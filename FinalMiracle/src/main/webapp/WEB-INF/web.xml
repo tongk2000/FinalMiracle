@@ -22,11 +22,14 @@
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+			<param-value>
+				/WEB-INF/spring/appServlet/servlet-context.xml,
+				/WEB-INF/spring/config/websocketContext.xml <!-- #173. 웹채팅 관련 6 -->
+			</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-		
+	
 	<!-- === #3. URL 패턴에서 확장자가 *.action 인 것으로 요청을 하면 appServlet 서블릿이 받아서 처리를 해준다. === -->
 	<servlet-mapping>
 		<servlet-name>appServlet</servlet-name>
@@ -51,6 +54,9 @@
 	<!-- 웹 애플리케이션 요청 시 시작파일을 지정한다. -->
 	<welcome-file-list>
 	    <welcome-file>home.mr</welcome-file>
-	</welcome-file-list>
-	
+	</welcome-file-list>	
 </web-app>
+
+
+
+

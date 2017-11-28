@@ -46,4 +46,13 @@
 	      <beans:property name="viewClass" value="org.springframework.web.servlet.view.tiles3.TilesView" />
 	      <beans:property name="order" value="1"/>
 	</beans:bean>
+	
+	<!-- ===== #25. 파일업로드 및 다운로드에 필요한 의존객체 설정하기 ===== -->
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+	      <beans:property name="defaultEncoding" value="utf-8" />
+	      <!-- 자바파일이 UTF-8로 저장된 경우 한글파일명이 깨지지 않게하기 위해 설정함 -->
+	      <beans:property name="maxUploadSize" value="10485760" />
+	      <!-- 공짜버전이라 10메가만 사용 가능 -->
+	</beans:bean>
+	
 </beans:beans>
