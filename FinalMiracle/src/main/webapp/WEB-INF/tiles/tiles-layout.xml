@@ -22,7 +22,9 @@
       <definition name="*/*/*.all" extends="layout-all">
             <put-attribute name="content" value="/WEB-INF/views/{1}/{2}/{3}.jsp"/>
       </definition>
-      
+      <definition name="*/*/*/*.all" extends="layout-all">
+            <put-attribute name="content" value="/WEB-INF/views/{1}/{2}/{3}/{4}.jsp"/>
+      </definition>
       
       <!-- ==== tiles 를 사용하지 않는 레이아웃 설정 시작 -->
       <definition name="layout-not" template="/WEB-INF/tiles/layout/layout-not.jsp">
@@ -37,6 +39,9 @@
       </definition>
       <definition name="*/*/*.not" extends="layout-not">
             <put-attribute name="content" value="/WEB-INF/views/{1}/{2}/{3}.jsp"/>
+      </definition>
+      <definition name="*/*/*/*.not" extends="layout-not">
+            <put-attribute name="content" value="/WEB-INF/views/{1}/{2}/{3}/{4}.jsp"/>
       </definition>
       <!-- ==== tiles 를 사용하지 않는 레이아웃 설정 끝 -->
       

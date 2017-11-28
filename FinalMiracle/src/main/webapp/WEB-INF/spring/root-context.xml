@@ -19,7 +19,7 @@
 	<!-- ==== #5. myBatis(JDBC)설정 mapper 파일 위치 지정하기  ==== -->
 	<!-- mapper 파일이란 sql 문을 가지고 있는 xml 파일을 말한다. -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-	    <property name="mapperLocations" value="classpath*:com/miracle/mapper/*.xml" />
+	    <property name="mapperLocations" value="classpath*:com/miracle/*/mapper/*.xml" />
 	    <property name="dataSource" ref="dataSource"/>
 	</bean>
 	
