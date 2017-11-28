@@ -5,6 +5,6 @@ public class GeniousPark {
 		System.out.println("바본디 ㅎㅎ");
 		System.out.println("바보맞음 ㅎㅎㅎ");
 		// 이젠 되겠지 ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ
-		// 대헌1
+		// 선호 1
 	}
 }
