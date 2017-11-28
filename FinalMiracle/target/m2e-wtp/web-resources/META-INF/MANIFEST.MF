@@ -1,9 +1,5 @@
 Manifest-Version: 1.0
-<<<<<<< HEAD
 Built-By: parks
-=======
-Built-By: user1
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 Build-Jdk: 1.8.0_141
 Created-By: Maven Integration for Eclipse
 
