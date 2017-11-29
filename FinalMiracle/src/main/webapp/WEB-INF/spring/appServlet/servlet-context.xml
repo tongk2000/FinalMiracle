@@ -24,7 +24,7 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean> -->
 	
-	<context:component-scan base-package="com.miracle" />
+	<context:component-scan base-package="com.miracle.*" />
 	
 	<!-- ===== #10. 일단 스프링에서 트랜잭션 처리를 하기 위해서는
                     src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml 파일에 
