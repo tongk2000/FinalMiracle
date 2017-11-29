@@ -1,5 +1,5 @@
 package com.miracle.jsw.service;
 
-public class sample {
+public interface InterCommuteService {
 
 }
