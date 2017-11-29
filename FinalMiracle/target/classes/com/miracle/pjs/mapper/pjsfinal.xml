@@ -20,10 +20,10 @@
 		      <if test='searchType!=null and searchString!=null and !"".equals(searchType) and !"".equals(searchString)'>
 				where ${searchType} like '%'||#{searchString}||'%'
 			  </if>
+			  order by idx desc
 		  )  v
 		) t
 		where rno between #{sNum} and #{eNum}
-		order by rno DESC
 	</select>
 	
 	<resultMap id="noticeMap" type="HashMap">
