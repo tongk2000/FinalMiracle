@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #7. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== #8. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->              
+<mapper namespace="pjsfinal">
+<!-- ============================================================================================================================================================= -->	
+	<!-- === *** 게시판 리스트 전체를 불러온다. *** === --><!-- 바뀜 -->
+	<!-- === *** 검색한 리스트를 불러온다. *** === -->
+	<select id="getNoticeList" parameterType="HashMap" resultMap="noticeMap">
+		select *
+		from
+		(
+		  select rownum as rno, v.*
+		  from
+		  (
+		      select fk_userid, subject, to_char(regday, 'yyyy-mm-dd hh24:mi:ss') as regday, readcount
+		      from tbl_notice
+		      <if test='searchType!=null and searchString!=null and !"".equals(searchType) and !"".equals(searchString)'>
+				where ${searchType} like '%'||#{searchString}||'%'
+			  </if>
+			  order by idx desc
+		  )  v
+		) t
+		where rno between #{sNum} and #{eNum}
+	</select>
+	
+	<resultMap id="noticeMap" type="HashMap">
+ 		<result property="fk_userid" 		column="fk_userid" 		javaType="String"></result>
+ 		<result property="subject" 			column="subject" 		javaType="String"></result>
+ 		<result property="regday" 			column="regday" 		javaType="String"></result>
+ 		<result property="readcount" 		column="readcount" 		javaType="int"></result>
+ 	</resultMap>
+<!-- ============================================================================================================================================================= -->	
+	<!-- === *** 검색한 리스트를 불러온다. *** === -->
+	<select id="getCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_notice
+		<if test='searchType!=null and searchString!=null and !"".equals(searchType) and !"".equals(searchString)'>
+			where ${searchType} like '%'||#{searchString}||'%'
+		</if>
+	</select>
+<!-- ============================================================================================================================================================= -->	
+</mapper>
