@@ -4,6 +4,46 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- ==== #8. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->              
-<mapper namespace="final_jsw">
+<mapper namespace="commute">
+	
+
+	<resultMap type="java.util.HashMap" id="commutelist">
+		<result property="wt_idx" 		column="wt_idx" 	javaType="int" />
+ 		<result property="wt_date" 		column="wt_date" 	javaType="String" />
+ 		<result property="stime" 		column="stime" 		javaType="String" />
+ 		<result property="etime" 		column="etime" 		javaType="String" />
+ 	 	<result property="whour" 		column="whour" 		javaType="String" />
+ 		<result property="wminute" 		column="wminute" 	javaType="String" />	
+ 		<result property="w.status" 	column="w.status" 	javaType="int" />
+ 		<result property="wstatus" 		column="wstatus" 	javaType="int" />
+ 		<result property="name" 		column="name" 		javaType="String" />
+	</resultMap>
+	<select id="commuteList" resultMap="commutelist">
+		select wt_idx, to_char(wt_date, 'mm-dd') as wt_date, to_char(stime, 'hh24:mi') as stime, to_char(etime, 'hh24:mi') as etime
+		, to_char(nvl(trunc((etime-stime)*24),0))||'시간' as whour
+		, to_char(nvl(trunc((((etime-stime)*24)-(trunc((etime-stime)*24)))*60),0))||'분' as wminute
+		, w.status, wstatus, name
+		from tbl_worktime w join tbl_member m
+		on w.fk_member_idx = m.idx
+		where m.status = 1
+	</select>
+	
+	
+	
+	<update id="startWork">
+		update tbl_worktime set stime = sysdate, status = 1
+		where to_char(wt_date, 'mm-dd') = to_char(sysdate, 'mm-dd')
+		and status = 0
+		and fk_member_idx = 3
+	</update>
+	
+	<update id="endWork">
+		update tbl_worktime set etime = sysdate, status = 2
+		where to_char(wt_date, 'mm-dd') = to_char(sysdate, 'mm-dd')
+		and status = 1
+		and fk_member_idx = 3
+	</update>
+	
+	
 	
 </mapper>

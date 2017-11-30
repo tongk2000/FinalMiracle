@@ -20,11 +20,19 @@
 
 <script type="text/javascript">
 	
-	function begin() {
+	function welcome() {
 		
-		var one = document.getElementById("one").value;
+		location.href="<%= request.getContextPath() %>/commutestart.mr";
 		
 	}
+	
+	function goodbye() {
+		
+		location.href="<%= request.getContextPath() %>/commuteend.mr";
+		
+	}
+	
+	
 	
 </script>
 
@@ -35,18 +43,14 @@
 홍길동님의 출퇴근 내역 입사일자 2017-10-10
 <br/>
 
-<button>출근</button>
-<button>톼근</button>
+<button id="start" name="start" onclick="welcome()">출근</button>
+<button id="end" name="end" onclick="goodbye()">톼근</button>
 
 <br/>
 
-<select id="one" onchange="begin()">
-	<c:forEach begin="1" end="12" varStatus="status">
-		<option value="${status.count}">${status.count}월</option>
-	</c:forEach>
-</select>
-~
-<select id="two">
+월별보기
+<select id="month" onchange="begin()">
+	<option value="all">전체</option>
 	<c:forEach begin="1" end="12" varStatus="status">
 		<option value="${status.count}">${status.count}월</option>
 	</c:forEach>
@@ -59,17 +63,33 @@
 			<th>출근시간</th>
 			<th>퇴근시간</th>
 			<th>근무시간</th>
-			<th>상태</th>
+			<th>비고</th>
 		</tr>
 	</thead>
 	<tbody>
-		<tr>
-			<td>2017-11-29</td>
-			<td>11:06</td>
-			<td>17:45</td>
-			<td>6:00</td>
-			<td>지각</td>
-		</tr>
+		<c:forEach var="map" items="${commuteList}">
+			<tr>
+				<td>${map.wt_date}</td>
+				<td>${map.stime}</td>
+				<td>${map.etime}</td>
+				<td>${map.whour} ${map.wminute}</td>
+				<c:if test="${map.wstatus == 0}">
+					<td> </td>
+				</c:if>
+				<c:if test="${map.wstatus == 1}">
+					<td>지각</td>
+				</c:if>
+				<c:if test="${map.wstatus == 2}">
+					<td>조퇴</td>
+				</c:if>
+				<c:if test="${map.wstatus == 3}">
+					<td>결근</td>
+				</c:if>
+				<c:if test="${map.wstatus == 4}">
+					<td>지각,조퇴</td>
+				</c:if>
+			</tr>
+		</c:forEach>
 	</tbody>
 </table>
 

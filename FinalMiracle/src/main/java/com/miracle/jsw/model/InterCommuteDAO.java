@@ -1,9 +1,9 @@
-package com.miracle.jsw.service;
+package com.miracle.jsw.model;
 
 import java.util.HashMap;
 import java.util.List;
 
-public interface InterCommuteService {
+public interface InterCommuteDAO {
 
 	List<HashMap<String, String>> commuteList(); // 출퇴근 리스트를 불러옴
 
