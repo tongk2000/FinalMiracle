@@ -86,6 +86,97 @@
 		and substr(wt_date,4,2) = #{month}
 	</select>
 	
+	<resultMap type="java.util.HashMap" id="teamwonlist">
+		<result property="tidx" 		column="tidx" 		javaType="int" />
+ 		<result property="tname" 		column="tname" 		javaType="String" />
+ 		<result property="twidx" 		column="twidx" 		javaType="int" />
+ 		<result property="twstatus" 	column="twstatus" 	javaType="int" />
+ 	 	<result property="midx" 		column="midx" 		javaType="int" />
+ 		<result property="userid" 		column="userid" 	javaType="String" />	
+ 		<result property="username" 	column="username" 	javaType="String" />
+ 		<result property="img" 			column="img" 		javaType="String" />
+	</resultMap>
+	<select id="getTeamWonList" resultMap="teamwonlist" parameterType="HashMap">
+		select t.idx as tidx, t.name as tname, tw.idx as twidx, tw.status as twstatus, m.idx as midx, m.userid as userid, m.name as username, m.img as img
+		from tbl_team t join tbl_teamwon tw
+		on t.idx = tw.fk_team_idx
+		join tbl_member m
+		on tw.fk_member_idx = m.idx
+		where t.idx = #{tidx}
+		and tw.status = 1
+		order by tw.idx
+	</select>
+	
+	
+	<!--  -->
+	
+	
+	
+	<select id="twcommuteList" resultMap="commutelist" parameterType="HashMap">
+		select wt_idx, wt_date, stime, etime, whour, wminute, status, wstatus, name
+		from 
+		(
+		select rownum as rno, wt_idx, wt_date, stime, etime, whour, wminute, status, wstatus, name
+		from
+		(
+		  select wt_idx, to_char(wt_date, 'mm-dd') as wt_date, to_char(stime, 'hh24:mi') as stime, to_char(etime, 'hh24:mi') as etime
+		  , to_char(nvl(trunc((etime-stime)*24),0))||'시간' as whour
+		  , to_char(nvl(trunc((((etime-stime)*24)-(trunc((etime-stime)*24)))*60),0))||'분' as wminute
+		  , w.status, wstatus, name
+		  from tbl_worktime w join tbl_member m
+		  on w.fk_member_idx = m.idx
+		  where m.status = 1
+		  and m.idx = #{idx}
+		  order by wt_idx desc
+		)V
+		)T
+		where rno >= #{startRno} and rno <![CDATA[<=]]> #{endRno}
+	</select>
+	
+	<select id="twcommuteListMonth" resultMap="commutelist" parameterType="HashMap">
+		select wt_idx, wt_date, stime, etime, whour, wminute, status, wstatus, name
+		from 
+		(
+		select rownum as rno, wt_idx, wt_date, stime, etime, whour, wminute, status, wstatus, name
+		from
+		(
+		  select wt_idx, to_char(wt_date, 'mm-dd') as wt_date, to_char(stime, 'hh24:mi') as stime, to_char(etime, 'hh24:mi') as etime
+		  , to_char(nvl(trunc((etime-stime)*24),0))||'시간' as whour
+		  , to_char(nvl(trunc((((etime-stime)*24)-(trunc((etime-stime)*24)))*60),0))||'분' as wminute
+		  , w.status, wstatus, name
+		  from tbl_worktime w join tbl_member m
+		  on w.fk_member_idx = m.idx
+		  where m.status = 1
+		  and m.idx = #{idx}
+		  and substr(wt_date,4,2) = #{month}
+		  order by wt_idx desc
+		)V
+		)T
+		where rno >= #{startRno} and rno <![CDATA[<=]]> #{endRno}
+	</select>
+	
+	<select id="getTWTotalCount" resultType="int">
+		select count(*)
+		from tbl_worktime
+		where status = 1
+		and fk_member_idx = #{idx}
+	</select>
+	
+	<select id="getTWTotalCountMonth" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_worktime
+		where status = 1
+		and fk_member_idx = #{idx}
+		and substr(wt_date,4,2) = #{month}
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
