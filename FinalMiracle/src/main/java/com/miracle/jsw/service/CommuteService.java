@@ -13,12 +13,6 @@ public class CommuteService implements InterCommuteService {
 
 	@Autowired
 	private InterCommuteDAO dao;
-	
-	@Override
-	public List<HashMap<String, String>> commuteList() {
-		List<HashMap<String, String>> map = dao.commuteList();
-		return map;
-	}
 
 	@Override
 	public int startWork() {
@@ -29,6 +23,30 @@ public class CommuteService implements InterCommuteService {
 	@Override
 	public int endWork() {
 		int n = dao.endWork();
+		return n;
+	}
+
+	@Override
+	public List<HashMap<String, String>> commuteList(HashMap<String, String> map) {
+		List<HashMap<String, String>> list = dao.commuteList(map);
+		return list;
+	}
+
+	@Override
+	public List<HashMap<String, String>> commuteListMonth(HashMap<String, String> map) {
+		List<HashMap<String, String>> list = dao.commuteListMonth(map);
+		return list;
+	}
+
+	@Override
+	public int getTotalCountMonth(HashMap<String, String> map) {
+		int n = dao.getTotalCountMonth(map);
+		return n;
+	}
+
+	@Override
+	public int getTotalCount() {
+		int n = dao.getTotalCount();
 		return n;
 	}
 

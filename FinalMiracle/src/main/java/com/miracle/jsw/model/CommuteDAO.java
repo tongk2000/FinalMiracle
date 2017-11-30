@@ -14,12 +14,6 @@ public class CommuteDAO implements InterCommuteDAO {
 	private SqlSessionTemplate sqlsession;
 
 	@Override
-	public List<HashMap<String, String>> commuteList() {
-		List<HashMap<String, String>> map = sqlsession.selectList("commute.commuteList");
-		return map;
-	}
-
-	@Override
 	public int startWork() {
 		int n = sqlsession.update("commute.startWork");
 		return n;
@@ -28,6 +22,30 @@ public class CommuteDAO implements InterCommuteDAO {
 	@Override
 	public int endWork() {
 		int n = sqlsession.update("commute.endWork");
+		return n;
+	}
+
+	@Override
+	public List<HashMap<String, String>> commuteList(HashMap<String, String> map) {
+		List<HashMap<String, String>> list = sqlsession.selectList("commute.commuteList", map);
+		return list;
+	}
+
+	@Override
+	public List<HashMap<String, String>> commuteListMonth(HashMap<String, String> map) {
+		List<HashMap<String, String>> list = sqlsession.selectList("commute.commuteListMonth", map);
+		return list;
+	}
+
+	@Override
+	public int getTotalCountMonth(HashMap<String, String> map) {
+		int n = sqlsession.selectOne("commute.getTotalCountMonth", map);
+		return n;
+	}
+
+	@Override
+	public int getTotalCount() {
+		int n = sqlsession.selectOne("commute.getTotalCount");
 		return n;
 	}
 
