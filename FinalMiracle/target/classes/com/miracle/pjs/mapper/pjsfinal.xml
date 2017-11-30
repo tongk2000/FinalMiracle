@@ -6,8 +6,8 @@
 <!-- ==== #8. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->              
 <mapper namespace="pjsfinal">
 <!-- ============================================================================================================================================================= -->	
-	<!-- === *** 게시판 리스트 전체를 불러온다. *** === --><!-- 바뀜 -->
-	<!-- === *** 검색한 리스트를 불러온다. *** === -->
+	<!-- === *** 공지사항 게시판 리스트 전체를 불러온다. *** === --><!-- 바뀜 -->
+	<!-- === *** 공지사항 게시판에서 검색한 리스트를 불러온다. *** === -->
 	<select id="getNoticeList" parameterType="HashMap" resultMap="noticeMap">
 		select *
 		from
@@ -33,7 +33,7 @@
  		<result property="readcount" 		column="readcount" 		javaType="int"></result>
  	</resultMap>
 <!-- ============================================================================================================================================================= -->	
-	<!-- === *** 검색한 리스트를 불러온다. *** === -->
+	<!-- === *** 총 행의 수를 불러온다. *** === -->
 	<select id="getCount" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_notice
@@ -42,4 +42,48 @@
 		</if>
 	</select>
 <!-- ============================================================================================================================================================= -->	
+	<!-- === *** JSON 검색한 리스트를 불러온다. *** === -->
+	<select id="getNoticeJSONList" parameterType="HashMap" resultType="String">
+		select fk_userid||' '||subject 
+		from tbl_notice
+		where ${searchType} like '%'||#{searchString}||'%'
+	</select>
+<!-- ============================================================================================================================================================= -->	
+	<!-- === *** 마음의 소리 게시판의 전체 리스트를 불러온다. *** === -->
+	<select id="getMindList" resultMap="mindMap">
+		select *
+		from
+		(
+		  select rownum as rno, v.*
+		  from
+		  (
+		      select fk_userid, subject, to_char(regday, 'yyyy-mm-dd hh24:mi:ss') as regday, readcount
+		      from tbl_mind
+		      <if test='searchType!=null and searchString!=null and !"".equals(searchType) and !"".equals(searchString)'>
+				where ${searchType} like '%'||#{searchString}||'%'
+			  </if>
+			  order by idx desc
+		  )  v
+		) t
+		where rno between #{sNum} and #{eNum}
+	</select>
+	
+	<resultMap id="mindMap" type="HashMap">
+ 		<result property="fk_userid" 		column="fk_userid" 		javaType="String"></result>
+ 		<result property="subject" 			column="subject" 		javaType="String"></result>
+ 		<result property="regday" 			column="regday" 		javaType="String"></result>
+ 		<result property="readcount" 		column="readcount" 		javaType="int"></result>
+ 	</resultMap>
+<!-- ============================================================================================================================================================= -->	
+	<!-- === *** 마음의 소리 게시판의 검색된 행의 수를 불러온다. *** === -->
+	<select id="getMindCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_mind
+		<if test='searchType!=null and searchString!=null and !"".equals(searchType) and !"".equals(searchString)'>
+			where ${searchType} like '%'||#{searchString}||'%'
+		</if>
+	</select>
+<!-- ============================================================================================================================================================= -->	
+
+
 </mapper>

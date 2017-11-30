@@ -2,19 +2,25 @@ package com.miracle.pjs.controller;
 
 import java.util.HashMap;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
 import com.miracle.pjs.service.PjsinterService;
 import com.miracle.pjs.util.MyUtil;
 
+
 @Controller
 public class GeniousPjs {
+	
 	@Autowired
 	private PjsinterService service;
 	
+	// ==== *** 공지사항 게시판 *** ==== //
 	@RequestMapping(value="noticeList.mr", method={RequestMethod.GET})
 	public String notice(HttpServletRequest req) {	
 		/* ============================== 페이징 처리 시 필요한 변수들! ============================== */
@@ -57,7 +63,7 @@ public class GeniousPjs {
 		map.put("sNum", sNum);
 		map.put("eNum", eNum);
 		
-		int totalCount = service.getTotalCount(map);
+		int totalCount = service.getNoticeCount(map);
 		int totalPage=(int)Math.ceil((double)totalCount/sizePerPage);
 		String pagebar = MyUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentPage, searchType, searchString, null, "noticeList.mr");
 		List<HashMap<String, String>> list = service.getNoticeList(map);
@@ -66,6 +72,69 @@ public class GeniousPjs {
 		req.setAttribute("searchString", searchString);
 		req.setAttribute("pagebar", pagebar);
 		return "pjs/notice/noticeList.all";
+	}/*=======================================================================================================================================================*/
+	@RequestMapping(value="noticeListJSON.mr", method={RequestMethod.GET})
+	public String noticeJSON(HttpServletRequest req) {	
+		//System.out.println("컨트롤러엔 오니>");
+		String searchString = req.getParameter("searchString");
+		String searchType = req.getParameter("searchType");
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("searchString", searchString);
+		map.put("searchType", searchType);
+		List<String> list = service.getNoticeJSONList(map);
+		System.out.println("list사이즈는  "+list.size());
+		/*JSONArray jsonArray = new JSONArray();
+		if(list != null && list.size() != 0) {
+			for(String obj : list) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("searchString", obj);
+				jsonArray.put(jsonObj);
+			}
+		}
+		String array = jsonArray.toString();*/
+		req.setAttribute("list", list);
+		return "pjs/notice/noticeListJSON.all";
+	}/*=======================================================================================================================================================*/
+	
+	
+	
+	// ==== *** 마음의 소리 게시판 *** ==== //
+	@RequestMapping(value="mindList.mr", method={RequestMethod.GET})
+	public String mindList(HttpServletRequest req) {
+		String searchType = req.getParameter("searchType");
+		String searchString = req.getParameter("searchString");
+		String str_sizePerPage = req.getParameter("sizePerPage");
+		String str_currentPage = req.getParameter("currentShowPageNo");
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("searchType", searchType);
+		map.put("searchString", searchString);
+		List<HashMap<String, String>> list = service.getMindList(map, str_sizePerPage, str_currentPage); // 게시판을 가져오는 서비스단
+		String pagebar = list.get(list.size()-1).get("pagebar");
+		list.remove(list.size()-1);
+		req.setAttribute("sizePerPage", str_sizePerPage);
+		req.setAttribute("searchType", searchType);
+		req.setAttribute("searchString", searchString);
+		req.setAttribute("pagebar", pagebar);
+		req.setAttribute("list", list);
+		return "pjs/mind/mindList.all";
+	}/*=======================================================================================================================================================*/
+
+	
+	
+	// ==== *** 구글맵 *** ==== //
+	@RequestMapping(value="googleMap.mr", method={RequestMethod.GET})
+	public String googleMap(HttpServletRequest req) {
+		
+		return "pjs/map/?.all";
+	}/*=======================================================================================================================================================*/
+	
+	
+	
+	// ==== *** 쪽지 *** ==== //
+	@RequestMapping(value="memo.mr", method={RequestMethod.GET})
+	public String memo(HttpServletRequest req) {
+		
+		return "pjs/memo/?.all";
 	}/*=======================================================================================================================================================*/
 
 }		
