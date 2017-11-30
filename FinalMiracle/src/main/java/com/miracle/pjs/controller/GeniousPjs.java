@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.miracle.pjs.model.MapVO;
 import com.miracle.pjs.service.PjsinterService;
 import com.miracle.pjs.util.MyUtil;
 
@@ -19,6 +20,8 @@ public class GeniousPjs {
 	
 	@Autowired
 	private PjsinterService service;
+
+/*=======================================================================================================================================================*/	
 	
 	// ==== *** 공지사항 게시판 *** ==== //
 	@RequestMapping(value="noticeList.mr", method={RequestMethod.GET})
@@ -72,7 +75,7 @@ public class GeniousPjs {
 		req.setAttribute("searchString", searchString);
 		req.setAttribute("pagebar", pagebar);
 		return "pjs/notice/noticeList.all";
-	}/*=======================================================================================================================================================*/
+	}
 	@RequestMapping(value="noticeListJSON.mr", method={RequestMethod.GET})
 	public String noticeJSON(HttpServletRequest req) {	
 		//System.out.println("컨트롤러엔 오니>");
@@ -94,9 +97,9 @@ public class GeniousPjs {
 		String array = jsonArray.toString();*/
 		req.setAttribute("list", list);
 		return "pjs/notice/noticeListJSON.all";
-	}/*=======================================================================================================================================================*/
+	}
 	
-	
+/*=======================================================================================================================================================*/	
 	
 	// ==== *** 마음의 소리 게시판 *** ==== //
 	@RequestMapping(value="mindList.mr", method={RequestMethod.GET})
@@ -117,17 +120,20 @@ public class GeniousPjs {
 		req.setAttribute("pagebar", pagebar);
 		req.setAttribute("list", list);
 		return "pjs/mind/mindList.all";
-	}/*=======================================================================================================================================================*/
+	}
 
-	
+/*=======================================================================================================================================================*/	
+
 	
 	// ==== *** 구글맵 *** ==== //
 	@RequestMapping(value="googleMap.mr", method={RequestMethod.GET})
 	public String googleMap(HttpServletRequest req) {
-		
-		return "pjs/map/?.all";
-	}/*=======================================================================================================================================================*/
+		List<MapVO> list = service.getMap(); // 전체 리스트를 반환한다.
+		req.setAttribute("list", list);
+		return "pjs/map/googleMap.all";
+	}
 	
+/*=======================================================================================================================================================*/	
 	
 	
 	// ==== *** 쪽지 *** ==== //
@@ -135,6 +141,8 @@ public class GeniousPjs {
 	public String memo(HttpServletRequest req) {
 		
 		return "pjs/memo/?.all";
-	}/*=======================================================================================================================================================*/
+	}
+
+/*=======================================================================================================================================================*/	
 
 }		
