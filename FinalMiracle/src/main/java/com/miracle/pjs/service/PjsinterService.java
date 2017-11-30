@@ -14,7 +14,7 @@ public interface PjsinterService {
 
 	int getNoticeCount(HashMap<String, String> map); // 공지사항 테이블의 전체 행 수를 반환하는 메소드
 
-	List<String> getNoticeJSONList(HashMap<String, String> map); // 공지사항 테이블에서 검색 시 json처리를 하기위한 메소드
+	String getNoticeJSONList(HashMap<String, String> map); // 공지사항 테이블에서 검색 시 json처리를 하기위한 메소드
 
 //==========================================================================================================================================================//	
 	

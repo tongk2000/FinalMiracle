@@ -42,7 +42,6 @@ public class PjsDAOImpl implements PjsinterDAO {
 	public List<HashMap<String, String>> getMindList(HashMap<String, String> map) {
 		// 마음의 소리 게시판 전체리스트 반환
 		List<HashMap<String, String>> list = sqlsession.selectList("pjsfinal.getMindList", map);
-		System.out.println("list는 "+list.size());
 		return list;
 	}
 	@Override

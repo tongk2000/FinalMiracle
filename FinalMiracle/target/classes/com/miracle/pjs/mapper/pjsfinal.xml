@@ -5,8 +5,8 @@
 
 <!-- ==== #8. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->              
 <mapper namespace="pjsfinal">
+<!-- 공지사항 게시판 -->
 <!-- ============================================================================================================================================================= -->	
-	<!-- 공지사항 게시판 -->
 	<!-- === *** 공지사항 게시판 리스트 전체를 불러온다. *** === --><!-- 바뀜 -->
 	<!-- === *** 공지사항 게시판에서 검색한 리스트를 불러온다. *** === -->
 	<select id="getNoticeList" parameterType="HashMap" resultMap="noticeMap">
@@ -16,12 +16,12 @@
 		  select rownum as rno, v.*
 		  from
 		  (
-		      select fk_userid, subject, to_char(regday, 'yyyy-mm-dd hh24:mi:ss') as regday, readcount
-		      from tbl_notice
+		      select n.fk_userid, n.subject, to_char(n.regday, 'yyyy-mm-dd hh24:mi:ss') as regday,n.readcount, m.img
+		      from tbl_notice n join tbl_member m on n.fk_userid = m.userid
 		      <if test='searchType!=null and searchString!=null and !"".equals(searchType) and !"".equals(searchString)'>
 				where ${searchType} like '%'||#{searchString}||'%'
 			  </if>
-			  order by idx desc
+			  order by n.idx desc
 		  )  v
 		) t
 		where rno between #{sNum} and #{eNum}
@@ -32,6 +32,7 @@
  		<result property="subject" 			column="subject" 		javaType="String"></result>
  		<result property="regday" 			column="regday" 		javaType="String"></result>
  		<result property="readcount" 		column="readcount" 		javaType="int"></result>
+ 		<result property="img" 				column="img" 			javaType="String"></result>
  	</resultMap>
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 총 행의 수를 불러온다. *** === -->
@@ -45,16 +46,22 @@
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** JSON 검색한 리스트를 불러온다. *** === -->
 	<select id="getNoticeJSONList" parameterType="HashMap" resultType="String">
-		select fk_userid||' '||subject 
-		from tbl_notice
-		where ${searchType} like '%'||#{searchString}||'%'
+		<if test="'fk_userid'.equals(searchType)">
+			select fk_userid
+			from tbl_notice
+			where ${searchType} like '%'||#{searchString}||'%'
+		</if>
+		<if test="'subject'.equals(searchType)">
+			select subject
+			from tbl_notice
+			where ${searchType} like '%'||#{searchString}||'%'
+		</if>
 	</select>
 <!-- ============================================================================================================================================================= -->	
 	
 
-	
+<!-- 마음의 소리 게시판 -->
 <!-- ============================================================================================================================================================= -->	
-	<!-- 마음의 소리 게시판 -->
 	<!-- === *** 마음의 소리 게시판의 전체 리스트를 불러온다. *** === -->
 	<select id="getMindList" resultMap="mindMap">
 		select *
@@ -63,12 +70,12 @@
 		  select rownum as rno, v.*
 		  from
 		  (
-		      select fk_userid, subject, to_char(regday, 'yyyy-mm-dd hh24:mi:ss') as regday, readcount
-		      from tbl_mind
+		      select n.fk_userid, n.subject, to_char(n.regday, 'yyyy-mm-dd hh24:mi:ss') as regday,n.readcount, m.img
+		      from tbl_mind n join tbl_member m on n.fk_userid = m.userid
 		      <if test='searchType!=null and searchString!=null and !"".equals(searchType) and !"".equals(searchString)'>
 				where ${searchType} like '%'||#{searchString}||'%'
 			  </if>
-			  order by idx desc
+			  order by n.idx desc
 		  )  v
 		) t
 		where rno between #{sNum} and #{eNum}
@@ -79,6 +86,7 @@
  		<result property="subject" 			column="subject" 		javaType="String"></result>
  		<result property="regday" 			column="regday" 		javaType="String"></result>
  		<result property="readcount" 		column="readcount" 		javaType="int"></result>
+ 		<result property="img" 				column="img" 			javaType="String"></result>
  	</resultMap>
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 마음의 소리 게시판의 검색된 행의 수를 불러온다. *** === -->

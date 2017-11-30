@@ -3,6 +3,8 @@ package com.miracle.pjs.service;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,10 +34,23 @@ public class PjsserviceImpl implements PjsinterService {
 		return cnt;
 	}
 	@Override
-	public List<String> getNoticeJSONList(HashMap<String, String> map) {
+	public String getNoticeJSONList(HashMap<String, String> map) {
 		// 공지사항 테이블에서 검색 시 json처리를 하기위한 메소드
 		List<String> list = dao.getNoticeJSONList(map);
-		return list;
+		JSONArray jsonList = null;
+		String searchString = "";
+		if(list!=null&&list.size()>0) {
+			jsonList = new JSONArray();
+			for(String obj : list) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("search", obj);
+				jsonList.put(jsonObj);
+			}
+			searchString = jsonList.toString();
+		}
+		else 
+			searchString = "해당하는 검색정보가 없습니다.";
+		return searchString;
 	}
 	
 //==========================================================================================================================================================//	

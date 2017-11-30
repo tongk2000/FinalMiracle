@@ -161,7 +161,7 @@
 	}); // end of $(document).ready()-------------------------
 </script>
 <%-- 화면에 나오는 창은 밑에 div 하나만 존재한다.!!! --%>
-<div id="googleMap"	style="width: 100%; height: 360px; margin: auto;"></div>
+<div id="googleMap"	style="width: 30%; height: 200px; margin: auto; margin:20% 30% 20% 35% ; "></div>
 
 
 
