@@ -14,44 +14,67 @@ public class Folder_TeamwonVO {
 	// ,constraint CK_ft_status check (status in (0, 1, 2))
 	// );
 	
+	private String userid; // userid 알아오기용(컬럼은 없음)
+	
 	public Folder_TeamwonVO() {}
-	public Folder_TeamwonVO(int idx, int fk_folder_idx, int fk_teamwon_idx, int acceptability, int status) {
+
+	public Folder_TeamwonVO(int idx, int fk_folder_idx, int fk_teamwon_idx, int acceptability, int status,
+			String userid) {
 		super();
 		this.idx = idx;
 		this.fk_folder_idx = fk_folder_idx;
 		this.fk_teamwon_idx = fk_teamwon_idx;
 		this.acceptability = acceptability;
 		this.status = status;
+		this.userid = userid;
 	}
+
 	public int getIdx() {
 		return idx;
 	}
+
 	public void setIdx(int idx) {
 		this.idx = idx;
 	}
+
 	public int getFk_folder_idx() {
 		return fk_folder_idx;
 	}
+
 	public void setFk_folder_idx(int fk_folder_idx) {
 		this.fk_folder_idx = fk_folder_idx;
 	}
+
 	public int getFk_teamwon_idx() {
 		return fk_teamwon_idx;
 	}
+
 	public void setFk_teamwon_idx(int fk_teamwon_idx) {
 		this.fk_teamwon_idx = fk_teamwon_idx;
 	}
+
 	public int getAcceptability() {
 		return acceptability;
 	}
+
 	public void setAcceptability(int acceptability) {
 		this.acceptability = acceptability;
 	}
+
 	public int getStatus() {
 		return status;
 	}
+
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public String getUserid() {
+		return userid;
+	}
+
+	public void setUserid(String userid) {
+		this.userid = userid;
 	}
 	
 }

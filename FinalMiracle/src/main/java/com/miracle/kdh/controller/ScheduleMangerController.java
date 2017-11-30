@@ -1,5 +1,6 @@
 package com.miracle.kdh.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,4 +25,16 @@ public class ScheduleMangerController {
 		req.setAttribute("doList", doList);
 		return "kdh/doList.all";
 	} // end of String doList (HttpServletRequest req) -----------------------------------
+	
+	// 선택한 폴더의 모든 정보를 가져오기
+	@RequestMapping(value="do_getSelectFolderInfo.mr", method={RequestMethod.GET})
+	public String getSelectFolderInfo(HttpServletRequest req) {
+		String idx = req.getParameter("idx");
+		HashMap<String, Object> map = svc.getSelectFolderInfo(idx);
+		req.setAttribute("fvo", map.get("fvo"));
+		req.setAttribute("folder_teamwonList", map.get("folder_teamwonList"));
+		req.setAttribute("folder_commentList", map.get("folder_commentList"));
+		return "kdh/modal/modalFolder.not";
+	}
+	
 }

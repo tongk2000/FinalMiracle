@@ -20,15 +20,34 @@
 
 <script type="text/javascript">
 	
-	function welcome() {
+	$(document).ready(function(){
+		
+		
+		if(${not empty month}){
+			$("#month").val("${month}");
+		}
+		
+		
+	});
+	
+	
+	function welcome() { //출근
 		
 		location.href="<%= request.getContextPath() %>/commutestart.mr";
 		
 	}
 	
-	function goodbye() {
+	function goodbye() { // 퇴근
 		
 		location.href="<%= request.getContextPath() %>/commuteend.mr";
+		
+	}
+	
+	function search() { // 월별보기
+		var frm = document.monthFrm;
+		frm.method = "get";
+		frm.action = "<%= request.getContextPath() %>/commute.mr";
+		frm.submit();
 		
 	}
 	
@@ -40,7 +59,7 @@
 
 <h1>출퇴근 체크</h1>
 
-홍길동님의 출퇴근 내역 입사일자 2017-10-10
+홍길동님의 출퇴근 내역
 <br/>
 
 <button id="start" name="start" onclick="welcome()">출근</button>
@@ -48,13 +67,16 @@
 
 <br/>
 
+<form name="monthFrm">
 월별보기
-<select id="month" onchange="begin()">
-	<option value="all">전체</option>
-	<c:forEach begin="1" end="12" varStatus="status">
-		<option value="${status.count}">${status.count}월</option>
-	</c:forEach>
-</select>
+	<select id="month" name="month">
+		<option value="">전체</option>
+		<c:forEach begin="1" end="12" varStatus="status">
+			<option value="${status.count}">${status.count}월</option>
+		</c:forEach>
+	</select>
+	<button type="button" onclick="search()">검색</button>
+</form>
 
 <table>
 	<thead>
@@ -94,5 +116,7 @@
 </table>
 
 
-pagebar
+<div align="center" style="width: 70%; margin-left: 50px;">
+	${pageBar}
+</div>
 

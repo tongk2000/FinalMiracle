@@ -22,7 +22,7 @@
 </style>
 
 </head>
-<body>
+<body id="body">
 	<div class="container">
 		<div class="header">
 		      <tiles:insertAttribute name="header" />

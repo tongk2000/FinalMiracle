@@ -11,28 +11,37 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		
-		$(".modalBnt").click(function(){
-			return false;
-		});
+		$(".modalFolder").click(function(){
+		 	var frm = {"idx":$(this).attr("id")};
+			$.ajax({
+				url:"do_getSelectFolderInfo.mr",
+				data:frm,
+				dataType:"html",
+				success:function(data){
+					$("#folderInfo").html(data);
+					$("#folderInfo").modal();
+				}, error:function(request, status, error){
+                    alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+				}
+			});
+			return;
+		}); // end of $(".modalFolder").click(function() ------------------------------------------------------------------------
 		
 		$(".folder").click(function(){			
 			var $this = $(this);
-						
 			var idx = $this.attr("id");
-			
-			var depth = getDepth($this); // 깊이 구하기			
-			
+			var depth = getDepth($this); // 클릭한 요소의 깊이 구하기
 			while(1==1) {
-				$this2 = $this.next(); // 다음 요소의 깊이 구하기
-				var depth2 = getDepth($this2);
+				$this2 = $this.next();
+				var depth2 = getDepth($this2); // 다음 요소의 깊이 구하기
 				
-				if(depth+1 == depth2) {
+				if(depth+1 == depth2) { // 클릭한 요소의 깊이보다 다음 요소의 깊이가 1 크다면 (클릭했을때 +1 깊이만 표시되도록 하기 위해서 구분함)
 					if($this2.is(":visible")) {
 						$this2.hide();
 					} else {
 						$this2.show();
 					}
-				} else if (depth+1 < depth2) {
+				} else if (depth+1 < depth2) { // 클릭한 요소의 깊이보다 다음 요소의 깊이가 2 이상이라면
 					if($this2.is(":visible")) {
 						$this2.hide();
 					}
@@ -41,16 +50,28 @@
 				}
 				$this = $this2; // 다음의 다음 요소를 찾기 위함
 			}
-		});
+		}); // end of $(".folder").click(function() -----------------------------------------------------------------------------------------------
 		
-		$("#allClose").click(function(){
+		$("#allClose").click(function(){ // 폴더 전체 닫기
 			$(".folder").hide();
 			$(".0").show();
-		});
+		}); // end of $("#allClose").click(function() -------------------------------------------------------------------------------------
 		
-		$("#allOpen").click(function(){
+		$("#allOpen").click(function(){ // 폴더 전체 펴기
 			$(".folder").show();
-		});
+		}); // end of $("#allOpen").click(function() ---------------------------------------------------------------------------------------------
+		
+		
+		$("#body").keydown(function(){
+			var modalFlag = $('#folderInfo').is(':visible');
+			if(event.keyCode == 27 && modalFlag) {
+				$('#folderInfo').modal('hide');
+			} 
+		}); // end of $("#body").keydown(function() ------------------------------------------------------------------------------------------------------
+			
+		$(".modalClose").click(function(){
+			$('#folderInfo').modal('hide');
+		}); // end of $(".modalClose").click(function() ------------------------------------------------------------------------------------------------------
 	});
 	
 	// 그룹번호 구해주는 함수
@@ -58,19 +79,28 @@
 		var className = $this.attr("class");
 		var index1 = className.indexOf(" ");
 		var index2 = className.indexOf(" ", index1+1);
-		var groupNo = className.substr(index1+1, index2-index1-1);
+		var groupNo = className.substr(index1+1, index2-index1-1); // 2번째 클래스를 추출함
 		return parseInt(groupNo);
-	}
+	} // end of function getGroupNo($this) -----------------------------------------------------------------------------------------------------------------------
 	
 	// 깊이 구해주는 함수
 	function getDepth($this) {
 		var className = $this.attr("class");
 		var index1 = className.indexOf(" ");
 		var index2 = className.indexOf(" ", index1+1);
-		var depth = className.substr(index2);
+		var depth = className.substr(index2);  // 3번째 클래스를 추출함
 		return parseInt(depth);
-	}
+	} // end of function getDepth($this) ------------------------------------------------------------------------------------------------------------------------	
 	
+	 function goClose(){
+         var ynFlag = confirm("창을 종료하시겠습니까?\r\n(종료시 수정하신 정보는 모두 초기화됩니다)");
+         if(ynFlag) {
+               changeFlag = false;
+               window.location.reload(true);
+         } else {
+               return;
+         }
+	} // end of function goClose() --------------------------------------------------------------------------------------------------------------------------------
 	
 </script>
 
@@ -93,19 +123,21 @@
 				<c:forEach var="dvo" items="${doList}">
 					<tr id="${dvo.idx}" class="folder ${dvo.groupNo} ${dvo.depth}">
 						<td>
-							<span style="margin-left:${dvo.depth*15}px;">
+							<span style="margin-left:${dvo.depth*15}px; cursor:pointer;">
 								<c:if test="${dvo.category == 1}"> <!-- 폴더라면 -->
-									<a data-toggle="modal" data-target="#MyInfo" data-dismiss="modal" data-backdrop="static" class="modalBnt">
+									<span class="modalFolder" id="${dvo.idx}">
 										<c:if test="${dvo.fk_folder_idx == 0}"> <!-- 최상위 폴더라면 -->
 											${dvo.subject}
 										</c:if>
 										<c:if test="${dvo.fk_folder_idx != 0}"> <!-- 최상위 폴더가 아니라면 -->
 											└${dvo.subject}
 										</c:if>
-									</a>
+									</span>
 								</c:if>
 								<c:if test="${dvo.category == 2}"> <!-- 할일이라면 -->
-									└<input type="checkbox"/>${dvo.subject}
+									<span class="modalTask" id="${dvo.idx}">
+										└<input type="checkbox"/>${dvo.subject}
+									</span>
 								</c:if>
 							</span>
 						</td>
@@ -132,144 +164,9 @@
 <div class="container" style="width:60%; float:right">
 </div>
 
-
-
-
-
-<%-- 폴더 보기 Modal --%>
-<div class="modal fade" id="MyInfo" role="dialog">
-      <form name="MyInfoEdit" method="post" action="MyInfoEdit.do">
-      <div class="modal-dialog">
-            <%-- Modal content --%>
-        <div class="modal-content" align="center">
-              <div class="modal-header">
-                  <button type="button" class="close modalClose" data-dismiss="modal">&times;</button> <!-- &times; : x버튼으로 표시됨 -->
-                  <h4 class="modal-title" align="center">
-                        ::: <span style="color:blue; font-weight:bold;">${loginUser.name}</span> 회원님의 정보 ::: <br/>
-                        <span style="font-size:9pt; margin-left:-25px;">(<span style="color:green;">녹색글자</span>는 수정가능한 항목입니다.)</span>
-                  </h4>
-              </div>
-              <div class="modal-body" style="width:100%; height:400px;">
-                  <table>
-                        <tbody>
-                              <tr>
-                                    <td class="infoClass">회원번호</td>
-                                    <td class="infoData">
-                                          ${loginUser.idx}
-                                          <input type="hidden" name="idx" value="${loginUser.idx}"/>
-                                    </td>
-                              </tr>
-                              
-                              <tr>
-                                    <td class="infoClass">성명</td>
-                                    <td class="infoData showInfo">${loginUser.name}</td>
-                                    <td class="infoData hiddenEdit">
-                                          <input style="height:20px; width:100%;" type="text" id="name" name="name" value="${loginUser.name}"/>
-                                    </td>
-                              </tr>
-                              
-                              <tr>
-                                    <td class="infoClass">아이디</td>
-                                    <td class="infoData">
-                                          ${loginUser.userid}
-                                          <input type="hidden" name="userid" value="${loginUser.userid}"/>
-                                    </td>
-                                    
-                              </tr>
-                              
-                              <tr>
-                                    <td class="infoClass">비밀번호</td>
-                                    <td class="infoData showInfo">********</td>
-                                    <td class="infoData hiddenEdit">
-                                          <input style="height:20px; width:100%;" type="password" id="pwd" name="pwd" value="${loginUser.pwd}"/>
-                                    </td>
-                              </tr>
-                              
-                              <tr>
-                                    <td class="infoClass" style="width:120px;">비밀번호 확인</td>
-                                    <td class="infoData showInfo">********</td>
-                                    <td class="infoData hiddenEdit">
-                                          <input style="height:20px; width:100%;" type="password" value="${loginUser.pwd}"/>
-                                    </td>
-                              </tr>
-                              
-                              <tr>
-                                    <td class="infoClass">이메일</td>
-                                    <td class="infoData showInfo">${loginUser.email}</td>
-                                    <td class="infoData hiddenEdit">
-                                          <input style="height:20px; width:100%;" type="text" id="email" name="email" value="${loginUser.email}"/>
-                                    </td>
-                              </tr>
-                              
-                              <tr>
-                                    <td class="infoClass">연락처</td>
-                                    <td class="infoData showInfo">${loginUser.allHp}</td>
-                                    <td class="infoData hiddenEdit">
-                                          <select id="hp1" name="hp1" style="height:20px; vertical-align:top;">
-                                                 <option value="${loginUser.hp1}"selected></option>
-                                           <option value="010">010</option>
-                                           <option value="011">011</option>
-                                           <option value="016">016</option>
-                                           <option value="017">017</option>
-                                           <option value="018">018</option>
-                                           <option value="019">019</option>        
-                                      </select>&nbsp;-
-                                      <input style="height:20px;" type="text" id="hp2" name="hp2" size="4" maxlength="4" value="${loginUser.hp2}"/>&nbsp;-
-                                      <input style="height:20px;" type="text" id="hp3" name="hp3" size="4" maxlength="4" value="${loginUser.hp3}"/>
-                                    </td>
-                              </tr>
-                              
-                              <tr>
-                                    <td class="infoClass">우편번호</td>
-                                    <td class="infoData showInfo">${loginUser.allPost}</td>
-                                    <td class="infoData hiddenEdit">
-                                          <input style="height:20px;" type="text" id="post1" size="3" maxlength="3" name="post1" value="${loginUser.post1}"/>&nbsp;-
-                                          <input style="height:20px;" type="text" id="post2" size="3" maxlength="3" name="post2" value="${loginUser.post2}"/>
-                                    </td>
-                              </tr>
-                              
-                              <tr>
-                                    <td class="infoClass">주소</td>
-                                    <td class="infoData showInfo">${loginUser.allAddr}</td>
-                                    <td class="infoData hiddenEdit">
-                                          <input style="height:20px; width:100%;" type="text" id="addr1" name="addr1" value="${loginUser.addr1}"/>
-                                          <input style="height:20px; width:100%;" type="text" id="addr2" name="addr2" value="${loginUser.addr2}"/>
-                                    </td>
-                              </tr>
-                              
-                              <tr>
-                                    <td class="infoClass">가입일자</td>
-                                    <td class="infoData">${loginUser.joindate}</td>
-                              </tr>
-                              
-                              <tr>
-                                    <td class="infoClass">충전금액</td>
-                                    <td class="infoData showInfo">${loginUser.coin}</td>
-                                    <td class="infoData hiddenEdit">
-                                          <input style="height:20px; width:100%;" type="text" id="coin" name="coin" value="${loginUser.coin}"/>
-                                    </td>
-                              </tr>
-                              
-                              <tr>
-                                    <td class="infoClass">적립금</td>
-                                    <td class="infoData showInfo">${loginUser.point}</td>
-                                    <td class="infoData hiddenEdit">
-                                          <input style="height:20px; width:100%;" type="text" id="point" name="point" value="${loginUser.point}"/>
-                                    </td>
-                              </tr>
-                        </tbody>
-                  </table>
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-default" onClick="goEditInsert();">정보수정</button>
-                  <button type="button" class="btn btn-default modalClose">취소</button>
-              </div>
-        </div>
-      </div>
-      </form>
+<div class="modal fade" id="folderInfo" role="dialog">
+	<jsp:include page="../kdh/modal/modalFolder.jsp"/> <!-- 폴더 보기 Modal -->
 </div>
-<%-- end of 폴더 보기 Modal --%>
-
 
 
 

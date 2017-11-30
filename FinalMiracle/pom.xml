@@ -185,7 +185,14 @@
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-tx</artifactId>
 		    <version>${org.springframework-version}</version>
-		</dependency>	
+		</dependency>
+		
+		<!-- ===== #7. JSON 관련 jar 추가하기 =====  --> 
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20171018</version>
+		</dependency>
 		
 		<!-- ===== #8.-2.  tiles 관련 jar 추가하기 ===== -->
 		<dependency>

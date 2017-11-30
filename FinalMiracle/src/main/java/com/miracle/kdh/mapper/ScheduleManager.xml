@@ -19,4 +19,48 @@
 		connect by prior idx = fk_folder_idx
 		order siblings by category asc
 	</select>
+	
+	<select id="getFolderInfo" resultType="com.miracle.kdh.model.FolderVO">
+		select idx, fk_teamwon_idx, subject, content
+		     , to_char(startdate, 'yyyy-mm-dd') as startdate
+		     , to_char(lastdate, 'yyyy-mm-dd') as lastdate
+		     , fk_folder_idx, groupno, depth, category, status, importance
+		     , case when trunc(startdate) &lt; sysdate and sysdate &lt; trunc(lastdate)+1 then 1
+		            when trunc(lastdate)+1 &lt; sysdate then -1
+		            else 0 end as dayCnt
+		     , (select avg(importance) from tbl_folder where groupNo = F.groupNo and idx != #{idx}) as importanceAvg
+		from tbl_folder F
+		where idx = #{idx}
+	</select>
+	
+	<select id="getFolder_teamwonInfo" resultType="com.miracle.kdh.model.Folder_TeamwonVO">
+		select idx, fk_folder_idx, fk_teamwon_idx, acceptability, status
+		     , (select userid from view_teamwonWithUserid where idx = fk_teamwon_idx) as userid
+		from tbl_folder_teamwon
+		where fk_folder_idx = #{idx}
+	</select>
+	
+	<select id="getFolder_commentInfo" resultType="com.miracle.kdh.model.Folder_CommentVO">
+		select idx, fk_folder_idx, fk_teamwon_idx, content, status, to_char(writeDate, 'yyyy-mm-dd') as writeDate
+		     , (select userid from view_teamwonWithUserid where idx = fk_teamwon_idx) as userid
+		from tbl_folder_comment
+		where idx = #{idx} and status = 1
+		order by 1
+	</select>
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
