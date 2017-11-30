@@ -16,4 +16,22 @@ public class ScheduleManagerDAO {
 		List<FolderVO> doList = sql.selectList("do.getAllDoList");
 		return doList;
 	} // end of List<FolderVO> getAllDoList() ------------------------------------------ 
+	
+	// 선택한 폴더의 정보를 가져오는 메소드
+	public FolderVO getFolderInfo(String idx) {
+		FolderVO fvo = sql.selectOne("do.getFolderInfo",idx);
+		return fvo;
+	} // end of FolderVO getFolderInfo(String idx) ------------------------------------------ 
+	
+	// 선택한 폴더에 소속된 팀원 리스트를 가져오는 메소드
+	public List<Folder_TeamwonVO> getFolder_teamwonInfo(String idx) {
+		List<Folder_TeamwonVO> folder_teamwonList  = sql.selectList("do.getFolder_teamwonInfo",idx);
+		return folder_teamwonList;
+	} // end of List<Folder_TeamwonVO> getFolder_teamwonInfo(String idx) ------------------------------------------ 
+	
+	// 선택한 폴더에 작성된 댓글 리스트를 가져오는 메소드
+	public List<Folder_CommentVO> getFolder_commentInfo(String idx) {
+		List<Folder_CommentVO> folder_commentList = sql.selectList("do.getFolder_commentInfo",idx);
+		return folder_commentList;
+	} // end of List<Folder_CommentVO> getFolder_commentInfo(String idx) ------------------------------------------ 
 }
