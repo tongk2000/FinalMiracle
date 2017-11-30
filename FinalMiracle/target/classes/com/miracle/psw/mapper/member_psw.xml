@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #7. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== #8. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->              
+<mapper namespace="member_psw">
+	
+	<select id="loginEnd" parameterType="HashMap" resultType="int">
+		select case (select count(*)
+                     from tbl_member
+                     where status = 1
+                     and userid = #{userid} and pwd = #{pwd}) 
+	           when 1 then 1
+	           else ( case (select count(*)
+                            from tbl_member
+                            where userid = #{userid}) 
+	                  when 1 then 0
+	                  else -1
+	                  end
+	                 )
+	           end as LOGINCHECK
+		from dual
+	</select>
+	
+	<select id="getLoginMember" parameterType="String" resultType="com.miracle.psw.model.MemberVO">
+		select idx, userid, pwd, name, img, status
+		from tbl_member
+		where status = 1
+		and userid = #{userid}
+	</select>
+	
+	<select id="getUserid" parameterType="HashMap" resultType="String">
+		select userid
+		from
+		(
+		  select userid, name 
+		       , hp1||hp2||hp3 as mobile
+		  from tbl_member M
+		  join tbl_member_detail D
+		  on M.idx = D.fk_member_idx
+		  where status = 1
+		  and name = #{name}
+		) V
+		where mobile = #{mobile}
+	</select>
+	
+	<select id="getUserExists" parameterType="HashMap" resultType="int">
+		select count(*) as cnt
+		from tbl_member M
+		join tbl_member_detail D
+		on M.idx = D.fk_member_idx
+		where status = 1
+		and userid = #{userid}
+		and email = #{email}
+	</select>
+	
+	<update id="updatePwd" parameterType="HashMap">
+		update tbl_member set pwd = #{pwd}
+		where status = 1
+		and userid = #{userid}
+	</update>
+	
+	
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
