@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #7. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== #8. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->              
+<mapper namespace="do">
+	<select id="getAllDoList" resultType="com.miracle.kdh.model.FolderVO">
+		select idx, fk_teamwon_idx, subject, content
+		     , to_char(startdate, 'yyyy-mm-dd') as startdate
+		     , to_char(lastdate, 'yyyy-mm-dd') as lastdate
+		     , fk_folder_idx, groupno, depth, category, status, importance
+		     , case when trunc(startdate) <![CDATA[<]]> sysdate and sysdate <![CDATA[<]]> trunc(lastdate)+1 then 1
+		            when trunc(lastdate)+1 <![CDATA[<]]> sysdate then -1
+		            else 0 end as dayCnt
+		from tbl_folder
+		where status = 1
+		start with fk_folder_idx = 0
+		connect by prior idx = fk_folder_idx
+		order siblings by category asc
+	</select>
+</mapper>
