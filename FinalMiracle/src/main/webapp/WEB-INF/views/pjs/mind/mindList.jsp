@@ -19,12 +19,12 @@
 	}
 </style>
 <script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
-<title>Notice 게시판 입니다!</title>
+<title>Mind 게시판 입니다!</title>
 </head>
 <body>
 	<div class="container">
 		<div align="center" style="width:80%; margin:auto;">
-			<h2>공지사항 게시판</h2>
+			<h2>마음의 소리 게시판</h2>
 			<form name="frm">
 				<select id="choice" name="searchType" style="font-size:12pt;">
 					<option value="fk_userid">아이디</option>
@@ -105,7 +105,7 @@
 		}
 		function goSearch() {
 			var frm = document.frm;
-			frm.action="<%=request.getContextPath()%>/noticeList.mr";
+			frm.action="<%=request.getContextPath()%>/mindList.mr";
 			frm.method="get";
 			frm.submit();
 		}
