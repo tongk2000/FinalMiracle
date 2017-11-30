@@ -15,14 +15,14 @@
 
 <style type="text/css">
 	.container{border:1px solid red; width:90%; min-height:1000px; padding:0px;}
-	.header{border:1px solid black; width:100%; min-height:200px;}
-	.sideInfo{border:1px solid blue; width:10%; min-height:700px; float:left;}
-	.content{border:1px solid green; width:90%; min-height:700px; float:right;}
+	.header{border:1px solid black; width:100%; min-height:50px;}
+	.sideInfo{border:1px solid blue; width:10%; min-height:850px; float:left;}
+	.content{border:1px solid green; width:90%; min-height:850px; float:right;}
 	.footer{border:1px solid black; width:100%; min-height:100px; clear:both;}
 </style>
 
 </head>
-<body>
+<body id="body">
 	<div class="container">
 		<div class="header">
 		      <tiles:insertAttribute name="header" />
