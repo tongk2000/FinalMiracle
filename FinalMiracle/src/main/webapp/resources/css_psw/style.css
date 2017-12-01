@@ -27,8 +27,9 @@
  body, td, th, input, select, textarea, p {
 	font-size: 10pt;
 	font-family: 'NanumGothic', 'MalgunGothic' ; 
-	color: #4F84C4;
+	color: black;
 	padding: 4px; /* 안쪽 여백 */
+	background-color: lightgray;
 }
 
 /* 표준 링크 스타일 */

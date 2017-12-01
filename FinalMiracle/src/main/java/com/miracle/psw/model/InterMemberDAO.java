@@ -16,6 +16,10 @@ public interface InterMemberDAO {
 
 	int idDuplicateCheck(String userid);  // id 중복 체크
 
+	int registerMember(MemberVO mvo);  // 회원가입(tbl_member)
+
+	int registerMemberDetail(MemberDetailVO mdvo);  // 회원가입(tbl_member_detail)
+
 	
 
 	
