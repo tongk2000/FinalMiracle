@@ -34,4 +34,10 @@ public class ScheduleManagerDAO {
 		List<Folder_CommentVO> folder_commentList = sql.selectList("do.getFolder_commentInfo",idx);
 		return folder_commentList;
 	} // end of List<Folder_CommentVO> getFolder_commentInfo(String idx) ------------------------------------------ 
+
+	// 선택한 폴더의 정보를 수정하기
+	public int do_goModalEdit(FolderVO fvo) {
+		int result = sql.update("do.goModalEdit", fvo);
+		return result;
+	} // end of public int do_goModalEdit(FolderVO fvo) ---------------------------------------------------------------------
 }
