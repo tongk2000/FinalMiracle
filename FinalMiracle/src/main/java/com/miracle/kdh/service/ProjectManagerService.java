@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 import com.miracle.kdh.model.FolderVO;
 import com.miracle.kdh.model.Folder_CommentVO;
 import com.miracle.kdh.model.Folder_TeamwonVO;
-import com.miracle.kdh.model.ScheduleManagerDAO;
+import com.miracle.kdh.model.ProjectManagerDAO;
 
 @Service
-public class ScheduleManagerService {
+public class ProjectManagerService {
 	@Autowired
-	ScheduleManagerDAO dao;
+	ProjectManagerDAO dao;
 	
 	// 모든 폴더, 할일 리스트를 가져오는 메소드
 	public List<FolderVO> getAllDoList() {
@@ -45,5 +45,10 @@ public class ScheduleManagerService {
 	public int do_goModalEdit(FolderVO fvo) {
 		int result = dao.do_goModalEdit(fvo);
 		return result;
+	}
+
+	// 할일 완료, 미완료 처리하기
+	public void setTaskComplete(FolderVO fvo) {
+		dao.setTaskComplete(fvo);
 	}
 }
