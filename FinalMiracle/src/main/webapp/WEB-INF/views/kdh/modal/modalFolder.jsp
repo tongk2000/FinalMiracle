@@ -1,14 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<form name="folderInfoEdit">
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$(".hiddenEdit").hide();
+	});
+</script>
+
+<form name="modalInfoFrm">
 	<div class="modal-dialog">
 		<div class="modal-content" align="center">
 			<div class="modal-header">
-				<button type="button" class="close modalClose" data-dismiss="modal">&times;</button>
+				<button type="button" class="close modalClose">&times;</button>
 				<!-- &times; : x버튼으로 표시됨 -->
 				<h4 class="modal-title" align="center">
-					:::<span style="color: blue; font-weight: bold;">${fvo.subject}</span> 폴더 상세정보 :::<br/>
+					::: 폴더 상세정보 :::<br/>
 					<span style="font-size: 9pt; margin-left: -25px;">
 						(<span style="color: green;">녹색글자</span>는 수정가능한 항목입니다.)
 					</span>
@@ -18,9 +25,18 @@
 				<table>
 					<tbody>
 						<tr>
+							<td class="infoClass">폴더이름</td>
+							<td class="infoData showInfo">${fvo.subject}
+							<td class="infoData hiddenEdit">
+								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="subject" value="${fvo.subject}" />
+							</td>
+						</tr>
+						
+						<tr>
 							<td class="infoClass">폴더개요</td>
-							<td class="infoData">${fvo.content}
-								<input type="hidden" name="content" value="${fvo.content}" />
+							<td class="infoData showInfo">${fvo.content}
+							<td class="infoData hiddenEdit">
+								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="content" value="${fvo.content}" />
 							</td>
 						</tr>
 
@@ -28,7 +44,7 @@
 							<td class="infoClass">시작일</td>
 							<td class="infoData showInfo">${fvo.startDate}</td>
 							<td class="infoData hiddenEdit">
-								<input style="height: 20px; width: 100%;" type="text" name="startDate" value="${fvo.startDate}" />
+								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="startDate" value="${fvo.startDate}" />
 							</td>
 						</tr>
 
@@ -36,7 +52,7 @@
 							<td class="infoClass">마감일</td>
 							<td class="infoData showInfo">${fvo.lastDate}</td>
 							<td class="infoData hiddenEdit">
-								<input style="height: 20px; width: 100%;" type="text" name="lastDate" value="${fvo.lastDate}" />
+								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="lastDate" value="${fvo.lastDate}" />
 							</td>
 
 						</tr>
@@ -45,7 +61,7 @@
 							<td class="infoClass">담당</td>
 							<td class="infoData">
 								<c:forEach var="ftvo" items="${folder_teamwonList}" varStatus="status">
-									${ftvo.userid}<c:if test="${status.count != folder_teamwonList.size()}">,</c:if>
+									${ftvo.userid}(${ftvo.proceedingTaskCnt}:${ftvo.completeTaskCnt})<c:if test="${status.count != folder_teamwonList.size()}">,</c:if>
 								</c:forEach>
 							</td>
 						</tr>
@@ -54,7 +70,7 @@
 							<td class="infoClass">폴더 중요도</td>
 							<td class="infoData showInfo">${fvo.importance}</td>
 							<td class="infoData hiddenEdit">
-								<input style="height: 20px; width: 100%;" type="text" name="importance" value="${fvo.importance}" />
+								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="importance" value="${fvo.importance}" />
 							</td>
 						</tr>
 						
@@ -62,7 +78,7 @@
 							<td class="infoClass">하위 요소 중요도</td>
 							<td class="infoData showInfo">${fvo.importanceAvg}</td>
 							<td class="infoData hiddenEdit">
-								<input style="height: 20px; width: 100%;" type="text" name="fvo.importanceAvg" value="${fvo.importanceAvg}" />
+								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="importanceAvg" value="${fvo.importanceAvg}" />
 							</td>
 						</tr>
 					</tbody>
@@ -94,11 +110,12 @@
 				</table>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" onClick="goEdit();">정보수정</button>
+				<button type="button" class="btn btn-default modalEdit">정보수정</button>
 				<button type="button" class="btn btn-default modalClose">취소</button>
 			</div>
 		</div>
 	</div>
+	<input type="hidden" name="idx" value="${fvo.idx}" /> <!-- 폴더번호 저장용 -->
 </form>
 
 

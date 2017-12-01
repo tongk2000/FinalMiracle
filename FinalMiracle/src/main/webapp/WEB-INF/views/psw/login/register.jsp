@@ -137,9 +137,16 @@
 		   }
 		   
 	   });// end of $("#passwdcheck").blur()----------------------	   
-	
 	   
-	  $("#email").blur(function(){
+	   
+	   // === *** 생년 / 월 / 일 유효성 검사 *** ===
+	   
+		   
+		   
+		   
+	
+	   // email 유효성 검사
+	   $("#email").blur(function(){
 		   
 		   var email = $(this).val();
 		   
@@ -471,6 +478,16 @@
 					<span class="error">비밀번호가 일치하지 않습니다.</span>
 				</td>
 			</tr>
+			<!-- 생년/월/일 추가 -->
+			<tr>
+				<td style="width: 20%; font-weight: bold;">생년/월/일&nbsp;<span class="star">*</span></td>
+				<td style="width: 80%; text-align: left;">
+				   <input type="text" id="birth1" name="birth1" size="2" maxlength="2" />&nbsp;/&nbsp;
+				   <input type="text" id="birth2" name="birth2" size="2" maxlength="2" />&nbsp;/&nbsp;
+				   <input type="text" id="birth3" name="birth3" size="2" maxlength="2" /> 
+				   <span class="error error_birth">생년월일 형식이 아닙니다.</span> 
+				</td>
+			</tr>
 			<tr>
 				<td style="width: 20%; font-weight: bold;">이메일&nbsp;<span class="star">*</span></td>
 				<td style="width: 80%; text-align: left;">
@@ -482,7 +499,7 @@
 				<td style="width: 20%; font-weight: bold;">휴대폰</td>
 				<td style="width: 80%; text-align: left;">
 				   <select id="hp1" name="hp1">
-				   	 <option style="height: 50px;" value="010" selected>010</option>	
+				   	 <option value="010" selected>010</option>	
 				   </select>&nbsp;-&nbsp;
 				   <input type="text" id="hp2" name="hp2" size="4" maxlength="4" />&nbsp;-&nbsp;
 				   <input type="text" id="hp3" name="hp3" size="4" maxlength="4" /> 

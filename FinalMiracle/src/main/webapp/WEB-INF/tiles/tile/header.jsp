@@ -30,9 +30,10 @@
  
 <div class="mydiv logo">
 
-	<a href="<%= request.getContextPath() %>/index.mr"><img src="<%= request.getContextPath() %>/resources/images/logo.png" height="130px;" width="280px;"></a>	
+	<a href="<%= request.getContextPath() %>/doList.mr"><img src="<%= request.getContextPath() %>/resources/images/logo.png" height="100px;" width="250px;"></a>	
 </div>
 
+<!-- 통합검색메뉴 -->
 <div class="mydiv search">
 	통합검색 : <input type="text"  />	
 </div>
@@ -48,3 +49,7 @@
 		<a href="<%= request.getContextPath() %>/member_logout.mr">[로그아웃]</a>
 	</div>
 </c:if>
+
+
+
+

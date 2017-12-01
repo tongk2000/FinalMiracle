@@ -2,6 +2,7 @@ package com.miracle.psw.service;
 
 import java.util.HashMap;
 
+import com.miracle.psw.model.MemberDetailVO;
 import com.miracle.psw.model.MemberVO;
 
 public interface InterMemberService {
@@ -15,6 +16,10 @@ public interface InterMemberService {
 	int getUserExists(HashMap<String, String> map); // pw 찾기
 
 	int updatePwd(HashMap<String, String> map);  // pwd 변경하기
+
+	boolean idDuplicateCheck(String userid);  // id 중복체크
+
+	int registerMember(MemberVO mvo, MemberDetailVO mdvo) throws Throwable ;  // 회원가입
 
 	
 

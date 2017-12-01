@@ -5,24 +5,25 @@
 
 <!-- ==== #8. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->              
 <mapper namespace="member_psw">
-	
+	<!-- 로그인 -->
 	<select id="loginEnd" parameterType="HashMap" resultType="int">
 		select case (select count(*)
                      from tbl_member
                      where status = 1
                      and userid = #{userid} and pwd = #{pwd}) 
 	           when 1 then 1
-	           else ( case (select count(*)
-                            from tbl_member
-                            where userid = #{userid}) 
-	                  when 1 then 0
-	                  else -1
-	                  end
+	           else (case (select count(*)
+                           from tbl_member
+                           where userid = #{userid}) 
+	                 when 1 then 0
+	                 else -1
+	                 end
 	                 )
 	           end as LOGINCHECK
 		from dual
 	</select>
 	
+	<!-- 로그인정보 출력 -->
 	<select id="getLoginMember" parameterType="String" resultType="com.miracle.psw.model.MemberVO">
 		select idx, userid, pwd, name, img, status
 		from tbl_member
@@ -30,6 +31,7 @@
 		and userid = #{userid}
 	</select>
 	
+	<!-- 아이디찾기 -->
 	<select id="getUserid" parameterType="HashMap" resultType="String">
 		select userid
 		from
@@ -45,6 +47,7 @@
 		where mobile = #{mobile}
 	</select>
 	
+	<!-- 비밀번호 찾기 -->
 	<select id="getUserExists" parameterType="HashMap" resultType="int">
 		select count(*) as cnt
 		from tbl_member M
@@ -55,13 +58,29 @@
 		and email = #{email}
 	</select>
 	
+	<!-- 비밀번호 변경하기 -->
 	<update id="updatePwd" parameterType="HashMap">
 		update tbl_member set pwd = #{pwd}
 		where status = 1
 		and userid = #{userid}
 	</update>
 	
+	<!-- 아이디 중복체크 -->
+	<select id="idDuplicateCheck" parameterType="String" resultType="int">
+		select count(*) as cnt
+		from tbl_member
+		where userid = #{userid}
+	</select>
 	
+	<!-- 회원가입 -->
+	<insert id="registerMember" parameterType="com.miracle.psw.model.MemberVO">
+		insert into tbl_member(idx, userid, pwd, name, img, status)
+		values(seq_member.nextval, #{userid}, #{pwd}, #{name}, default, default)
+	</insert>
+	<insert id="registerMemberDetail" parameterType="com.miracle.psw.model.MemberDetailVO">
+		insert into tbl_member_detail(idx, fk_member_idx, birth1, birth2, birth3, hp1, hp2, hp3, email, post1, post2, addr1, addr2, profile, regdate)
+		values(seq_member_detail.nextval, (select max(idx) from tbl_member), #{birth1}, #{birth2}, #{birth3}, #{hp1}, #{hp2}, #{hp3}, #{email}, #{post1}, #{post2}, #{addr1}, #{addr2}, default, default )  
+	</insert>
 	
 </mapper>
 

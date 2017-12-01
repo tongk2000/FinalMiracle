@@ -3,8 +3,12 @@ package com.miracle.psw.service;
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.miracle.psw.model.InterMemberDAO;
+import com.miracle.psw.model.MemberDetailVO;
 import com.miracle.psw.model.MemberVO;
 
 @Service
@@ -42,6 +46,28 @@ public class MemberService implements InterMemberService {
 		int n = dao.updatePwd(map);
 		return n;
 	}
+
+	@Override
+	public boolean idDuplicateCheck(String userid) {  // id 중복체크
+		int n = dao.idDuplicateCheck(userid);
+		
+		if(n == 1) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	@Override
+	public int registerMember(MemberVO mvo, MemberDetailVO mdvo) throws Throwable {  // 회원가입(insert tbl_member, tbl_member_detail)
+		int n = dao.registerMember(mvo);
+		int m = dao.registerMemberDetail(mdvo);
+		
+		return (n + m);
+	}
+	
+	
 
 	
 
