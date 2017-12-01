@@ -30,11 +30,8 @@
                     src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml 파일에 
                     아래와 같이 트랜잭션 처리을 위한 aop 등록을 해야 한다. -->    
 	<aop:config proxy-target-class="true">
-<<<<<<< HEAD
 	      <aop:pointcut id="controllerOperation" expression="execution(public * com.miracle..*.Controller.*(..))" />
-=======
 	      <aop:pointcut id="controllerOperation" expression="execution(public * com.miracle.*.controller.*(..))" />
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle
 	</aop:config>
 	
 	<!-- ======= #14. tiles 프레임워크 구현을 위한 빈을 등록한다. ======= -->

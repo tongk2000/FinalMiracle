@@ -30,6 +30,64 @@
 		});
 		
 		
+		$('#chart').highcharts({
+	        chart: {
+	            plotBackgroundColor: null,
+	            plotBorderWidth: null,
+	            plotShadow: false,
+	            type: 'pie'
+	        },
+	        title: {
+	            text: '투표 차트'
+	        },
+	        tooltip: {
+	            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	        },
+	        plotOptions: {
+	            pie: {
+	                allowPointSelect: true,
+	                cursor: 'pointer',
+	                dataLabels: {
+	                    enabled: true,
+	                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+	                    style: {
+	                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+	                    }
+	                }
+	            }
+	        },
+	        series: [{
+	            name: '투표율',
+	            colorByPoint: true,
+	            data: [
+	            	<c:forEach var="votevo" items="${voteList}" varStatus="status">
+	            	<c:set value="${votevo.IDX}" var="voteidx" />
+		            	<c:forEach var="voteitemvo" items="${voteItemList}" varStatus="status">
+		            	<c:set value="${voteitemvo.fk_vote_idx}" var="voteitemidx" />
+		            		<c:if test="${voteidx eq voteitemidx}">
+				            	<c:if test="${status.count < voteItemList.size()}">
+			            		{
+			            			name: '${voteitemvo.item}',
+			            			y: Number(${voteitemvo.votenum}) //숫자 형태이므로 반드시 Number(${key})라는 함수를 사용해야한다.
+			            			
+			            			<c:if test="${status.count == voteItemList.size()-1}">
+			            			,
+			            			sliced: true,
+			            			selected: true
+			            			</c:if>
+			            		}
+				            		<c:if test="${status.count < voteItemList.size()-1}">
+				            		,
+				            		</c:if>
+			            		</c:if>
+			            	</c:if>
+		            	</c:forEach>
+		            </c:forEach>
+	            ]
+	        }]
+	    });
+		
+		
 	});
 	
 	function searchKeep(){
@@ -130,8 +188,8 @@
 								<button type="button" onClick="goVote('${votevo.IDX}', '${votevo.FK_TEAMWON_IDX}', '${voteitemvo.idx}', '${gobackURL}');">선택</button>
 								<br>
 							</c:if>
-							<button type="button">차트보기</button>
 						</c:forEach>	
+						<button type="button">차트보기</button>
 					</td>
 					<td>
 						<%-- <c:if test="${voteidx eq sessionScope.idx}"> --%>
