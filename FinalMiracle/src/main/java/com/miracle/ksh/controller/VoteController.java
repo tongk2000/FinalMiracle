@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.miracle.ksh.model.VoteItemVO;
 import com.miracle.ksh.model.VoteVO;
 import com.miracle.ksh.service.InterVoteService;
-import com.miracle.ksh.util.FileManager;
+import com.miracle.ksh.util.KshFileManager;
 import com.miracle.ksh.util.MyUtil;
 import com.miracle.ksh.util.ThumbnailManager;
 
@@ -34,7 +34,7 @@ public class VoteController {
 	private InterVoteService service;
 	
 	@Autowired
-	private FileManager fileManager;
+	private KshFileManager fileManager;
 	
 	@Autowired
 	private ThumbnailManager thumbnailManager;

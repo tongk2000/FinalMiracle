@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 
 // ===== #129. FileManager 클래스 생성하기 =====
 @Repository
-public class FileManager {
+public class KshFileManager {
 
 	// path : 파일을 저장할 경로
 	// 리턴 : 서버에 저장된 새로운 파일명
