@@ -59,6 +59,8 @@ public class MemberDAO implements InterMemberDAO {
 		int n = sqlsession.insert("member_psw.registerMemberDetail", mdvo);
 		return n;
 	}
+
+	
 	
 	
 	

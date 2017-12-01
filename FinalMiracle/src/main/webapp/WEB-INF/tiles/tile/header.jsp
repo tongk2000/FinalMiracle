@@ -45,7 +45,7 @@
 		아이디 : <span style="color: navy; font-weight: bold;">${sessionScope.loginUser.userid}</span> &nbsp;
 		회원명 : <span style="color: navy; font-weight: bold;">${sessionScope.loginUser.name}</span> &nbsp;
 		<br/>
-		[내정보 수정] &nbsp;&nbsp; 
+		<a href="<%= request.getContextPath() %>/member_edit.mr">[내정보 수정]</a> &nbsp;&nbsp; 
 		<a href="<%= request.getContextPath() %>/member_logout.mr">[로그아웃]</a>
 	</div>
 </c:if>

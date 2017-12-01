@@ -82,6 +82,11 @@
 		values(seq_member_detail.nextval, (select max(idx) from tbl_member), #{birth1}, #{birth2}, #{birth3}, #{hp1}, #{hp2}, #{hp3}, #{email}, #{post1}, #{post2}, #{addr1}, #{addr2}, default, default )  
 	</insert>
 	
+	<!-- 회원번호를 사용하여 회원정보 알아오기 -->
+	<select id="findMemberByIdx" parameterType="com.miracle.psw.model.MemberVO" resultType="com.miracle.psw.model.MemberVO">
+	
+	</select>
+	
 </mapper>
 
 
