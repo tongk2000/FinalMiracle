@@ -54,7 +54,7 @@
 		<c:forEach var="map" items="${teamWonList}">
 			<tr>
 				<td>${map.twidx}</td>
-				<td><a href="<%=request.getContextPath() %>/commutetw.mr?idx=${map.midx}&username=${map.username}"><img src="<%=request.getContextPath() %>/resources/images/${map.img}"></a></td>
+				<td><a href="<%=request.getContextPath() %>/commutetw.mr?idx=${map.midx}&username=${map.username}"><img height="60px" width="60px" src="<%=request.getContextPath() %>/resources/images/${map.img}"></a></td>
 				<td><a href="<%=request.getContextPath() %>/commutetw.mr?idx=${map.midx}&username=${map.username}">${map.userid}</a></td>
 				<td><a href="<%=request.getContextPath() %>/commutetw.mr?idx=${map.midx}&username=${map.username}">${map.username}</a></td>
 			</tr>
