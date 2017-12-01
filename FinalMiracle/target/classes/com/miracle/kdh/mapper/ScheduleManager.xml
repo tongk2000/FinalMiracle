@@ -14,7 +14,7 @@
 		            when trunc(lastdate)+1 <![CDATA[<]]> sysdate then -1
 		            else 0 end as dayCnt
 		from tbl_folder
-		where status = 1
+		where status in (0, 1)
 		start with fk_folder_idx = 0
 		connect by prior idx = fk_folder_idx
 		order siblings by category asc
@@ -28,7 +28,7 @@
 		     , case when trunc(startdate) &lt; sysdate and sysdate &lt; trunc(lastdate)+1 then 1
 		            when trunc(lastdate)+1 &lt; sysdate then -1
 		            else 0 end as dayCnt
-		     , (select avg(importance) from tbl_folder where groupNo = F.groupNo and idx != #{idx}) as importanceAvg
+		     , (select avg(importance) from tbl_folder where groupNo = F.groupNo and idx != F.idx) as importanceAvg
 		from tbl_folder F
 		where idx = #{idx}
 	</select>
@@ -36,6 +36,8 @@
 	<select id="getFolder_teamwonInfo" resultType="com.miracle.kdh.model.Folder_TeamwonVO">
 		select idx, fk_folder_idx, fk_teamwon_idx, acceptability, status
 		     , (select userid from view_teamwonWithUserid where idx = fk_teamwon_idx) as userid
+		     , getProceedingTaskCnt(fk_teamwon_idx,#{idx}) as proceedingTaskCnt
+     		 , getCompleteTaskCnt(fk_teamwon_idx,#{idx}) as completeTaskCnt
 		from tbl_folder_teamwon
 		where fk_folder_idx = #{idx}
 	</select>

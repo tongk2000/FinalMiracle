@@ -24,7 +24,7 @@
                     alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 				}
 			});
-			return;
+			return false;
 		}); // end of $(".modalFolder").click(function() ------------------------------------------------------------------------
 		
 		$(".folder").click(function(){			
@@ -60,18 +60,6 @@
 		$("#allOpen").click(function(){ // 폴더 전체 펴기
 			$(".folder").show();
 		}); // end of $("#allOpen").click(function() ---------------------------------------------------------------------------------------------
-		
-		
-		$("#body").keydown(function(){
-			var modalFlag = $('#folderInfo').is(':visible');
-			if(event.keyCode == 27 && modalFlag) {
-				$('#folderInfo').modal('hide');
-			} 
-		}); // end of $("#body").keydown(function() ------------------------------------------------------------------------------------------------------
-			
-		$(".modalClose").click(function(){
-			$('#folderInfo').modal('hide');
-		}); // end of $(".modalClose").click(function() ------------------------------------------------------------------------------------------------------
 	});
 	
 	// 그룹번호 구해주는 함수
@@ -91,17 +79,6 @@
 		var depth = className.substr(index2);  // 3번째 클래스를 추출함
 		return parseInt(depth);
 	} // end of function getDepth($this) ------------------------------------------------------------------------------------------------------------------------	
-	
-	 function goClose(){
-         var ynFlag = confirm("창을 종료하시겠습니까?\r\n(종료시 수정하신 정보는 모두 초기화됩니다)");
-         if(ynFlag) {
-               changeFlag = false;
-               window.location.reload(true);
-         } else {
-               return;
-         }
-	} // end of function goClose() --------------------------------------------------------------------------------------------------------------------------------
-	
 </script>
 
 <div class="container" style="width:40%; float:left">
@@ -136,7 +113,12 @@
 								</c:if>
 								<c:if test="${dvo.category == 2}"> <!-- 할일이라면 -->
 									<span class="modalTask" id="${dvo.idx}">
-										└<input type="checkbox"/>${dvo.subject}
+										<c:if test="${dvo.status == 0}"> <!-- 완료된 할일이라면 -->
+											└<input type="checkbox" checked/>${dvo.subject}
+										</c:if>
+										<c:if test="${dvo.status == 1}"> <!-- 미완료된 할일이라면 -->
+											└<input type="checkbox"/>${dvo.subject}
+										</c:if>
 									</span>
 								</c:if>
 							</span>
@@ -164,9 +146,7 @@
 <div class="container" style="width:60%; float:right">
 </div>
 
-<div class="modal fade" id="folderInfo" role="dialog">
-	<jsp:include page="../kdh/modal/modalFolder.jsp"/> <!-- 폴더 보기 Modal -->
-</div>
+<div class="modal fade" id="folderInfo" role="dialog"></div>
 
 
 

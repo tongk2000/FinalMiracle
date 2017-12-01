@@ -15,11 +15,13 @@ public class Folder_TeamwonVO {
 	// );
 	
 	private String userid; // userid 알아오기용(컬럼은 없음)
+	private int proceedingTaskCnt;
+	private int completeTaskCnt;
 	
 	public Folder_TeamwonVO() {}
 
 	public Folder_TeamwonVO(int idx, int fk_folder_idx, int fk_teamwon_idx, int acceptability, int status,
-			String userid) {
+			String userid, int proceedingTaskCnt, int completeTaskCnt) {
 		super();
 		this.idx = idx;
 		this.fk_folder_idx = fk_folder_idx;
@@ -27,6 +29,8 @@ public class Folder_TeamwonVO {
 		this.acceptability = acceptability;
 		this.status = status;
 		this.userid = userid;
+		this.proceedingTaskCnt = proceedingTaskCnt;
+		this.completeTaskCnt = completeTaskCnt;
 	}
 
 	public int getIdx() {
@@ -75,6 +79,22 @@ public class Folder_TeamwonVO {
 
 	public void setUserid(String userid) {
 		this.userid = userid;
+	}
+
+	public int getProceedingTaskCnt() {
+		return proceedingTaskCnt;
+	}
+
+	public void setProceedingTaskCnt(int proceedingTaskCnt) {
+		this.proceedingTaskCnt = proceedingTaskCnt;
+	}
+
+	public int getCompleteTaskCnt() {
+		return completeTaskCnt;
+	}
+
+	public void setCompleteTaskCnt(int completeTaskCnt) {
+		this.completeTaskCnt = completeTaskCnt;
 	}
 	
 }
