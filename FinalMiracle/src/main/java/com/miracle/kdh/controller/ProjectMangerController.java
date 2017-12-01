@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.miracle.kdh.model.FolderVO;
-import com.miracle.kdh.service.ScheduleManagerService;
+import com.miracle.kdh.service.ProjectManagerService;
 
 @Controller
-public class ScheduleMangerController {
+public class ProjectMangerController {
 	@Autowired
-	ScheduleManagerService svc;
+	ProjectManagerService svc;
 	
 	// 모든 폴더, 할일 리스트를 가져오는 메소드
 	@RequestMapping(value="doList.mr", method={RequestMethod.GET})
@@ -38,6 +38,17 @@ public class ScheduleMangerController {
 		return "kdh/modal/modalFolder.not";
 	} // end of String do_getSelectFolderInfo(HttpServletRequest req) -----------------------------------------------
 	
+	// 선택한 할일의 모든 정보를 가져오기
+	@RequestMapping(value="do_getSelectTaskInfo.mr", method={RequestMethod.GET})
+	public String do_getSelectTaskInfo(HttpServletRequest req) {
+		String idx = req.getParameter("idx");
+		HashMap<String, Object> map = svc.do_getSelectFolderInfo(idx);
+		req.setAttribute("fvo", map.get("fvo"));
+		req.setAttribute("folder_teamwonList", map.get("folder_teamwonList"));
+		req.setAttribute("folder_commentList", map.get("folder_commentList"));
+		return "kdh/modal/modalTask.not";
+	} // end of String do_getSelectFolderInfo(HttpServletRequest req) -----------------------------------------------
+	
 	// 선택한 폴더의 정보를 수정하기
 	@RequestMapping(value="do_goModalEdit.mr", method={RequestMethod.POST})
 	public String do_goModalEdit(HttpServletRequest req, FolderVO fvo) {		
@@ -52,4 +63,39 @@ public class ScheduleMangerController {
 		
 		return "kdh/json.not";
 	} // end of String do_goModalEdit(HttpServletRequest req, FolderVO fvo) ----------------------------------------------
+	
+	// 할일 완료, 미완료 처리하기
+	@RequestMapping(value="do_taskComplete.mr", method={RequestMethod.GET})
+	public String do_taskComplete(HttpServletRequest req, FolderVO fvo) {
+		System.out.println("idx"+fvo.getIdx());
+		System.out.println("status"+fvo.getStatus());
+		svc.setTaskComplete(fvo);
+		return "kdh/json.not";
+	} // end of String do_taskComplete(HttpServletRequest req, FolderVO fvo) ----------------------------------------------
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

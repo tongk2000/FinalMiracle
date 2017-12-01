@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ScheduleManagerDAO {
+public class ProjectManagerDAO {
 	@Autowired
 	SqlSessionTemplate sql;  
 	
@@ -40,4 +40,9 @@ public class ScheduleManagerDAO {
 		int result = sql.update("do.goModalEdit", fvo);
 		return result;
 	} // end of public int do_goModalEdit(FolderVO fvo) ---------------------------------------------------------------------
+
+	// 할일 완료, 미완료 처리하기
+	public void setTaskComplete(FolderVO fvo) { 
+		sql.update("do.setTaskComplete", fvo);
+	}
 }
