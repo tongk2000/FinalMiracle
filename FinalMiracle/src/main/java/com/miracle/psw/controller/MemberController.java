@@ -250,32 +250,22 @@ public class MemberController {
 		mdvo.setPost2(post2);
 		mdvo.setAddr1(addr1);
 		mdvo.setAddr2(addr2);
-		
-		try {
-			int n = service.registerMember(mvo, mdvo); 
-
-			if(n == 2) {
-				String msg = "Miracle World 의 가족이 되신걸 환영합니다.";
-				String loc = "member_login.mr";
 				
-				req.setAttribute("msg", msg);
-				req.setAttribute("loc", loc);
-			}
-			
-		} catch (java.sql.SQLIntegrityConstraintViolationException e) {
-			
-			String msg = "회원 아이디가 이미 사용중입니다. 새로운 아이디를 입력하세요!!";
-			String loc = "member_register.mr";
+		int n = service.registerMember(mvo, mdvo); 
+
+		if(n == 2) {
+			String msg = "Miracle World 의 가족이 되신걸 환영합니다.";
+			String loc = "member_login.mr";
 			
 			req.setAttribute("msg", msg);
 			req.setAttribute("loc", loc);
 		}
-		
+
 		return "psw/msg.not";
 	}  // end of public String registerEnd(HttpServletRequest req, MemberVO mvo, MemberDetailVO mdvo) --------------
 	
 	@ExceptionHandler(java.sql.SQLIntegrityConstraintViolationException.class)
-	public String handleDataIntegrityViolationException(HttpServletRequest req) {
+	public String SQLIntegrityConstraintViolationException(HttpServletRequest req) {
 		String msg = "아이디 제약조건 위반입니다.";
 		
 		String ctxpath = req.getContextPath();
@@ -286,6 +276,10 @@ public class MemberController {
 		
 		return "psw/msg.not";
 	}
+	
+	
+	
+	
 	
 	
 }
