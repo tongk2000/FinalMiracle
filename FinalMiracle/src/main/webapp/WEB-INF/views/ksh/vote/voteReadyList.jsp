@@ -1,10 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<script type="text/javascript" src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
-<script src="<%= request.getContextPath() %>/resources/js/highcharts.js"></script>
-<script src="<%= request.getContextPath() %>/resources/js/modules/exporting.js"></script>
     
 <style type="text/css">
 	table, th, td {border: solid gray 1px;}
@@ -15,7 +11,7 @@
     	           cursor: pointer; }
   	
   	/* ==== #142. 파일첨부가 되었으므로 테이블의 가로폭을 늘려보자 ==== */
-  	#table {border-collapse: collaps; width: 100%;}
+  	#table {border-collapse: collaps; width: 920px;}
   	#table th, #table td {padding: 5px;}
   	#table th {background-color: #DDDDDD;}
 	    
@@ -28,66 +24,6 @@
 		$("#sizePerPage").change(function(){
 			goSizePerPage();
 		});
-		
-		
-		$('#chart').highcharts({
-	        chart: {
-	            plotBackgroundColor: null,
-	            plotBorderWidth: null,
-	            plotShadow: false,
-	            type: 'pie'
-	        },
-	        title: {
-	            text: '투표 차트'
-	        },
-	        tooltip: {
-	            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-	        },
-	        plotOptions: {
-	            pie: {
-	                allowPointSelect: true,
-	                cursor: 'pointer',
-	                dataLabels: {
-	                    enabled: true,
-	                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-	                    style: {
-	                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-	                    }
-	                }
-	            }
-	        },
-	        series: [{
-	            name: '투표율',
-	            colorByPoint: true,
-	            data: [
-	            	<c:forEach var="votevo" items="${voteList}" varStatus="status">
-	            	<c:set value="${votevo.IDX}" var="voteidx" />
-		            	<c:forEach var="voteitemvo" items="${voteItemList}" varStatus="status">
-		            	<c:set value="${voteitemvo.fk_vote_idx}" var="voteitemidx" />
-		            		<c:if test="${voteidx eq voteitemidx}">
-				            	<c:if test="${status.count < voteItemList.size()}">
-			            		{
-			            			name: '${voteitemvo.item}',
-			            			y: Number(${voteitemvo.votenum}) //숫자 형태이므로 반드시 Number(${key})라는 함수를 사용해야한다.
-			            			
-			            			<c:if test="${status.count == voteItemList.size()-1}">
-			            			,
-			            			sliced: true,
-			            			selected: true
-			            			</c:if>
-			            		}
-				            		<c:if test="${status.count < voteItemList.size()-1}">
-				            		,
-				            		</c:if>
-			            		</c:if>
-			            	</c:if>
-		            	</c:forEach>
-		            </c:forEach>
-	            ]
-	        }]
-	    });
-		
-		
 	});
 	
 	function searchKeep(){
@@ -132,8 +68,8 @@
 	
 </script>
 
-<form id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/voteList.mr" method="get" enctype="multipart/form-data">
-<div style="padding-left: 10%; border: solid 0px red; width: 100%;">
+<form id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/voteReadyList.mr" method="get" enctype="multipart/form-data">
+<div style="padding-left: 10%; border: solid 0px red;">
 	<h1>투표목록</h1>
 	
 	<div style="margin-top: 20px;">
@@ -155,22 +91,22 @@
 	<table id="table">
 		<thead>
 			<tr>
-				<th style="width: 5%;">투표번호</th>
-				<th style="width: 5%;">팀번호</th>
-				<th style="width: 5%;">팀원번호</th>
-				<th style="width: 10%;">제목</th>
-				<th style="width: 20%">내용</th>
-				<th style="width: 5%;">시작날짜</th>
-				<th style="width: 5%;">종료날짜</th>
-				<th style="width: 10%;">문항</th>
-				<th style="width: 10%;">비고</th>
-				<th style="width: 25%;">차트</th>
+				<th style="width: 100px;">투표번호</th>
+				<th style="width: 100px;">팀번호</th>
+				<th style="width: 100px;">팀원번호</th>
+				<th style="width: 200px;">제목</th>
+				<th style="width: 360px;">내용</th>
+				<th style="width: 100px;">시작날짜</th>
+				<th style="width: 100px;">종료날짜</th>
+				<th style="width: 150px;">문항</th>
+				<th style="width: 150px;">비고</th>
+				<th style="width: 300px;">차트</th>
 			</tr>
 		</thead>
 		
-		<c:if test="${not empty voteList}">
+		<c:if test="${not empty voteReadyList}">
 		<tbody>
-			<c:forEach var="votevo" items="${voteList}" varStatus="status">
+			<c:forEach var="votevo" items="${voteReadyList}" varStatus="status">
 				<c:set value="${votevo.IDX}" var="voteidx" />
 				<tr>
 					<td>${votevo.IDX}</td>
@@ -184,27 +120,23 @@
 						<c:forEach var="voteitemvo" items="${voteItemList}" varStatus="status">
 							<c:set value="${voteitemvo.fk_vote_idx}" var="voteitemidx" />
 							<c:if test="${voteidx eq voteitemidx}">
-								<input type="radio" name="voteitem_info" value="${voteitemvo.item}">${voteitemvo.item}<br/>${voteitemvo.votenum}표
-								<button type="button" onClick="goVote('${votevo.IDX}', '${votevo.FK_TEAMWON_IDX}', '${voteitemvo.idx}', '${gobackURL}');">선택</button>
-								<br>
+								* ${voteitemvo.item} : ${voteitemvo.votenum}표<br/>
 							</c:if>
-						</c:forEach>	
-						<button type="button">차트보기</button>
+						</c:forEach>
 					</td>
 					<td>
 						<%-- <c:if test="${voteidx eq sessionScope.idx}"> --%>
+							<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteEdit.mr?idx=${votevo.IDX}'">투표수정</button>
 							<button type="button" onClick="goDel('${votevo.IDX}');">투표삭제</button>&nbsp;
 						<%-- </c:if> --%>
 					</td>
-					<td>
-						<div id="chart" class="chart" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
-					</td>
+					<td></td>
 				</tr>
 			</c:forEach>
 		</tbody>
 		</c:if>
 		
-		<c:if test="${empty voteList}">
+		<c:if test="${empty voteReadyList}">
 		<tbody>
 			<tr>
 				<td colspan="10">투표 목록이 존재하지 않습니다.</td>
@@ -214,20 +146,20 @@
 
 	</table>	
 	<br/>
-
+	
 	<!-- ==== 페이지바 ==== -->
 	<div align="center" style="width: 70%; margin-left: 50px;">
 		${pagebar}
 	</div>
 	
 	<!-- ==== 투표 검색창 ==== -->
-	<select name="colname" id="colname">
-		<option value="subject">제목</option>
-		<option value="content">내용</option>
-		<!-- <option value="name">글쓴이</option> -->
-	</select>
-	<input type="text" name="search" id="search" size="40" />
-	<button type="button" onclick="goSearch();">검색</button>
+		<select name="colname" id="colname">
+			<option value="subject">제목</option>
+			<option value="content">내용</option>
+			<!-- <option value="name">글쓴이</option> -->
+		</select>
+		<input type="text" name="search" id="search" size="40" />
+		<button type="button" onclick="goSearch();">검색</button>
 	
 	<div style="margin-top: 20px;">
 		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteAdd.mr'">투표작성</button>&nbsp;
