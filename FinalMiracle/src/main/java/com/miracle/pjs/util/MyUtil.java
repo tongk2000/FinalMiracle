@@ -161,7 +161,7 @@ public class MyUtil {
 			str_pageNo = "&nbsp;<";
 		}
 		else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" >"+">"+"</a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" >"+"<"+"</a>&nbsp;"; 
 		}
 		pageBar += str_pageNo;
 		while(!(pageNo > totalPage || loop > blockSize)){

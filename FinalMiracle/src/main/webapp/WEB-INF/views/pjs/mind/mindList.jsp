@@ -33,52 +33,50 @@
 <title>Mind 게시판 입니다!</title>
 </head>
 <body>
-	<div class="container">
-		<div align="center" style="width:80%; margin:auto;">
-			<h2>마음의 소리 게시판</h2>
-			<form name="frm">
-				<select id="searchType" name="searchType" style="font-size:12pt;">
-					<option value="fk_userid">아이디</option>
-					<option value="subject">제목</option>
-				</select>
-				<input type="text" id="searchString" name="searchString" />
-				<button type="button" id="btnClick" onClick="goSearch();">검색</button><br/>
-				<div><div class="min"><div class="min"><div class="min"><div class="min"><div class="min"><div class="min">
-					<div id="displayList" style="background-color:red; width:150px; margin-left: 28px; border-top: 0px; border: solid black 1px;"></div>
-				</div></div></div></div></div></div></div>
-				<table style="width:100%;">
-					<thead>
+	<div align="center" style="width:80%; margin:auto;">
+		<h2>마음의 소리 게시판</h2>
+		<form name="frm">
+			<select id="searchType" name="searchType" style="font-size:12pt;">
+				<option value="fk_userid">아이디</option>
+				<option value="subject">제목</option>
+			</select>
+			<input type="text" id="searchString" name="searchString" />
+			<button type="button" id="btnClick" onClick="goSearch();">검색</button><br/>
+			<div><div class="min"><div class="min"><div class="min"><div class="min"><div class="min"><div class="min">
+				<div id="displayList" style="background-color:red; width:150px; margin-left: 28px; border-top: 0px; border: solid black 1px;"></div>
+			</div></div></div></div></div></div></div>
+			<table style="width:100%;">
+				<thead>
+					<tr>
+						<th>번호</th>		<!-- 번호 -->
+						<th>아이디</th>	<!-- 아이디 -->
+						<th>제목</th>		<!-- 제목 -->
+						<th>글쓴 시간</th>	<!-- 글쓴 시간 -->
+						<th>조회수</th>	<!-- 조회수-->
+					</tr>
+				</thead>
+				<tbody>
+					<c:if test="${empty list}">
 						<tr>
-							<th>번호</th>		<!-- 번호 -->
-							<th>아이디</th>	<!-- 아이디 -->
-							<th>제목</th>		<!-- 제목 -->
-							<th>글쓴 시간</th>	<!-- 글쓴 시간 -->
-							<th>조회수</th>	<!-- 조회수-->
+							<td colspan="6">데이터가 없습니다.</td>
 						</tr>
-					</thead>
-					<tbody>
-						<c:if test="${empty list}">
+					</c:if>
+					<c:if test="${not empty list}">
+						<c:forEach var="md" items="${list}" varStatus="status">
 							<tr>
-								<td colspan="6">데이터가 없습니다.</td>
+								<td>${status.count}</td>	<!-- 번호 -->
+								<td><img class="img" src="<%= request.getContextPath()%>/resources/images/${md.img}"/> 
+								<span class="userid" >${md.fk_userid}</span></td>	<!-- 아이디 -->
+								<td>${md.subject}</td>		<!-- 제목 -->
+								<td>${md.regday}</td>		<!-- 날짜 -->
+								<td>${md.readcount}</td>	<!-- 조회수-->
 							</tr>
-						</c:if>
-						<c:if test="${not empty list}">
-							<c:forEach var="md" items="${list}" varStatus="status">
-								<tr>
-									<td>${status.count}</td>	<!-- 번호 -->
-									<td><img class="img" src="<%= request.getContextPath()%>/resources/images/${md.img}"/> 
-									<span class="userid" >${md.fk_userid}</span></td>	<!-- 아이디 -->
-									<td>${md.subject}</td>		<!-- 제목 -->
-									<td>${md.regday}</td>		<!-- 날짜 -->
-									<td>${md.readcount}</td>	<!-- 조회수-->
-								</tr>
-							</c:forEach>
-						</c:if>	
-					</tbody>
-				</table>
-			</form>
-			${pagebar}
-		</div>
+						</c:forEach>
+					</c:if>	
+				</tbody>
+			</table>
+		</form>
+		${pagebar}
 	</div>
 	<script>
 		$(document).ready(function(){

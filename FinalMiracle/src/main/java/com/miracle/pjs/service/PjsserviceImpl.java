@@ -25,13 +25,13 @@ public class PjsserviceImpl implements PjsinterService {
 		// 공지사항 게시판 페이징리스트를 가져오는 메소드
 		List<HashMap<String, String>> list = dao.getNoticeList(map);
 		return list;
-	}
+	}/* ================================================================================================================================================== */
 	@Override
 	public int getNoticeCount(HashMap<String, String> map) {
 		// 테이블의 행수를 반환
 		int cnt = dao.getNoticeCount(map);
 		return cnt;
-	}
+	}/* ================================================================================================================================================== */
 	@Override
 	public String getNoticeJSONList(HashMap<String, String> map) {
 		// 공지사항 테이블에서 검색 시 json처리를 하기위한 메소드
@@ -50,7 +50,7 @@ public class PjsserviceImpl implements PjsinterService {
 		else 
 			searchString = "해당하는 검색정보가 없습니다.";
 		return searchString;
-	}
+	}/* ================================================================================================================================================== */
 	@Override
 	public HashMap<String, String> getViewContent(String id) {
 		// 유저의 정보를 가져오기 위한 메소드
@@ -99,7 +99,7 @@ public class PjsserviceImpl implements PjsinterService {
 		List<HashMap<String, String>> list = dao.getMindList(map);
 		list.add(hashMap);
 		return list;
-	}
+	}/* ================================================================================================================================================== */
 	@Override
 	public String getMindJSONList(HashMap<String, String> map) {
 		// 공지사항 테이블에서 검색 시 json처리를 하기위한 메소드
