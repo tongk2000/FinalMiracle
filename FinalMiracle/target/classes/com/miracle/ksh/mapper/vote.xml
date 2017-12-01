@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #7. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== #8. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->              
+<mapper namespace="kshVote">
+	
+	<resultMap type="java.util.HashMap" id="VoteListPagingMap">
+		<result property="IDX" 				column="idx" 			javaType="String" />
+ 		<result property="FK_TEAM_IDX" 			column="fk_team_idx" 			javaType="String" />
+ 		<result property="FK_TEAMWON_IDX" 			column="fk_teamwon_idx" 			javaType="String" />
+ 		<result property="SUBJECT" 			column="subject" 		javaType="String" />
+ 		<result property="CONTENT" 			column="content" 			javaType="String" />
+ 		<result property="STARTDATE" 	column="startdate" 	javaType="String" />
+ 		<result property="ENDDATE" 			column="enddate" 			javaType="String" />
+ 		<result property="STATUS" 	column="status" 	javaType="String" />
+	</resultMap>
+	<select id="VoteListNoPaging" resultMap="VoteListPagingMap">
+		select A.idx, B.fk_team_idx, A.fk_teamwon_idx, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
+		      to_char(A.enddate, 'yyyy-mm-dd') as enddate, A.status
+		from tbl_vote A join tbl_teamwon B
+		on A.fk_teamwon_idx = B.idx
+		where A.status = 1
+		and enddate > sysdate
+		and startdate <![CDATA[<]]> sysdate
+		order by idx desc
+	</select>
+	
+	
+	<select id="VoteEndListNoPaging" resultMap="VoteListPagingMap">
+		select A.idx, B.fk_team_idx, A.fk_teamwon_idx, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
+		      to_char(A.enddate, 'yyyy-mm-dd') as enddate, A.status
+		from tbl_vote A join tbl_teamwon B
+		on A.fk_teamwon_idx = B.idx
+		where A.status = 1
+		and enddate <![CDATA[<]]> sysdate
+		order by idx desc
+	</select>
+	
+	<select id="VoteItemList" resultType="com.miracle.ksh.model.VoteItemVO">
+		select idx, fk_vote_idx, item, image, votenum
+		from tbl_voteItem
+		order by idx asc
+	</select>
+	
+	
+	<insert id="VoteAdd" parameterType="java.util.HashMap">
+		insert into tbl_vote
+		values(seq_vote.nextval, 1, #{subject}, #{content}, to_date(#{startdate}, 'yyyy-mm-dd'), to_date(#{enddate}, 'yyyy-mm-dd'), default)
+	</insert>
+	
+	
+	<insert id="VoteItemAdd" parameterType="java.util.HashMap">
+		insert into tbl_voteItem
+		values(seq_vote_item.nextval, #{lastidx}, #{items}, null, default)
+	</insert>
+	
+	
+	<insert id="VoteItemImageAdd" parameterType="java.util.HashMap">
+		insert into tbl_voteItem
+		values(seq_vote_item.nextval, #{lastidx}, #{items}, #{newFileName}, default)
+	</insert>
+	
+	
+	<select id="VoteLastIdx" resultType="int">
+		select max(idx)
+		from tbl_vote
+	</select>
+	
+	
+	<update id="VoteNumUpdate" parameterType="String">
+		update tbl_voteItem set votenum = votenum + 1
+		where idx = #{voteitem_idx}
+	</update>
+	
+	
+	<select id="VoteTotalCount1" resultType="int">
+		select count(*)
+		from tbl_vote
+		where status = 1
+		and enddate > sysdate
+	</select>
+	
+	
+	<select id="VoteListYesPaging1" parameterType="HashMap" resultMap="VoteListPagingMap">
+		select idx, fk_team_idx, fk_teamwon_idx, subject, content, startdate, enddate, status
+		from (
+			select rownum as RNO,
+				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.subject, V.content, V.startdate, V.enddate, V.status
+			from (
+				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
+				      to_char(A.enddate, 'yyyy-mm-dd') as enddate, A.status
+				from tbl_vote A join tbl_teamwon B
+				on A.fk_teamwon_idx = B.idx
+				where A.status = 1
+				and enddate >= sysdate
+				and startdate <![CDATA[<]]> sysdate
+				order by idx desc
+			) V
+		) T
+		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
+	</select>
+	
+	
+	<select id="VoteEndListYesPaging1" parameterType="HashMap" resultMap="VoteListPagingMap">
+		select idx, fk_team_idx, fk_teamwon_idx, subject, content, startdate, enddate, status
+		from (
+			select rownum as RNO,
+				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.subject, V.content, V.startdate, V.enddate, V.status
+			from (
+				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
+				      to_char(A.enddate, 'yyyy-mm-dd') as enddate, A.status
+				from tbl_vote A join tbl_teamwon B
+				on A.fk_teamwon_idx = B.idx
+				where A.status = 1
+				and enddate <![CDATA[<]]> sysdate
+				order by idx desc
+			) V
+		) T
+		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
+	</select>
+	
+	
+	<select id="VoteEndTotalCount1" resultType="int">
+		select count(*)
+		from tbl_vote
+		where status = 1
+		and enddate <![CDATA[<]]> sysdate
+	</select>
+	
+	
+	<insert id="VotedAdd" parameterType="HashMap">
+		insert into tbl_voted
+		values(seq_voted.nextval, #{vote_idx}, #{teamwon_idx}, #{voteitem_idx}, sysdate)
+	</insert>
+	
+	
+	<select id="VotedCheck" parameterType="HashMap" resultType="String">
+		select count(*)
+		from tbl_voted
+		where fk_vote_idx = #{vote_idx}
+		and fk_teamwon_idx = #{teamwon_idx}
+		group by fk_vote_idx, fk_teamwon_idx
+		having count(*) > 0
+	</select>
+	
+	
+	<select id="VoteListYesPaging2" parameterType="HashMap" resultMap="VoteListPagingMap">
+		select idx, fk_team_idx, fk_teamwon_idx, subject, content, startdate, enddate, status
+		from (
+			select rownum as RNO,
+				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.subject, V.content, V.startdate, V.enddate, V.status
+			from (
+				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
+				      to_char(A.enddate, 'yyyy-mm-dd') as enddate, A.status
+				from tbl_vote A join tbl_teamwon B
+				on A.fk_teamwon_idx = B.idx
+				where A.status = 1
+				and enddate >= sysdate
+				and startdate <![CDATA[<]]> sysdate
+				and ${colname} like '%'|| #{search} ||'%'
+				order by idx desc
+			) V
+		) T
+		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
+	</select>
+	
+	
+	<select id="VoteTotalCount2" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_vote
+		where status = 1
+		and enddate > sysdate
+		and ${colname} like '%'|| #{search} ||'%'
+	</select>
+	
+	
+	<select id="VoteEndListYesPaging2" parameterType="HashMap" resultMap="VoteListPagingMap">
+		select idx, fk_team_idx, fk_teamwon_idx, subject, content, startdate, enddate, status
+		from (
+			select rownum as RNO,
+				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.subject, V.content, V.startdate, V.enddate, V.status
+			from (
+				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
+				      to_char(A.enddate, 'yyyy-mm-dd') as enddate, A.status
+				from tbl_vote A join tbl_teamwon B
+				on A.fk_teamwon_idx = B.idx
+				where A.status = 1
+				and enddate <![CDATA[<]]> sysdate
+				and ${colname} like '%'|| #{search} ||'%'
+				order by idx desc
+			) V
+		) T
+		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
+	</select>
+	
+	
+	<select id="VoteEndTotalCount2" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_vote
+		where status = 1
+		and enddate <![CDATA[<]]> sysdate
+		and ${colname} like '%'|| #{search} ||'%'
+	</select>
+	
+	<select id="VoteMyListYesPaging1" parameterType="HashMap" resultMap="VoteListPagingMap">
+		select idx, fk_team_idx, fk_teamwon_idx, subject, content, startdate, enddate, status
+		from (
+			select rownum as RNO,
+				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.subject, V.content, V.startdate, V.enddate, V.status
+			from (
+				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
+				      to_char(A.enddate, 'yyyy-mm-dd') as enddate, A.status
+				from tbl_vote A join tbl_teamwon B
+				on A.fk_teamwon_idx = B.idx
+				where 1=1
+                <if test="votekind.equals('ing')">
+                	and A.status = 1
+                	and fk_teamwon_idx = 1
+                	and enddate >= sysdate
+					and startdate <![CDATA[<]]> sysdate
+                </if>
+                <if test="votekind.equals('end')">
+	                and A.status = 1
+	                and fk_teamwon_idx = 1
+                	and enddate <![CDATA[<]]> sysdate
+                </if>
+                <if test="votekind.equals('ready')">
+	                and A.status = 1
+	                and fk_teamwon_idx = 1
+                	and enddate >= sysdate
+                	and startdate >= sysdate
+                </if>
+				order by idx desc
+			) V
+		) T
+		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
+	</select>
+	
+	<select id="VoteMyListYesPaging2" parameterType="HashMap" resultMap="VoteListPagingMap">
+		select idx, fk_team_idx, fk_teamwon_idx, subject, content, startdate, enddate, status
+		from (
+			select rownum as RNO,
+				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.subject, V.content, V.startdate, V.enddate, V.status
+			from (
+				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
+				      to_char(A.enddate, 'yyyy-mm-dd') as enddate, A.status
+				from tbl_vote A join tbl_teamwon B
+				on A.fk_teamwon_idx = B.idx
+				where A.status = 1
+                and fk_teamwon_idx = 1
+                and ${colname} like '%'|| #{search} ||'%'
+                <if test='votekind.equals("ing")'>
+                	and enddate > sysdate
+					and startdate <![CDATA[<]]> sysdate
+                </if>
+                <if test='votekind.equals("end")'>
+                	and enddate <![CDATA[<]]> sysdate
+                </if>
+                <if test='votekind.equals("ready")'>
+                	and enddate >= sysdate
+                	and startdate >= sysdate
+                </if>
+				order by idx desc
+			) V
+		) T
+		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
+	</select>
+	
+	
+	<update id="VoteDel" parameterType="String">
+		update tbl_vote set status = 0
+		where idx = #{idx}
+	</update>
+	
+	
+	<select id="VoteView" parameterType="String" resultType="com.miracle.ksh.model.VoteVO">
+		select idx, fk_teamwon_idx, subject, content, to_char(startdate, 'yyyy-mm-dd') as startdate, 
+		      to_char(enddate, 'yyyy-mm-dd') as enddate, status
+		from tbl_vote
+		where status = 1
+		and idx = #{idx}
+	</select>
+	
+	<select id="VoteItemView" parameterType="String" resultType="com.miracle.ksh.model.VoteItemVO">
+		select idx, fk_vote_idx, item, image, votenum
+		from tbl_voteItem
+		where fk_vote_idx = #{idx}
+		order by idx asc
+	</select>
+	
+	<select id="VoteItemViewCnt" parameterType="String" resultType="int">
+		select count(*)
+		from tbl_voteItem
+		where fk_vote_idx = #{idx}
+	</select>
+	
+	
+	<update id="VoteEdit" parameterType="HashMap">
+		update tbl_vote set subject = #{subject}, content = #{content},
+						   startdate = #{startdate}, enddate = #{enddate}
+		where idx = #{idx}
+	</update>
+	
+	<update id="VoteItemEdit" parameterType="HashMap">
+		update tbl_voteItem set item = #{items}
+		where fk_vote_idx = #{idx}
+		and idx = #{itemidx}
+	</update>
+	
+	<update id="VoteItemImageEdit" parameterType="HashMap">
+		update tbl_voteItem set item = #{items}, image = #{newFileName}
+		where fk_vote_idx = #{idx}
+	</update>
+	
+	
+	<select id="VoteReadyListYesPaging1" parameterType="HashMap" resultMap="VoteListPagingMap">
+		select idx, fk_team_idx, fk_teamwon_idx, subject, content, startdate, enddate, status
+		from (
+			select rownum as RNO,
+				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.subject, V.content, V.startdate, V.enddate, V.status
+			from (
+				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
+				      to_char(A.enddate, 'yyyy-mm-dd') as enddate, A.status
+				from tbl_vote A join tbl_teamwon B
+				on A.fk_teamwon_idx = B.idx
+				where A.status = 1
+                and fk_teamwon_idx = 1
+                and enddate >= sysdate
+                and startdate >= sysdate
+				order by idx desc
+			) V
+		) T
+		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
+	</select>
+	
+	<select id="VoteReadyListYesPaging2" parameterType="HashMap" resultMap="VoteListPagingMap">
+		select idx, fk_team_idx, fk_teamwon_idx, subject, content, startdate, enddate, status
+		from (
+			select rownum as RNO,
+				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.subject, V.content, V.startdate, V.enddate, V.status
+			from (
+				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
+				      to_char(A.enddate, 'yyyy-mm-dd') as enddate, A.status
+				from tbl_vote A join tbl_teamwon B
+				on A.fk_teamwon_idx = B.idx
+				where A.status = 1
+                and fk_teamwon_idx = 1
+                and ${colname} like '%'|| #{search} ||'%'
+                and enddate >= sysdate
+                and startdate >= sysdate
+				order by idx desc
+			) V
+		) T
+		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
+	</select>
+	
+	<select id="VoteReadyTotalCount1" resultType="int">
+		select count(*)
+		from tbl_vote
+		where status = 1
+		and enddate >= sysdate
+		and startdate >= sysdate
+	</select>
+	
+	<select id="VoteReadyTotalCount2" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_vote
+		where status = 1
+		and enddate >= sysdate
+		and startdate >= sysdate
+		and ${colname} like '%'|| #{search} ||'%'
+	</select>
+	
+	
+	<select id="VoteMyTotalCount1" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_vote
+		where status = 1
+		<if test="votekind.equals('ing')">
+			and enddate >= sysdate
+			and startdate <![CDATA[<]]> sysdate
+		</if>
+		<if test="votekind.equals('end')">
+			and enddate <![CDATA[<]]> sysdate
+		</if>
+		<if test="votekind.equals('ready')">
+			and enddate >= sysdate
+			and startdate >= sysdate
+		</if>
+	</select>
+	
+	
+	<select id="VoteMyTotalCount2" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_vote
+		where status = 1
+		<if test="votekind.equals('ing')">
+			and enddate >= sysdate
+			and startdate <![CDATA[<]]> sysdate
+			and ${colname} like '%'|| #{search} ||'%'
+		</if>
+		<if test="votekind.equals('end')">
+			and enddate <![CDATA[<]]> sysdate
+			and ${colname} like '%'|| #{search} ||'%'
+		</if>
+		<if test="votekind.equals('ready')">
+			and enddate >= sysdate
+			and startdate >= sysdate
+			and ${colname} like '%'|| #{search} ||'%'
+		</if>
+	</select>
+	
+	
+	<insert id="VoteItemRestAdd" parameterType="java.util.HashMap">
+		insert into tbl_voteItem
+		values(seq_vote_item.nextval, #{idx}, #{none}, null, default)
+	</insert>
+	
+	<delete id="VoteItemRestDel">
+		delete from tbl_voteItem
+		where idx = #{itemidx}
+	</delete>
+	
+	
+	<select id="VoteItemMaxRest" parameterType="HashMap" resultType="int">
+		select max(idx)
+		from tbl_voteItem
+	</select>
+	
+</mapper>
