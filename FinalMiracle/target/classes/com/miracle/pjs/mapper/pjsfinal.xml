@@ -73,9 +73,8 @@
 		    select userid, name, img, birth1||'년도 '||birth2||'월생' as age, hp1||'-'||hp2||'-'||hp3 as hp, addr1||' '||addr2 as addr
 		    from tbl_member m join tbl_member_detail d on m.idx = d.fk_member_idx
 			where m.userid = #{id}
-		) v   
+		) v
 	</select>
-	
 	<resultMap id="userinfo" type="HashMap">
  		<result property="userid" 				column="userid" 			javaType="String"></result>
  		<result property="name" 				column="name" 				javaType="String"></result>
@@ -146,7 +145,7 @@
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 구글맵 전체 정보를 가져온다. *** === -->
 	<select id="getMap" resultType="com.miracle.pjs.model.MapVO">
-		select * from tbl_map
+		select * from tbl_map m join tbl_team t on t.idx = m.team_idx
 	</select>
 <!-- ============================================================================================================================================================= -->	
 
