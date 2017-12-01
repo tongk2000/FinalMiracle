@@ -50,4 +50,34 @@ public class CommuteService implements InterCommuteService {
 		return n;
 	}
 
+	@Override
+	public List<HashMap<String, String>> getTeamWonList(HashMap<String, String> map) {
+		List<HashMap<String, String>> list = dao.getTeamWonList(map);
+		return list;
+	}
+
+	@Override
+	public List<HashMap<String, String>> twcommuteListMonth(HashMap<String, String> map) {
+		List<HashMap<String, String>> list = dao.twcommuteListMonth(map);
+		return list;
+	}
+
+	@Override
+	public int getTWTotalCountMonth(HashMap<String, String> map) {
+		int n = dao.getTWTotalCountMonth(map);
+		return n;
+	}
+
+	@Override
+	public List<HashMap<String, String>> twcommuteList(HashMap<String, String> map) {
+		List<HashMap<String, String>> list = dao.twcommuteList(map);
+		return list;
+	}
+
+	@Override
+	public int getTWTotalCount(HashMap<String, String> map) {
+		int n = dao.getTWTotalCount(map);
+		return n;
+	}
+
 }

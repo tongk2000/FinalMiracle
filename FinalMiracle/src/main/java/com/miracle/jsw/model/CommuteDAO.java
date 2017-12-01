@@ -49,4 +49,34 @@ public class CommuteDAO implements InterCommuteDAO {
 		return n;
 	}
 
+	@Override
+	public List<HashMap<String, String>> getTeamWonList(HashMap<String, String> map) {
+		List<HashMap<String, String>> list = sqlsession.selectList("commute.getTeamWonList", map);
+		return list;
+	}
+
+	@Override
+	public List<HashMap<String, String>> twcommuteListMonth(HashMap<String, String> map) {
+		List<HashMap<String, String>> list = sqlsession.selectList("commute.twcommuteListMonth", map);
+		return list;
+	}
+
+	@Override
+	public int getTWTotalCountMonth(HashMap<String, String> map) {
+		int n = sqlsession.selectOne("commute.getTWTotalCountMonth", map);
+		return n;
+	}
+
+	@Override
+	public List<HashMap<String, String>> twcommuteList(HashMap<String, String> map) {
+		List<HashMap<String, String>> list = sqlsession.selectList("commute.twcommuteList", map);
+		return list;
+	}
+
+	@Override
+	public int getTWTotalCount(HashMap<String, String> map) {
+		int n = sqlsession.selectOne("commute.getTWTotalCount", map);
+		return n;
+	}
+
 }

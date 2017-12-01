@@ -2,14 +2,12 @@ package com.miracle.pjs.controller;
 
 import java.util.HashMap;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
+import com.miracle.pjs.model.MapVO;
 import com.miracle.pjs.service.PjsinterService;
 import com.miracle.pjs.util.MyUtil;
 
@@ -19,6 +17,8 @@ public class GeniousPjs {
 	
 	@Autowired
 	private PjsinterService service;
+
+/*=======================================================================================================================================================*/	
 	
 	// ==== *** 공지사항 게시판 *** ==== //
 	@RequestMapping(value="noticeList.mr", method={RequestMethod.GET})
@@ -72,31 +72,20 @@ public class GeniousPjs {
 		req.setAttribute("searchString", searchString);
 		req.setAttribute("pagebar", pagebar);
 		return "pjs/notice/noticeList.all";
-	}/*=======================================================================================================================================================*/
+	}
 	@RequestMapping(value="noticeListJSON.mr", method={RequestMethod.GET})
 	public String noticeJSON(HttpServletRequest req) {	
-		//System.out.println("컨트롤러엔 오니>");
 		String searchString = req.getParameter("searchString");
 		String searchType = req.getParameter("searchType");
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("searchString", searchString);
 		map.put("searchType", searchType);
-		List<String> list = service.getNoticeJSONList(map);
-		System.out.println("list사이즈는  "+list.size());
-		/*JSONArray jsonArray = new JSONArray();
-		if(list != null && list.size() != 0) {
-			for(String obj : list) {
-				JSONObject jsonObj = new JSONObject();
-				jsonObj.put("searchString", obj);
-				jsonArray.put(jsonObj);
-			}
-		}
-		String array = jsonArray.toString();*/
+		String list = service.getNoticeJSONList(map);
 		req.setAttribute("list", list);
-		return "pjs/notice/noticeListJSON.all";
-	}/*=======================================================================================================================================================*/
+		return "pjs/notice/noticeListJSON.not";
+	}
 	
-	
+/*=======================================================================================================================================================*/	
 	
 	// ==== *** 마음의 소리 게시판 *** ==== //
 	@RequestMapping(value="mindList.mr", method={RequestMethod.GET})
@@ -117,24 +106,26 @@ public class GeniousPjs {
 		req.setAttribute("pagebar", pagebar);
 		req.setAttribute("list", list);
 		return "pjs/mind/mindList.all";
-	}/*=======================================================================================================================================================*/
+	}
 
-	
-	
+/*=======================================================================================================================================================*/	
+
 	// ==== *** 구글맵 *** ==== //
 	@RequestMapping(value="googleMap.mr", method={RequestMethod.GET})
 	public String googleMap(HttpServletRequest req) {
-		
-		return "pjs/map/?.all";
-	}/*=======================================================================================================================================================*/
+		List<MapVO> list = service.getMap(); // 전체 리스트를 반환한다.
+		req.setAttribute("list", list);
+		return "pjs/map/googleMap.all";
+	}
 	
-	
+/*=======================================================================================================================================================*/	
 	
 	// ==== *** 쪽지 *** ==== //
 	@RequestMapping(value="memo.mr", method={RequestMethod.GET})
 	public String memo(HttpServletRequest req) {
-		
 		return "pjs/memo/?.all";
-	}/*=======================================================================================================================================================*/
+	}
+
+/*=======================================================================================================================================================*/	
 
 }		

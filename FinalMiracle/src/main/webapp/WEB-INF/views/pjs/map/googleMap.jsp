@@ -2,9 +2,9 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/BootStrapStudy/css/bootstrap.css">
+<%-- <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/BootStrapStudy/css/bootstrap.css"> --%>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-2.0.0.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/BootStrapStudy/js/bootstrap.js"></script> 
+<%-- <script type="text/javascript" src="<%= request.getContextPath() %>/BootStrapStudy/js/bootstrap.js"></script>  --%>
 <%-- *** 구글맵 api 사용하기 *** --%>
 <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAGoOx5t16lxp_DW2Y8WpN2gJB9U3fzPRg"></script>
 <style>
@@ -62,12 +62,12 @@
 		    });
 			var storeArr = [ // [] : 배열 	{} : 객체    // 디비서 호출한 위도, 경도, 매장이름!!! 
 				<c:set var="cnt" value="1" />
-				<c:forEach var="store" items="${mapList}" varStatus="status">					
+				<c:forEach var="obj" items="${list}" varStatus="status">					
 				     [	// 이중배열은 안쪽의 배열을 하나의 객체로 바라본다.
-				    	"${store.storeName}",
-				    	"${store.latitude}",
-				    	"${store.longitude}",
-				    	"${store.zindex}"
+				    	"${obj.name}",
+				    	"${obj.latitude}",
+				    	"${obj.longitude}",
+				    	"${obj.idx}"
 					 ]
 				     <c:if test="${cnt != mapList.size()}">
 				     ,
@@ -161,7 +161,7 @@
 	}); // end of $(document).ready()-------------------------
 </script>
 <%-- 화면에 나오는 창은 밑에 div 하나만 존재한다.!!! --%>
-<div id="googleMap"	style="width: 100%; height: 360px; margin: auto;"></div>
+<div id="googleMap"	style="width: 30%; height: 200px; margin: auto; margin:20% 30% 20% 35% ; "></div>
 
 
 
