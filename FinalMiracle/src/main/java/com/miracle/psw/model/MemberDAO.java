@@ -47,6 +47,18 @@ public class MemberDAO implements InterMemberDAO {
 		int n = sqlsession.selectOne("member_psw.idDuplicateCheck", userid);
 		return n;
 	}
+
+	@Override
+	public int registerMember(MemberVO mvo) {  // 회원가입(tbl_member)
+		int n = sqlsession.insert("member_psw.registerMember", mvo);
+		return n;
+	}
+
+	@Override
+	public int registerMemberDetail(MemberDetailVO mdvo) {  // 회원가입(tbl_member_detail)
+		int n = sqlsession.insert("member_psw.registerMemberDetail", mdvo);
+		return n;
+	}
 	
 	
 	
