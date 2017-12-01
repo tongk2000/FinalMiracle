@@ -12,12 +12,12 @@
                      where status = 1
                      and userid = #{userid} and pwd = #{pwd}) 
 	           when 1 then 1
-	           else ( case (select count(*)
-                            from tbl_member
-                            where userid = #{userid}) 
-	                  when 1 then 0
-	                  else -1
-	                  end
+	           else (case (select count(*)
+                           from tbl_member
+                           where userid = #{userid}) 
+	                 when 1 then 0
+	                 else -1
+	                 end
 	                 )
 	           end as LOGINCHECK
 		from dual
