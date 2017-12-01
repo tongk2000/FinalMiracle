@@ -18,9 +18,8 @@ public class PjsserviceImpl implements PjsinterService {
 	@Autowired
 	private PjsinterDAO dao;
 
+// === *** 공지사항 게시판 *** === //
 //==========================================================================================================================================================//	
-
-	// === *** 공지사항 게시판 *** === //
 	@Override
 	public List<HashMap<String, String>> getNoticeList(HashMap<String, String> map) {
 		// 공지사항 게시판 페이징리스트를 가져오는 메소드
@@ -52,10 +51,18 @@ public class PjsserviceImpl implements PjsinterService {
 			searchString = "해당하는 검색정보가 없습니다.";
 		return searchString;
 	}
-	
+	@Override
+	public HashMap<String, String> getViewContent(String id) {
+		// 유저의 정보를 가져오기 위한 메소드
+		HashMap<String, String> map = dao.getViewContent(id);
+		return map;
+	}
 //==========================================================================================================================================================//	
+
 	
-	// === *** 마음의 소리 게시판 *** //
+	
+// === *** 마음의 소리 게시판 *** === //	
+//==========================================================================================================================================================//	
 	@Override
 	public List<HashMap<String, String>> getMindList(HashMap<String, String> map, String str_sizePerPage, String str_currentPage) {
 		// 마음의 소리 게시판의 검색된 모든 리스트를 가져오는 메소드 
@@ -93,20 +100,44 @@ public class PjsserviceImpl implements PjsinterService {
 		list.add(hashMap);
 		return list;
 	}
-	
+	@Override
+	public String getMindJSONList(HashMap<String, String> map) {
+		// 공지사항 테이블에서 검색 시 json처리를 하기위한 메소드
+		List<String> list = dao.getMindJSONList(map);
+		JSONArray jsonList = null;
+		String searchString = "";
+		if(list!=null&&list.size()>0) {
+			jsonList = new JSONArray();
+			for(String obj : list) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("search", obj);
+				jsonList.put(jsonObj);
+			}
+			searchString = jsonList.toString();
+		}
+		else 
+			searchString = "해당하는 검색정보가 없습니다.";
+		return searchString;
+	}
 //==========================================================================================================================================================//	
+
 	
-	// === *** 구글맵  *** === //
+	
+// === *** 구글맵  *** === //	
+//==========================================================================================================================================================//	
 	@Override
 	public List<MapVO> getMap() {
 		// 구글맵 테이블의 모든 정보를 가져온다.
 		List<MapVO> list = dao.getMap();
 		return list;
 	}
-	
 //==========================================================================================================================================================//	
+	
 
-	// === *** 쪽지 *** === //
+	
+	
+// === *** 쪽지 *** === //
+//==========================================================================================================================================================//	
 
 //==========================================================================================================================================================//	
 
