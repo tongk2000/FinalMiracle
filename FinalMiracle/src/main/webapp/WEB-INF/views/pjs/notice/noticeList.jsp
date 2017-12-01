@@ -18,21 +18,23 @@
 		text-align:center;
 	}
 	.img {
-		width:10%;
-		height:10%;
+		width:5%;
+		height:5%;
 	}
 	div.min{
 		height:10px;
 		opacity:1.0;
 	} 
+	.subjectstyle {font-weight: bold;
+    	           color: gray;
+    	           cursor: pointer; }
 </style>
 <title>Notice 게시판 입니다!</title>
-<script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 </head>
 <body>
 	<div class="container">
 		<div align="center" style="width:80%; margin:auto;">
-			<h2>공지사항 게시판</h2>
+			<h2>공지사항 게시판(여기냐?)</h2>
 			<form name="frm">
 				<select id="searchType" name="searchType" style="font-size:12pt;">
 					<option value="fk_userid">아이디</option>
@@ -40,6 +42,7 @@
 				</select>
 				<input type="text" id="searchString" name="searchString" />
 				<button type="button" id="btnClick" onClick="goSearch();">검색</button><br/>
+			</form>	
 				<div><div class="min"><div class="min"><div class="min"><div class="min"><div class="min"><div class="min">
 					<div id="displayList" style="background-color:red; width:150px; margin-left: 28px; border-top: 0px; border: solid black 1px;"></div>
 				</div></div></div></div></div></div></div>
@@ -62,20 +65,26 @@
 						<c:if test="${not empty list}">
 							<c:forEach var="nt" items="${list}" varStatus="status">
 								<tr>
-									<td>${status.count}</td>	<!-- 번호 -->
-									<td><img class="img" src="<%= request.getContextPath()%>/resources/images/${nt.img}"/> 
-									<span class="userid">${nt.fk_userid}</span></td>	<!-- 아이디 -->
-									<td>${nt.subject}</td>		<!-- 제목 -->
-									<td>${nt.regday}</td>		<!-- 날짜 -->
-									<td>${nt.readcount}</td>	<!-- 조회수-->
+									<td>${status.count}</td>									<!-- 번호 -->
+									<td >
+										<a onClick="goUserInfo('${nt.fk_userid}');">
+											<img class="img" src="<%= request.getContextPath()%>/resources/images/${nt.img}" /> 
+											<span class="userid">${nt.fk_userid}</span>
+										</a>
+									</td>														<!-- 아이디 -->
+									<td onClick="goView('${nt.fk_userid}')">${nt.subject}</td>	<!-- 제목 -->
+									<td>${nt.regday}</td>										<!-- 날짜 -->
+									<td>${nt.readcount}</td>									<!-- 조회수-->
 								</tr>
 							</c:forEach>
 						</c:if>	
 					</tbody>
 				</table>
-			</form>
 			${pagebar}
 		</div>
+		<form name="view">
+			<input type="hidden" name="idx" />
+		</form>
 	</div>
 	<script>
 		$(document).ready(function(){
@@ -114,6 +123,7 @@
 						
 					}
 				}); // end of $.ajax()------------------------
+				
 			}); // end of keyup(function(){})-----------------
 		});
 		function keep() {
@@ -130,6 +140,28 @@
 			frm.method="get";
 			frm.submit();
 		}
+		function goUserInfo(id) {
+			var userid = {"userid":id};
+			$.ajax({
+				url:"noticeUserInfo.mr",
+				type:"get",
+				data:userid,
+				dataType:"html",
+				success: function(data) {
+					if(data.length>0) {
+						alert("ajax결과 성공"+data);
+						$("#userinfo").html(data);
+						$("#userinfo").modal();
+					}
+					else {
+						alert("ajax결과"+data);
+					}
+				},error : function() {
+					alert("실패!");
+				}
+			});
+		}
 	</script>
+	<div class="modal fade" id="userinfo" role="dialog"></div>
 </body>
 </html>

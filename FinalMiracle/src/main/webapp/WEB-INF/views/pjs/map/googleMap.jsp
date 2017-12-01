@@ -83,13 +83,13 @@
 			markerArr = new Array(storeArr.length); // 배열의 길이 3!!!
 			for(var i=0; i < storeArr.length; i++){
 				if(i == 0) { // 디비서 가져온 가계들마다 마커의 색을 각각 주기!!!!
-					var image = "<%= request.getContextPath() %>/images/pointerBlue.png";  // 1번 마커 이미지	
+					var image = "<%= request.getContextPath() %>/resources/images/pointerBlue.png";  // 1번 마커 이미지	
 				} 
 				else if(i == 1) {
-					var image = "<%= request.getContextPath() %>/images/pointerPink.png"; // 2번 마커 이미지
+					var image = "<%= request.getContextPath() %>/resources/images/pointerPink.png"; // 2번 마커 이미지
 				}
 				else {
-					var image = "<%= request.getContextPath() %>/images/pointerBlue.png"; // 3번 마커 이미지
+					var image = "<%= request.getContextPath() %>/resources/images/pointerBlue.png"; // 3번 마커 이미지
 				}
 				var store = storeArr[i]; // 배열의 하나의 객체 값을   var store에 담는다
 				//  alert(store[0]);
@@ -161,16 +161,4 @@
 	}); // end of $(document).ready()-------------------------
 </script>
 <%-- 화면에 나오는 창은 밑에 div 하나만 존재한다.!!! --%>
-<div id="googleMap"	style="width: 30%; height: 200px; margin: auto; margin:20% 30% 20% 35% ; "></div>
-
-
-
-
-
-
-
-
-
-
-
-    
+<div id="googleMap"	style="width: 30%; height: 200px; margin: auto; margin:20% 30% 20% 35% ; "></div>    

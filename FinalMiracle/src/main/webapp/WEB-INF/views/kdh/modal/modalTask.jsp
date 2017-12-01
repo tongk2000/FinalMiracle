@@ -15,7 +15,7 @@
 				<button type="button" class="close modalClose">&times;</button>
 				<!-- &times; : x버튼으로 표시됨 -->
 				<h4 class="modal-title" align="center">
-					::: 폴더 상세정보 :::<br/>
+					::: 할일 상세정보 :::<br/>
 					<span style="font-size: 9pt; margin-left: -25px;">
 						(<span style="color: green;">녹색글자</span>는 수정가능한 항목입니다.)
 					</span>
@@ -25,7 +25,7 @@
 				<table>
 					<tbody>
 						<tr>
-							<td class="infoClass">폴더이름</td>
+							<td class="infoClass">할일제목</td>
 							<td class="infoData showInfo">${fvo.subject}
 							<td class="infoData hiddenEdit">
 								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="subject" value="${fvo.subject}" />
@@ -33,7 +33,7 @@
 						</tr>
 						
 						<tr>
-							<td class="infoClass">폴더개요</td>
+							<td class="infoClass">할일개요</td>
 							<td class="infoData showInfo">${fvo.content}
 							<td class="infoData hiddenEdit">
 								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="content" value="${fvo.content}" />
@@ -67,7 +67,7 @@
 						</tr>
 
 						<tr>
-							<td class="infoClass">폴더 중요도</td>
+							<td class="infoClass">할일 중요도</td>
 							<td class="infoData showInfo">${fvo.importance}</td>
 							<td class="infoData hiddenEdit">
 								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="importance" value="${fvo.importance}" />
@@ -75,10 +75,20 @@
 						</tr>
 						
 						<tr>
-							<td class="infoClass">하위 요소 중요도</td>
-							<td class="infoData showInfo">${fvo.importanceAvg}</td>
-							<td class="infoData hiddenEdit">
-								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="importanceAvg" value="${fvo.importanceAvg}" />
+							<td class="infoClass">완료여부</td>
+							<td class="infoData">
+								<c:if test="${fvo.status == 0}"> <!-- 완료된 할일이라면 -->
+									<input type="checkbox" id="modalStatus${fvo.idx}" class="status" checked/>
+									<span style="color:green;" id="modalStatus">
+										<label for="modalStatus${fvo.idx}">완료</label>
+									</span>
+								</c:if>
+								<c:if test="${fvo.status == 1}"> <!-- 미완료된 할일이라면 -->
+									<input type="checkbox" id="modalStatus${fvo.idx}" class="status"/>
+									<span style="color:red;" id="modalStatus">
+										<label for="modalStatus${fvo.idx}">미완료</label>
+									</span>
+								</c:if>
 							</td>
 						</tr>
 					</tbody>

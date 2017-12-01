@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ScheduleManagerDAO {
+public class ProjectManagerDAO {
 	@Autowired
 	SqlSessionTemplate sql;  
 	
@@ -34,4 +34,15 @@ public class ScheduleManagerDAO {
 		List<Folder_CommentVO> folder_commentList = sql.selectList("do.getFolder_commentInfo",idx);
 		return folder_commentList;
 	} // end of List<Folder_CommentVO> getFolder_commentInfo(String idx) ------------------------------------------ 
+
+	// 선택한 폴더의 정보를 수정하기
+	public int do_goModalEdit(FolderVO fvo) {
+		int result = sql.update("do.goModalEdit", fvo);
+		return result;
+	} // end of public int do_goModalEdit(FolderVO fvo) ---------------------------------------------------------------------
+
+	// 할일 완료, 미완료 처리하기
+	public void setTaskComplete(FolderVO fvo) { 
+		sql.update("do.setTaskComplete", fvo);
+	}
 }
