@@ -89,10 +89,18 @@
  	    }
  		
  		$("#btnFind").click(function(){
- 			var frm = document.idFindFrm;
- 			frm.method = "post";
- 			frm.action = "<%= request.getContextPath() %>/member_idFind.mr";
- 			frm.submit();
+ 			var frm = $("form[name=idFindFrm]").serialize();
+ 			$.ajax({
+ 				url:"member_idFind.mr",
+ 				type:"post",
+ 				data:frm,
+ 				dataType:"JSON",
+ 				success:function(data){
+ 					$("#useridFind").text(data.userid);
+ 				}, error:function(){
+ 					alert("시스템오류. 관리자에게 문의하세요.");
+ 				}
+ 			});
  		});
  		
  		if (method == "POST") {
@@ -104,6 +112,7 @@
  		$(".modalOpen").click(function(){
  			$("#mobile").val("");
  			$("#name").val("");
+ 			$("#useridFind").text("");
  		});
  		
  		// 페이지 전체에서 esc 키를 누르면 모달창을 닫기
@@ -111,12 +120,16 @@
 			var modalFlag = $('.modal').is(':visible');
 			if(event.keyCode == 27 && modalFlag) { 
 				$('.modal').modal('hide');
+				var userid = $("#useridFind").text();
+				$("#userid").val(userid);
 			}
 		}); // end of $("#body").keyup(function() ------------------------------------------------------------------------------------------------------
 		
 		// 모달창에서 x 나 취소를 누르면 모달창 닫기
-		$(document).on("click", ".modalClose", function(){			
+		$(document).on("click", ".modalClose", function(){
 			$('.modal').modal('hide');
+			var userid = $("#useridFind").text();
+			$("#userid").val(userid);
 		}); // end of $(".modalClose").click(function() ------------------------------------------------------------------------------------------------------
 	 
     }); // end of $(document).ready()---------------------------	 
@@ -183,10 +196,8 @@
 				</div>
 
 				<div class="mydiv" style="margin-left: 5%;">
-					<input class="mydisplay form-control" type="text" name="userid"
-						id="userid" size="20" /> <input class="mydisplay form-control"
-						style="margin-top: 15px;" type="password" name="pwd" id="pwd"
-						size="20" />
+					<input class="mydisplay form-control" type="text" name="userid"	id="userid" size="20" /> 
+					<input class="mydisplay form-control" style="margin-top: 15px;" type="password" name="pwd" id="pwd" size="20" />
 				</div>
 				<br />
 				<br />
@@ -239,7 +250,7 @@
 									</div>
 
 									<div id="div_finalResult" align="center">
-										ID : <span style="color: red; font-size: 16pt; font-weight: bold;">${userid}</span>
+										ID : <span style="color: red; font-size: 16pt; font-weight: bold;" id="useridFind"></span>
 									</div>
 
 									<div id="div_btnFind" align="center">
