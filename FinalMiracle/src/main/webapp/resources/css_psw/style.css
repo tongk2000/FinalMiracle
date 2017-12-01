@@ -2,7 +2,7 @@
 
 #mycontainer	{ position:relative; top:20px; background-color:#F0F0F0; width:95%; margin:0 auto; padding:10px; }
 #headerImg		{ background-color:#908886; height:50px; padding: 10px;}
-#headerLink		{ font-size: 13pt; }
+#headerLink		{ font-size: 11pt; }
 #goldline		{ position:relative; top:10px; background-color:gold; height: 3px; }
 
 /* 
@@ -25,10 +25,10 @@
 /*표준 글꼴 서식 스타일*/
 
  body, td, th, input, select, textarea, p {
-	font-size:12pt;
+	font-size: 10pt;
 	font-family: 'NanumGothic', 'MalgunGothic' ; 
-	color:navy;
-	padding:4px; /* 안쪽 여백 */
+	color: #4F84C4;
+	padding: 4px; /* 안쪽 여백 */
 }
 
 /* 표준 링크 스타일 */
