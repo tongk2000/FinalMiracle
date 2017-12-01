@@ -14,8 +14,7 @@
 	.long {width: 470px;}
 	.short {width: 120px;} 	
 	
-	a{text-decoration: none;
-	color: black;}	
+	a{color: black;}	
 
 </style>
 
@@ -63,8 +62,4 @@
 	</tbody>
 </table>
 
-
-<div align="center" style="width: 70%; margin-left: 50px;">
-	${pageBar}
-</div>
 

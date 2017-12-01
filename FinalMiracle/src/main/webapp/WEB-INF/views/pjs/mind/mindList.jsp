@@ -17,6 +17,10 @@
 	td, th {
 		text-align:center;
 	}
+	.img {
+		width:10%;
+		height:10%;
+	}
 </style>
 <script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 <title>Mind 게시판 입니다!</title>
@@ -50,13 +54,14 @@
 							</tr>
 						</c:if>
 						<c:if test="${not empty list}">
-							<c:forEach var="nt" items="${list}" varStatus="status">
+							<c:forEach var="md" items="${list}" varStatus="status">
 								<tr>
 									<td>${status.count}</td>	<!-- 번호 -->
-									<td>${nt.fk_userid}</td>	<!-- 아이디 -->
-									<td>${nt.subject}</td>		<!-- 제목 -->
-									<td>${nt.regday}</td>		<!-- 날짜 -->
-									<td>${nt.readcount}</td>	<!-- 조회수-->
+									<td><img class="img" src="<%= request.getContextPath()%>/resources/images/${md.img}"/> 
+									<span class="userid" >${md.fk_userid}</span></td>	<!-- 아이디 -->
+									<td>${md.subject}</td>		<!-- 제목 -->
+									<td>${md.regday}</td>		<!-- 날짜 -->
+									<td>${md.readcount}</td>	<!-- 조회수-->
 								</tr>
 							</c:forEach>
 						</c:if>	
@@ -68,12 +73,12 @@
 	</div>
 	<script>
 		$(document).ready(function(){
+			alert("실행되니");
 			keep();
 			$("#displayList").hide();
 			$("#searchString").keyup(function(){
 				$.getJSON("noticeListJSON.mr", {"searchString":$("#searchString").val(),
 												"searchType":$("#searchType").val()}, function(data){
-					alert("getJSON에는 온다.");
 					var html="";
 					$(data).each(function(index, item){
 						var title = item;
