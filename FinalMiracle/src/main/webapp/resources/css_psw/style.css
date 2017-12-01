@@ -1,0 +1,84 @@
+@CHARSET "UTF-8";
+
+#mycontainer	{ position:relative; top:20px; background-color:#F0F0F0; width:95%; margin:0 auto; padding:10px; }
+#headerImg		{ background-color:#908886; height:50px; padding: 10px;}
+#headerLink		{ font-size: 11pt; }
+#goldline		{ position:relative; top:10px; background-color:gold; height: 3px; }
+
+/* 
+#sideinfo		{ background-color:#E6E6E6; width:20%; height:420px; float:left; }
+#content		{ background-color:#F5F5F5; width:80%; height:420px; float:left; } 
+*/
+
+/* 
+#sideinfo		{ background-color:#E6E6E6; width:20%; max-height:420px; overflow-y: auto; float:left; }
+#content		{ background-color:#F5F5F5; width:80%; max-height:420px; overflow-y: auto; float:left; } 
+*/
+
+#mysubcontainer { min-height:800px; }
+#sideinfo		{ position:relative; top:40px; background-color:#E6E6E6; width:20%; min-height:750px; float:left; }
+#content		{ position:relative; top:40px; background-color:#F5F5F5; width:80%; min-height:750px; float:left; }  
+
+#footer			{ position:relative; top:35px; background-color:#999999; height:90px; clear:both; margin-top: 10px; margin-bottom: 35px; }
+
+
+/*표준 글꼴 서식 스타일*/
+
+ body, td, th, input, select, textarea, p {
+	font-size: 10pt;
+	font-family: 'NanumGothic', 'MalgunGothic' ; 
+	color: black;
+	padding: 4px; /* 안쪽 여백 */
+	background-color: lightgray;
+}
+
+/* 표준 링크 스타일 */
+a {text-decoration: none !important;}
+
+/* 
+   a:link { text-decoration:none; }
+
+   a:visited { text-decoration:none; } 
+*/
+
+/* unvisited link */
+a:link {
+	color: #005c99;	
+}
+
+/* visited link */
+a:visited{
+	color: #005c99;
+}
+
+/* mouse over link */
+a:hover { color:maroon; 
+          font-weight: bold; }
+          
+/* selected link */
+a:active {
+	color: navy;
+}          
+          
+		  
+#headerLink a:hover { text-decoration: none;
+	                  color: maroon;
+		  			  font-weight: bold;
+		  			  font-size:12pt;
+		  			  cursor: pointer;  }	   
+
+.box { border:1px solid navy; }
+
+.box2 { border:1px dotted red; }
+
+table.outline { width: 95%;
+	            border-top: 4px double navy;
+	            border-bottom: 4px double navy; }
+	             
+table.outline th {background-color: #e6e6e6;}	             
+
+.error { color: red; padding-left: 10px; margin-bottom: 5px;}
+
+img { border: 0px; }
+
+.bgcol {background-color: LightGray;}

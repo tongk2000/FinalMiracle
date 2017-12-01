@@ -9,20 +9,24 @@
 <meta charset="UTF-8">
 <title>Final Project</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/resources/jqueryuicss/jquery-ui.css" />
+
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/BootStrapStudy/js/bootstrap.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/resources/jqueryuijs/jquery-ui.js"></script>
 
 <style type="text/css">
 	.container{border:1px solid red; width:90%; min-height:1000px; padding:0px;}
-	.header{border:1px solid black; width:100%; min-height:200px;}
-	.sideInfo{border:1px solid blue; width:10%; min-height:700px; float:left;}
-	.content{border:1px solid green; width:90%; min-height:700px; float:right;}
+	.header{border:1px solid black; width:100%; min-height:120px;}
+	.sideInfo{border:1px solid blue; width:10%; min-height:850px; float:left;}
+	.content{border:1px solid green; width:90%; min-height:850px; float:right;}
 	.footer{border:1px solid black; width:100%; min-height:100px; clear:both;}
 </style>
 
 </head>
-<body>
+<body id="body">
 	<div class="container">
 		<div class="header">
 		      <tiles:insertAttribute name="header" />
