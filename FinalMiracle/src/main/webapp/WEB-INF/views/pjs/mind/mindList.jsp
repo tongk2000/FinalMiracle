@@ -18,9 +18,16 @@
 		text-align:center;
 	}
 	.img {
-		width:10%;
-		height:10%;
+		width:5%;
+		height:5%;
 	}
+	div.min{
+		height:10px;
+		opacity:1.0;
+	} 
+	.subjectstyle {font-weight: bold;
+    	           color: gray;
+    	           cursor: pointer; }
 </style>
 <script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 <title>Mind 게시판 입니다!</title>
@@ -30,13 +37,15 @@
 		<div align="center" style="width:80%; margin:auto;">
 			<h2>마음의 소리 게시판</h2>
 			<form name="frm">
-				<select id="choice" name="searchType" style="font-size:12pt;">
+				<select id="searchType" name="searchType" style="font-size:12pt;">
 					<option value="fk_userid">아이디</option>
-					<option value="subject" selected>제목</option>
+					<option value="subject">제목</option>
 				</select>
 				<input type="text" id="searchString" name="searchString" />
 				<button type="button" id="btnClick" onClick="goSearch();">검색</button><br/>
-				<div id="displayList"></div><br/>
+				<div><div class="min"><div class="min"><div class="min"><div class="min"><div class="min"><div class="min">
+					<div id="displayList" style="background-color:red; width:150px; margin-left: 28px; border-top: 0px; border: solid black 1px;"></div>
+				</div></div></div></div></div></div></div>
 				<table style="width:100%;">
 					<thead>
 						<tr>
@@ -73,32 +82,42 @@
 	</div>
 	<script>
 		$(document).ready(function(){
-			alert("실행되니");
 			keep();
 			$("#displayList").hide();
 			$("#searchString").keyup(function(){
-				$.getJSON("noticeListJSON.mr", {"searchString":$("#searchString").val(),
-												"searchType":$("#searchType").val()}, function(data){
-					var html="";
-					$(data).each(function(index, item){
-						var title = item;
+				if($("#searchType").val()==null||$("#searchType").val()=="") {
+					$("#searchType").val("fk_userid");
+				}
+				var data_form = {"searchString":$("#searchString").val(), "searchType":$("#searchType").val()};
+				$.ajax({
+					url:"mindListJSON.mr",
+					type:"get",
+					data:data_form,
+					dataType:"JSON",
+					success: function(data) {
+						var resultHTML ="";
+						if(data.length > 0) { // 검색된 데이터가 있는 경우라면
+							$.each(data, function(entryIndex, entry){
+								var wordstr = entry.search;
+								var index = wordstr.toLowerCase().indexOf( $("#searchString").val().toLowerCase() );
+								var len = $("#searchString").val().length;
+								var result = "";
+								result = "<span class='first' style='color:blue;'>" +wordstr.substr(0, index)+ "</span>" + "<span class='second' style='color:red; font-weight:bold;'>" +wordstr.substr(index, len)+ "</span>" + "<span class='third' style='color:blue;'>" +wordstr.substr(index+len, wordstr.length - (index+len) )+ "</span>";  
+								resultHTML += "<span style='cursor:pointer;'>"+ result +"</span><br/>"; 
+							});
+							$("#displayList").html(resultHTML);
+							$("#displayList").show();
+						}
+						else {
+							// 검색된 데이터가 존재하지 않는 경우라면
+							$("#displayList").hide();
+						} // end of if ~ else ----------------
+					}, // end of success: function()----------
+					error: function(){
 						
-						var index = title.toLowerCase().indexOf($("#searchString").val().toLowerCase() );
-					//	alert("확인용 index : " + index);
-					//  검색어의 길이를 반환
-					    
-					    var len = $("#searchString").val().length;
-					    var result = "";
-					    
-					    result = "<span class='first' style='color:blue;'>"+title.substr(0,index)+"</span>" + "<span class='second' style='color:red; font-weight:bold;'>"+title.substr(index,len)+"</span>" + "<span class='third' style='color:blue;'>"+title.substr(index+len)+"</span>";     
-					    
-					    // 검색된 타이틀을 3등분으로 나눈다. -> 그래서 검색어와 일치하는 부분은 빨간색으로 나머지는 파랑색으로 !!
-						
-						resultHTML += "<span style='cursor:pointer;'>"+result+"</span><br/>";
-					});
-					$("#displayList").html(resultHTML).show();
-				});
-			});
+					}
+				}); // end of $.ajax()------------------------
+			}); // end of keyup(function(){})-----------------
 		});
 		function keep() {
 			<c:if test="${searchType!=null&&searchType!=''}">
