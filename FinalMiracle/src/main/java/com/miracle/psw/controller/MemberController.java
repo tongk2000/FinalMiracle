@@ -197,9 +197,19 @@ public class MemberController {
 	}
 	
 	@RequestMapping(value="/member_idDuplicateCheck.mr")
-	public String idDuplicateCheck() {
+	public String idDuplicateCheck(HttpServletRequest req) {
+		String method = req.getMethod();
+		String userid = req.getParameter("userid");
 		
+		req.setAttribute("method", method);
 		
+		if(userid != null) {
+			req.setAttribute("userid", userid);
+			
+			boolean isUseuserid = service.idDuplicateCheck(userid);
+			
+			req.setAttribute("isUseuserid", isUseuserid);
+		}
 		return "psw/login/idDuplicateCheck.not";
 	}
 	

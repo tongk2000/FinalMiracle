@@ -61,6 +61,12 @@
 		and userid = #{userid}
 	</update>
 	
+	<select id="idDuplicateCheck" parameterType="String" resultType="int">
+		select count(*) as cnt
+		from tbl_member
+		where userid = #{userid}
+	</select>
+	
 	
 	
 </mapper>

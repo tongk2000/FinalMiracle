@@ -41,6 +41,14 @@ public class MemberDAO implements InterMemberDAO {
 		int n = sqlsession.update("member_psw.updatePwd", map);
 		return n;
 	}
+
+	@Override
+	public int idDuplicateCheck(String userid) {  // id 중복 체크
+		int n = sqlsession.selectOne("member_psw.idDuplicateCheck", userid);
+		return n;
+	}
+	
+	
 	
 	
 }

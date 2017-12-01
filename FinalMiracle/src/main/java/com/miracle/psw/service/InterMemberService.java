@@ -16,6 +16,8 @@ public interface InterMemberService {
 
 	int updatePwd(HashMap<String, String> map);  // pwd 변경하기
 
+	boolean idDuplicateCheck(String userid);  // id 중복체크
+
 	
 
 	

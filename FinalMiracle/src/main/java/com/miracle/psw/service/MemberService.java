@@ -43,6 +43,19 @@ public class MemberService implements InterMemberService {
 		return n;
 	}
 
+	@Override
+	public boolean idDuplicateCheck(String userid) {  // id 중복체크
+		int n = dao.idDuplicateCheck(userid);
+		
+		if(n == 1) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	
+
 	
 
 	

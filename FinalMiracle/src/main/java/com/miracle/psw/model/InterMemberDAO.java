@@ -14,6 +14,8 @@ public interface InterMemberDAO {
 
 	int updatePwd(HashMap<String, String> map);  // pwd 변경하기
 
+	int idDuplicateCheck(String userid);  // id 중복 체크
+
 	
 
 	

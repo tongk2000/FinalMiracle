@@ -71,6 +71,8 @@
 	
 	    if (method == "GET") {
 	       $("#div_finalResult").hide();
+	       $("#name").val("");
+		   $("#mobile").val("");
 	    }
 		
 		$("#btnFind").click(function(){
