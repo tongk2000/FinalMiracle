@@ -9,9 +9,11 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.miracle.psw.model.MemberDetailVO;
 import com.miracle.psw.model.MemberVO;
 import com.miracle.psw.service.InterMemberService;
 import com.miracle.psw.util.GoogleMail;
@@ -214,14 +216,81 @@ public class MemberController {
 	}
 	
 	
+	
 	@RequestMapping(value="/member_registerEnd.mr")
-	public String registerEnd() {
+	public String registerEnd(HttpServletRequest req, MemberVO mvo, MemberDetailVO mdvo) throws Throwable {
+		String name = req.getParameter("name");
+		String userid = req.getParameter("userid");
+		String pwd = req.getParameter("pwd");
 		
-		return "psw/login/memberRegisterEnd.not";
+		String birth1 = req.getParameter("birth1");
+		String birth2 = req.getParameter("birth2");
+		String birth3 = req.getParameter("birth3");
+		String email = req.getParameter("email");
+		String hp1 = req.getParameter("hp1");
+		String hp2 = req.getParameter("hp2");
+		String hp3 = req.getParameter("hp3");
+		String post1 = req.getParameter("post1");
+		String post2 = req.getParameter("post2");
+		String addr1 = req.getParameter("addr1");
+		String addr2 = req.getParameter("addr2"); 
+		
+		mvo.setName(name);
+		mvo.setUserid(userid);
+		mvo.setPwd(pwd);
+		
+		mdvo.setBirth1(birth1);
+		mdvo.setBirth2(birth2);
+		mdvo.setBirth3(birth3);
+		mdvo.setEmail(email);
+		mdvo.setHp1(hp1);
+		mdvo.setHp2(hp2);
+		mdvo.setHp3(hp3);
+		mdvo.setPost1(post1);
+		mdvo.setPost2(post2);
+		mdvo.setAddr1(addr1);
+		mdvo.setAddr2(addr2);
+		
+		try {
+			int n = service.registerMember(mvo, mdvo); 
+
+			if(n == 2) {
+				String msg = "Miracle World 의 가족이 되신걸 환영합니다.";
+				String loc = "member_login.mr";
+				
+				req.setAttribute("msg", msg);
+				req.setAttribute("loc", loc);
+			}
+			
+		} catch (java.sql.SQLIntegrityConstraintViolationException e) {
+			
+			String msg = "회원 아이디가 이미 사용중입니다. 새로운 아이디를 입력하세요!!";
+			String loc = "member_register.mr";
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+		}
+		
+		return "psw/msg.not";
+	}  // end of public String registerEnd(HttpServletRequest req, MemberVO mvo, MemberDetailVO mdvo) --------------
+	
+	@ExceptionHandler(java.sql.SQLIntegrityConstraintViolationException.class)
+	public String handleDataIntegrityViolationException(HttpServletRequest req) {
+		String msg = "아이디 제약조건 위반입니다.";
+		
+		String ctxpath = req.getContextPath();
+		String loc = ctxpath + "/member_registerEnd.mr";
+		
+		req.setAttribute("msg", msg);
+		req.setAttribute("loc", loc);
+		
+		return "psw/msg.not";
 	}
 	
 	
 }
+
+
 
 
 
