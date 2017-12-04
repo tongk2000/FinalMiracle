@@ -230,5 +230,11 @@ public class VoteDAO implements InterVoteDAO {
 		return n;
 	}
 
+	@Override
+	public List<VoteItemVO> VoteItemChart(String idx) {
+		List<VoteItemVO> list = sqlsession.selectList("kshVote.VoteItemChart", idx);
+		return list;
+	}
+
 
 }
