@@ -13,6 +13,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -983,6 +985,38 @@ public class VoteController {
 		req.setAttribute("voteItemList", voteItemList);
 		
 		return "ksh/vote/voteReadyList.all";
+	}
+	
+	
+	@RequestMapping(value="/voteCallChart.mr", method={RequestMethod.GET})
+	public String voteCallChart(HttpServletRequest req){
+		
+		String idx = req.getParameter("idx");
+		
+		JSONArray jsonMap = new JSONArray();
+		
+		if(!idx.trim().isEmpty()){
+			List<VoteItemVO> list = service.VoteItemChart(idx);
+			
+			if(list != null){
+				for(VoteItemVO vo : list){
+					JSONObject jsonObj = new JSONObject();
+					jsonObj.put("no", vo.getIdx());
+					jsonObj.put("name", vo.getFk_vote_idx());
+					jsonObj.put("email", vo.getItem());
+					jsonObj.put("tel", vo.getImage());
+					jsonObj.put("addr", vo.getVotenum());
+					
+					jsonMap.put(jsonObj);
+				}
+			}
+		}
+
+		String str_jsonMap = jsonMap.toString();
+
+		req.setAttribute("str_jsonMap", str_jsonMap);
+		
+		return "ksh/json/ChartJSON.not";
 	}
 	
 	

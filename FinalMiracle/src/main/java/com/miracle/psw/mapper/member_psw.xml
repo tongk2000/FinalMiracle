@@ -83,8 +83,15 @@
 	</insert>
 	
 	<!-- 회원번호를 사용하여 회원정보 알아오기 -->
-	<select id="findMemberByIdx" parameterType="com.miracle.psw.model.MemberVO" resultType="com.miracle.psw.model.MemberVO">
-	
+	<select id="findMemberByIdx" parameterType="int" resultType="com.miracle.psw.model.MemberVO">
+		select idx, userid, pwd, name, img, status
+		from tbl_member
+		where idx = #{idx}
+	</select>
+	<select id="findMemberByIdx2" parameterType="int" resultType="com.miracle.psw.model.MemberDetailVO">
+		select birth1, birth2, birth3, hp1, hp2, hp3, email, post1, post2, addr1, addr2, profile, regdate
+		from tbl_member_detail
+		where fk_member_idx = #{idx}
 	</select>
 	
 </mapper>

@@ -67,6 +67,18 @@ public class MemberService implements InterMemberService {
 		return (n + m);
 	}
 
+	@Override
+	public HashMap<String, Object> findMemberByIdx(int idx) {  // 회원번호로 회원정보 불러오기
+		MemberVO mvo = dao.findMemberByIdx(idx);
+		MemberDetailVO mdvo = dao.findMemberByIdx2(idx);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("mvo", mvo);
+		map.put("mdvo", mdvo);
+		
+		return map;
+	}
+
 	
 	
 	

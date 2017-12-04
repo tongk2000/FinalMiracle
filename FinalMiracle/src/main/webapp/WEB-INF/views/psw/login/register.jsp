@@ -60,28 +60,23 @@
 	   $(".requiredInfo").each(function(){
 		   $(this).blur(function(){
 			   var data = $(this).val().trim();
+			   
 			   if(data.length == 0) {
 				   $(this).parent().find(".error").show();
 				   $(":input").attr("disabled",true).addClass("bgcol"); 
 				   $(this).attr("disabled",false).removeClass("bgcol");
-				   
 				   $("#btnRegister").attr("disabled",true);
-				   
 				   $(this).focus();
-			   }
-			   else{
+			   } else {
 				   $(this).parent().find(".error").hide();
-				   $(":input").attr("disabled",false).removeClass("bgcol"); 
-				   				   
+				   $(":input").attr("disabled",false).removeClass("bgcol"); 			   
 				   $("#btnRegister").attr("disabled",false);
 			   }
-		   });
-		   
+		   }); 
 	   });// end of $(".requiredInfo").each()------------
 	   
 	   
 	   $("#pwd").blur(function(){
-		   
 		   var pwd = $(this).val();
 		   
 		   var pattern = new RegExp(/^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g); 
@@ -90,7 +85,6 @@
 		   var bool = pattern.test(pwd);
 		   
 		   if(!bool) {
-				 
 			     $(this).next().show();
 			     
 			     $(":input").attr("disabled",true).addClass("bgcol"); 
@@ -100,24 +94,19 @@
 				 
 				 $(this).val("");
 				 $(this).focus();
-				 
 		   } else {
-			   $(this).next().hide();
-			     
+			   $(this).next().hide(); 
 			   $(":input").attr("disabled",false).removeClass("bgcol");  
 			   $("#btnRegister").attr("disabled",false); 
 		   }
-		   
 	   });// end of $("#passwd").blur()----------------------
 	   
 
 	   $("#pwdcheck").blur(function(){
-		   
 		   var pwd = $("#pwd").val();
 		   var pwdcheck = $(this).val();
 		   		   
-		   if(pwd != pwdcheck) {
-			   
+		   if(pwd != pwdcheck) { 
 		     $(this).next().show();
 			     
 		     $(":input").attr("disabled",true).addClass("bgcol"); 
@@ -128,8 +117,7 @@
 				 
 			 $(this).val("");
 			 $("#pwd").focus();
-		   }
-		   else{
+		   } else {
 			   $(this).next().hide();
 			     
 			   $(":input").attr("disabled",false).removeClass("bgcol");  
