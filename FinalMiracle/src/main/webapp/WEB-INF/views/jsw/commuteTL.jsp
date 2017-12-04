@@ -22,7 +22,8 @@
 	
 	$(document).ready(function(){
 		
-
+		var idx = 
+		getUserDetail();
 		
 	});
 	
@@ -31,13 +32,10 @@
 	
 </script>
 
-
-
 <h1>팀원 출퇴근 정보</h1>
 
 ~~팀 팀원 출퇴근 보기
 <br/>
-
 
 
 
