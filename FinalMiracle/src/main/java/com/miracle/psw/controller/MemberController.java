@@ -6,6 +6,7 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -70,20 +71,18 @@ public class MemberController {
 		String mobile = req.getParameter("mobile");
 		String method = req.getMethod();
 		
-		if(name != null && mobile != null && !name.equals("") && !mobile.equals("") && method.equals("POST")) {
-			req.setAttribute("name", name);    
-			req.setAttribute("mobile", mobile);
-			req.setAttribute("method", method);
-			
+		if(name != null && mobile != null && !name.equals("") && !mobile.equals("") && method.equals("POST")) {			
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("name", name);
 			map.put("mobile", mobile);
 			
 			String userid = service.getUserid(map);
-			
-			req.setAttribute("userid", userid);
+			JSONObject jobj = new JSONObject(); 
+			jobj.put("userid", userid);
+			String str_json = jobj.toString();
+			req.setAttribute("str_json", str_json);
 		}
-		return "psw/login/idFind.not";
+		return "psw/login/json.not";
 	}
 	
 	/* 
