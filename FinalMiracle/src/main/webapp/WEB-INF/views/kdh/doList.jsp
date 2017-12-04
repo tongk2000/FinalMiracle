@@ -26,19 +26,26 @@
 		cursor:pointer;
 	}
 	
-	.custom-menu {
+	#rightClickMune {
 	    z-index:1000;
 	    position: absolute;
-	    background-color:#C0C0C0;
+	    background-color:white;
 	    border: 1px solid black;
 	    padding: 2px;
 	}
+	
+	#rightClickMune table {
+		width:100%;
+	}
+	
 	
 </style>
 
 <script type="text/javascript">
 	$(document).ready(function(){
 		var changeFlag = false; // 모달창에서 변경된 값이 있는지 체크하는 변수
+		$("#rightClickMune").hide();
+		
 		
 		// 폴더 모달창 띄우기
 		$(".modalFolder").click(function(){
@@ -57,6 +64,7 @@
 			return false;
 		}); // end of $(".modalFolder").click(function() ------------------------------------------------------------------------
 		
+				
 		// 할일 모달창 띄우기
 		$(".modalTask").click(function(){
 		 	var frm = {"idx":$(this).attr("id").replace("subject","")};
@@ -74,15 +82,16 @@
 			return false;
 		}); // end of $(".modalFolder").click(function() ------------------------------------------------------------------------
 				
+				
 		// 선택한 폴더 접고 펴기
 		$(".folder").click(function(){
 			var $this = $(this);
 			var idx = $this.attr("id");
-			var depth = getDepth($this); // 클릭한 요소의 깊이 구하기
-			var groupNo = getGroupNo($this);
+			var depth = parseInt(getThirdClass($this)); // 클릭한 요소의 깊이 구하기
+			var groupNo = getSecondClass($this);
 			while(1==1) {
 				$this2 = $this.next();
-				var depth2 = getDepth($this2); // 다음 요소의 깊이 구하기
+				var depth2 = parseInt(getThirdClass($this2)); // 다음 요소의 깊이 구하기
 				
 				if(depth+1 == depth2) { // 클릭한 요소의 깊이보다 다음 요소의 깊이가 1 크다면 (클릭했을때 +1 깊이만 표시되도록 하기 위해서 구분함)
 					if($this2.is(":visible")) {
@@ -101,20 +110,23 @@
 			}
 		}); // end of $(".folder").click(function() -----------------------------------------------------------------------------------------------
 		
-		$(document).bind("mousedown", "keydown", function(){
-			$("div.custom-menu").remove();
-		});
+				
+		// 마우스 클릭 이벤트 있으면 일단 우클릭 메뉴 없애주기
+		$(document).mousedown(function(){
+			$("#rightClickMune").hide();
+		}); // end of $(document).mousedown(function() ------------------------------------------------------
 		
-		
+				
+		// 우클릭시 메뉴 보여주기
 		$(".folder").bind("contextmenu", function(event) {
-			$("div.custom-menu").remove();
 		    event.preventDefault();
-		    $("<div class='custom-menu'>Custom menu</div>")
-		        .appendTo("body")
-		        .css({top: event.pageY + "px", left: event.pageX + "px"});
-			}).bind("click", function(event) {
-		    $("div.custom-menu").remove();
-		});
+		    var classname = getFirstClass($(this));
+		    
+		    var subject = $(this).find(".subject").text();
+		    $("#rcmSubject").text("["+subject+"]");
+		    $("#rightClickMune").css({top:event.pageY+"px", left:event.pageX+"px"}).show();
+		}); // end of $(".folder").bind("contextmenu", function(event) --------------------------------------------------------------------
+				
 				
 		// 폴더 전체 닫기
 		$("#allClose").click(function(){
@@ -122,11 +134,13 @@
 			$(".0").show();
 		}); // end of $("#allClose").click(function() -------------------------------------------------------------------------------------
 		
+				
 		// 폴더 전체 펴기
 		$("#allOpen").click(function(){ 
 			$(".folder").show();
 		}); // end of $("#allOpen").click(function() ---------------------------------------------------------------------------------------------
 		
+				
 		// 모달창에서 정보를 선택했을때 수정할 수 있는 input 띄워주기
 		$(document).on("click", ".showInfo", function(){
 			$(this).hide();
@@ -140,12 +154,14 @@
 			$hiddenEditInput.val("").val(endFocus); // 짝지어주면 글 커서가 제일 마지막으로 감!!
 		}); // end of $(document).on("click", ".showInfo", function() ------------------------------------------------------------------------------
 		
+				
 		// 모달창에서 정보 수정 input 박스를 벗어나면 show 폼으로 변경하기
 		$(document).on("blur", ".hiddenEditInput", function(){
 			$(this).parent(".hiddenEdit").hide();
 			$(this).parent().parent().find(".showInfo").show();
 		}); // end of $(document).on("blur", ".hiddenEditInput", function() -------------------------------------------------------------------------
 		
+				
 		// 모달창에서 정보 수정을 하면 그 값을 바로 show 폼에 적용시키기
 		$(document).on("keyup", ".hiddenEditInput", function(){
 			changeFlag = true;
@@ -155,6 +171,7 @@
 			}
 		}); // end of $(document).on("keyup", ".hiddenEditInput", function() --------------------------------------------------------------------------
 		
+				
 		// 폴더 모달창의 정보를 수정하기
 		$(document).on("click", ".modalEdit", function(){
 			var frm = $("form[name=modalInfoFrm]").serialize(); // 폼값을 직렬화해서 한꺼번에 ajax 로 넘길수 있다. 
@@ -176,6 +193,7 @@
 				}
 			});
 		}); // end of function goModalEdit() -------------------------------------------------------------------------------------------------------------
+		
 		
 		// 할일 완료나 미완료 체크하면 DB수정하고 css 변경해주기
 		$(document).on("change", ".status", function(){
@@ -201,9 +219,15 @@
 			});
 		}); // end of $(document).on("change", "#status", function() ----------------------------------------------------------------------
 		
+				
 		// 페이지 전체에서 esc 키를 누르면 모달창을 닫기
 		$(document).on("keydown", function(){
 			var modalFlag = $('.modal').is(':visible');
+			
+			if(event.keyCode == 27) {
+				$("#rightClickMune").hide();
+			}
+			
 			if(event.keyCode == 27 && modalFlag && changeFlag) { // 입력한 키가 esc 이고, 모달창이 보여지고 있는 상태이면서 바꾼 내용이 있을때
 				var ynFlag = confirm("창을 종료하시겠습니까?\r\n(종료시 수정하신 정보는 모두 초기화됩니다)");
 				if(ynFlag) {
@@ -215,6 +239,7 @@
 			}
 		}); // end of $("#body").keyup(function() ------------------------------------------------------------------------------------------------------
 		
+				
 		// 모달창에서 x 나 취소를 누르면 esc 누른 효과를 주기(위의 이벤트핸들러로 이동함)
 		$(document).on("click", ".modalClose", function(){			
 			event.keyCode = 27;
@@ -223,23 +248,34 @@
 				
 	}); // end of $(document).ready(function() --------------------------------------------------------------------------------------------------------
 	
-	// 그룹번호 구해주는 함수
-	function getGroupNo($this) {
+			
+	// 첫번째 클래스 구해주는 함수
+	function getFirstClass($this) {
 		var className = $this.attr("class");
-		var index1 = className.indexOf(" ");
-		var index2 = className.indexOf(" ", index1+1);
-		var groupNo = className.substr(index1+1, index2-index1-1); // 2번째 클래스를 추출함
-		return parseInt(groupNo);
-	} // end of function getGroupNo($this) -----------------------------------------------------------------------------------------------------------------------
+		var index = className.indexOf(" ");
+		var firstClass = className.substr(0, index); // 첫번째 클래스를 추출함
+		return firstClass;
+	} // end of function getSecondClass($this) -----------------------------------------------------------------------------------------------------------------------
 	
-	// 깊이 구해주는 함수
-	function getDepth($this) {
+	
+	// 두번째 클래스 구해주는 함수
+	function getSecondClass($this) {
 		var className = $this.attr("class");
 		var index1 = className.indexOf(" ");
 		var index2 = className.indexOf(" ", index1+1);
-		var depth = className.substr(index2);  // 3번째 클래스를 추출함
-		return parseInt(depth);
-	} // end of function getDepth($this) ------------------------------------------------------------------------------------------------------------------------
+		var secondClass = className.substr(index1+1, index2-index1-1); // 두번째 클래스를 추출함
+		return secondClass;
+	} // end of function getSecondClass($this) -----------------------------------------------------------------------------------------------------------------------
+	
+	
+	// 세번째 클래스 구해주는 함수
+	function getThirdClass($this) {
+		var className = $this.attr("class");
+		var index1 = className.indexOf(" ");
+		var index2 = className.indexOf(" ", index1+1);
+		var thirdClass = className.substr(index2);  // 세번째 클래스를 추출함
+		return thirdClass;
+	} // end of function getThirdClass($this) ------------------------------------------------------------------------------------------------------------------------
 </script>
 
 <div class="container" style="width:40%; float:left">
@@ -267,7 +303,7 @@
 										<c:if test="${dvo.fk_folder_idx != 0}"> <!-- 최상위 폴더가 아니라면 -->
 											└
 										</c:if>
-										<span id="subject${dvo.idx}">${dvo.subject}</span>
+										<span class="modalFolder subject" id="subject${dvo.idx}">${dvo.subject}</span>
 									</span>
 								</c:if>
 								<c:if test="${dvo.category == 2}"> <!-- 할일이라면 -->
@@ -277,7 +313,7 @@
 									<c:if test="${dvo.status == 1}"> <!-- 미완료된 할일이라면 -->
 										└<input type="checkbox" id="status${dvo.idx}" class="status"/>
 									</c:if>
-									<span class="modalTask" id="subject${dvo.idx}">${dvo.subject}</span>
+									<span class="modalTask subject" id="subject${dvo.idx}">${dvo.subject}</span>
 								</c:if>
 							</span>
 						</td>
@@ -309,7 +345,28 @@
 
 
 
-
+<div id="rightClickMune" style="width:200px; padding:0px;">
+	<table>
+		<tr>
+			<td id="rcmSubject">1</td>
+		</tr>
+		<tr>
+			<td>하위폴더추가</td>
+		</tr>
+		<tr>
+			<td>할일추가</td>
+		</tr>
+		<tr>
+			<td>팀원초대</td>
+		</tr>
+		<tr>
+			<td>상세정보</td>
+		</tr>
+		<tr>
+			<td>삭제</td>
+		</tr>
+	</table>
+</div>
 
 
 
