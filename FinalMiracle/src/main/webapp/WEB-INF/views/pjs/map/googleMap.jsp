@@ -42,8 +42,8 @@
 		google.maps.event.addDomListener(window, 'load', initialize); // 구글사에서 그대로 따옴!!!
 		function initialize(){ // 사용자가 커스텀마이즈 할 수 있다.
 		    var mapOptions = { // 구글 맵 옵션 설정
-		        zoom : 20, // 기본 확대율(줌 크기조절) , 숫자가 클수록 줌 크기가 확대되는 것이다. 숫자가 작아질 수록 광대역을 볼 수 있다.
-		        center : new google.maps.LatLng(37.5338151, 126.89697839999997), // 처음 지도의 중앙 위치 세팅!!
+		        zoom : 10, // 기본 확대율(줌 크기조절) , 숫자가 클수록 줌 크기가 확대되는 것이다. 숫자가 작아질 수록 광대역을 볼 수 있다.
+		        center : new google.maps.LatLng(37.5338151, 126.896978300000007), // 처음 지도의 중앙 위치 세팅!!
 		        //-------------------------------------------------------------------- 지도 옵션에 관련한 세부사항들
 		        disableDefaultUI : false,  // 기본 UI(지도창에 나오는 부수적인 아이콘들, 없으면 지도만 나온다.) 비활성화 여부
 		        scrollwheel : true,        // 마우스 휠로 확대, 축소 사용 여부
@@ -82,15 +82,15 @@
 		function setMarkers(map, storeArr){ // 지도 값과 3이 들어간다.!!!!
 			markerArr = new Array(storeArr.length); // 배열의 길이 3!!!
 			for(var i=0; i < storeArr.length; i++){
-				if(i == 0) { // 디비서 가져온 가계들마다 마커의 색을 각각 주기!!!!
-					var image = "<%= request.getContextPath() %>/resources/images/pointerBlue.png";  // 1번 마커 이미지	
-				} 
-				else if(i == 1) {
+				//if(i == 0) { // 디비서 가져온 가계들마다 마커의 색을 각각 주기!!!!
+					var image = "<%= request.getContextPath() %>/resources/images/pointerYellow.png";  // 1번 마커 이미지	
+				//} 
+				<%-- else if(i == 1) {
 					var image = "<%= request.getContextPath() %>/resources/images/pointerPink.png"; // 2번 마커 이미지
 				}
 				else {
 					var image = "<%= request.getContextPath() %>/resources/images/pointerBlue.png"; // 3번 마커 이미지
-				}
+				} --%>
 				var store = storeArr[i]; // 배열의 하나의 객체 값을   var store에 담는다
 				//  alert(store[0]);
 				var myLatLng = new google.maps.LatLng(Number(store[1]), Number(store[2]));  

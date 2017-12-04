@@ -132,7 +132,6 @@ public class PjsserviceImpl implements PjsinterService {
 		return list;
 	}
 //==========================================================================================================================================================//	
-	
 
 	
 	
@@ -141,4 +140,14 @@ public class PjsserviceImpl implements PjsinterService {
 
 //==========================================================================================================================================================//	
 
+	
+	
+	@Override
+	public HashMap<String, String> getUserTeam(String userid) {
+		// 로그인한 유저의 팀정보를 가져오는 메소드
+		HashMap<String, String> userTeam = dao.getUserTeam(userid);
+		return userTeam;
+	}
+	
+	
 }	
