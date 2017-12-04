@@ -20,6 +20,11 @@ public interface InterMemberDAO {
 
 	int registerMemberDetail(MemberDetailVO mdvo);  // 회원가입(tbl_member_detail)
 
+	MemberVO findMemberByIdx(int idx);  // 회원번호로 회원정보 조회(tbl_member)
+
+	MemberDetailVO findMemberByIdx2(int idx);  // 회원번호로 회원정보 조회(tbl_member_detail)
+	
+
 	
 
 	
