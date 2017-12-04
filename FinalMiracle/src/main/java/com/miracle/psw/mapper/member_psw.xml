@@ -12,12 +12,12 @@
                      where status = 1
                      and userid = #{userid} and pwd = #{pwd}) 
 	           when 1 then 1
-	           else ( case (select count(*)
-                            from tbl_member
-                            where userid = #{userid}) 
-	                  when 1 then 0
-	                  else -1
-	                  end
+	           else (case (select count(*)
+                           from tbl_member
+                           where userid = #{userid}) 
+	                 when 1 then 0
+	                 else -1
+	                 end
 	                 )
 	           end as LOGINCHECK
 		from dual
@@ -81,6 +81,11 @@
 		insert into tbl_member_detail(idx, fk_member_idx, birth1, birth2, birth3, hp1, hp2, hp3, email, post1, post2, addr1, addr2, profile, regdate)
 		values(seq_member_detail.nextval, (select max(idx) from tbl_member), #{birth1}, #{birth2}, #{birth3}, #{hp1}, #{hp2}, #{hp3}, #{email}, #{post1}, #{post2}, #{addr1}, #{addr2}, default, default )  
 	</insert>
+	
+	<!-- 회원번호를 사용하여 회원정보 알아오기 -->
+	<select id="findMemberByIdx" parameterType="com.miracle.psw.model.MemberVO" resultType="com.miracle.psw.model.MemberVO">
+	
+	</select>
 	
 </mapper>
 

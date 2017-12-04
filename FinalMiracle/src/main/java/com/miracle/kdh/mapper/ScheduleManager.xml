@@ -49,6 +49,16 @@
 		where idx = #{idx} and status = 1
 		order by 1
 	</select>
+	
+	<update id="goModalEdit" parameterType="com.miracle.kdh.model.FolderVO">
+		update tbl_folder set subject=#{subject}, content=#{content}, startDate=to_date(#{startDate}), lastDate=to_date(#{lastDate}), importance=#{importance}
+		where idx = #{idx}
+	</update>
+	
+	<update id="setTaskComplete" parameterType="com.miracle.kdh.model.FolderVO">
+		update tbl_folder set status = #{status}
+		where idx = #{idx}
+	</update>
 </mapper>
 
 

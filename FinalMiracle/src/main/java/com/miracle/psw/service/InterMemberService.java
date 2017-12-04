@@ -21,6 +21,8 @@ public interface InterMemberService {
 
 	int registerMember(MemberVO mvo, MemberDetailVO mdvo) throws Throwable ;  // 회원가입
 
+
+
 	
 
 	

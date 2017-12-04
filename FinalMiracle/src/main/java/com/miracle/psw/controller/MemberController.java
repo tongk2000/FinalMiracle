@@ -6,6 +6,7 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -23,15 +24,7 @@ import com.miracle.psw.util.GoogleMail;
 public class MemberController {
 	
 	@Autowired  // DI
-	private InterMemberService service;
-	
-	// 일정관리 페이지 대신 index 페이지 이동
-	@RequestMapping(value="/index.mr", method={RequestMethod.GET})
-	public String index() {
-		
-		return "index.all";
-	}
-	
+	private InterMemberService service;	
 	
 	@RequestMapping(value="/member_login.mr" , method={RequestMethod.GET})
 	public String login() {  // 로그인 폼페이지 띄우기(첫화면)
@@ -39,7 +32,7 @@ public class MemberController {
 		return "psw/login/loginForm.not";
 	}
 	@RequestMapping(value="/member_loginEnd.mr", method={RequestMethod.POST})
-	public String loginEnd(HttpServletRequest req, HttpSession session, MemberVO loginUser) {  // 로그인 처리
+	public String loginEnd(HttpServletRequest req, HttpSession session, MemberVO loginUser) {  // 로그인 완료
 		String userid = req.getParameter("userid");
 		String pwd = req.getParameter("pwd");
 		
@@ -78,20 +71,18 @@ public class MemberController {
 		String mobile = req.getParameter("mobile");
 		String method = req.getMethod();
 		
-		if(name != null && mobile != null && !name.equals("") && !mobile.equals("") && method.equals("POST")) {
-			req.setAttribute("name", name);    
-			req.setAttribute("mobile", mobile);
-			req.setAttribute("method", method);
-			
+		if(name != null && mobile != null && !name.equals("") && !mobile.equals("") && method.equals("POST")) {			
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("name", name);
 			map.put("mobile", mobile);
 			
 			String userid = service.getUserid(map);
-			
-			req.setAttribute("userid", userid);
+			JSONObject jobj = new JSONObject(); 
+			jobj.put("userid", userid);
+			String str_json = jobj.toString();
+			req.setAttribute("str_json", str_json);
 		}
-		return "psw/login/idFind.not";
+		return "psw/login/json.not";
 	}
 	
 	/* 
@@ -250,32 +241,23 @@ public class MemberController {
 		mdvo.setPost2(post2);
 		mdvo.setAddr1(addr1);
 		mdvo.setAddr2(addr2);
-		
-		try {
-			int n = service.registerMember(mvo, mdvo); 
-
-			if(n == 2) {
-				String msg = "Miracle World 의 가족이 되신걸 환영합니다.";
-				String loc = "member_login.mr";
 				
-				req.setAttribute("msg", msg);
-				req.setAttribute("loc", loc);
-			}
-			
-		} catch (java.sql.SQLIntegrityConstraintViolationException e) {
-			
-			String msg = "회원 아이디가 이미 사용중입니다. 새로운 아이디를 입력하세요!!";
-			String loc = "member_register.mr";
+		int n = service.registerMember(mvo, mdvo); 
+
+		if(n == 2) {
+			String msg = "Miracle World 의 가족이 되신걸 환영합니다.";
+			String loc = "member_login.mr";
 			
 			req.setAttribute("msg", msg);
 			req.setAttribute("loc", loc);
 		}
-		
+
 		return "psw/msg.not";
 	}  // end of public String registerEnd(HttpServletRequest req, MemberVO mvo, MemberDetailVO mdvo) --------------
 	
+	
 	@ExceptionHandler(java.sql.SQLIntegrityConstraintViolationException.class)
-	public String handleDataIntegrityViolationException(HttpServletRequest req) {
+	public String SQLIntegrityConstraintViolationException(HttpServletRequest req) {
 		String msg = "아이디 제약조건 위반입니다.";
 		
 		String ctxpath = req.getContextPath();
@@ -286,6 +268,54 @@ public class MemberController {
 		
 		return "psw/msg.not";
 	}
+	
+	/*
+	@RequestMapping(value="/member_edit.mr")
+	public String editMyInfo(HttpServletRequest req, HttpSession session, MemberVO mvo, MemberDetailVO mdvo) {
+		session = req.getSession();
+		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		
+		if(loginUser.getUserid() != null) {
+			String str_idx = req.getParameter("idx");
+			
+			mvo = null;
+			mdvo = null;
+			
+			int idx = 0;
+			
+			try{
+			    idx = Integer.parseInt(str_idx);
+			    	
+			   	if(idx < 1) {    	
+			   		String msg = "비정상적인 경로로 들어왔습니다.";
+				    String loc = "javascript:history.back()";
+				    
+				    req.setAttribute("msg", msg);
+				    req.setAttribute("loc", loc);
+				    
+		    	} else {
+			    	    mvo = service.findMemberByIdx(idx); 
+			    	    mdvo = service.findMemberByIdx2(idx); 
+			            
+						req.setAttribute("mvo", mvo);
+						}
+			   	
+			    } catch(NumberFormatException e) {
+			   	
+			    	String msg = "비정상적인 경로로 들어왔습니다.";
+				    String loc = "javascript:history.back()";
+				    
+				    req.setAttribute("msg", msg);
+				    req.setAttribute("loc", loc);
+			    }
+		}
+		
+		return "psw/login/editMyInfo.all";
+	}
+	*/
+	
+	
+	
 	
 	
 }

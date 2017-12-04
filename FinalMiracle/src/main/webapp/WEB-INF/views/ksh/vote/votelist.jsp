@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<script type="text/javascript" src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
+<script src="<%= request.getContextPath() %>/resources/js/highcharts.js"></script>
+<script src="<%= request.getContextPath() %>/resources/js/modules/exporting.js"></script>
     
 <style type="text/css">
 	table, th, td {border: solid gray 1px;}
@@ -11,7 +15,7 @@
     	           cursor: pointer; }
   	
   	/* ==== #142. 파일첨부가 되었으므로 테이블의 가로폭을 늘려보자 ==== */
-  	#table {border-collapse: collaps; width: 920px;}
+  	#table {border-collapse: collaps; width: 100%;}
   	#table th, #table td {padding: 5px;}
   	#table th {background-color: #DDDDDD;}
 	    
@@ -19,72 +23,228 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-				
+		searchKeep();
+		
+		$("#sizePerPage").change(function(){
+			goSizePerPage();
+		});
+		
+		
+		$('#chart').highcharts({
+	        chart: {
+	            plotBackgroundColor: null,
+	            plotBorderWidth: null,
+	            plotShadow: false,
+	            type: 'pie'
+	        },
+	        title: {
+	            text: '투표 차트'
+	        },
+	        tooltip: {
+	            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	        },
+	        plotOptions: {
+	            pie: {
+	                allowPointSelect: true,
+	                cursor: 'pointer',
+	                dataLabels: {
+	                    enabled: true,
+	                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+	                    style: {
+	                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+	                    }
+	                }
+	            }
+	        },
+	        series: [{
+	            name: '투표율',
+	            colorByPoint: true,
+	            data: [
+	            	<c:forEach var="votevo" items="${voteList}" varStatus="status">
+	            	<c:set value="${votevo.IDX}" var="voteidx" />
+		            	<c:forEach var="voteitemvo" items="${voteItemList}" varStatus="status">
+		            	<c:set value="${voteitemvo.fk_vote_idx}" var="voteitemidx" />
+		            		<c:if test="${voteidx eq voteitemidx}">
+				            	<c:if test="${status.count < voteItemList.size()}">
+			            		{
+			            			name: '${voteitemvo.item}',
+			            			y: Number(${voteitemvo.votenum}) //숫자 형태이므로 반드시 Number(${key})라는 함수를 사용해야한다.
+			            			
+			            			<c:if test="${status.count == voteItemList.size()-1}">
+			            			,
+			            			sliced: true,
+			            			selected: true
+			            			</c:if>
+			            		}
+				            		<c:if test="${status.count < voteItemList.size()-1}">
+				            		,
+				            		</c:if>
+			            		</c:if>
+			            	</c:if>
+		            	</c:forEach>
+		            </c:forEach>
+	            ]
+	        }]
+	    });
+		
+		
 	});
+	
+	function searchKeep(){
+		<c:if test="${(colname != 'null' && not empty colname) && (search != 'null' && not empty search)}"> /* colname과 search가 비어있지 않다라면 */
+			$("#colname").val("${colname}");//검색시 컬럼명을 유지시켜보자
+			$("#search").val("${search}");//검색어 대한 검색어를 유지시켜보자
+		</c:if>
+		$("#sizePerPage").val("${sizePerPage}");
+	}
+	
+	function goSearch(){
+		var frm = document.listFrm;
+		var search = $("#search").val();
+		
+		if(search.trim() == ""){
+			alert("검색어를 입력하세요");
+			return;
+		} else {
+			frm.submit();
+		}
+	}
+	
+	function goDel(idx){
+		
+		if(confirm("투표를 삭제하시겠습니까?")){
+			var frm = document.idxFrm;
+			
+			frm.idx.value = idx;
+			
+			frm.action = "voteDel.mr";
+			frm.submit();
+		}
+		
+	}
+	
+	function goSizePerPage(){
+		var frm = document.listFrm;
+		
+		frm.submit();
+	}
 	
 	
 </script>
 
-<div style="padding-left: 10%; border: solid 0px red;">
+<form id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/voteList.mr" method="get" enctype="multipart/form-data">
+<div style="padding-left: 10%; border: solid 0px red; width: 100%;">
 	<h1>투표목록</h1>
 	
 	<div style="margin-top: 20px;">
-		<button type="button" onClick="">진행중 투표</button>&nbsp;
-		<button type="button" onClick="">종료된 투표</button>
+		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteList.mr'">진행중 투표</button>&nbsp;
+		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteReadyList.mr'">시작전 투표</button>&nbsp;
+		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteEndList.mr'">종료된 투표</button>&nbsp;
+		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteMyList.mr'">나의 투표</button>&nbsp;
+		<br/>전체 <span style="color: red; font-weight: bold;">${totalCount}</span>&nbsp;
+		목록 수 : 
+		<select name="sizePerPage" id="sizePerPage">
+			<option value="5">5</option>
+			<option value="10">10</option>
+			<option value="15">15</option>
+			<option value="20">20</option>
+		</select>
 	</div>
+	
 	
 	<table id="table">
 		<thead>
 			<tr>
-				<th style="width: 70px;" >투표번호</th>
-				<th style="width: 360px;" >팀원번호</th>
-				<th style="width: 70px;" >제목</th>
-				<th style="width: 180px;" >내용</th>
-				<th style="width: 70px;" >시작날짜</th>
-				<th style="width: 70px;">종료날짜</th>
-				<th style="width: 100px;">문항</th>
+				<th style="width: 5%;">투표번호</th>
+				<th style="width: 5%;">팀번호</th>
+				<th style="width: 5%;">팀원번호</th>
+				<th style="width: 10%;">제목</th>
+				<th style="width: 20%">내용</th>
+				<th style="width: 5%;">시작날짜</th>
+				<th style="width: 5%;">종료날짜</th>
+				<th style="width: 10%;">문항</th>
+				<th style="width: 10%;">비고</th>
+				<th style="width: 25%;">차트</th>
 			</tr>
 		</thead>
 		
+		<c:if test="${not empty voteList}">
+		<tbody>
+			<c:forEach var="votevo" items="${voteList}" varStatus="status">
+				<c:set value="${votevo.IDX}" var="voteidx" />
+				<tr>
+					<td>${votevo.IDX}</td>
+					<td>${votevo.FK_TEAM_IDX}</td>
+					<td>${votevo.FK_TEAMWON_IDX}</td>
+					<td>${votevo.SUBJECT}</td>
+					<td>${votevo.CONTENT}</td>
+					<td>${votevo.STARTDATE}</td>
+					<td>${votevo.ENDDATE}</td>
+					<td>
+						<c:forEach var="voteitemvo" items="${voteItemList}" varStatus="status">
+							<c:set value="${voteitemvo.fk_vote_idx}" var="voteitemidx" />
+							<c:if test="${voteidx eq voteitemidx}">
+								<input type="radio" name="voteitem_info" value="${voteitemvo.item}">${voteitemvo.item}<br/>${voteitemvo.votenum}표
+								<button type="button" onClick="goVote('${votevo.IDX}', '${votevo.FK_TEAMWON_IDX}', '${voteitemvo.idx}', '${gobackURL}');">선택</button>
+								<br>
+							</c:if>
+						</c:forEach>	
+						<button type="button">차트보기</button>
+					</td>
+					<td>
+						<%-- <c:if test="${voteidx eq sessionScope.idx}"> --%>
+							<button type="button" onClick="goDel('${votevo.IDX}');">투표삭제</button>&nbsp;
+						<%-- </c:if> --%>
+					</td>
+					<td>
+						<div id="chart" class="chart" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+					</td>
+				</tr>
+			</c:forEach>
+		</tbody>
+		</c:if>
+		
+		<c:if test="${empty voteList}">
 		<tbody>
 			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+				<td colspan="10">투표 목록이 존재하지 않습니다.</td>
 			</tr>
 		</tbody>
-	</table>
+		</c:if>
+
+	</table>	
 	<br/>
-	
-	<form name="seqFrm">
-		<input type="hidden" name="seq" />
-		<input type="hidden" name="gobackURL" />
-	</form>
 
 	<!-- ==== 페이지바 ==== -->
 	<div align="center" style="width: 70%; margin-left: 50px;">
-		
+		${pagebar}
 	</div>
 	
 	<!-- ==== 투표 검색창 ==== -->
-	<form name="searchFrm" action="" method="get">
-		<select name="colname" id="colname">
-			<option value="subject">제목</option>
-			<option value="content">내용</option>
-			<option value="name">성명</option>
-		</select>
-		<input type="text" name="search" id="search" size="40" />
-		<button type="button" onclick="goSearch();">검색</button>
-	</form>
+	<select name="colname" id="colname">
+		<option value="subject">제목</option>
+		<option value="content">내용</option>
+		<!-- <option value="name">글쓴이</option> -->
+	</select>
+	<input type="text" name="search" id="search" size="40" />
+	<button type="button" onclick="goSearch();">검색</button>
 	
 	<div style="margin-top: 20px;">
-		<button type="button" onClick="">투표목록</button>&nbsp;
-		<button type="button" onClick="">투표작성</button>
+		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteAdd.mr'">투표작성</button>&nbsp;
 	</div>
 	
 
 </div>
+</form>
+
+<form name="choiceFrm" action="<%= request.getContextPath() %>/voteChoice.mr" method="get" enctype="multipart/form-data">
+	<input type="hidden" name="vote_idx"/>
+	<input type="hidden" name="teamwon_idx"/>
+	<input type="hidden" name="voteitem_idx"/>
+	<input type="hidden" name="gobackURL" />
+</form>
+
+<form name="idxFrm">
+	<input type="hidden" name="idx" />
+	<input type="hidden" name="gobackURL" value="${gobackURL}">
+</form>

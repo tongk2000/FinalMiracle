@@ -10,13 +10,14 @@
 	<!-- === *** 공지사항 게시판 리스트 전체를 불러온다. *** === --><!-- 바뀜 -->
 	<!-- === *** 공지사항 게시판에서 검색한 리스트를 불러온다. *** === -->
 	<select id="getNoticeList" parameterType="HashMap" resultMap="noticeMap">
-		select *
+		select t.*
 		from
 		(
 		  select rownum as rno, v.*
 		  from
 		  (
-		      select n.fk_userid, n.subject, to_char(n.regday, 'yyyy-mm-dd hh24:mi:ss') as regday,n.readcount, m.img
+		      select n.idx, n.fk_userid, n.pwd, n.subject, to_char(n.regday, 'yyyy-mm-dd hh24:mi:ss') as regday, n.readcount
+		      		, n.depth, n.groupno, n.ref_idx, n.status, m.img
 		      from tbl_notice n join tbl_member m on n.fk_userid = m.userid
 		      <if test='searchType!=null and searchString!=null and !"".equals(searchType) and !"".equals(searchString)'>
 				where ${searchType} like '%'||#{searchString}||'%'
@@ -28,10 +29,16 @@
 	</select>
 	
 	<resultMap id="noticeMap" type="HashMap">
+		<result property="idx"		 		column="idx" 			javaType="String"></result>
  		<result property="fk_userid" 		column="fk_userid" 		javaType="String"></result>
+ 		<result property="pwd"		 		column="pwd" 			javaType="String"></result>
  		<result property="subject" 			column="subject" 		javaType="String"></result>
  		<result property="regday" 			column="regday" 		javaType="String"></result>
- 		<result property="readcount" 		column="readcount" 		javaType="int"></result>
+ 		<result property="readcount" 		column="readcount" 		javaType="String"></result>
+ 		<result property="depth" 			column="depth" 			javaType="String"></result>
+ 		<result property="groupno" 			column="groupno" 		javaType="String"></result>
+ 		<result property="ref_idx" 			column="ref_idx" 		javaType="String"></result>
+ 		<result property="status" 			column="status" 		javaType="String"></result>
  		<result property="img" 				column="img" 			javaType="String"></result>
  	</resultMap>
 <!-- ============================================================================================================================================================= -->	
@@ -57,6 +64,25 @@
 			where ${searchType} like '%'||#{searchString}||'%'
 		</if>
 	</select>
+<!-- ============================================================================================================================================================= -->	
+	<!-- === *** 이모티콘을 누르면 해당 유저의 정보 불러온다. *** === -->
+	<select id="getViewContent" parameterType="String" resultMap="userinfo">
+		select *
+		from
+		(
+		    select userid, name, img, birth1||'년도 '||birth2||'월생' as age, hp1||'-'||hp2||'-'||hp3 as hp, addr1||' '||addr2 as addr
+		    from tbl_member m join tbl_member_detail d on m.idx = d.fk_member_idx
+			where m.userid = #{id}
+		) v
+	</select>
+	<resultMap id="userinfo" type="HashMap">
+ 		<result property="userid" 				column="userid" 			javaType="String"></result>
+ 		<result property="name" 				column="name" 				javaType="String"></result>
+ 		<result property="img"		 			column="img" 				javaType="String"></result>
+ 		<result property="age" 					column="age" 				javaType="String"></result>
+ 		<result property="hp" 					column="hp" 				javaType="String"></result>
+ 		<result property="addr" 				column="addr" 				javaType="String"></result>
+ 	</resultMap>
 <!-- ============================================================================================================================================================= -->	
 	
 
@@ -98,14 +124,28 @@
 		</if>
 	</select>
 <!-- ============================================================================================================================================================= -->	
-	
-	
-	
+	<!-- === *** JSON 검색한 리스트를 불러온다. *** === -->
+	<select id="getMindJSONList" parameterType="HashMap" resultType="String">
+		<if test="'fk_userid'.equals(searchType)">
+			select fk_userid
+			from tbl_mind
+			where ${searchType} like '%'||#{searchString}||'%'
+		</if>
+		<if test="'subject'.equals(searchType)">
+			select subject
+			from tbl_mind
+			where ${searchType} like '%'||#{searchString}||'%'
+		</if>
+	</select>
 <!-- ============================================================================================================================================================= -->	
-	<!-- === *** 구글맵  *** === -->
+	
+	
+	
+<!-- === *** 구글맵  *** === -->	
+<!-- ============================================================================================================================================================= -->	
 	<!-- === *** 구글맵 전체 정보를 가져온다. *** === -->
 	<select id="getMap" resultType="com.miracle.pjs.model.MapVO">
-		select * from tbl_map
+		select * from tbl_map m join tbl_team t on t.idx = m.team_idx
 	</select>
 <!-- ============================================================================================================================================================= -->	
 

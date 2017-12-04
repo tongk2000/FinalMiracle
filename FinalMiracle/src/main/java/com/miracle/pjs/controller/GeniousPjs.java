@@ -21,7 +21,7 @@ public class GeniousPjs {
 /*=======================================================================================================================================================*/	
 	
 	// ==== *** 공지사항 게시판 *** ==== //
-	@RequestMapping(value="noticeList.mr", method={RequestMethod.GET})
+	@RequestMapping(value="noticeList.mr", method={RequestMethod.GET}) // 공지사항 게시판 리스트
 	public String notice(HttpServletRequest req) {	
 		/* ============================== 페이징 처리 시 필요한 변수들! ============================== */
 		int sizePerPage = 0;
@@ -64,7 +64,7 @@ public class GeniousPjs {
 		map.put("eNum", eNum);
 		
 		int totalCount = service.getNoticeCount(map);
-		int totalPage=(int)Math.ceil((double)totalCount/sizePerPage);
+		int totalPage=(int)Math.ceil((double)totalCount / sizePerPage);
 		String pagebar = MyUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentPage, searchType, searchString, null, "noticeList.mr");
 		List<HashMap<String, String>> list = service.getNoticeList(map);
 		req.setAttribute("list", list);
@@ -72,8 +72,8 @@ public class GeniousPjs {
 		req.setAttribute("searchString", searchString);
 		req.setAttribute("pagebar", pagebar);
 		return "pjs/notice/noticeList.all";
-	}
-	@RequestMapping(value="noticeListJSON.mr", method={RequestMethod.GET})
+	}/* ================================================================================================================================================== */
+	@RequestMapping(value="noticeListJSON.mr", method={RequestMethod.GET})	// 공지사항 게시판 리스트의 검색작업
 	public String noticeJSON(HttpServletRequest req) {	
 		String searchString = req.getParameter("searchString");
 		String searchType = req.getParameter("searchType");
@@ -83,6 +83,44 @@ public class GeniousPjs {
 		String list = service.getNoticeJSONList(map);
 		req.setAttribute("list", list);
 		return "pjs/notice/noticeListJSON.not";
+	}/* ================================================================================================================================================== */
+	@RequestMapping(value="noticeUserInfo.mr", method={RequestMethod.GET})	// 공지사항 게시판글의 유저정보보기
+	public String noticeUserInfo(HttpServletRequest req) {
+		// 1. 게시판을 클릭해서 글을 볼 목적일 경우
+		String id = req.getParameter("userid"); // 해당 번호의 글내용을 가져온다.
+		System.out.println("================================id========================"+id);
+		HashMap<String, String> map = service.getViewContent(id);
+		String userid = map.get("userid"); String name = map.get("name"); String img = map.get("img"); 
+		String age = map.get("age"); String hp = map.get("hp"); String addr = map.get("addr"); 
+		req.setAttribute("userid", userid); req.setAttribute("name", name); req.setAttribute("img", img); 
+		req.setAttribute("age", age); req.setAttribute("hp", hp); req.setAttribute("addr", addr); 
+		return "pjs/notice/noticeView.not";
+	}/* ================================================================================================================================================== */
+	@RequestMapping(value="noticeWrite.mr", method={RequestMethod.GET})	// 공지사항 게시판글 쓰기 
+	public String noticeWrite(HttpServletRequest req) {
+		// 1. 게시판을 클릭해서 글을 볼 목적일 경우
+		String idx = req.getParameter("idx");
+		req.setAttribute("idx", idx);
+		return ".all";
+	}/* ================================================================================================================================================== */
+	@RequestMapping(value="noticeDel.mr", method={RequestMethod.GET})	// 공지사항 게시판글 삭제
+	public String noticeDel(HttpServletRequest req) {
+		// 1. 게시판을 클릭해서 글을 볼 목적일 경우
+		String idx = req.getParameter("idx");
+		req.setAttribute("idx", idx);
+		return ".all";
+	}/* ================================================================================================================================================== */
+	@RequestMapping(value="noticeEdit.mr", method={RequestMethod.GET})	// 공지사항 게시판글 수정
+	public String noticeEdit(HttpServletRequest req) {
+		// 1. 게시판을 클릭해서 글을 볼 목적일 경우
+		String idx = req.getParameter("idx");
+		req.setAttribute("idx", idx);
+		return ".all";
+	}/* ================================================================================================================================================== */
+	@RequestMapping(value="noticeView.mr", method={RequestMethod.POST})	// 공지사항 게시판글 보기 
+	public String noticeView(HttpServletRequest req) {
+		// 1. 게시판을 클릭해서 글을 볼 목적일 경우
+		return ".all";
 	}
 	
 /*=======================================================================================================================================================*/	
@@ -106,8 +144,53 @@ public class GeniousPjs {
 		req.setAttribute("pagebar", pagebar);
 		req.setAttribute("list", list);
 		return "pjs/mind/mindList.all";
+	}/* ================================================================================================================================================== */
+	@RequestMapping(value="mindListJSON.mr", method={RequestMethod.GET})
+	public String mindJSON(HttpServletRequest req) {	
+		String searchString = req.getParameter("searchString");
+		String searchType = req.getParameter("searchType");
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("searchString", searchString);
+		map.put("searchType", searchType);
+		String list = service.getMindJSONList(map);
+		req.setAttribute("list", list);
+		return "pjs/mind/mindListJSON.not";
+	}/* ================================================================================================================================================== */
+	@RequestMapping(value="mindView.mr", method={RequestMethod.GET})
+	public String mindView(HttpServletRequest req) {
+		String idx = req.getParameter("idx");
+		req.setAttribute("idx", idx);
+		return "noticeView.all";
 	}
-
+	@RequestMapping(value="mindWrite.mr", method={RequestMethod.GET})	// 공지사항 게시판글 쓰기 
+	public String mindWrite(HttpServletRequest req) {
+		// 1. 게시판을 클릭해서 글을 볼 목적일 경우
+		String idx = req.getParameter("idx");
+		req.setAttribute("idx", idx);
+		return "noticeView.all";
+	}/* ================================================================================================================================================== */
+	@RequestMapping(value="mindDel.mr", method={RequestMethod.GET})	// 공지사항 게시판글 삭제
+	public String mindDel(HttpServletRequest req) {
+		// 1. 게시판을 클릭해서 글을 볼 목적일 경우
+		String idx = req.getParameter("idx");
+		req.setAttribute("idx", idx);
+		return "noticeView.all";
+	}/* ================================================================================================================================================== */
+	@RequestMapping(value="mindEdit.mr", method={RequestMethod.GET})	// 공지사항 게시판글 수정
+	public String mindEdit(HttpServletRequest req) {
+		// 1. 게시판을 클릭해서 글을 볼 목적일 경우
+		String idx = req.getParameter("idx");
+		req.setAttribute("idx", idx);
+		return "noticeView.all";
+	}/* ================================================================================================================================================== */
+	@RequestMapping(value="mindUserInfo.mr", method={RequestMethod.GET})	// 공지사항 게시판글의 유저정보보기
+	public String mindUserInfo(HttpServletRequest req) {
+		// 1. 게시판을 클릭해서 글을 볼 목적일 경우
+		String idx = req.getParameter("idx");
+		req.setAttribute("idx", idx);
+		return "noticeView.all";
+	}
+	
 /*=======================================================================================================================================================*/	
 
 	// ==== *** 구글맵 *** ==== //
@@ -125,7 +208,7 @@ public class GeniousPjs {
 	public String memo(HttpServletRequest req) {
 		return "pjs/memo/?.all";
 	}
-
+	
 /*=======================================================================================================================================================*/	
 
 }		

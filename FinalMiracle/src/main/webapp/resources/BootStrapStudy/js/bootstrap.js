@@ -1058,9 +1058,9 @@ if (typeof jQuery === 'undefined') {
 
   Modal.prototype.escape = function () {
     if (this.isShown && this.options.keyboard) {
-      this.$element.on('keydown.dismiss.bs.modal', $.proxy(function (e) {
+      /*this.$element.on('keydown.dismiss.bs.modal', $.proxy(function (e) {
         e.which == 27 && this.hide()
-      }, this))
+      }, this))*/ // #kdh : 모달창 마음대로 닫히는거 방지하려고 주석처리함
     } else if (!this.isShown) {
       this.$element.off('keydown.dismiss.bs.modal')
     }

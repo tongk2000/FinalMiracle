@@ -66,6 +66,9 @@ public class MemberService implements InterMemberService {
 		
 		return (n + m);
 	}
+
+	
+	
 	
 	
 
