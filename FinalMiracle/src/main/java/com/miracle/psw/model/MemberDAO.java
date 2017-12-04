@@ -53,11 +53,23 @@ public class MemberDAO implements InterMemberDAO {
 		int n = sqlsession.insert("member_psw.registerMember", mvo);
 		return n;
 	}
-
+	
 	@Override
 	public int registerMemberDetail(MemberDetailVO mdvo) {  // 회원가입(tbl_member_detail)
 		int n = sqlsession.insert("member_psw.registerMemberDetail", mdvo);
 		return n;
+	}
+
+	@Override
+	public MemberVO findMemberByIdx(int idx) {  // 회원번호로 회원정보 불러오기(tbl_member)
+		MemberVO mvo = sqlsession.selectOne("member_psw.findMemberByIdx", idx);
+		return mvo;
+	}
+
+	@Override
+	public MemberDetailVO findMemberByIdx2(int idx) {  // 회원번호로 회원정보 불러오기(tbl_member_detail)
+		MemberDetailVO mdvo = sqlsession.selectOne("member_psw.findMemberByIdx2", idx);
+		return mdvo;
 	}
 
 	
