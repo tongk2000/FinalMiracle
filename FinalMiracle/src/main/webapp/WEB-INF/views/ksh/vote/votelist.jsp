@@ -28,66 +28,7 @@
 		$("#sizePerPage").change(function(){
 			goSizePerPage();
 		});
-		
-		
-		$('#chart').highcharts({
-	        chart: {
-	            plotBackgroundColor: null,
-	            plotBorderWidth: null,
-	            plotShadow: false,
-	            type: 'pie'
-	        },
-	        title: {
-	            text: '투표 차트'
-	        },
-	        tooltip: {
-	            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-	        },
-	        plotOptions: {
-	            pie: {
-	                allowPointSelect: true,
-	                cursor: 'pointer',
-	                dataLabels: {
-	                    enabled: true,
-	                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-	                    style: {
-	                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-	                    }
-	                }
-	            }
-	        },
-	        series: [{
-	            name: '투표율',
-	            colorByPoint: true,
-	            data: [
-	            	<c:forEach var="votevo" items="${voteList}" varStatus="status">
-	            	<c:set value="${votevo.IDX}" var="voteidx" />
-		            	<c:forEach var="voteitemvo" items="${voteItemList}" varStatus="status">
-		            	<c:set value="${voteitemvo.fk_vote_idx}" var="voteitemidx" />
-		            		<c:if test="${voteidx eq voteitemidx}">
-				            	<c:if test="${status.count < voteItemList.size()}">
-			            		{
-			            			name: '${voteitemvo.item}',
-			            			y: Number(${voteitemvo.votenum}) //숫자 형태이므로 반드시 Number(${key})라는 함수를 사용해야한다.
-			            			
-			            			<c:if test="${status.count == voteItemList.size()-1}">
-			            			,
-			            			sliced: true,
-			            			selected: true
-			            			</c:if>
-			            		}
-				            		<c:if test="${status.count < voteItemList.size()-1}">
-				            		,
-				            		</c:if>
-			            		</c:if>
-			            	</c:if>
-		            	</c:forEach>
-		            </c:forEach>
-	            ]
-	        }]
-	    });
-		
-		
+
 	});
 	
 	function searchKeep(){
@@ -128,6 +69,68 @@
 		
 		frm.submit();
 	}
+	
+	function callChart(idx){
+		var data_form = {"idx":idx};
+		
+		$.ajax({
+			url: "voteCallChart.mr",
+			type: "GET",
+			data: data_form,
+			dataType: "JSON",
+			success: function(data){
+				$("#chart").empty();
+				if(data.length > 0){
+					$.each(data, function(entryIndex, entry){
+						
+						$('#chart').highcharts({
+							chart: {
+					            plotBackgroundColor: null,
+					            plotBorderWidth: null,
+					            plotShadow: false,
+					            type: 'pie'
+					        },
+					        title: {
+					            text: '투표 차트'
+					        },
+					        tooltip: {
+					            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+					        },
+					        plotOptions: {
+					            pie: {
+					                allowPointSelect: true,
+					                cursor: 'pointer',
+					                dataLabels: {
+					                    enabled: true,
+					                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+					                    style: {
+					                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+					                    }
+					                }
+					            }
+					        },
+					        series: [{
+					            name: '비율',
+					            colorByPoint: true,
+					            data: [{
+					                name: entry.item,
+					                y: Number(entry.votenum)
+					            
+					            }]
+					        }]
+					    });
+						
+					});
+				} else {
+					$("#chart").html("<tr><td colspan='7' style='color:red;'>검색된 데이터가 없습니다.</td></tr>");
+				}
+					
+			}, error: function(request, status, error){
+				alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+			}
+		});
+	}
+
 	
 	
 </script>
@@ -189,7 +192,7 @@
 								<br>
 							</c:if>
 						</c:forEach>	
-						<button type="button">차트보기</button>
+						<button type="button" onclick="callChart('${votevo.IDX}')">차트보기</button>
 					</td>
 					<td>
 						<%-- <c:if test="${voteidx eq sessionScope.idx}"> --%>
@@ -197,7 +200,7 @@
 						<%-- </c:if> --%>
 					</td>
 					<td>
-						<div id="chart" class="chart" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+						<div id="chart${votevo.IDX}" class="chart" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
 					</td>
 				</tr>
 			</c:forEach>

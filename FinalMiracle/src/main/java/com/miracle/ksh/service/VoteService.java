@@ -231,5 +231,11 @@ public class VoteService implements InterVoteService {
 		return n;
 	}
 
+	@Override
+	public List<VoteItemVO> VoteItemChart(String idx) {
+		List<VoteItemVO> list = dao.VoteItemChart(idx);
+		return list;
+	}
+
 	
 }

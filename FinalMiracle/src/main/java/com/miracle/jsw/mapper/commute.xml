@@ -76,14 +76,12 @@
 	<select id="getTotalCount" resultType="int">
 		select count(*)
 		from tbl_worktime
-		where status = 1
 	</select>
 	
 	<select id="getTotalCountMonth" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_worktime
-		where status = 1
-		and substr(wt_date,4,2) = #{month}
+		where substr(wt_date,4,2) = #{month}
 	</select>
 	
 	<resultMap type="java.util.HashMap" id="teamwonlist">
@@ -158,15 +156,13 @@
 	<select id="getTWTotalCount" resultType="int">
 		select count(*)
 		from tbl_worktime
-		where status = 1
-		and fk_member_idx = #{idx}
+		where fk_member_idx = #{idx}
 	</select>
 	
 	<select id="getTWTotalCountMonth" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_worktime
-		where status = 1
-		and fk_member_idx = #{idx}
+		where fk_member_idx = #{idx}
 		and substr(wt_date,4,2) = #{month}
 	</select>
 	
