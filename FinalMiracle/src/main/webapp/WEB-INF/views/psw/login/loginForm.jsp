@@ -34,34 +34,30 @@
 	}
 	
 	#div_name {
-		width: 70%;
+		width: 90%;
 		height: 15%;
 		margin-bottom: 5%;
-		margin-left: 10%;
 		position: relative;
 	}
 	
 	#div_mobile {
-		width: 70%;
+		width: 90%;
 		height: 15%;
 		margin-bottom: 5%;
-		margin-left: 10%;
 		position: relative;
 	}
 	
 	#div_finalResult {
-		width: 70%;
+		width: 90%;
 		height: 15%;
 		margin-bottom: 5%;
-		margin-left: 10%;
 		position: relative;
 	}
 	
 	#div_btnFind {
-		width: 70%;
+		width: 90%;
 		height: 15%;
 		margin-bottom: 5%;
-		margin-left: 10%;
 		position: relative;
 	}
 </style>
@@ -167,8 +163,7 @@
 		 document.loginFrm.method = "post";
 		 document.loginFrm.submit();
 		 
-    }  // end of function func_Login(event)-----------------------------
-     
+    }  // end of function func_Login(event)----------------------------- 
 </script>
 
 

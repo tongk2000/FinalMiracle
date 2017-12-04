@@ -31,8 +31,6 @@ public class MemberController {
 	@RequestMapping(value="/member_login.mr" , method={RequestMethod.GET})
 	public String login(HttpSession session, HttpServletRequest req) {  // 로그인 폼페이지 띄우기(첫화면)
 		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
-		
-		System.out.println("1" + loginUser);
 
 		if (loginUser != null) {
 			String ctxpath = req.getContextPath();
