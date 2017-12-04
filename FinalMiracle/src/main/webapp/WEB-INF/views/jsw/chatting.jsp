@@ -56,6 +56,7 @@
         		     	 , to : "all" };  // 초기화
             
             websocket.send(JSON.stringify(messageObj));
+        		     	 
         };
     	
     	// === 메시지 수신 콜백함수
