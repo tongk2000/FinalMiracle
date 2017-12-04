@@ -429,4 +429,12 @@
 		from tbl_voteItem
 	</select>
 	
+	
+	<select id="VoteItemChart" parameterType="String" resultType="com.miracle.ksh.model.VoteItemVO">
+		select idx, fk_vote_idx, item, image, votenum
+		from tbl_voteItem
+		where fk_vote_idx = #{idx}
+		order by idx asc
+	</select>
+	
 </mapper>

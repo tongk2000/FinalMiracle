@@ -77,4 +77,6 @@ public interface InterVoteDAO {
 
 	int VoteItemMaxRest(); //수정시 추가될 문항의 idx를 구해보자
 
+	List<VoteItemVO> VoteItemChart(String idx); //차트에 필요한 투표문항 정보들을 얻어오자 (JSON)
+
 }

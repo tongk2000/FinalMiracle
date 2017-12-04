@@ -80,5 +80,12 @@ public class PjsDAOImpl implements PjsinterDAO {
 
 	
 //==========================================================================================================================================================//	
+
 	
+	@Override
+	public HashMap<String, String> getUserTeam(String userid) {
+		// 로그인한 유저의 팀정보를 가져오는 메소드
+		HashMap<String, String> userTeam = sqlsession.selectOne("pjsfinal.getUserTeam", userid); 
+		return userTeam;
+	}
 }
