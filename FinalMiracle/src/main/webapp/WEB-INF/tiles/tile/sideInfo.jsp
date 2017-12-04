@@ -12,7 +12,6 @@
       <li><a href="<%= request.getContextPath() %>/voteList.mr">투표</a></li>
       <li><a href="#">팀원관리</a></li>
       <li><a href="#">메모</a></li>
-      <li><a href="#">팀원관리</a></li>
       <li><a href="#">쪽지</a></li>
     </ul>
 </div>
