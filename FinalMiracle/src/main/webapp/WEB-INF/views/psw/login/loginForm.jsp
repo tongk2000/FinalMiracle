@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html>
@@ -64,53 +65,53 @@
 
 <script type="text/javascript">
  
-     $(document).ready(function() { 
-    	 $("#btnLOGIN").click(function() {
-    		 func_Login(event);
-    	 }); // end of $("#btnLOGIN").click();-----------------------
-    	 
-    	 $("#pwd").keydown(function(event) {  
-  			if(event.keyCode == 13) { 
-  				func_Login(event);
-  			}
-    	 }); // end of $("#pwd").keydown();-----------------------	
-    	 
-    	 var method = "${method}";
-    		
- 	    if (method == "GET") {
- 	       $("#div_finalResult").hide();
- 	       $("#name").val("");
- 		   $("#mobile").val("");
- 	    }
- 	    
- 		$("#btnFind").click(function(){
- 			var frm = $("form[name=idFindFrm]").serialize();
- 			$.ajax({
- 				url:"member_idFind.mr",
- 				type:"post",
- 				data:frm,
- 				dataType:"JSON",
- 				success:function(data){
- 					$("#useridFind").text(data.userid);
- 				}, error:function(){
- 					alert("시스템오류. 관리자에게 문의하세요.");
- 				}
- 			});
- 		});
- 		
- 		if (method == "POST") {
- 		    $("#name").val("${name}");
- 		    $("#mobile").val("${mobile}");
- 		    $("#div_finalResult").show();
- 		}
- 		
- 		$(".modalOpen").click(function(){
- 			$("#mobile").val("");
- 			$("#name").val("");
- 			$("#useridFind").text("");
- 		});
- 		
- 		// 페이지 전체에서 esc 키를 누르면 모달창을 닫기
+	$(document).ready(function() { 
+		$("#btnLOGIN").click(function() {
+			func_Login(event);
+		}); // end of $("#btnLOGIN").click();-----------------------
+		 
+		$("#pwd").keydown(function(event) {  
+			if(event.keyCode == 13) { 
+				func_Login(event);
+			}
+		}); // end of $("#pwd").keydown();-----------------------	
+		 
+		var method = "${method}";
+		
+	    if (method == "GET") {
+	       $("#div_finalResult").hide();
+	       $("#name").val("");
+		   $("#mobile").val("");
+	    }
+	    
+		$("#btnIdFind").click(function(){
+			var frm = $("form[name=idFindFrm]").serialize();
+			$.ajax({
+				url:"member_idFind.mr",
+				type:"post",
+				data:frm,
+				dataType:"JSON",
+				success:function(data){
+					$("#useridFind").text(data.userid);
+				}, error:function(){
+					alert("시스템오류. 관리자에게 문의하세요.");
+				}
+			});
+		});
+		
+		if (method == "POST") {
+		    $("#name").val("${name}");
+		    $("#mobile").val("${mobile}");
+		    $("#div_finalResult").show();
+		}
+		
+		$(".modalOpen").click(function(){
+			$("#mobile").val("");
+			$("#name").val("");
+			$("#useridFind").text("");
+		});
+		
+		// ============================================== *** 페이지 전체에서 esc 키를 누르면 모달창을 닫기 *** =======
 		$(document).on("keydown", function(){
 			var modalFlag = $('.modal').is(':visible');
 			if(event.keyCode == 27 && modalFlag) { 
@@ -118,16 +119,16 @@
 				var userid = $("#useridFind").text();
 				$("#userid").val(userid);
 			}
-		}); // end of $("#body").keyup(function() ------------------------------------------------------------------------------------------------------
+		}); // end of $("#body").keyup(function() --------------------------------------------------------
 		
-		// 모달창에서 x 나 취소를 누르면 모달창 닫기
+		// ======================== *** 모달창에서 x 나 Close 를 누르면 모달창 닫기 *** ==================================
 		$(document).on("click", ".modalClose", function(){
 			$('.modal').modal('hide');
 			var userid = $("#useridFind").text();
 			$("#userid").val(userid);
-		}); // end of $(".modalClose").click(function() ------------------------------------------------------------------------------------------------------
+		}); // end of $(".modalClose").click(function() --------------------------------------------------
 	 
-    }); // end of $(document).ready()---------------------------	 
+    }); // end of $(document).ready()------------------------------------------------------------------------------------------------------------------- 
 
     
     function func_Login(event) {
@@ -223,7 +224,7 @@
 					</div>
 					<div class="modal-body" style="width: 100%; height: 400px;">
 						<div id="idFind">
-							<div class="content">
+							<div>
 								<form name="idFindFrm">
 									<div id="div_name" align="center">
 										<span style="color: blue; font-size: 12pt;">성명</span><br /> 
@@ -237,7 +238,7 @@
 										ID : <span style="color: red; font-size: 16pt; font-weight: bold;" id="useridFind"></span>
 									</div>
 									<div id="div_btnFind" align="center">
-										<button type="button" class="btn btn-success" id="btnFind">찾기</button>
+										<button type="button" class="btn btn-success" id="btnIdFind">찾기</button>
 									</div>
 								</form>
 							</div>
@@ -262,7 +263,7 @@
 					</div>
 					<div class="modal-body" style="width: 100%; height: 400px;">
 						<div id="pwdFind">
-							<iframe style="border: none; width: 100%; height: 350px;" src="<%= request.getContextPath() %>/member_pwdFind.mr"></iframe>
+							<iframe id="pwdFrame" style="border: none; width: 100%; height: 350px;" src="<%= request.getContextPath() %>/member_pwdFind.mr"></iframe>  
 						</div>
 					</div>
 					<div class="modal-footer">

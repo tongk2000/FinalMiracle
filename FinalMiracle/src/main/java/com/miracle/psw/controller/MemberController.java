@@ -87,10 +87,15 @@ public class MemberController {
 			map.put("mobile", mobile);
 			
 			String userid = service.getUserid(map);
+			if(userid == null || userid.equals("")) {
+				userid = "입력하신 정보의 아이디가 없습니다.";
+			}
+			
 			JSONObject jobj = new JSONObject(); 
 			jobj.put("userid", userid);
 			String str_json = jobj.toString();
-			req.setAttribute("str_json", str_json);
+
+			req.setAttribute("str_json", str_json);	
 		}
 		return "psw/login/json.not";
 	}  // end of public String idFind(HttpServletRequest req) -------------------------------------------------------

@@ -60,9 +60,7 @@
 
 
 <script type="text/javascript">
-
 	$(document).ready(function() {
-		
 		var method = "${method}";
 	
 	    if (method == "GET") {
@@ -83,9 +81,7 @@
 		    $("#mobile").val("${mobile}");
 		    $("#div_finalResult").show();
 		}
-		
 	});
-
 </script>
 
 </head>
