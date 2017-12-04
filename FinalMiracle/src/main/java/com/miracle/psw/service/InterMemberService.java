@@ -19,9 +19,13 @@ public interface InterMemberService {
 
 	boolean idDuplicateCheck(String userid);  // id 중복체크
 
-	int registerMember(MemberVO mvo, MemberDetailVO mdvo) throws Throwable ;  // 회원가입
+	int registerMember(MemberVO mvo, MemberDetailVO mdvo) throws Throwable;  // 회원가입
 
 	HashMap<String, Object> findMemberByIdx(int idx);  // 회원 번호로 한사람의 회원정보 불러오기
+
+	int updateMember(MemberVO mvo, MemberDetailVO mdvo) throws Throwable;  // 회원정보 수정
+
+	
 
 
 

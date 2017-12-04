@@ -68,13 +68,12 @@
 
 <script type="text/javascript">
  
-     $(document).ready(function(){
-    	 
+     $(document).ready(function() { 
     	 $("#btnLOGIN").click(function() {
     		 func_Login(event);
     	 }); // end of $("#btnLOGIN").click();-----------------------
     	 
-    	 $("#pwd").keydown(function(event){  
+    	 $("#pwd").keydown(function(event) {  
   			if(event.keyCode == 13) { 
   				func_Login(event);
   			}
@@ -87,7 +86,7 @@
  	       $("#name").val("");
  		   $("#mobile").val("");
  	    }
- 		
+ 	    
  		$("#btnFind").click(function(){
  			var frm = $("form[name=idFindFrm]").serialize();
  			$.ajax({
@@ -177,12 +176,8 @@
 
 
 <body>
-
 	<div class="content">
-
-
-		<div
-			style="width: 60%; margin-top: 10%; margin-left: 20%; height: 500px; border-radius: 10px; background-color: #4F84C4;">
+		<div style="width: 60%; margin-top: 10%; margin-left: 20%; height: 500px; border-radius: 10px; background-color: #4F84C4;">
 			<br />
 			<h2 style="text-align: center;">
 				<span style="color: #FAE03C;">Miracle World</span>
@@ -194,31 +189,30 @@
 					<span class="mydisplay myfont">아이디</span> <span
 						class="mydisplay myfont" style="margin-top: 30px;">암&nbsp;&nbsp;&nbsp;호</span>
 				</div>
-
 				<div class="mydiv" style="margin-left: 5%;">
 					<input class="mydisplay form-control" type="text" name="userid"	id="userid" size="20" /> 
 					<input class="mydisplay form-control" style="margin-top: 15px;" type="password" name="pwd" id="pwd" size="20" />
 				</div>
-				<br />
-				<br />
+				<br /><br />
 				<div class="mydiv" style="margin-left: 20%;">
 					<a data-toggle="modal" class="modalOpen" data-target="#userIdfind" data-dismiss="modal">
-						<span style="color: white;">ID 찾기</span></a> / 
-					<a data-toggle="modal" class="modalOpen" data-target="#passwdFind" data-dismiss="modal"><span style="color: white;">PW 찾기</span></a>
+						<span style="color: white;">ID 찾기</span>
+					</a> / 
+					<a data-toggle="modal" class="modalOpen" data-target="#passwdFind" data-dismiss="modal">
+						<span style="color: white;">PW 찾기</span>
+					</a>
 					&nbsp;&nbsp;&nbsp;
 					<button class="btn btn-success" style="width: 100px; font-size: 14pt;" type="button" id="btnLOGIN">로그인</button>
 				</div>
-				<br />
-				<br />
+				<br/><br/>
 				<div class="mydiv" style="margin-left: 18%;">
-					아직 회원가입을 안하셨나요? &nbsp; <a
-						href="<%= request.getContextPath() %>/member_register.mr"><span
-						style="color: orange; font-weight: bold;">[회원가입]</span></a>
+					아직 회원가입을 안하셨나요? &nbsp; 
+					<a href="<%= request.getContextPath() %>/member_register.mr">
+						<span style="color: orange; font-weight: bold;">[회원가입]</span>
+					</a>
 				</div>
-				<br />
-				<br />
-				<div class="mydiv" style="margin-left: 20%;">Welcome to ⓒ
-					Miracle World ~ !!</div>
+				<br/><br/>
+				<div class="mydiv" style="margin-left: 20%;">Welcome to ⓒ Miracle World ~ !!</div>
 			</form>
 		</div>
 
@@ -226,7 +220,6 @@
 		<%-- 아이디 찾기 Modal --%>
 		<div class="modal fade" id="userIdfind" role="dialog">
 			<div class="modal-dialog">
-
 				<%-- Modal content --%>
 				<div class="modal-content" align="center">
 					<div class="modal-header">
@@ -236,29 +229,22 @@
 					<div class="modal-body" style="width: 100%; height: 400px;">
 						<div id="idFind">
 							<div class="content">
-
 								<form name="idFindFrm">
 									<div id="div_name" align="center">
 										<span style="color: blue; font-size: 12pt;">성명</span><br /> 
 										<input type="text" id="name" name="name" size="15" placeholder="성명" required />
 									</div>
-
 									<div id="div_mobile" align="center">
 										<span style="color: blue; font-size: 12pt;">휴대전화</span><br />
-										<input type="text" id="mobile" name="mobile" size="15"
-											placeholder="-없이 입력하세요" required />
+										<input type="text" id="mobile" name="mobile" size="15" placeholder="-없이 입력하세요" required />
 									</div>
-
 									<div id="div_finalResult" align="center">
 										ID : <span style="color: red; font-size: 16pt; font-weight: bold;" id="useridFind"></span>
 									</div>
-
 									<div id="div_btnFind" align="center">
 										<button type="button" class="btn btn-success" id="btnFind">찾기</button>
 									</div>
-
 								</form>
-
 							</div>
 						</div>
 					</div>
@@ -266,7 +252,6 @@
 						<button type="button" class="btn btn-default modalClose" data-dismiss="modal">Close</button>
 					</div>
 				</div>
-
 			</div>
 		</div>
 
@@ -274,7 +259,6 @@
 		<%-- 비밀번호 찾기 Modal --%>
 		<div class="modal fade" id="passwdFind" role="dialog">
 			<div class="modal-dialog">
-
 				<%-- Modal content --%>
 				<div class="modal-content" align="center">
 					<div class="modal-header">
@@ -287,8 +271,7 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default myclose"
-							data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-default myclose" data-dismiss="modal">Close</button>
 					</div>
 				</div>
 
