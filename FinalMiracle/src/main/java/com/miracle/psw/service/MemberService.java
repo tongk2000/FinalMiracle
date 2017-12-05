@@ -79,6 +79,17 @@ public class MemberService implements InterMemberService {
 		return map;
 	}
 
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	@Override
+	public int updateMember(MemberVO mvo, MemberDetailVO mdvo) throws Throwable {
+		int n = dao.updateMember(mvo);
+		int m = dao.updateMember2(mdvo);
+		
+		return (n + m);
+	}
+
+	
+
 	
 	
 	
