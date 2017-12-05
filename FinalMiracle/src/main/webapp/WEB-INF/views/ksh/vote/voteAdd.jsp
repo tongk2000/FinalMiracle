@@ -138,7 +138,7 @@
 				<th>내용</th>
 				<td>
 				    <div style="width: 100%">
-					   <textarea name="content" id="content" class="summernote">dd</textarea>
+					   <textarea name="content" id="content" class="summernote"></textarea>
 					</div>
 				</td>
 			</tr>

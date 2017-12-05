@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #7. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== #8. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->              
+<mapper namespace="kshMemo">
+
+	<select id="memoList1" parameterType="HashMap" resultType="com.miracle.ksh.model.MemoVO">
+		select idx, fk_member_idx, fk_teamwon_idx, subject, content, groups, regdate, editdate
+		from (
+			select rownum as RNO,
+				  V.idx, V.fk_member_idx, V.fk_teamwon_idx, V.subject, V.content, V.groups, V.regdate, V.editdate
+			from (
+				select idx, fk_member_idx, fk_teamwon_idx, subject, content, groups,
+				      to_char(regdate, 'yyyy-mm-dd hh24:mi:ss') as regdate,
+                      to_char(editdate, 'yyyy-mm-dd hh24:mi:ss') as editdate
+				from tbl_memo
+				where fk_member_idx = #{fk_member_idx}
+				<if test="folder.equals('전체')">
+					<if test="period.equals('-1')">
+						and not groups = '휴지통'
+					</if>
+					<if test="period.equals('7')">
+						and not groups = '휴지통'
+						and regdate >= to_char(sysdate-7, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('30')">
+						and not groups = '휴지통'
+						and regdate >= to_char(sysdate-30, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('90')">
+						and not groups = '휴지통'
+						and regdate >= to_char(sysdate-90, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('180')">
+						and not groups = '휴지통'
+						and regdate >= to_char(sysdate-180, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('365')">
+						and not groups = '휴지통'
+						and regdate >= to_char(sysdate-365, 'yyyy-mm-dd')
+					</if>
+				</if>
+				<if test="folder.equals('휴지통')">
+					<if test="period.equals('-1')">
+						and groups = '휴지통'
+					</if>
+					<if test="period.equals('7')">
+						and groups = '휴지통'
+						and regdate >= to_char(sysdate-7, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('30')">
+						and groups = '휴지통'
+						and regdate >= to_char(sysdate-30, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('90')">
+						and groups = '휴지통'
+						and regdate >= to_char(sysdate-90, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('180')">
+						and groups = '휴지통'
+						and regdate >= to_char(sysdate-180, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('365')">
+						and groups = '휴지통'
+						and regdate >= to_char(sysdate-365, 'yyyy-mm-dd')
+					</if>
+				</if>
+				<if test="!folder.equals('전체') and !folder.equals('휴지통')">
+					<if test="period.equals('-1')">
+						and groups = #{folder}
+					</if>
+					<if test="period.equals('7')">
+						and groups = #{folder}
+						and regdate >= to_char(sysdate-7, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('30')">
+						and groups = #{folder}
+						and regdate >= to_char(sysdate-30, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('90')">
+						and groups = #{folder}
+						and regdate >= to_char(sysdate-90, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('180')">
+						and groups = #{folder}
+						and regdate >= to_char(sysdate-180, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('365')">
+						and groups = #{folder}
+						and regdate >= to_char(sysdate-365, 'yyyy-mm-dd')
+					</if>
+				</if>
+				order by idx desc
+			) V
+		) T
+		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
+	</select>
+	
+	<select id="memoList2" parameterType="HashMap" resultType="com.miracle.ksh.model.MemoVO">
+		select idx, fk_member_idx, fk_teamwon_idx, subject, content, groups, regdate, editdate
+		from (
+			select rownum as RNO,
+				  V.idx, V.fk_member_idx, V.fk_teamwon_idx, V.subject, V.content, V.groups, V.regdate, V.editdate
+			from (
+				select idx, fk_member_idx, fk_teamwon_idx, subject, content, groups,
+				      to_char(regdate, 'yyyy-mm-dd hh24:mi:ss') as regdate,
+                      to_char(editdate, 'yyyy-mm-dd hh24:mi:ss') as editdate
+				from tbl_memo				
+				where fk_member_idx = #{fk_member_idx}
+				<if test="folder.equals('전체')">
+					<if test="period.equals('-1')">
+						and not groups = '휴지통'
+						and ${colname} like '%'|| #{search} ||'%'
+					</if>
+					<if test="period.equals('7')">
+						and not groups = '휴지통'
+						and ${colname} like '%'|| #{search} ||'%'
+						and regdate >= to_char(sysdate-7, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('30')">
+						and not groups = '휴지통'
+						and ${colname} like '%'|| #{search} ||'%'
+						and regdate >= to_char(sysdate-30, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('90')">
+						and not groups = '휴지통'
+						and ${colname} like '%'|| #{search} ||'%'
+						and regdate >= to_char(sysdate-90, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('180')">
+						and not groups = '휴지통'
+						and ${colname} like '%'|| #{search} ||'%'
+						and regdate >= to_char(sysdate-180, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('365')">
+						and not groups = '휴지통'
+						and ${colname} like '%'|| #{search} ||'%'
+						and regdate >= to_char(sysdate-365, 'yyyy-mm-dd')
+					</if>
+				</if>
+				<if test="folder.equals('휴지통')">
+					<if test="period.equals('-1')">
+						and groups = '휴지통'
+						and ${colname} like '%'|| #{search} ||'%'
+					</if>
+					<if test="period.equals('7')">
+						and groups = '휴지통'
+						and ${colname} like '%'|| #{search} ||'%'
+						and regdate >= to_char(sysdate-7, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('30')">
+						and groups = '휴지통'
+						and ${colname} like '%'|| #{search} ||'%'
+						and regdate >= to_char(sysdate-30, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('90')">
+						and groups = '휴지통'
+						and ${colname} like '%'|| #{search} ||'%'
+						and regdate >= to_char(sysdate-90, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('180')">
+						and groups = '휴지통'
+						and ${colname} like '%'|| #{search} ||'%'
+						and regdate >= to_char(sysdate-180, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('365')">
+						and groups = '휴지통'
+						and ${colname} like '%'|| #{search} ||'%'
+						and regdate >= to_char(sysdate-365, 'yyyy-mm-dd')
+					</if>
+				</if>
+				<if test="!folder.equals('전체') and !folder.equals('휴지통')">
+					<if test="period.equals('-1')">
+						and groups = #{folder}
+						and ${colname} like '%'|| #{search} ||'%'
+					</if>
+					<if test="period.equals('7')">
+						and groups = #{folder}
+						and ${colname} like '%'|| #{search} ||'%'
+						and regdate >= to_char(sysdate-7, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('30')">
+						and groups = #{folder}
+						and ${colname} like '%'|| #{search} ||'%'
+						and regdate >= to_char(sysdate-30, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('90')">
+						and groups = #{folder}
+						and ${colname} like '%'|| #{search} ||'%'
+						and regdate >= to_char(sysdate-90, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('180')">
+						and groups = #{folder}
+						and ${colname} like '%'|| #{search} ||'%'
+						and regdate >= to_char(sysdate-180, 'yyyy-mm-dd')
+					</if>
+					<if test="period.equals('365')">
+						and groups = #{folder}
+						and ${colname} like '%'|| #{search} ||'%'
+						and regdate >= to_char(sysdate-365, 'yyyy-mm-dd')
+					</if>
+				</if>
+				order by idx desc
+			) V
+		) T
+		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
+	</select>
+	
+	
+	<select id="MemoTotalCount1" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_memo
+		where fk_member_idx = #{fk_member_idx}
+		<if test="folder.equals('전체')">
+			and not groups = '휴지통'
+		</if>
+		<if test="folder.equals('휴지통')">
+			and groups = '휴지통'
+		</if>
+		<if test="!folder.equals('전체') and !folder.equals('휴지통')">
+			and groups = #{folder}
+		</if>
+	</select>
+	
+	<select id="MemoTotalCount2" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_memo
+		where fk_member_idx = #{fk_member_idx}
+		and ${colname} like '%'|| #{search} ||'%'
+		<if test="folder.equals('전체')">
+			and not groups = '휴지통'
+		</if>
+		<if test="folder.equals('휴지통')">
+			and groups = '휴지통'
+		</if>
+		<if test="!folder.equals('전체') and !folder.equals('휴지통')">
+			and groups = #{folder}
+		</if>
+	</select>
+	
+	
+	<select id="getfolderList" resultType="String">
+		select distinct groups
+		from tbl_memo
+		where not groups in ('중요', '휴지통', '전체')
+	</select>
+	
+	
+	<insert id="MemoAdd" parameterType="HashMap">
+		<if test="newfolder == null">
+		insert into tbl_memo
+		values(seq_memo.nextval, #{fk_member_idx}, 1, #{subject}, #{content}, #{folder}, sysdate, sysdate)
+		</if>
+		<if test="newfolder != null">
+		insert into tbl_memo
+		values(seq_memo.nextval, #{fk_member_idx}, 1, #{subject}, #{content}, #{newfolder}, sysdate, sysdate)
+		</if>
+	</insert>
+	
+	
+	<select id="getMemoVO" parameterType="String" resultType="com.miracle.ksh.model.MemoVO">
+		select idx, fk_member_idx, fk_teamwon_idx, subject, content, groups,
+		      to_char(regdate, 'yyyy-mm-dd hh24:mi:ss') as regdate,
+              to_char(editdate, 'yyyy-mm-dd hh24:mi:ss') as editdate
+		from tbl_memo
+		where idx = #{idx}
+	</select>
+	
+	<update id="MemoEdit" parameterType="HashMap">
+		update tbl_memo set subject = #{subject}, content = #{content}, groups = #{folder}, editdate = sysdate
+		where idx = #{idx}
+	</update>
+	
+	
+	<update id="MemoGarbage" parameterType="String">
+		update tbl_memo set groups = '휴지통'
+		where idx = #{idx}
+	</update>
+	
+	
+	<update id="MemoRestore" parameterType="String">
+		update tbl_memo set groups = '전체'
+		where idx = #{idx}
+	</update>
+	
+	
+	<delete id="MemoDel" parameterType="String">
+		delete from tbl_memo
+		where idx = #{idx}
+	</delete>
+
+</mapper>
