@@ -1,12 +1,17 @@
 package com.miracle.ksh.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.miracle.ksh.model.InterVoteDAO;
+import com.miracle.ksh.model.VoteCommVO;
 import com.miracle.ksh.model.VoteItemVO;
 import com.miracle.ksh.model.VoteVO;
 
@@ -168,8 +173,102 @@ public class VoteService implements InterVoteService {
 	}
 
 	@Override
-	public int VoteItemEdit(HashMap<String, Object> mapVoteItem) {
-		int n = dao.VoteItemEdit(mapVoteItem);
+	@Transactional(propagation=Propagation.REQUIRED, isolation= Isolation.READ_COMMITTED, rollbackFor={Throwable.class})  
+	public int VoteItemEdit(HashMap<String, Object> mapVoteItem, String[] items, String[] itemidx) {
+		
+		int n = 0;
+	    int m = 0;
+	    int count = 0;
+
+	    /*for(int i=0; i<items.length; i++){
+			System.out.println(items[i] + i);
+		}*/
+	    
+	    //System.out.println(itemidx.length - items.length);
+	    
+	    if (items.length > itemidx.length){ //입력한 문항 수 > 테이블에 있는 문항 수
+	    	List<Object> restArray = new ArrayList<Object>();
+	    	int rest = 0;	
+	    	int gap = items.length - itemidx.length;
+	    	
+	    	for(int i=0; i<items.length - itemidx.length; i++){
+	    		//System.out.println(items[i] + i);
+	    		dao.VoteItemRestAdd(mapVoteItem);
+	    		rest = dao.VoteItemMaxRest();
+	    		restArray.add(rest);
+	    	}
+	    	
+	    	for(int i=0; i<items.length; i++){
+	    		
+	    		if(i < gap){
+	    			mapVoteItem.put("items", items[i]);
+		    		mapVoteItem.put("itemidx", itemidx[i]);
+		    		restArray.add(rest);
+		    		//System.out.println(items[i] + "-" + i + " / " + itemidx[i] + "-" + i);
+		    		m = dao.VoteItemEdit(mapVoteItem);
+	    		} else {
+	    			int j = 0;
+	    			
+	    			mapVoteItem.put("items", items[i]);
+	    			mapVoteItem.put("itemidx", restArray.get(j));
+	    			
+	    			j++;
+	    			
+	    			m = dao.VoteItemEdit(mapVoteItem);
+	    		}
+	    		if(m==1) count++;
+	    	}
+	    	
+	    	if(items.length == count) {
+			    n=1;
+		    }
+		    else {
+		 	   n=0;
+		    }
+	    	
+	    } else if(items.length < itemidx.length){ //입력한 문항 수 < 테이블에 있는 문항 수
+	    	
+	    	for(int i=0; i<itemidx.length - items.length; i++){
+	    		//System.out.println(itemidx.length - items.length);
+	    		mapVoteItem.put("items", items[i]);
+	    		mapVoteItem.put("itemidx", itemidx[i]);
+	    		//System.out.println(items[i] + "-" + i + " / " + itemidx[i] + "-" + i);
+	    		m = dao.VoteItemEdit(mapVoteItem);
+	    		
+	    		if(m==1) count++;
+	    	}
+	    	
+	    	for(int i = items.length; i < itemidx.length; i++){
+	    		mapVoteItem.put("itemidx", itemidx[i]);
+	    		dao.VoteItemRestDel(mapVoteItem);
+	    	}
+	    	
+	    	if(itemidx.length - items.length == count) {
+			   n=1;
+		    }
+		    else {
+		 	   n=0;
+		    }
+	    	
+	    } else{ //입력한 문항 수 == 테이블에 있는 문항 수
+	    	
+	    	for(int i=0; i<items.length; i++){
+	    		mapVoteItem.put("items", items[i]);
+	    		mapVoteItem.put("itemidx", itemidx[i]);
+	    		//System.out.println(items[i] + "-" + i + " / " + itemidx[i] + "-" + i);
+	    		m = dao.VoteItemEdit(mapVoteItem);
+	    		
+	    		if(m==1) count++;
+	    	}
+	    	
+	    	if(items.length == count) {
+			    n=1;
+		    }
+		    else {
+		 	   n=0;
+		    }
+	    	
+	    }
 		return n;
 	}
 
@@ -235,6 +334,30 @@ public class VoteService implements InterVoteService {
 	public List<VoteItemVO> VoteItemChart(String idx) {
 		List<VoteItemVO> list = dao.VoteItemChart(idx);
 		return list;
+	}
+
+	@Override
+	public List<HashMap<String, String>> VoteCommList() {
+		List<HashMap<String, String>> voteCommList = dao.VoteCommList();
+		return voteCommList;
+	}
+
+	@Override
+	public int getFk_teamwon_idx(String getidx) {
+		int n = dao.getFk_teamwon_idx(getidx);
+		return n;
+	}
+
+	@Override
+	public int addComment(HashMap<String, String> commMap) {
+		int result = dao.addComment(commMap);
+		return result;
+	}
+
+	@Override
+	public int DelComment(HashMap<String, String> commMap) {
+		int result = dao.DelComment(commMap);
+		return result;
 	}
 
 	

@@ -11,7 +11,7 @@
     	           cursor: pointer; }
   	
   	/* ==== #142. 파일첨부가 되었으므로 테이블의 가로폭을 늘려보자 ==== */
-  	#table {border-collapse: collaps; width: 920px;}
+  	#table {border-collapse: collaps; width: 100%;}
   	#table th, #table td {padding: 5px;}
   	#table th {background-color: #DDDDDD;}
 	    
@@ -77,11 +77,38 @@
 		frm.submit();
 	}
 	
+	function goCommAdd(idx){
+		var commcontent = document.getElementById("commcontent"+idx).value;
+		var frm = document.addCommFrm;
+		
+		//alert(idx + commcontent);
+		
+		if(commcontent.trim() == ""){
+			alert("빈 칸은 입력할 수 없습니다.");
+			return;
+		} else {
+			frm.voteidx.value = idx;
+			frm.comment.value = commcontent;
+
+			frm.submit();
+		}
+
+	}
+	
+	
+	function goCommDel(idx){
+		var frm = document.DelCommFrm;
+		
+		frm.delidx.value = idx;
+
+		frm.submit();
+	}
+	
 	
 </script>
 
 <form id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/voteMyList.mr" method="get" enctype="multipart/form-data">
-<div style="padding-left: 10%; border: solid 0px red;">
+<div style="padding-left: 10%; border: solid 0px red; width: 100%;">
 	<h1>투표목록</h1>
 	
 	<div style="margin-top: 20px;">
@@ -109,16 +136,16 @@
 	<table id="table">
 		<thead>
 			<tr>
-				<th style="width: 100px;">투표번호</th>
-				<th style="width: 100px;">팀번호</th>
-				<th style="width: 100px;">팀원번호</th>
-				<th style="width: 200px;">제목</th>
-				<th style="width: 360px;">내용</th>
-				<th style="width: 100px;">시작날짜</th>
-				<th style="width: 100px;">종료날짜</th>
-				<th style="width: 150px;">문항</th>
-				<th style="width: 150px;">비고</th>
-				<th style="width: 300px;">차트</th>
+				<th style="width: 5%;">투표번호</th>
+				<th style="width: 5%;">팀번호</th>
+				<th style="width: 5%;">팀원번호</th>
+				<th style="width: 10%;">제목</th>
+				<th style="width: 20%">내용</th>
+				<th style="width: 5%;">시작날짜</th>
+				<th style="width: 5%;">종료날짜</th>
+				<th style="width: 10%;">문항</th>
+				<th style="width: 10%;">비고</th>
+				<th style="width: 25%;">댓글</th>
 			</tr>
 		</thead>
 		
@@ -151,7 +178,22 @@
 						</c:if>
 							<button type="button" onClick="goDel('${votevo.IDX}');">투표삭제</button>&nbsp;
 					</td>
-					<td></td>
+					<td>
+						<input type="text" id="commcontent${votevo.IDX}" name="commcontent${votevo.IDX}" size="35px;" />
+						<button type="button" onClick="goCommAdd('${votevo.IDX}');">등록</button>&nbsp;
+						<br/>
+						<c:forEach var="votecommvo" items="${voteCommList}" varStatus="status">
+							<c:set value="${votecommvo.FK_VOTE_IDX}" var="votecommidx" />
+							<c:if test="${voteidx eq votecommidx}">
+								${votecommvo.NAME}(${votecommvo.USERID}) : ${votecommvo.CONTENT}
+								<c:if test="${votecommvo.MEMIDX eq sessionScope.loginUser.idx}">
+									<%-- <button type="button" onClick="goCommAdd('${votevo.IDX}', '${votecommvo.IDX}');">수정</button>&nbsp; --%>
+									<button type="button" onClick="goCommDel('${votecommvo.COMMIDX}');">삭제</button>
+								</c:if>
+								<br/>
+							</c:if>
+						</c:forEach>	
+					</td>
 				</tr>
 			</c:forEach>
 		</tbody>
@@ -193,4 +235,15 @@
 <form name="idxFrm">
 	<input type="hidden" name="idx" />
 	<input type="hidden" name="gobackURL" value="${gobackURL}">
+</form>
+
+<form name="addCommFrm" action="<%= request.getContextPath() %>/voteCommAdd.mr" method="get" enctype="multipart/form-data">
+	<input type="hidden" id="voteidx" name="voteidx" />
+	<input type="hidden" id="comment" name="comment" />
+	<input type="hidden" name="gobackURL" value="${gobackURL}" />
+</form>
+
+<form name="DelCommFrm" action="<%= request.getContextPath() %>/voteCommDel.mr" method="get" enctype="multipart/form-data">
+	<input type="hidden" id="delidx" name="delidx" />
+	<input type="hidden" name="gobackURL" value="${gobackURL}" />
 </form>
