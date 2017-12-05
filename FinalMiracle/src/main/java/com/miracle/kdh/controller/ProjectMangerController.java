@@ -72,6 +72,19 @@ public class ProjectMangerController {
 		svc.setTaskComplete(fvo);
 		return "kdh/json.not";
 	} // end of String do_taskComplete(HttpServletRequest req, FolderVO fvo) ----------------------------------------------
+	
+	// 하위폴더 추가 팝업창 띄우기
+	@RequestMapping(value="do_addDownFolder.mr", method={RequestMethod.GET})
+	public String addDownFolder(HttpServletRequest req) {
+		String upIdx = req.getParameter("upIdx");
+		
+		HashMap<String, String> map = svc.getUpFolder(upIdx);
+		map.put("upIdx",upIdx);
+		
+		req.setAttribute("map", map);
+		
+		return "kdh/popup/addDownFolder.not";
+	} // end of String do_taskComplete(HttpServletRequest req, FolderVO fvo) ----------------------------------------------
 }
 
 

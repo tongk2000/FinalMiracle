@@ -51,4 +51,32 @@ public class ProjectManagerService {
 	public void setTaskComplete(FolderVO fvo) {
 		dao.setTaskComplete(fvo);
 	}
+
+	public HashMap<String, String> getUpFolder(String upIdx) {
+		HashMap<String, String> map = dao.getUpFolder(upIdx);
+		return map;
+	} // public HashMap<String, String> getUpFolder(int upIdx) --------------------------------------------------------
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
