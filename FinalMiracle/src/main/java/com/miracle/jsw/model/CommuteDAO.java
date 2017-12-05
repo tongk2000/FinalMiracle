@@ -14,14 +14,14 @@ public class CommuteDAO implements InterCommuteDAO {
 	private SqlSessionTemplate sqlsession;
 
 	@Override
-	public int startWork() {
-		int n = sqlsession.update("commute.startWork");
+	public int startWork(int idx) {
+		int n = sqlsession.update("commute.startWork", idx);
 		return n;
 	}
 
 	@Override
-	public int endWork() {
-		int n = sqlsession.update("commute.endWork");
+	public int endWork(int idx) {
+		int n = sqlsession.update("commute.endWork", idx);
 		return n;
 	}
 
@@ -44,8 +44,8 @@ public class CommuteDAO implements InterCommuteDAO {
 	}
 
 	@Override
-	public int getTotalCount() {
-		int n = sqlsession.selectOne("commute.getTotalCount");
+	public int getTotalCount(HashMap<String, String> map) {
+		int n = sqlsession.selectOne("commute.getTotalCount", map);
 		return n;
 	}
 
@@ -77,6 +77,30 @@ public class CommuteDAO implements InterCommuteDAO {
 	public int getTWTotalCount(HashMap<String, String> map) {
 		int n = sqlsession.selectOne("commute.getTWTotalCount", map);
 		return n;
+	}
+
+	@Override
+	public int startWorkLate(int idx) {
+		int n = sqlsession.update("commute.startWorkLate", idx);
+		return n;
+	}
+
+	@Override
+	public int endWorkEarly(int idx) {
+		int n = sqlsession.update("commute.endWorkEarly", idx);
+		return n;
+	}
+
+	@Override
+	public int workLateAndEarlyGo(int idx) {
+		int n = sqlsession.update("commute.workLateAndEarlyGo", idx);
+		return n;
+	}
+
+	@Override
+	public List<HashMap<String, String>> getUserTeamDetail(HashMap<String, String> map) {
+		List<HashMap<String, String>> userTeamDetail = sqlsession.selectList("commute.getUserTeamDetail", map);
+		return userTeamDetail;
 	}
 
 }

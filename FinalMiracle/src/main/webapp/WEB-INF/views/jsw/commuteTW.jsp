@@ -24,7 +24,8 @@
 		
 		
 		
-		if(${not empty month}){
+		if(${not empty month && month != null}){
+		
 			$("#month").val("${month}");
 		}
 		
