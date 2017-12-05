@@ -56,7 +56,20 @@ public class PjsserviceImpl implements PjsinterService {
 		// 유저의 정보를 가져오기 위한 메소드
 		HashMap<String, String> map = dao.getViewContent(id);
 		return map;
+	}/* ================================================================================================================================================== */
+	@Override
+	public HashMap<String, String> getIdxTeam(String idx) {
+		// 공지사항 게시판의 해당 글을 클릭하면 그 글의 내용을 보여주는 메소드
+		HashMap<String, String> map = dao.getIdxTeam(idx);
+		return map;
 	}
+	@Override
+	public int delNoticeIdx(String idx) {
+		// 공지사항 게시물을 지우는 메소드
+		int n = dao.delNoticeIdx(idx);
+		return n;
+	}
+	
 //==========================================================================================================================================================//	
 
 	
@@ -130,6 +143,27 @@ public class PjsserviceImpl implements PjsinterService {
 		// 구글맵 테이블의 모든 정보를 가져온다.
 		List<MapVO> list = dao.getMap();
 		return list;
+	}/* ================================================================================================================================================== */
+	@Override
+	public List<MapVO> getMapWithSearch(HashMap<String, String> map) {
+		// 검색어가 포함된 지도 리스트
+		List<MapVO> list = dao.getMapWithSearch(map);
+		return list;
+	}/* ================================================================================================================================================== */
+	@Override
+	public String getSearchJSON(HashMap<String, String> map) {
+		// 구글맵 JSON 검색처리
+		List<String> list = dao.getSearchJSON(map);
+		JSONArray arr = new JSONArray();
+		if(list!=null&&list.size()>0) {
+			for(String obj : list) {
+				JSONObject jsonobj = new JSONObject();
+				jsonobj.put("searchString", obj);
+				arr.put(jsonobj);
+			}
+		}
+		String googleMap = arr.toString();
+		return googleMap;
 	}
 //==========================================================================================================================================================//	
 

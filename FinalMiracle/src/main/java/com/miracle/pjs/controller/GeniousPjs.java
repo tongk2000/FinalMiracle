@@ -30,7 +30,7 @@ public class GeniousPjs {
 	public String notice(HttpServletRequest req, HttpSession session) {	
 		MemberVO mvo = (MemberVO) session.getAttribute("loginUser"); // 유저의 정보를 가져온다.
 		if(mvo != null) {
-			HashMap<String, String> userTeam = service.getUserTeam(mvo.getUserid()); // 유저의 팀 정보를 가져온다.
+			HashMap<String, String> userTeam = service.getUserTeam(mvo.getUserid()); // 유저의 팀 정보를 가져온다. teamNum, userid, name, status
 			req.setAttribute("userTeam", userTeam); // 세션에서 얻을 수 없는 유저의 팀정보를 뷰단으로 보내 여러 조건에 비교용으로 쓴다.
 			session.setAttribute("readCount", "1"); // 게시판 리스트에서 게시글을 읽어야만 readcont가 올라가도록 설정!
 			/* ============================== 페이징 처리 시 필요한 변수들! ============================== */
@@ -91,7 +91,7 @@ public class GeniousPjs {
 			String loc = "location.href='../../miracle';"; // 현재경로 기준으로 위치바꿈!
 			req.setAttribute("msg", msg);
 			req.setAttribute("loc", loc);
-			return "error.not";
+			return "pjs/error.not";
 		}
 	}/* ================================================================================================================================================== */
 	@RequestMapping(value="noticeListJSON.mr", method={RequestMethod.GET})	// 공지사항 게시판 리스트의 검색작업
@@ -107,38 +107,52 @@ public class GeniousPjs {
 	}/* ================================================================================================================================================== */
 	@RequestMapping(value="noticeUserInfo.mr", method={RequestMethod.GET})	// 공지사항 게시판글의 유저정보보기
 	public String noticeUserInfo(HttpServletRequest req) {
-		// 1. 게시판을 클릭해서 글을 볼 목적일 경우
+		// 게시판에서 유저이름, 이미지 클릭시 해당 유저정보를 보여주는 메소드
 		String id = req.getParameter("userid"); // 해당 번호의 글내용을 가져온다.
 		System.out.println("================================id========================"+id);
 		HashMap<String, String> userinfo = service.getViewContent(id);
 		req.setAttribute("userinfo", userinfo);
 		return "pjs/notice/noticeUserInfo.not";
 	}/* ================================================================================================================================================== */
-	@RequestMapping(value="noticeWrite.mr", method={RequestMethod.GET})	// 공지사항 게시판글 쓰기 
+	@RequestMapping(value="noticeWrite.mr", method={RequestMethod.POST})	// 공지사항 게시판글 쓰기 
 	public String noticeWrite(HttpServletRequest req) {
-		// 1. 게시판을 클릭해서 글을 볼 목적일 경우
-		String idx = req.getParameter("idx");
-		req.setAttribute("idx", idx);
-		return ".all";
+		// 1. 게시판을 클릭해서 글을 쓸 경우
+		String userid = req.getParameter("userid");
+		HashMap<String, String> map = service.getUserTeam(userid); // teamNum , userid , name , status 받는다.
+		req.setAttribute("map", map);
+		return "pjs/notice/noticeWrite.all";
 	}/* ================================================================================================================================================== */
 	@RequestMapping(value="noticeDel.mr", method={RequestMethod.GET})	// 공지사항 게시판글 삭제
 	public String noticeDel(HttpServletRequest req) {
-		// 1. 게시판을 클릭해서 글을 볼 목적일 경우
+		// 1. 게시판에서 삭제버튼을 눌렸을 때
 		String idx = req.getParameter("idx");
-		req.setAttribute("idx", idx);
-		return ".all";
+		int n = service.delNoticeIdx(idx);
+		String loc = "location.href='/noticeList.mr;'";
+		if(n > 0) {
+			String msg = "삭제 성공!";
+			req.setAttribute("msg", msg);
+		}
+		else {
+			String msg = "삭제 실패";
+			req.setAttribute("msg", msg);
+		}
+		req.setAttribute("loc", loc);
+		return "pjs/error.not";		
 	}/* ================================================================================================================================================== */
 	@RequestMapping(value="noticeEdit.mr", method={RequestMethod.GET})	// 공지사항 게시판글 수정
 	public String noticeEdit(HttpServletRequest req) {
-		// 1. 게시판을 클릭해서 글을 볼 목적일 경우
+		// 1. 게시판에서 글을 보고(noticeView) -> 수정글쓰기를 할 경우
 		String idx = req.getParameter("idx");
 		req.setAttribute("idx", idx);
 		return ".all";
 	}/* ================================================================================================================================================== */
-	@RequestMapping(value="noticeView.mr", method={RequestMethod.POST})	// 공지사항 게시판글 보기 
+	@RequestMapping(value="noticeView.mr", method={RequestMethod.GET})	// 공지사항 게시판글 보기 
 	public String noticeView(HttpServletRequest req) {
 		// 1. 게시판을 클릭해서 글을 볼 목적일 경우
-		return ".all";
+		String idx = req.getParameter("idx");
+		HashMap<String, String> map =  service.getIdxTeam(idx); // team_idx , userid 받는다.
+		req.setAttribute("map", map);
+		return "pjs/notice/noticeView.all";
 	}
 	
 	
@@ -176,7 +190,7 @@ public class GeniousPjs {
 			String loc = "location.href='../../miracle';"; // 현재경로 기준으로 위치바꿈!
 			req.setAttribute("msg", msg);
 			req.setAttribute("loc", loc);
-			return "error.not";
+			return "pjs/error.not";
 		}
 		
 	}/* ================================================================================================================================================== */
@@ -233,12 +247,34 @@ public class GeniousPjs {
 	// ==== *** 구글맵 *** ==== //
 	@RequestMapping(value="googleMap.mr", method={RequestMethod.GET})
 	public String googleMap(HttpServletRequest req) {
-		List<MapVO> list = service.getMap(); // 전체 리스트를 반환한다.
-		req.setAttribute("list", list);
+		String choice = req.getParameter("choice");
+		String searchString = req.getParameter("searchString");
+		System.out.println("==============================choice============================"+choice);
+		System.out.println("==============================searchString============================"+searchString);
+		if(!(choice==null||searchString==null)) {
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("choice", choice);
+			map.put("searchString", searchString);
+			List<MapVO> list = service.getMapWithSearch(map); // 전체 리스트를 반환한다.
+			req.setAttribute("list", list);
+			req.setAttribute("choice", choice);
+			req.setAttribute("searchString", searchString);
+		}
+		else {
+			List<MapVO> list = service.getMap(); // 전체 리스트를 반환한다.
+			req.setAttribute("list", list);
+		}
 		return "pjs/map/googleMap.all";
+	}/* ================================================================================================================================================== */
+	@RequestMapping(value="googleMapJSON.mr", method={RequestMethod.GET})
+	public String googleMapJSON(HttpServletRequest req) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("searchString", req.getParameter("searchString") );
+		map.put("choice", req.getParameter("choice") );
+		String googleMap = service.getSearchJSON(map);
+		req.setAttribute("googleMap", googleMap);
+		return "pjs/map/googleMapJSON.not";
 	}
-	
-	
 	
 /*=======================================================================================================================================================*/	
 	
