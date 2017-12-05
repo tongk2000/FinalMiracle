@@ -51,4 +51,36 @@ public class ProjectManagerDAO {
 		HashMap<String, String> map = sql.selectOne("do.getUpFolder",upIdx);
 		return map;
 	}
+
+	public List<HashMap<String, String>> getTeamwonList(String fk_team_idx) {
+		List<HashMap<String, String>> teamwonList = sql.selectList("do.getTeamwonList",fk_team_idx);
+		return teamwonList;
+	}
+
+	public int addDownFolder(FolderVO fvo) {
+		int result = sql.insert("do.addDownFolder",fvo);
+		return result;
+	}
+
+	public int addFolderTeamwon(HashMap<String, String[]> map) {
+		int result = sql.insert("do.addFolderTeamwon",map); 
+		return result;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

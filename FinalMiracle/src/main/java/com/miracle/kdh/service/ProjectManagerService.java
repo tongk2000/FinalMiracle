@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.miracle.kdh.model.FolderVO;
 import com.miracle.kdh.model.Folder_CommentVO;
@@ -56,6 +59,18 @@ public class ProjectManagerService {
 		HashMap<String, String> map = dao.getUpFolder(upIdx);
 		return map;
 	} // public HashMap<String, String> getUpFolder(int upIdx) --------------------------------------------------------
+
+	public List<HashMap<String, String>> getTeamwonList(String fk_team_idx) {
+		List<HashMap<String, String>> teamwonList = dao.getTeamwonList(fk_team_idx);
+		return teamwonList;
+	}
+
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int addDownFolderEnd(FolderVO fvo, HashMap<String, String[]> map) {
+		int result1 = dao.addDownFolder(fvo);
+		int result2 = dao.addFolderTeamwon(map);
+		return result1 * result2;
+	}
 }
 
 
