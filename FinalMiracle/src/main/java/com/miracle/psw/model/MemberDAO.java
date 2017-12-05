@@ -44,14 +44,14 @@ public class MemberDAO implements InterMemberDAO {
 		return n;
 	}
 
-	// =================================================== *** 아이디 중복 체크 *** ===================================
+	// =================================================== *** 아이디 중복 체크 *** ======================================
 	@Override
 	public int idDuplicateCheck(String userid) {  // id 중복 체크
 		int n = sqlsession.selectOne("member_psw.idDuplicateCheck", userid);
 		return n;
 	}
 
-	// ============================================================== *** 회원가입 (Transaction처리) *** =============
+	// ============================================================== *** 회원가입 (Transaction처리) *** ================
 	@Override
 	public int registerMember(MemberVO mvo) {  // 회원가입(tbl_member)
 		int n = sqlsession.insert("member_psw.registerMember", mvo);

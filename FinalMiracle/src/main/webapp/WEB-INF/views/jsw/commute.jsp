@@ -23,7 +23,7 @@
 	$(document).ready(function(){
 		
 		
-		if(${not empty month}){
+		if(${not empty month && month != null}){
 			$("#month").val("${month}");
 		}
 		
@@ -59,7 +59,15 @@
 
 <h1>출퇴근 체크</h1>
 
-홍길동님의 출퇴근 내역
+${sessionScope.loginUser.name}님의 출퇴근 내역
+<br/>
+
+<c:forEach var="detail" items="${userTeamDetail}" varStatus="status">
+	<c:if test="${detail.twstatus == 2}">
+		<a id="teamMember${status.count}" href="commuteteam.mr?tidx=${detail.tidx}&teamname=${detail.teamname}">팀 ${detail.teamname}의 팀원 출퇴근 내역보기</a>
+	</c:if>
+</c:forEach>
+
 <br/>
 
 <button id="start" name="start" onclick="welcome()">출근</button>

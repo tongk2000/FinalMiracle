@@ -203,7 +203,7 @@ public class JswUtil {
 	}// end of String getPageBar(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String url)-----------------	   
 
 	
-	public static String getPageBarWithSearch(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String colname, String search, String period, String url) {
+	public static String getPageBarWithSearch(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String colname, String search, String url) {
 		
 		String pageBar = "";
 		
@@ -222,7 +222,7 @@ public class JswUtil {
 			str_pageNo = "&nbsp;[이전"+blockSize+"페이지]";
 		}
 		else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" >"+"[이전"+blockSize+"페이지]</a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"\" >"+"[이전"+blockSize+"페이지]</a>&nbsp;"; 
 		}
 		
 		pageBar += str_pageNo;
@@ -232,7 +232,7 @@ public class JswUtil {
 			if (pageNo == currentShowPageNo)
 				str_pageNo = "&nbsp;<span style=\"color:red; font-size:12pt; font-weight:bold; text-decoration:underline;\">"+pageNo+ "</span>&nbsp;";
 			else
-				str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" >"+pageNo+"</a>" + "&nbsp;";
+				str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"\" >"+pageNo+"</a>" + "&nbsp;";
 			
 			pageBar += str_pageNo; 
 			
@@ -244,7 +244,7 @@ public class JswUtil {
 			str_pageNo = "&nbsp;[다음"+blockSize+"페이지]";
 		}
 		else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" >"+"[다음"+blockSize+"페이지]</a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"\" >"+"[다음"+blockSize+"페이지]</a>&nbsp;"; 
 		}
 		
 		pageBar += str_pageNo;	
@@ -253,7 +253,7 @@ public class JswUtil {
 		
 	}// end of String getPageBarWithSearch(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String searchType, String searchString, String period, String url)--------------------	
 	
-	public static String getPageBarWithMonth(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String month, String period, String url) {
+	public static String getPageBarWithMonth(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String month, String url) {
 		
 		String pageBar = "";
 		
@@ -272,7 +272,7 @@ public class JswUtil {
 			str_pageNo = "&nbsp;[이전"+blockSize+"페이지]";
 		}
 		else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&month="+month+"&period="+period+"\" >"+"[이전"+blockSize+"페이지]</a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&month="+month+"\" >"+"[이전"+blockSize+"페이지]</a>&nbsp;"; 
 		}
 		
 		pageBar += str_pageNo;
@@ -282,7 +282,7 @@ public class JswUtil {
 			if (pageNo == currentShowPageNo)
 				str_pageNo = "&nbsp;<span style=\"color:red; font-size:12pt; font-weight:bold; text-decoration:underline;\">"+pageNo+ "</span>&nbsp;";
 			else
-				str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&month="+month+"&period="+period+"\" >"+pageNo+"</a>" + "&nbsp;";
+				str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&month="+month+"\" >"+pageNo+"</a>" + "&nbsp;";
 			
 			pageBar += str_pageNo; 
 			
@@ -294,7 +294,7 @@ public class JswUtil {
 			str_pageNo = "&nbsp;[다음"+blockSize+"페이지]";
 		}
 		else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&month="+month+"&period="+period+"\" >"+"[다음"+blockSize+"페이지]</a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&month="+month+"\" >"+"[다음"+blockSize+"페이지]</a>&nbsp;"; 
 		}
 		
 		pageBar += str_pageNo;	
