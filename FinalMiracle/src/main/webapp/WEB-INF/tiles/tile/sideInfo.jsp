@@ -9,7 +9,7 @@
       <li><a href="#">채팅</a></li>
       <li><a href="<%= request.getContextPath() %>/commute.mr">출퇴근 체크</a></li>
       <li><a href="#">채팅</a></li>
-      <li><a href="#">FAQ게시판</a></li>
+      <li><a href="<%= request.getContextPath() %>/faqList.mr">FAQ게시판</a></li>
       <li><a href="<%= request.getContextPath() %>/noticeList.mr">공지사항</a></li>
       <li><a href="<%= request.getContextPath() %>/mindList.mr">마음의소리</a></li>
       <li><a href="#">자유게시판</a></li>

@@ -10,12 +10,10 @@
 <style type="text/css">
 	.edit {display: inline-block;}
 	
-	.edit.img{
-		border: 1px solid pink;
-		margin-top: none;
-	}
+	.edit.img{border: 3px solid red;
+			  margin-top: 5%;}
 	
-	.edit.info{border: 1px solid green;}
+	.edit.info{border: 2px solid green;}
 	
 	.error { color: red; padding-left: 10px; margin-bottom: 5px;}
 	
@@ -304,7 +302,7 @@
 			<div class="edit img" style="float: left;">
 				<img alt="프로필사진" src="<%= request.getContextPath() %>/resources/images/${sessionScope.loginUser.img}" style="height: 280px; width: 256px;">
 				<br/>
-				<a href="#">[이미지 변경]</a>
+				<a href="#">[대표 이미지 변경]</a>
 				<br/><br/>
 			</div>
 		

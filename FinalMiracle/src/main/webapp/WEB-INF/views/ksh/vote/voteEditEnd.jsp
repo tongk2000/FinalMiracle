@@ -18,9 +18,6 @@
 		alert("투표의 문항들을 확인하세요.");
 		location.href="<%= request.getContextPath() %>/voteReadyList.mr";
 	</c:if>
-	
-	
-	
-	//글목록을 보여주는 페이지로 이동하자
+
 	
 </script>

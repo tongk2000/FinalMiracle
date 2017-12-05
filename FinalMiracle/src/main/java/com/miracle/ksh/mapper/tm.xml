@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #7. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== #8. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->              
+<mapper namespace="kshTM">
+
+	<resultMap type="java.util.HashMap" id="tmListMap">
+		<result property="RNO" 				column="rno" 			javaType="String" />
+ 		<result property="IDX" 			column="idx" 			javaType="String" />
+ 		<result property="USERID" 			column="userid" 			javaType="String" />
+ 		<result property="NAME" 			column="name" 		javaType="String" />
+ 		<result property="REGDATE" 			column="regdate" 			javaType="String" />
+ 		<result property="PROFILE" 	column="profile" 	javaType="String" />
+ 		<result property="IMG" 			column="img" 			javaType="String" />
+ 		<result property="STATUS" 	column="status" 	javaType="String" />
+	</resultMap>
+	<select id="tmList1" parameterType="HashMap" resultMap="tmListMap">
+		select rno, idx, userid, name, regdate, profile, img, status
+		from view_memberlist
+		where idx = 1
+	</select>
+	
+	<select id="tmList2" parameterType="HashMap" resultMap="tmListMap">
+		select rno, idx, userid, name, regdate, profile, img, status
+		from view_memberlist
+		where idx = 1
+		and ${colname} like '%'|| #{search} ||'%'
+	</select>
+	
+	
+	<select id="TMTotalCount1" parameterType="HashMap" resultType="int">
+		select count(*)
+		from view_memberlist
+		where idx = 1
+	</select>
+	
+	
+	<select id="TMTotalCount2" parameterType="HashMap" resultType="int">
+		select count(*)
+		from view_memberlist
+		where idx = 1
+		and ${colname} like '%'|| #{search} ||'%'
+	</select>
+
+</mapper>
