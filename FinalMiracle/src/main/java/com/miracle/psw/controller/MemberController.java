@@ -283,7 +283,7 @@ public class MemberController {
 				String msg = (n == 2) ? "회원정보 수정 성공 ~ !!" : "회원정보 수정 오류입니다.";
 				String ctxpath = req.getContextPath();
 				req.setAttribute("msg", msg);
-				req.setAttribute("loc", ctxpath + "/member_edit.mr");
+				req.setAttribute("loc", ctxpath + "/doList.mr");
 			}
 		}
 		return "psw/msg.not";
