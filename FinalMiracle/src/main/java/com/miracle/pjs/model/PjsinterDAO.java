@@ -17,6 +17,10 @@ public interface PjsinterDAO {
 	
 	HashMap<String, String> getViewContent(String id); // 유저의 정보를 가져오는 메소드
 	
+	HashMap<String, String> getIdxTeam(String idx); // 공지사항 게시판의 해당 행의 내용을 보여주는 메소드
+
+	int delNoticeIdx(String idx); // 공지사항 게시물을 지우는 메소드
+	
 //==========================================================================================================================================================//	
 	
 	
@@ -32,11 +36,19 @@ public interface PjsinterDAO {
 	
 	// === *** 구글맵 *** === //
 	List<MapVO> getMap(); // 구글맵 테이블의 전체 내용을 가져온다.
+	
+	List<MapVO> getMapWithSearch(HashMap<String, String> map); // 검색어를 포함한 지도 리스트를 받아온다.
+	
+	List<String> getSearchJSON(HashMap<String, String> map); // 구글맵 JSON 검색처리
 
 //==========================================================================================================================================================//	
 
 	
 	// 로그인한 유저의 팀정보를 가져오는 메소드
 	HashMap<String, String> getUserTeam(String userid);
+
+
+
+
 
 }

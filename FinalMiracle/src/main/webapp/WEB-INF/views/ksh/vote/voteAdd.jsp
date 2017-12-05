@@ -3,7 +3,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/resources/jqueryuicss/jquery-ui.css" />
+<link href="<%=request.getContextPath() %>/resources/summernote/summernote.css" rel="stylesheet">
+
 <script type="text/javascript" src="<%= request.getContextPath() %>/resources/jqueryuijs/jquery-ui.js"></script>
+<script src="<%=request.getContextPath() %>/resources/summernote/summernote.js"></script>
+<script src="<%=request.getContextPath() %>/resources/summernote/lang/summernote-ko-KR.js"></script>
 
 <style type="text/css">
   th {width: 25%;}
@@ -23,6 +27,14 @@
 		/* html += "<button type='button' onClick='goImageFile();'>이미지추가</button> <div id='addattach'></div>"; */
 		
 		$("#divbeginitems").append(html);
+		
+		$('.summernote').summernote({
+	      height: 300,          // 기본 높이값
+	      minHeight: null,      // 최소 높이값(null은 제한 없음)
+	      maxHeight: null,      // 최대 높이값(null은 제한 없음)
+	      focus: true,          // 페이지가 열릴때 포커스를 지정함
+	      lang: 'ko-KR'         // 한국어 지정(기본값은 en-US)
+	    });
 		
 		
 
@@ -125,8 +137,8 @@
 			<tr>
 				<th>내용</th>
 				<td>
-				    <div style="width: 50%;">
-						<input type="text" name="content" id="content" class="form-control" />
+				    <div style="width: 100%">
+					   <textarea name="content" id="content" class="summernote">dd</textarea>
 					</div>
 				</td>
 			</tr>

@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
@@ -22,12 +23,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.miracle.ksh.model.VoteCommVO;
 import com.miracle.ksh.model.VoteItemVO;
 import com.miracle.ksh.model.VoteVO;
 import com.miracle.ksh.service.InterVoteService;
 import com.miracle.ksh.util.KshFileManager;
 import com.miracle.ksh.util.MyUtil;
 import com.miracle.ksh.util.ThumbnailManager;
+import com.miracle.psw.model.MemberDetailVO;
+import com.miracle.psw.model.MemberVO;
 
 @Controller
 public class VoteController {
@@ -42,10 +46,11 @@ public class VoteController {
 	private ThumbnailManager thumbnailManager;
 	
 	@RequestMapping(value="/voteList.mr", method={RequestMethod.GET})
-	public String voteList(HttpServletRequest req){
+	public String voteList(HttpServletRequest req, HttpSession session){
 		
 		List<HashMap<String, String>> voteList = null;
 		List<VoteItemVO> voteItemList = null;
+		List<HashMap<String, String>> voteCommList = null;
 		
 		String gobackURL = MyUtil.getCurrentURL(req);//돌아갈 페이지를 위해서 현재 페이지의 주소를 뷰단으로 넘겨주자
 		
@@ -95,10 +100,12 @@ public class VoteController {
 			//검색어가 있	는 경우
 			voteList = service.VoteListYesPaging2(map);
 			voteItemList = service.VoteItemList();
+			voteCommList = service.VoteCommList();
 		} else{
 			//검색어가 없는 경우
 			voteList = service.VoteListYesPaging1(map);
 			voteItemList = service.VoteItemList();
+			voteCommList = service.VoteCommList();
 		}
 		
 		if( (colname != null && search != null) && (!colname.trim().isEmpty() && !search.trim().isEmpty()) && (!colname.equals("null") && !search.equals("null"))){
@@ -118,6 +125,9 @@ public class VoteController {
 		
 		pagebar += "</ul>";
 		
+		
+		req.setAttribute("gobackURL", gobackURL);
+		
 		req.setAttribute("pagebar", pagebar);
 		req.setAttribute("colname", colname);
 		req.setAttribute("search", search);
@@ -126,6 +136,7 @@ public class VoteController {
 		
 		req.setAttribute("voteList", voteList);
 		req.setAttribute("voteItemList", voteItemList);
+		req.setAttribute("voteCommList", voteCommList);
 		
 		return "ksh/vote/votelist.all";
 	}
@@ -135,6 +146,7 @@ public class VoteController {
 		
 		List<HashMap<String, String>> voteEndList = null;
 		List<VoteItemVO> voteItemList = null;
+		List<HashMap<String, String>> voteCommList = null;
 		
 		String gobackURL = MyUtil.getCurrentURL(req);//돌아갈 페이지를 위해서 현재 페이지의 주소를 뷰단으로 넘겨주자
 		
@@ -185,10 +197,12 @@ public class VoteController {
 			//검색어가 있	는 경우
 			voteEndList = service.VoteEndListYesPaging2(map);
 			voteItemList = service.VoteItemList();
+			voteCommList = service.VoteCommList();
 		} else{
 			//검색어가 없는 경우
 			voteEndList = service.VoteEndListYesPaging1(map);
 			voteItemList = service.VoteItemList();
+			voteCommList = service.VoteCommList();
 		}
 		
 		if( (colname != null && search != null) && (!colname.trim().isEmpty() && !search.trim().isEmpty()) && (!colname.equals("null") && !search.equals("null"))){
@@ -208,6 +222,9 @@ public class VoteController {
 		
 		pagebar += "</ul>";
 		
+		
+		req.setAttribute("gobackURL", gobackURL);
+		
 		req.setAttribute("pagebar", pagebar);
 		req.setAttribute("colname", colname);
 		req.setAttribute("search", search);	
@@ -216,6 +233,7 @@ public class VoteController {
 		
 		req.setAttribute("voteEndList", voteEndList);
 		req.setAttribute("voteItemList", voteItemList);
+		req.setAttribute("voteCommList", voteCommList);
 		
 		return "ksh/vote/voteEndlist.all";
 	}
@@ -226,6 +244,7 @@ public class VoteController {
 		
 		List<HashMap<String, String>> voteMyList = null;
 		List<VoteItemVO> voteItemList = null;
+		List<HashMap<String, String>> voteCommList = null;
 		
 		String gobackURL = MyUtil.getCurrentURL(req);//돌아갈 페이지를 위해서 현재 페이지의 주소를 뷰단으로 넘겨주자
 		
@@ -283,10 +302,12 @@ public class VoteController {
 			//검색어가 있	는 경우
 			voteMyList = service.VoteMyListYesPaging2(map);
 			voteItemList = service.VoteItemList();
+			voteCommList = service.VoteCommList();
 		} else{
 			//검색어가 없는 경우
 			voteMyList = service.VoteMyListYesPaging1(map);
 			voteItemList = service.VoteItemList();
+			voteCommList = service.VoteCommList();
 		}
 		
 		if( (colname != null && search != null) && (!colname.trim().isEmpty() && !search.trim().isEmpty()) && (!colname.equals("null") && !search.equals("null"))){
@@ -308,6 +329,8 @@ public class VoteController {
 		
 		pagebar += "</ul>";
 		
+		req.setAttribute("gobackURL", gobackURL);
+		
 		req.setAttribute("pagebar", pagebar);
 		req.setAttribute("colname", colname);
 		req.setAttribute("search", search);
@@ -317,6 +340,7 @@ public class VoteController {
 		req.setAttribute("voteMyList", voteMyList);
 		req.setAttribute("voteItemList", voteItemList);
 		req.setAttribute("votekind", votekind);
+		req.setAttribute("voteCommList", voteCommList);
 		
 		return "ksh/vote/voteMylist.all";
 	}
@@ -332,6 +356,14 @@ public class VoteController {
 	@RequestMapping(value="/voteAddEnd.mr", method={RequestMethod.POST})
 	public String voteAddEnd(MultipartHttpServletRequest req){
 		
+		HttpSession session = req.getSession();
+		
+		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		
+		//System.out.println(loginUser.getIdx());
+		
+		String idx = String.valueOf(loginUser.getIdx());
+		
 		String subject = req.getParameter("subject");
 		String content = req.getParameter("content");
 		String startdate = req.getParameter("datepicker1");
@@ -340,8 +372,6 @@ public class VoteController {
 		//System.out.println(subject);
 		
 		String[] items = req.getParameterValues("items");
-		
-		List<MultipartFile> attachList = req.getFiles("attach");
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
 		Date startday = null;
@@ -398,6 +428,7 @@ public class VoteController {
 			mapVote.put("content", content);
 			mapVote.put("startdate", startdate);
 			mapVote.put("enddate", enddate);
+			mapVote.put("idx", idx);
 			
 			//System.out.println(subject + "/" + content + "/" + enddate);
 			
@@ -413,67 +444,19 @@ public class VoteController {
 			int n = 0;
 		    int m = 0;
 		    int count = 0;
-		    		    
-		    	   
-		    if(attachList == null) { // 파일 첨부된것이 없다면
-		    	
-		    	//System.out.println("attachList는 없다");
-		    	
-		    	for(int i=0; i<items.length; i++){
-		    		mapVoteItem.put("items", items[i]);
-		    		m = service.VoteItemAdd(mapVoteItem);
-		    		
-		    		if(m==1) count++;
-		    	}
-		    	
-		    	if(items.length == count) {
-				    n=1;
-			    }
-			    else {
-			 	   n=0;
-			    }
-			    
+	    	
+	    	for(int i=0; i<items.length; i++){
+	    		mapVoteItem.put("items", items[i]);
+	    		m = service.VoteItemAdd(mapVoteItem);
+	    		
+	    		if(m==1) count++;
+	    	}
+	    	
+	    	if(items.length == count) {
+			    n=1;
 		    }
-		    else if(attachList != null) { // 파일 첨부된것이 있다면
-		    	
-		    	//System.out.println("attachList는 있다");
-			   
-			    for(int i=0; i<items.length; i++) {
-			    	mapVoteItem.put("items", items[i]);
-			    				    	
-					// WAS 의 webapp 의 절대경로를 알아와야 한다. 
-					HttpSession session = req.getSession();
-					String root = session.getServletContext().getRealPath("/"); 
-					String path = root + "resources"+File.separator+"files";
-					// path 가 첨부파일들을 저장할 WAS(톰캣)의 폴더가 된다. 
-					
-					String newFileName = "";
-					// WAS(톰캣) 디스크에 저장할 파일명 
-					
-					byte[] bytes = null;
-					// 첨부파일을 WAS(톰캣) 디스크에 저장할때 사용되는 용도
-					
-					try {
-						 bytes = attachList.get(i).getBytes();
-						 
-						 newFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), path); 
-						 
-					} catch (Exception e) {
-						
-					}
-					
-					mapVoteItem.put("newFileName", newFileName);
-			    	
-		    		m = service.VoteItemImageAdd(mapVoteItem);
-				    if(m==1) count++;
-			    }
-			   
-			    if(items.length == count) {
-				    n=1;
-			    }
-			    else {
-			 	   n=0;
-			    }
+		    else {
+		 	   n=0;
 		    }
 		    
 		    
@@ -628,7 +611,7 @@ public class VoteController {
 	}
 	
 	@RequestMapping(value="/voteEditEnd.mr", method={RequestMethod.POST})
-	public String voteEditEnd(MultipartHttpServletRequest req){
+	public String voteEditEnd(MultipartHttpServletRequest req) throws Throwable{
 		
 		String idx = req.getParameter("idx");
 		String subject = req.getParameter("subject");
@@ -654,7 +637,6 @@ public class VoteController {
 		
 		//System.out.println(items.length + " vs " + itemidx.length);
 		
-		List<MultipartFile> attachList = null; //req.getFiles("attach");
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
 		Date startday = null;
@@ -724,174 +706,12 @@ public class VoteController {
 			HashMap<String, Object> mapVoteItem = new HashMap<String, Object>();
 			mapVoteItem.put("idx", idx);
 			mapVoteItem.put("none", none);
-
-			int n = 0;
-		    int m = 0;
-		    //int p = 0;
-		    int count = 0;
-		    
-		    
-		    /*for(int i=0; i<items.length; i++){
-				System.out.println(items[i] + i);
-			}*/
-		    
-		    //System.out.println(itemidx.length - items.length);
-		    
-		    if (items.length > itemidx.length){ //입력한 문항 수 > 테이블에 있는 문항 수
-		    	List<Object> restArray = new ArrayList<Object>();
-		    	int rest = 0;	
-		    	int gap = items.length - itemidx.length;
-		    	
-		    	for(int i=0; i<items.length - itemidx.length; i++){
-		    		//System.out.println(items[i] + i);
-		    		service.VoteItemRestAdd(mapVoteItem);
-		    		rest = service.VoteItemMaxRest();
-		    		restArray.add(rest);
-		    	}
-		    	
-		    	for(int i=0; i<items.length; i++){
-		    		
-		    		if(i < gap){
-		    			mapVoteItem.put("items", items[i]);
-			    		mapVoteItem.put("itemidx", itemidx[i]);
-			    		restArray.add(rest);
-			    		//System.out.println(items[i] + "-" + i + " / " + itemidx[i] + "-" + i);
-			    		m = service.VoteItemEdit(mapVoteItem);
-		    		} else {
-		    			int j = 0;
-		    			
-		    			mapVoteItem.put("items", items[i]);
-		    			mapVoteItem.put("itemidx", restArray.get(j));
-		    			
-		    			j++;
-		    			
-		    			m = service.VoteItemEdit(mapVoteItem);
-		    		}
-		    		if(m==1) count++;
-		    	}
-		    	
-		    	if(items.length == count) {
-				    n=1;
-			    }
-			    else {
-			 	   n=0;
-			    }
-		    	
-		    } else if(items.length < itemidx.length){ //입력한 문항 수 < 테이블에 있는 문항 수
-		    	
-		    	for(int i=0; i<itemidx.length - items.length; i++){
-		    		//System.out.println(itemidx.length - items.length);
-		    		mapVoteItem.put("items", items[i]);
-		    		mapVoteItem.put("itemidx", itemidx[i]);
-		    		//System.out.println(items[i] + "-" + i + " / " + itemidx[i] + "-" + i);
-		    		m = service.VoteItemEdit(mapVoteItem);
-		    		
-		    		if(m==1) count++;
-		    	}
-		    	
-		    	for(int i = items.length; i < itemidx.length; i++){
-		    		mapVoteItem.put("itemidx", itemidx[i]);
-		    		service.VoteItemRestDel(mapVoteItem);
-		    	}
-		    	
-		    	if(itemidx.length - items.length == count) {
-				   n=1;
-			    }
-			    else {
-			 	   n=0;
-			    }
-		    	
-		    } else{ //입력한 문항 수 == 테이블에 있는 문항 수
-		    	
-		    	for(int i=0; i<items.length; i++){
-		    		mapVoteItem.put("items", items[i]);
-		    		mapVoteItem.put("itemidx", itemidx[i]);
-		    		//System.out.println(items[i] + "-" + i + " / " + itemidx[i] + "-" + i);
-		    		m = service.VoteItemEdit(mapVoteItem);
-		    		
-		    		if(m==1) count++;
-		    	}
-		    	
-		    	if(items.length == count) {
-				    n=1;
-			    }
-			    else {
-			 	   n=0;
-			    }
-		    	
-		    }
-	   
-		    /*
-		    //if(attachList == null) { // 파일 첨부된것이 없다면
-		    	
-		    	//System.out.println("attachList는 없다");
-		    	
-		    	for(int i=0; i<items.length; i++){
-		    		mapVoteItem.put("items", items[i]);
-		    		mapVoteItem.put("itemidx", itemidx[i]);
-		    		//System.out.println(items[i] + "-" + i + " / " + itemidx[i] + "-" + i);
-		    		m = service.VoteItemEdit(mapVoteItem);
-		    		
-		    		if(m==1) count++;
-		    	}
-		    	
-		    	if(items.length == count) {
-				    n=1;
-			    }
-			    else {
-			 	   n=0;
-			    }
-			    
-		    }
-		    else if(attachList != null) { // 파일 첨부된것이 있다면
-		    	
-		    	System.out.println("attachList는 있다");
-			   
-			    for(int i=0; i<items.length; i++) {
-			    	mapVoteItem.put("items", items[i]);
-			    				    	
-					// WAS 의 webapp 의 절대경로를 알아와야 한다. 
-					HttpSession session = req.getSession();
-					String root = session.getServletContext().getRealPath("/"); 
-					String path = root + "resources"+File.separator+"files";
-					// path 가 첨부파일들을 저장할 WAS(톰캣)의 폴더가 된다. 
-					
-					String newFileName = "";
-					// WAS(톰캣) 디스크에 저장할 파일명 
-					
-					byte[] bytes = null;
-					// 첨부파일을 WAS(톰캣) 디스크에 저장할때 사용되는 용도
-					
-					try {
-						 bytes = attachList.get(i).getBytes();
-						 
-						 newFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), path); 
-						 
-					} catch (Exception e) {
-						
-					}
-					
-					mapVoteItem.put("newFileName", newFileName);
-			    	
-		    		m = service.VoteItemImageEdit(mapVoteItem);
-				    if(m==1) count++;
-			    }
-			   
-			    if(items.length == count) {
-				    n=1;
-			    }
-			    else {
-			 	   n=0;
-			    }
-		    }*/
-		    
-		    
-		    //System.out.println(x + "/" + n + "/" + m);
+			
+			int n = service.VoteItemEdit(mapVoteItem, items, itemidx);
 		    
 		    
 		    req.setAttribute("x", x);
 			req.setAttribute("n", n);
-			req.setAttribute("m", m);
 			
 			return "ksh/vote/voteEditEnd.all";
 		
@@ -904,6 +724,7 @@ public class VoteController {
 		
 		List<HashMap<String, String>> voteReadyList = null;
 		List<VoteItemVO> voteItemList = null;
+		List<HashMap<String, String>> voteCommList = null;
 		
 		String gobackURL = MyUtil.getCurrentURL(req);//돌아갈 페이지를 위해서 현재 페이지의 주소를 뷰단으로 넘겨주자
 		
@@ -952,10 +773,12 @@ public class VoteController {
 			//검색어가 있	는 경우
 			voteReadyList = service.VoteReadyListYesPaging2(map);
 			voteItemList = service.VoteItemList();
+			voteCommList = service.VoteCommList();
 		} else{
 			//검색어가 없는 경우
 			voteReadyList = service.VoteReadyListYesPaging1(map);
 			voteItemList = service.VoteItemList();
+			voteCommList = service.VoteCommList();
 		}
 		
 		if( (colname != null && search != null) && (!colname.trim().isEmpty() && !search.trim().isEmpty()) && (!colname.equals("null") && !search.equals("null"))){
@@ -975,6 +798,8 @@ public class VoteController {
 		
 		pagebar += "</ul>";
 		
+		req.setAttribute("gobackURL", gobackURL);
+		
 		req.setAttribute("pagebar", pagebar);
 		req.setAttribute("colname", colname);
 		req.setAttribute("search", search);
@@ -983,6 +808,7 @@ public class VoteController {
 		
 		req.setAttribute("voteReadyList", voteReadyList);
 		req.setAttribute("voteItemList", voteItemList);
+		req.setAttribute("voteCommList", voteCommList);
 		
 		return "ksh/vote/voteReadyList.all";
 	}
@@ -1004,7 +830,6 @@ public class VoteController {
 					jsonObj.put("no", vo.getIdx());
 					jsonObj.put("name", vo.getFk_vote_idx());
 					jsonObj.put("email", vo.getItem());
-					jsonObj.put("tel", vo.getImage());
 					jsonObj.put("addr", vo.getVotenum());
 					
 					jsonMap.put(jsonObj);
@@ -1016,7 +841,90 @@ public class VoteController {
 
 		req.setAttribute("str_jsonMap", str_jsonMap);
 		
-		return "ksh/json/ChartJSON.not";
+		return "ksh/json/Chart.not";
+	}
+	
+	
+	@RequestMapping(value="/voteCommAdd.mr", method={RequestMethod.GET})
+	public String voteCommAdd(HttpServletRequest req, HttpServletResponse response){
+		
+		HttpSession session = req.getSession();
+		
+		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		
+		String gobackURL = req.getParameter("gobackURL");
+		String comment = req.getParameter("comment");
+		String voteidx = req.getParameter("voteidx");
+		String getidx = String.valueOf(loginUser.getIdx());
+		
+		//System.out.println(comment + " / " + voteidx + " / " + getidx);
+		System.out.println(gobackURL);
+
+		int fk_teamwon_idx = service.getFk_teamwon_idx(getidx);
+		
+		String str_idx = String.valueOf(fk_teamwon_idx);
+		
+		HashMap<String, String> commMap = new HashMap<String, String>();
+		commMap.put("comment", comment);
+		commMap.put("voteidx", voteidx);
+		commMap.put("fk_teamwon_idx", str_idx);
+		
+		
+		int result = service.addComment(commMap);
+		
+		if(result > 0){
+			//댓글쓰기와 원 게시물(tblBoard 테이블)에 댓글의 갯수(1씩 증가)의 증가가 성공한다면
+			req.setAttribute("msg", "댓글 작성완료");
+			req.setAttribute("loc", gobackURL);
+			
+		} else {
+			//댓글쓰기가 실패 or 댓글의 갯수(1씩 증가)의 증가가 실패한다면
+			req.setAttribute("msg", "댓글 작성실패");
+			req.setAttribute("loc", gobackURL);
+		}
+		
+		return "ksh/msg.not";
+	}
+	
+	
+	@RequestMapping(value="/voteCommDel.mr", method={RequestMethod.GET})
+	public String voteCommDel(HttpServletRequest req){
+		
+		HttpSession session = req.getSession();
+		
+		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		
+		String gobackURL = req.getParameter("gobackURL");
+		String delidx = req.getParameter("delidx");
+		String getidx = String.valueOf(loginUser.getIdx());
+		
+		//System.out.println(comment + " / " + voteidx + " / " + getidx);
+		System.out.println("확인용 : " + delidx);
+		//System.out.println(gobackURL);
+
+		int fk_teamwon_idx = service.getFk_teamwon_idx(getidx);
+		
+		String str_idx = String.valueOf(fk_teamwon_idx);
+		
+		HashMap<String, String> commMap = new HashMap<String, String>();
+		commMap.put("delidx", delidx);
+		commMap.put("fk_teamwon_idx", str_idx);
+		
+		
+		int result = service.DelComment(commMap);
+		
+		if(result > 0){
+			//댓글쓰기와 원 게시물(tblBoard 테이블)에 댓글의 갯수(1씩 증가)의 증가가 성공한다면
+			req.setAttribute("msg", "댓글 삭제완료");
+			req.setAttribute("loc", gobackURL);
+			
+		} else {
+			//댓글쓰기가 실패 or 댓글의 갯수(1씩 증가)의 증가가 실패한다면
+			req.setAttribute("msg", "댓글 삭제실패");
+			req.setAttribute("loc", gobackURL);
+		}
+		
+		return "ksh/msg.not";
 	}
 	
 	
