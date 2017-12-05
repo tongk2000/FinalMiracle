@@ -63,6 +63,7 @@
 </style>
 
 <script type="text/javascript">
+	
 	$(document).ready(function(){
 		var changeFlag = false; // 모달창에서 변경된 값이 있는지 체크하는 변수
 		$("#folderRcm").hide();
@@ -229,10 +230,20 @@
 				$("#modalStatus").css({"color":"green"}).html("<label for='modalStatus"+idx+"'>완료</label>");
 				$("#status"+idx).prop("checked", true);
 				status = "0";
+				
+				$("#"+idx).addClass("completeLine"); // 깜빡이는 효과
+				setTimeout(function(){
+					$("#"+idx).removeClass("completeLine");
+				},500);
 			} else {
 				$("#modalStatus").css({"color":"red"}).html("<label for='modalStatus"+idx+"'>미완료</label>");
 				$("#status"+idx).prop("checked", false);
 				status = "1";
+				
+				$("#"+idx).addClass("incompleteLine"); // 깜빡이는 효과
+				setTimeout(function(){
+					$("#"+idx).removeClass("incompleteLine");
+				},500);
 			}
 			
 			var frm = {"idx":idx, "status":status};
@@ -257,18 +268,18 @@
 				$status.prop("checked", false);
 				status = "1";
 				
-				$("#"+idx).addClass("incompleteLine");
+				$("#"+idx).addClass("incompleteLine"); // 깜빡이는 효과
 				setTimeout(function(){
 					$("#"+idx).removeClass("incompleteLine");
-				},1000);
+				},500);
 			} else {
 				$status.prop("checked", true);
 				status = "0";
 				
-				$("#"+idx).addClass("completeLine");
+				$("#"+idx).addClass("completeLine"); // 깜빡이는 효과
 				setTimeout(function(){
 					$("#"+idx).removeClass("completeLine");
-				},1000);
+				},500);
 			}
 			
 			var frm = {"idx":idx, "status":status};
@@ -279,7 +290,7 @@
 			});
 			
 			$("#taskRcm").hide();
-		});
+		}); // end of $(document).on("click", "#statusRcm", function() ------------------------------------------------------------------------------
 				
 		// 페이지 전체에서 esc 키를 누르면 모달창을 닫기
 		$(document).on("keydown", function(){
@@ -318,7 +329,25 @@
 		
 	}); // end of $(document).ready(function() --------------------------------------------------------------------------------------------------------
 	
+	// 상위 폴더 추가(일단 보류;;)
+	function addUpFolder(){
+		$("#span1").css({"margin-left":"${3*15}px"});
+	}
 			
+	
+	// 하위 폴더 추가
+	function addDownFolder(){
+		var upIdx = $(".selectedLine").attr("id");
+		window.open("do_addDownFolder.mr?upIdx="+upIdx, "subwinpop", "left=100px, top=100px, width=400px, height=350px");
+	}
+	
+	
+	// 할일 추가
+	function addTask(){
+		
+	}
+	
+	
 	// 첫번째 클래스 구해주는 함수
 	function getFirstClass($this) {
 		var className = $this.attr("class");
@@ -399,7 +428,7 @@
 				<c:forEach var="dvo" items="${doList}">
 					<tr id="${dvo.idx}" class="folder ${dvo.groupNo} ${dvo.depth}">
 						<td>
-							<span style="margin-left:${dvo.depth*15}px; cursor:pointer;">
+							<span id="span${dvo.idx}" style="margin-left:${dvo.depth*15}px; cursor:pointer;">
 								<c:if test="${dvo.category == 1}"> <!-- 폴더라면 -->
 									<span class="modalFolder" id="modalIdx${dvo.idx}">
 										<c:if test="${dvo.fk_folder_idx != 0}"> <!-- 최상위 폴더가 아니라면 -->
@@ -453,16 +482,19 @@
 			<th class="rcmSubject"></th>
 		</tr>
 		<tr>
-			<td class="rcm">하위폴더추가</td>
+			<td class="rcm" id="addFolderRcm">상위폴더추가</td>
 		</tr>
 		<tr>
-			<td class="rcm">할일추가</td>
+			<td class="rcm" id="addFolderRcm" onclick="addDownFolder()">하위폴더추가</td>
+		</tr>
+		<tr>
+			<td class="rcm" id="addTaskRcm" onclick="addTask()">할일추가</td>
 		</tr>
 		<tr>
 			<td class="rcm" id="modalFolderRcm">조회/수정</td>
 		</tr>
 		<tr>
-			<td class="rcm">삭제</td>
+			<td class="rcm" id="deleteRcm">삭제</td>
 		</tr>
 	</table>
 </div>
@@ -480,7 +512,7 @@
 			<td class="rcm" id="modalTaskRcm">조회/수정</td>
 		</tr>
 		<tr>
-			<td class="rcm">삭제</td>
+			<td class="rcm" id="deleteRcm">삭제</td>
 		</tr>
 	</table>
 </div>

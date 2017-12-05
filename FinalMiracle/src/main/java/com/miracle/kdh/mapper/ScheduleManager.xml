@@ -59,6 +59,17 @@
 		update tbl_folder set status = #{status}
 		where idx = #{idx}
 	</update>
+	
+	<resultMap type="HashMap" id="getUpFolder">
+		<result property="groupNo" column="groupNo" javaType="String"/>
+		<result property="depth" column="depth" javaType="String"/>
+		<result property="subject" column="subject" javaType="String"/>
+	</resultMap>
+	<select id="getUpFolder" resultMap="getUpFolder">
+		select groupNo, depth, subject
+		from tbl_folder
+		where idx = #{upIdx}
+	</select>
 </mapper>
 
 
