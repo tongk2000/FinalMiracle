@@ -26,62 +26,75 @@
 		cursor:pointer;
 	}
 	
-	#rightClickMune {
+	#folderRcm {
 	    z-index:1000;
 	    position: absolute;
 	    background-color:white;
 	    border: 1px solid black;
 	    padding: 2px;
 	}
-	
-	#rightClickMune table {
+	#folderRcm table {
 		width:100%;
 	}
 	
+	#taskRcm {
+	    z-index:1000;
+	    position: absolute;
+	    background-color:white;
+	    border: 1px solid black;
+	    padding: 2px;
+	}
+	#taskRcm table {
+		width:100%;
+	}
 	
+	.selectLine {
+		background-color:lightgray;
+	}
+	.selectedLine {
+		background-color:lightgray;
+	}
+	.completeLine {
+		background-color:green;
+	}
+	.incompleteLine {
+		background-color:red;
+	}
 </style>
 
 <script type="text/javascript">
 	$(document).ready(function(){
 		var changeFlag = false; // 모달창에서 변경된 값이 있는지 체크하는 변수
-		$("#rightClickMune").hide();
+		$("#folderRcm").hide();
+		$("#taskRcm").hide();
 		
 		
-		// 폴더 모달창 띄우기
+		// 폴더 모달창 띄우기(값만 가지고 함수로 이동하게됨)
 		$(".modalFolder").click(function(){
 		 	var frm = {"idx":$(this).attr("id").replace("modalIdx","")};
-			$.ajax({
-				url:"do_getSelectFolderInfo.mr",
-				data:frm,
-				dataType:"html",
-				success:function(data){
-					$("#folderInfo").html(data);
-					$("#folderInfo").modal();
-				}, error:function(request, status, error){
-                    alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-				}
-			});
-			return false;
+		 	selectFolderInfo(frm);
+		 	return false; // 폴더 접고펴기가 실행되지 않도록 설정해둠
 		}); // end of $(".modalFolder").click(function() ------------------------------------------------------------------------
 		
-				
-		// 할일 모달창 띄우기
+		// 할일 모달창 띄우기(값만 가지고 함수로 이동하게됨)
 		$(".modalTask").click(function(){
 		 	var frm = {"idx":$(this).attr("id").replace("subject","")};
-			$.ajax({
-				url:"do_getSelectTaskInfo.mr",
-				data:frm,
-				dataType:"html",
-				success:function(data){
-					$("#taskInfo").html(data);
-					$("#taskInfo").modal();
-				}, error:function(request, status, error){
-                    alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-				}
-			});
-			return false;
+		 	selectTaskInfo(frm);
+		 	return false;
 		}); // end of $(".modalFolder").click(function() ------------------------------------------------------------------------
-				
+		
+		// 폴더 모달창 띄우기(우클릭 메뉴)
+		$("#modalFolderRcm").click(function(){
+			var frm = {"idx":$(".selectedLine").attr("id").replace("subject","")};
+			selectFolderInfo(frm);
+		});
+		
+		// 할일 모달창 띄우기(우클릭 메뉴)
+		$("#modalTaskRcm").click(function(){
+			var frm = {"idx":$(".selectedLine").attr("id").replace("subject","")};
+			selectTaskInfo(frm);
+		});
+		
 				
 		// 선택한 폴더 접고 펴기
 		$(".folder").click(function(){
@@ -112,19 +125,30 @@
 		
 				
 		// 마우스 클릭 이벤트 있으면 일단 우클릭 메뉴 없애주기
-		$(document).mousedown(function(){
-			$("#rightClickMune").hide();
+		$(document).on("mousedown", function(e){
+			if( !($(e.target).hasClass("rcm")) ) { // 클릭 대상이 rcm(우클릭메뉴) 클래스가 아닐 경우
+				$("#folderRcm").hide();
+				$("#taskRcm").hide();
+				$("tr").removeClass("selectedLine");
+			}
 		}); // end of $(document).mousedown(function() ------------------------------------------------------
 		
 				
 		// 우클릭시 메뉴 보여주기
 		$(".folder").bind("contextmenu", function(event) {
 		    event.preventDefault();
+		    $(this).addClass("selectedLine");
 		    var classname = getFirstClass($(this));
 		    
 		    var subject = $(this).find(".subject").text();
-		    $("#rcmSubject").text("["+subject+"]");
-		    $("#rightClickMune").css({top:event.pageY+"px", left:event.pageX+"px"}).show();
+		    $(".rcmSubject").text("["+subject+"] 메뉴");
+		    		    
+		    if($(this).find(".modalFolder").hasClass("modalFolder")) {
+		    	$("#folderRcm").css({top:event.pageY+"px", left:event.pageX+"px"}).show();
+		    } else if($(this).find(".modalTask").hasClass("modalTask")) {
+		    	$("#taskRcm").css({top:event.pageY+"px", left:event.pageX+"px"}).show();
+		    }
+		    return false;
 		}); // end of $(".folder").bind("contextmenu", function(event) --------------------------------------------------------------------
 				
 				
@@ -195,7 +219,7 @@
 		}); // end of function goModalEdit() -------------------------------------------------------------------------------------------------------------
 		
 		
-		// 할일 완료나 미완료 체크하면 DB수정하고 css 변경해주기
+		// 할일 완료나 미완료 체크하면 DB수정하고 css 변경해주기(기본+모달창에서 클릭시)
 		$(document).on("change", ".status", function(){
 			var checked = $(this).is(":checked");
 			var idx = $(this).attr("id").replace("modalStatus","").replace("status","");
@@ -219,16 +243,55 @@
 			});
 		}); // end of $(document).on("change", "#status", function() ----------------------------------------------------------------------
 		
+		// 할일 완료나 미완료 체크하면 DB 수정하기(오른쪽클릭 메뉴)
+		$(document).on("click", "#statusRcm", function(){
+			var $status = $(".selectedLine").find(".status");
+			
+			var checked = $status.is(":checked");
+			var idx = $status.attr("id").replace("status","");
+			var status = "";
+			
+			$("tr").removeClass("selectedLine");
+			
+			if(checked) { // 이건 체크박스를 직접 입력하는게 아니기 때문에 위하고는 반대로 되어야함
+				$status.prop("checked", false);
+				status = "1";
+				
+				$("#"+idx).addClass("incompleteLine");
+				setTimeout(function(){
+					$("#"+idx).removeClass("incompleteLine");
+				},1000);
+			} else {
+				$status.prop("checked", true);
+				status = "0";
+				
+				$("#"+idx).addClass("completeLine");
+				setTimeout(function(){
+					$("#"+idx).removeClass("completeLine");
+				},1000);
+			}
+			
+			var frm = {"idx":idx, "status":status};
+			
+			$.ajax({
+				url:"do_taskComplete.mr",
+				data:frm
+			});
+			
+			$("#taskRcm").hide();
+		});
 				
 		// 페이지 전체에서 esc 키를 누르면 모달창을 닫기
 		$(document).on("keydown", function(){
 			var modalFlag = $('.modal').is(':visible');
 			
 			if(event.keyCode == 27) {
-				$("#rightClickMune").hide();
+				$("#folderRcm").hide();
+				$("#taskRcm").hide();
+				$("tr").removeClass("selectedLine");
 			}
 			
-			if(event.keyCode == 27 && modalFlag && changeFlag) { // 입력한 키가 esc 이고, 모달창이 보여지고 있는 상태이면서 바꾼 내용이 있을때
+			if(event.keyCode == 27 && modalFlag && changeFlag){ // 입력한 키가 esc 이고, 모달창이 보여지고 있는 상태이면서 바꾼 내용이 있을때
 				var ynFlag = confirm("창을 종료하시겠습니까?\r\n(종료시 수정하신 정보는 모두 초기화됩니다)");
 				if(ynFlag) {
 					changeFlag = false;
@@ -245,7 +308,14 @@
 			event.keyCode = 27;
 			$(document).trigger("keydown"); // trigger : 해당 이벤트로 전달
 		}); // end of $(".modalClose").click(function() ------------------------------------------------------------------------------------------------------
-				
+		
+		// 모든 테이블 라인 선택시 백그라운드칼라로 옅은 회색 주기 
+		$("tr:has(td)").hover(function(){ // $("tr:has(td)") : tr 태그 중에서 td 태그인것만 선택함. th는 제외함
+			$(this).addClass("selectLine");
+		}, function(){
+			$(this).removeClass("selectLine");
+		}); // end of $("tr").hover(function() --------------------------------------------------------------------------------------------
+		
 	}); // end of $(document).ready(function() --------------------------------------------------------------------------------------------------------
 	
 			
@@ -276,6 +346,38 @@
 		var thirdClass = className.substr(index2);  // 세번째 클래스를 추출함
 		return thirdClass;
 	} // end of function getThirdClass($this) ------------------------------------------------------------------------------------------------------------------------
+	
+	
+	// 폴더 모달창 띄우기
+	function selectFolderInfo(frm) {
+		$.ajax({
+			url:"do_getSelectFolderInfo.mr",
+			data:frm,
+			dataType:"html",
+			success:function(data){
+				$("#folderInfo").html(data);
+				$("#folderInfo").modal();
+			}, error:function(request, status, error){
+	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		});
+	} // end of function selectTaskInfo(frm) ------------------------------------------------------------------------------------------------
+	
+	
+	// 할일 모달창 띄우기
+	function selectTaskInfo(frm) {
+		$.ajax({
+			url:"do_getSelectTaskInfo.mr",
+			data:frm,
+			dataType:"html",
+			success:function(data){
+				$("#taskInfo").html(data);
+				$("#taskInfo").modal();
+			}, error:function(request, status, error){
+	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		});
+	} // function selectTaskInfo(frm) ------------------------------------------------------------------------------------------------
 </script>
 
 <div class="container" style="width:40%; float:left">
@@ -303,7 +405,7 @@
 										<c:if test="${dvo.fk_folder_idx != 0}"> <!-- 최상위 폴더가 아니라면 -->
 											└
 										</c:if>
-										<span class="modalFolder subject" id="subject${dvo.idx}">${dvo.subject}</span>
+										<span class="modalFolder subject" id="modalIdx${dvo.idx}">${dvo.subject}</span>
 									</span>
 								</c:if>
 								<c:if test="${dvo.category == 2}"> <!-- 할일이라면 -->
@@ -345,29 +447,43 @@
 
 
 
-<div id="rightClickMune" style="width:200px; padding:0px;">
+<div id="folderRcm" style="padding:0px;">
 	<table>
 		<tr>
-			<td id="rcmSubject">1</td>
+			<th class="rcmSubject"></th>
 		</tr>
 		<tr>
-			<td>하위폴더추가</td>
+			<td class="rcm">하위폴더추가</td>
 		</tr>
 		<tr>
-			<td>할일추가</td>
+			<td class="rcm">할일추가</td>
 		</tr>
 		<tr>
-			<td>팀원초대</td>
+			<td class="rcm" id="modalFolderRcm">조회/수정</td>
 		</tr>
 		<tr>
-			<td>상세정보</td>
-		</tr>
-		<tr>
-			<td>삭제</td>
+			<td class="rcm">삭제</td>
 		</tr>
 	</table>
 </div>
 
+
+<div id="taskRcm" style="padding:0px;">
+	<table>
+		<tr>
+			<th class="rcmSubject"></th>
+		</tr>
+		<tr>
+			<td class="rcm" id="statusRcm">완료처리</td>
+		</tr>
+		<tr>
+			<td class="rcm" id="modalTaskRcm">조회/수정</td>
+		</tr>
+		<tr>
+			<td class="rcm">삭제</td>
+		</tr>
+	</table>
+</div>
 
 
 
