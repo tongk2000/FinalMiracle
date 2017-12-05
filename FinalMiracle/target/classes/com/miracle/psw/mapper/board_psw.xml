@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #7. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== #8. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->              
+<mapper namespace="board_psw">
+
+	<!-- faqList 보여주기 -->
+	<select id="faqList" resultType="com.miracle.psw.model.FaqBoardVO">
+		select idx, subject, content, readCnt, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, status
+		from tbl_faq
+		where status = 1
+		order by idx desc
+	</select>
+	
+
+</mapper>
