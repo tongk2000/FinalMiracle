@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!-- comment(ReplyVO), map(team_idx , userid) 받는다. -->
 <!DOCTYPE>
 <html>
 <head>
@@ -8,13 +9,14 @@
 <title>공지사항 글</title>
 <style>
 	.img {
-		width:20px;
-		heigth:20px;
+		width:25px;
+		heigth:25px;
 	}
 </style>
 </head>
 <body>
 <c:set var="user" value="${map}" /> 
+<c:set var="reply" value="${comment}" />
 	<div>
 		<div style="align: center;">
 			<table>
@@ -38,7 +40,33 @@
 					</tr>
 				</tbody>
 			</table>
+			댓글	:	<input type="text" /> <button type="button" id="goClick();">쓰기</button>
+			<div id="displayList">ddd</div>
 		</div>
 	</div>
+	<script>
+		$(document).ready(function(){
+			alert("nn");
+		});
+		function goClick(idx) {
+			alert("여기 옴?");
+			$.ajax({
+				url:"noticeReply.mr",
+				type:"get",
+				data:{"idx":idx},
+				dataType:"html",
+				success:function(data){
+					if(data.length>0) {
+						$("#displayList").html(data);
+					}
+					else {
+						alert("ajax결과"+data);
+					}
+				},
+				error:function(){
+				}
+			});
+		}
+	</script>
 </body>
 </html>

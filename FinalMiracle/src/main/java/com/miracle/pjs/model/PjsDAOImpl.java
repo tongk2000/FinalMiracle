@@ -51,8 +51,22 @@ public class PjsDAOImpl implements PjsinterDAO {
 	public int delNoticeIdx(String idx) {
 		// 공지사항 게시물을 지우는 메소드
 		int n = sqlsession.delete("pjsfinal.delNoticeIdx", idx);
+		System.out.println("======================n======================="+n);
+		return n;
+	}/* ================================================================================================================================================== */
+	@Override
+	public List<ReplyVO> getComment(String idx) {
+		// 공지사항 게시물의 리플을 얻어오는 메소드
+		List<ReplyVO> list = sqlsession.selectList("pjsfinal.getComment", idx);
+		return list;
+	}/* ================================================================================================================================================== */
+	@Override
+	public int setComment(HashMap<String, String> map) {
+		// 공지사항 게시글에 리플달기
+		int n = sqlsession.insert("pjsfinal.setComment", map);
 		return n;
 	}
+	
 	
 	
 //==========================================================================================================================================================//	
@@ -99,7 +113,12 @@ public class PjsDAOImpl implements PjsinterDAO {
 	@Override
 	public List<String> getSearchJSON(HashMap<String, String> map) {
 		// 구글맵 JSON 검색처리
+		System.out.println("===================map.get================="+map.get("choice"));
+		System.out.println("===================map.get================="+map.get("searchString"));
 		List<String> list = sqlsession.selectList("pjsfinal.getSearchJSON", map);
+		for(int i=0; i<list.size(); i++) {
+			System.out.println("===================list.get================="+list.get(i));
+		}
 		return list;
 	}
 	
@@ -112,7 +131,6 @@ public class PjsDAOImpl implements PjsinterDAO {
 		HashMap<String, String> userTeam = sqlsession.selectOne("pjsfinal.getUserTeam", userid); 
 		return userTeam;
 	}
-	
 	
 
 }

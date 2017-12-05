@@ -16,7 +16,7 @@
 		  select rownum as rno, v.*
 		  from
 		  (
-		    select n.idx as n_idx,n.fk_userid, n.pwd, n.subject, to_char(n.regday, 'yyyy-mm-dd hh24:mi:ss') as regday, n.readcount
+		    select n.idx as n_idx,n.fk_userid, n.subject, to_char(n.regday, 'yyyy-mm-dd hh24:mi:ss') as regday, n.readcount
 		          , n.depth, n.status, m.img, t.idx as t_idx
 		    from tbl_notice n join tbl_member m        on n.fk_userid = m.userid
 		                      join tbl_teamwon w       on m.idx = w.fk_member_idx
@@ -34,7 +34,6 @@
 	<resultMap id="noticeMap" type="HashMap">
 		<result property="n_idx" 			column="n_idx" 			javaType="String"></result>
  		<result property="fk_userid" 		column="fk_userid" 		javaType="String"></result>
- 		<result property="pwd"		 		column="pwd" 			javaType="String"></result>
  		<result property="subject" 			column="subject" 		javaType="String"></result>
  		<result property="regday" 			column="regday" 		javaType="String"></result>
  		<result property="readcount" 		column="readcount" 		javaType="String"></result>
@@ -107,9 +106,27 @@
 	<!-- === *** 게시판의 idx로 해당 글의 정보를 보여주는 뷰단으로 정보전달하기 *** === -->
 	<select id="delNoticeIdx" parameterType="String" resultType="int">
 		delete from tbl_notice
-		where idx = ${idx}
+		where idx = #{idx}
 	</select>
 <!-- ============================================================================================================================================================= -->	
+	<!-- === *** 리플 글 가져오기 *** === -->
+	<select id="getComment" parameterType="String" resultType="com.miracle.pjs.model.ReplyVO">
+		select * from tbl_noticereply
+		where idx = #{idx}
+	</select>
+<!-- ============================================================================================================================================================= -->	
+	<!-- === *** 리플글 입력하기 *** === -->
+	<insert id="setComment" parameterType="HashMap">
+		insert into tbl_noticereply
+		values(seq_noticereply.nextval,#{idx}, #{comment}, default, default, seq_noticereply.nextval, default)
+	</insert>
+<!-- ============================================================================================================================================================= -->	
+	
+
+	
+	
+	
+	
 	
 	
 
@@ -168,6 +185,12 @@
 	
 	
 	
+	
+	
+	
+	
+	
+	
 <!-- === *** 구글맵  *** === -->	
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 구글맵 전체 정보를 가져온다. *** === -->
@@ -179,24 +202,29 @@
 	<select id="getMapWithSearch" parameterType="HashMap" resultType="com.miracle.pjs.model.MapVO">
 		select *
 		from tbl_map
-		<if test="'-1'.equals(choice)">
+		<if test='"-1".equals(choice)'>
 			where team_idx is null and name like '%'||#{searchString}||'%'
 		</if>
-		<if test="'1'.equals(choice)||''.equals(choice)">
+		<if test='"1".equals(choice)'>
 			where team_idx is not null and name like '%'||#{searchString}||'%'
 		</if>
 	</select>
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 구글맵에서 JSON검색 *** === -->
-	<select id="getSearchJSON" parameterType="String" resultType="String">
+	<select id="getSearchJSON" parameterType="HashMap" resultType="String">
 		select name
 		from tbl_map
-		<if test="'-1'.equals(choice)">
-			where team_idx is null and name like '%'||#{searchString}||'%'
-		</if>
-		<if test="'1'.equals(choice)||''.equals(choice)">
-			where team_idx is not null and name like '%'||#{searchString}||'%'
-		</if>
+		<choose>
+			<when test='"-1".equals(choice)'>
+				where team_idx is null and name like '%'||#{searchString}||'%'
+			</when>
+			<when test='"1".equals(choice)'>
+				where team_idx is not null and name like '%'||#{searchString}||'%'
+			</when>
+			<when test='"".equals(searchString)'>
+				where 1=2
+			</when>
+		</choose>
 	</select>
 <!-- ============================================================================================================================================================= -->	
 	

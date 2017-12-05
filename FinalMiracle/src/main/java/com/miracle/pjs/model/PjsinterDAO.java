@@ -21,6 +21,11 @@ public interface PjsinterDAO {
 
 	int delNoticeIdx(String idx); // 공지사항 게시물을 지우는 메소드
 	
+	List<ReplyVO> getComment(String idx); // 공지사항 게시물의 리플을 얻는 메소드 
+	
+	int setComment(HashMap<String, String> map); // 공지사항 게시글에 리플달기
+	
+	
 //==========================================================================================================================================================//	
 	
 	

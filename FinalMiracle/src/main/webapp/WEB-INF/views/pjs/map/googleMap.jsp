@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <%-- <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/BootStrapStudy/css/bootstrap.css"> --%>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-2.0.0.js"></script>
+<%--  <script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-2.0.0.js"></script>  --%>
 <%-- <script type="text/javascript" src="<%= request.getContextPath() %>/BootStrapStudy/js/bootstrap.js"></script>  --%>
 <%-- *** 구글맵 api 사용하기 *** --%>
 <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAGoOx5t16lxp_DW2Y8WpN2gJB9U3fzPRg"></script>
@@ -36,12 +36,15 @@
 		margin-left: 10%;
 		position: relative;
 	}
+	div.height {
+		height:1px;
+	}
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$("#displayList").hide();	
-			google.maps.event.addDomListener(window, 'load', initialize); // 구글사에서 그대로 따옴!!!
-			function initialize(){ // 사용자가 커스텀마이즈 할 수 있다.
+		/* $("#displayList").hide();	 */
+			google.maps.event.addDomListener(window, 'load', initialize); // 구글사에서 그대로 따옴!!! ====== 구글맵 생성
+			function initialize(){ // 사용자가 커스텀마이즈 할 수 있다.									    ====== 구글맵 처음 시작할 때
 			    var mapOptions = { // 구글 맵 옵션 설정
 			        zoom : 10, // 기본 확대율(줌 크기조절) , 숫자가 클수록 줌 크기가 확대되는 것이다. 숫자가 작아질 수록 광대역을 볼 수 있다.
 			        center : new google.maps.LatLng(37.5338151, 126.896978300000007), // 처음 지도의 중앙 위치 세팅!!
@@ -55,8 +58,8 @@
 			    };
 			    // 구글맵 옵션내역 사이트 아래 참조 
 			    // https://developers.google.com/maps/documentation/javascript/reference#MapOptions
-			    var map = new google.maps.Map(document.getElementById('googleMap'), mapOptions);  // 구글 맵을 사용할 타겟
-			    google.maps.event.addDomListener(window, "resize", function() { // 지도를 확대, 축소할 때 관련된 메서드
+			    var map = new google.maps.Map(document.getElementById('googleMap'), mapOptions);  // <div>태그를 가리킨다. 
+			    	google.maps.event.addDomListener(window, "resize", function() { // 지도를 확대, 축소할 때 관련된 메서드
 			        var center = map.getCenter();
 			        google.maps.event.trigger(map, "resize");
 			        map.setCenter(center); 
@@ -94,7 +97,7 @@
 					} --%>
 					var store = storeArr[i]; // 배열의 하나의 객체 값을   var store에 담는다
 					//  alert(store[0]);
-					var myLatLng = new google.maps.LatLng(Number(store[1]), Number(store[2]));  
+					var myLatLng = new google.maps.LatLng(Number(store[1]), Number(store[2]));   //   ===== 구글맵의 위도, 경도가짐
 					// Number() 함수를 꼭 사용해야 함을 잊지 말자. 
 					markerArr[i] = new google.maps.Marker({   // 마커 설정하기
 						position: myLatLng,  // 마커 위치 (위도, 경도값을 넣어줌)
@@ -166,7 +169,7 @@
 				url:"googleMapJSON.mr",
 				type:"get",
 				data:data_form,
-				dataType:"JSON",
+				dataType:"json",
 				success : function(data){
 					var resultHTML ="";
 					if(data.length > 0) { // 검색된 데이터가 있는 경우라면
@@ -175,8 +178,8 @@
 							var index = wordstr.toLowerCase().indexOf( $("#searchString").val().toLowerCase() );
 							var len = $("#searchString").val().length;
 							var result = "";
-							result = "<span class='first' style='color:blue;'>" +wordstr.substr(0, index)+ "</span>" + "<span class='second' style='color:red; font-weight:bold;'>" +wordstr.substr(index, len)+ "</span>" + "<span class='third' style='color:blue;'>" +wordstr.substr(index+len, wordstr.length - (index+len) )+ "</span>";  
-							resultHTML += "<span style='cursor:pointer;'>"+ result +"</span><br/>"; 
+							result = "<span class='first' style='color:blue;'>" +wordstr.substr(0, index)+ "</span>" + "<span class='second' style='color:white; font-weight:bold;'>" +wordstr.substr(index, len)+ "</span>" + "<span class='third' style='color:blue;'>" +wordstr.substr(index+len, wordstr.length - (index+len) )+ "</span>";  
+							resultHTML += "<span class='one' style='cursor:pointer;'>"+ result +"</span><br/>"; 
 						}); // end of each
 					}
 					else {
@@ -196,6 +199,27 @@
 			frm.method="get";
 			frm.submit();
 		})
+		$("#searchString").keydown(function(){
+			var key = event.keyCode;
+			if(key == 13) {
+				$("#goSearch").trigger("click");
+			}
+		});
+		$("#displayList").click(function(event){
+			var word = "";
+			var $target = $(event.target);
+			if($target.is(".first")) {
+				word = $target.text() + $target.next().text() + $target.next().next().text();
+			}
+			else if($target.is(".second")) {
+				word = $target.prev().text() + $target.text() + $target.next().text();
+			}
+			else if($target.is(".third")) {
+				word = $target.prev().prev().text() + $target.prev().text() + $target.text();
+			}
+			$("#searchString").val(word); // 텍스트박스에 검색된 결과의 문자열을 입력해준다.
+			$("#displayList").hide();
+		});
 		keep();
 	}); // end of $(document).ready()-------------------------
 	function keep() {
@@ -209,14 +233,15 @@
 </script>
 <%-- 화면에 나오는 창은 밑에 div 하나만 존재한다.!!! --%>
 <select id="choice" name="choice" style="font-size:12pt;">
-	<option value="1">팀정보</option>
+	<option value="1" selected>팀정보</option>
 	<option value="-1">맛집정보</option>
 </select>
 <input type="text" name="searchString" id="searchString"/>
 <button type="button" id="goSearch">검색</button>
-<div id="displayList"></div>
+<div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height">
+	<div id="displayList" style="background-color:black">ㅇ</div>
+</div></div></div></div></div></div></div></div></div></div></div></div>
 <div id="googleMap"	style="width: 30%; height: 200px; margin: auto; margin:20% 30% 20% 35% ; "></div>
-
 <form name="map">
 	<input type="hidden" name="choice">
 	<input type="hidden" name="searchString">

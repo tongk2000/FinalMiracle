@@ -18,8 +18,8 @@
 		text-align:center;
 	}
 	.img {
-		width:5%;
-		height:5%;
+		width:25px;
+		height:25px;
 	}
 	div.min{
 		height:10px;
@@ -49,7 +49,7 @@
 			<input type="text" id="searchString" name="searchString" />
 			<button type="button" id="btnClick" onClick="goSearch();">검색</button><br/>
 		</form>	
-			<div><div class="min"><div class="min"><div class="min"><div class="min"><div class="min"><div class="min">
+			<div class="min"><div class="min"><div class="min"><div class="min"><div class="min"><div class="min"><div class="min">
 				<div id="displayList" style="background-color:red; width:150px; margin-left: 28px; border-top: 0px; border: solid black 1px;"></div>
 			</div></div></div></div></div></div></div>
 			<table style="width:100%;">
@@ -72,7 +72,7 @@
 						<c:forEach var="nt" items="${list}" varStatus="status">
 							<c:if test="${nt.depth == 0}">
 								<tr class="line">
-									<td>${status.count}</td>									<!-- 번호 -->
+									<td>${status.count}<input type="hidden" value="${nt.n_idx}"/></td>									<!-- 번호 -->
 									<td >
 										<a onClick="goUserInfo('${nt.fk_userid}');">
 											<img class="img" src="<%= request.getContextPath()%>/resources/images/${nt.img}" class="img" /> 
@@ -122,12 +122,21 @@
 	<script>
 		$(document).ready(function(){
 			$("tr:has(td)").click(function(){ // tr중에서 td를 가지고 있는 tr
-				$(this).addClass("selectLine");
+				var bool = $(this).hasClass("selectLine"); // 한번 더 클릭하면 클래스 삭제
+				alert(bool);
+				if(bool) {
+					$(this).removeClass("selectLine");
+				}
+				else {
+					$(this).addClass("selectLine");
+				}
 			});
 			$("#del").click(function(){
 				$(".selectLine").each(function(){
-					
-				});		
+					var idx = $(this).find("input").val();
+					alert(idx);
+					location.href="<%=request.getContextPath()%>/noticeDel.mr?idx="+idx;
+				});
 			});
 			keep();
 			$("#displayList").hide();
@@ -182,28 +191,7 @@
 				$(this).removeClass("grayColor");
 			});
 			
-			/* $(".line").click(function(){ 
-				var bool = $(this).prop("ckecked");
-				alert(bool);
-				if(bool) {
-					$(this).removeClass("grayColor");
-				}
-				else {
-					$(this).addClass("grayColor");
-				}
-			});	 */
-			
-			/* $("#del").click(function(){
-				$(".line").each(function(){
-					var index = $(".line").index(this);
-					alert(index);
-					if(bool) {
-									
-					}
-				});
-			}); */
-			
-		});
+		}); // $(document).ready
 		function keep() {
 			<c:if test="${searchType!=null&&searchType!=''}">
 				$("#searchType").val("${searchType}");

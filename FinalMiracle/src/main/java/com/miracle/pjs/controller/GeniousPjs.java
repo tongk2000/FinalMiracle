@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.miracle.pjs.model.MapVO;
+import com.miracle.pjs.model.ReplyVO;
 import com.miracle.pjs.service.PjsinterService;
 import com.miracle.pjs.util.MyUtil;
 import com.miracle.psw.model.MemberVO;
@@ -126,8 +127,9 @@ public class GeniousPjs {
 	public String noticeDel(HttpServletRequest req) {
 		// 1. 게시판에서 삭제버튼을 눌렸을 때
 		String idx = req.getParameter("idx");
+		System.out.println("=========================idx====================="+idx);
 		int n = service.delNoticeIdx(idx);
-		String loc = "location.href='/noticeList.mr;'";
+		String loc = "location.href='noticeList.mr;'";
 		if(n > 0) {
 			String msg = "삭제 성공!";
 			req.setAttribute("msg", msg);
@@ -139,18 +141,35 @@ public class GeniousPjs {
 		req.setAttribute("loc", loc);
 		return "pjs/error.not";		
 	}/* ================================================================================================================================================== */
-	@RequestMapping(value="noticeEdit.mr", method={RequestMethod.GET})	// 공지사항 게시판글 수정
+	@RequestMapping(value="noticeReply.mr", method={RequestMethod.GET})	// 공지사항 게시판글 수정
 	public String noticeEdit(HttpServletRequest req) {
-		// 1. 게시판에서 글을 보고(noticeView) -> 수정글쓰기를 할 경우
-		String idx = req.getParameter("idx");
-		req.setAttribute("idx", idx);
-		return ".all";
+		// 1. 공지사항 게시판의 해당 글을 볼 때 그 글의 코멘트를 가져오는 메소드
+		String idx = req.getParameter("fk_idx");
+		String co = req.getParameter("comment");
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("idx", idx);
+		map.put("comment", co);
+		int n = service.setComment(map);
+		if(n == 0) {
+			String msg="댓글달기 실패";
+			String loc="noticeView.mr?idx="+idx;
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			return "pjs/error.not";
+		}
+		else {
+			List<ReplyVO> comment = service.getComment(idx);
+			req.setAttribute("comment", comment);
+			return "pjs/notice/comment.not";
+		}
 	}/* ================================================================================================================================================== */
 	@RequestMapping(value="noticeView.mr", method={RequestMethod.GET})	// 공지사항 게시판글 보기 
 	public String noticeView(HttpServletRequest req) {
 		// 1. 게시판을 클릭해서 글을 볼 목적일 경우
 		String idx = req.getParameter("idx");
 		HashMap<String, String> map =  service.getIdxTeam(idx); // team_idx , userid 받는다.
+		List<ReplyVO> comment = service.getComment(idx);
+		req.setAttribute("comment", comment);
 		req.setAttribute("map", map);
 		return "pjs/notice/noticeView.all";
 	}
@@ -249,8 +268,6 @@ public class GeniousPjs {
 	public String googleMap(HttpServletRequest req) {
 		String choice = req.getParameter("choice");
 		String searchString = req.getParameter("searchString");
-		System.out.println("==============================choice============================"+choice);
-		System.out.println("==============================searchString============================"+searchString);
 		if(!(choice==null||searchString==null)) {
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("choice", choice);

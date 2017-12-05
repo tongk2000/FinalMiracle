@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.miracle.pjs.model.MapVO;
 import com.miracle.pjs.model.PjsinterDAO;
+import com.miracle.pjs.model.ReplyVO;
 import com.miracle.pjs.util.MyUtil;
 
 @Service
@@ -69,6 +70,19 @@ public class PjsserviceImpl implements PjsinterService {
 		int n = dao.delNoticeIdx(idx);
 		return n;
 	}
+	@Override
+	public List<ReplyVO> getComment(String idx) {
+		// 게시물을 볼 때 그 글의 리플을 보는 메소드
+		List<ReplyVO> list = dao.getComment(idx);
+		return list;
+	}
+	@Override
+	public int setComment(HashMap<String, String> map) {
+		// 공지사항 게시글에 리플 달기
+		int n = dao.setComment(map);
+		return n;
+	}
+	
 	
 //==========================================================================================================================================================//	
 
@@ -183,5 +197,6 @@ public class PjsserviceImpl implements PjsinterService {
 		return userTeam;
 	}
 	
+
 	
 }	
