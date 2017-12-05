@@ -15,14 +15,14 @@ public class CommuteService implements InterCommuteService {
 	private InterCommuteDAO dao;
 
 	@Override
-	public int startWork() {
-		int n = dao.startWork();
+	public int startWork(int idx) {
+		int n = dao.startWork(idx);
 		return n;
 	}
 
 	@Override
-	public int endWork() {
-		int n = dao.endWork();
+	public int endWork(int idx) {
+		int n = dao.endWork(idx);
 		return n;
 	}
 
@@ -45,8 +45,8 @@ public class CommuteService implements InterCommuteService {
 	}
 
 	@Override
-	public int getTotalCount() {
-		int n = dao.getTotalCount();
+	public int getTotalCount(HashMap<String, String> map) {
+		int n = dao.getTotalCount(map);
 		return n;
 	}
 
@@ -78,6 +78,30 @@ public class CommuteService implements InterCommuteService {
 	public int getTWTotalCount(HashMap<String, String> map) {
 		int n = dao.getTWTotalCount(map);
 		return n;
+	}
+
+	@Override
+	public int startWorkLate(int idx) {
+		int n = dao.startWorkLate(idx);
+		return n;
+	}
+
+	@Override
+	public int endWorkEarly(int idx) {
+		int n = dao.endWorkEarly(idx);
+		return n;
+	}
+
+	@Override
+	public int workLateAndEarlyGo(int idx) {
+		int n = dao.workLateAndEarlyGo(idx);
+		return n;
+	}
+
+	@Override
+	public List<HashMap<String, String>> getUserTeamDetail(HashMap<String, String> map) {
+		List<HashMap<String, String>> userTeamDetail = dao.getUserTeamDetail(map);
+		return userTeamDetail;
 	}
 
 }
