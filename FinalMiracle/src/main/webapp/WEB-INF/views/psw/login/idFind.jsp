@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>MiracleCoder_LogIn</title>
+<title>MiracleCoder_idFind</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.css">
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
@@ -23,10 +23,6 @@
 	.mydisplay {display: block;}
 	       	
 	.myfont {font-size: 14pt; color: white; font-weight: bold;}
-	
-</style>
-
-<style type="text/css">
 	
 	#div_name {
 		width: 70%;
@@ -64,9 +60,7 @@
 
 
 <script type="text/javascript">
-
 	$(document).ready(function() {
-		
 		var method = "${method}";
 	
 	    if (method == "GET") {
@@ -87,9 +81,7 @@
 		    $("#mobile").val("${mobile}");
 		    $("#div_finalResult").show();
 		}
-		
 	});
-
 </script>
 
 </head>

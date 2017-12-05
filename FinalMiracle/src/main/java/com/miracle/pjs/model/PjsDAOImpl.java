@@ -40,7 +40,20 @@ public class PjsDAOImpl implements PjsinterDAO {
 		// 공지사항 게시판에서 유저의 정보를 가져오는 메소드
 		HashMap<String, String> map = sqlsession.selectOne("pjsfinal.getViewContent", id);
 		return map;
+	}/* ================================================================================================================================================== */
+	@Override
+	public HashMap<String, String> getIdxTeam(String idx) {
+		// 공지사항 게시판의 해당 행의 내용을 보여주는 메소드
+		HashMap<String, String> map = sqlsession.selectOne("pjsfinal.getIdxTeam", idx);
+		return map;
+	}/* ================================================================================================================================================== */
+	@Override
+	public int delNoticeIdx(String idx) {
+		// 공지사항 게시물을 지우는 메소드
+		int n = sqlsession.delete("pjsfinal.delNoticeIdx", idx);
+		return n;
 	}
+	
 	
 //==========================================================================================================================================================//	
 	
@@ -76,9 +89,30 @@ public class PjsDAOImpl implements PjsinterDAO {
 		// 구글맵 테이블의 전체 내용을 가져온다.
 		List<MapVO> list = sqlsession.selectList("pjsfinal.getMap");
 		return list;
+	}/* ================================================================================================================================================== */
+	@Override
+	public List<MapVO> getMapWithSearch(HashMap<String, String> map) {
+		// 검색어를 포함한 지도 리스트를 받아온다.
+		List<MapVO> list = sqlsession.selectList("pjsfinal.getMapWithSearch", map);
+		return list;
+	}/* ================================================================================================================================================== */
+	@Override
+	public List<String> getSearchJSON(HashMap<String, String> map) {
+		// 구글맵 JSON 검색처리
+		List<String> list = sqlsession.selectList("pjsfinal.getSearchJSON", map);
+		return list;
 	}
-
 	
 //==========================================================================================================================================================//	
+
 	
+	@Override
+	public HashMap<String, String> getUserTeam(String userid) {
+		// 로그인한 유저의 팀정보를 가져오는 메소드
+		HashMap<String, String> userTeam = sqlsession.selectOne("pjsfinal.getUserTeam", userid); 
+		return userTeam;
+	}
+	
+	
+
 }

@@ -72,7 +72,7 @@
 		where userid = #{userid}
 	</select>
 	
-	<!-- 회원가입 -->
+	<!-- 회원가입(Transaction) insert x2 -->
 	<insert id="registerMember" parameterType="com.miracle.psw.model.MemberVO">
 		insert into tbl_member(idx, userid, pwd, name, img, status)
 		values(seq_member.nextval, #{userid}, #{pwd}, #{name}, default, default)
@@ -93,6 +93,21 @@
 		from tbl_member_detail
 		where fk_member_idx = #{idx}
 	</select>
+	
+	<!-- 회원정보 수정하기(Transaction) update x2 -->
+	<update id="updateMember" parameterType="com.miracle.psw.model.MemberVO">
+		update tbl_member set pwd = #{pwd}, name = #{name}
+		where idx = #{idx}
+	</update>
+	<update id="updateMember2" parameterType="com.miracle.psw.model.MemberDetailVO">
+		update tbl_member_detail set birth1 = #{birth1}, birth2 = #{birth2}, birth3 = #{birth3}
+	                               , hp1 = #{hp1}, hp2 = #{hp2}, hp3 = #{hp3}
+	                               , email = #{email}
+	                               , post1 = #{post1}, post2 = #{post2}
+	                               , addr1 = #{addr1}, addr2 = #{addr2}
+	                               , profile = #{profile}
+		where fk_member_idx = #{idx}
+	</update>
 	
 </mapper>
 

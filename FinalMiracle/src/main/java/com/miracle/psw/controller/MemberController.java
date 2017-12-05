@@ -29,9 +29,18 @@ public class MemberController {
 	
 	// ====================================================================== *** 로그인 *** =============================
 	@RequestMapping(value="/member_login.mr" , method={RequestMethod.GET})
-	public String login() {  // 로그인 폼페이지 띄우기(첫화면)
-		
-		return "psw/login/loginForm.not";
+	public String login(HttpSession session, HttpServletRequest req) {  // 로그인 폼페이지 띄우기(첫화면)
+		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+
+		if (loginUser != null) {
+			String ctxpath = req.getContextPath();
+			String msg = "이미 로그인 중입니다!";
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", ctxpath + "/doList.mr");
+			return "psw/msg.not";
+		} else {
+			return "psw/login/loginForm.not";
+		}
 	}
 	@RequestMapping(value="/member_loginEnd.mr", method={RequestMethod.POST})
 	public String loginEnd(HttpServletRequest req, HttpSession session, MemberVO loginUser) {  // 로그인 완료
@@ -65,7 +74,7 @@ public class MemberController {
 		return "psw/login/logout.all";
 	}
 	
-	// ====================================================== *** 아이디 찾기 *** ==========================================
+	// ====================================================== *** 아이디 찾기 *** ================================================
 	@RequestMapping(value="/member_idFind.mr")  // 첫 모달창 GET방식, 사용자정보입력시 POST방식
 	public String idFind(HttpServletRequest req) {  // 아이디 찾기
 		String name = req.getParameter("name");
@@ -78,10 +87,15 @@ public class MemberController {
 			map.put("mobile", mobile);
 			
 			String userid = service.getUserid(map);
+			if(userid == null || userid.equals("")) {
+				userid = "입력하신 정보의 아이디가 없습니다.";
+			}
+			
 			JSONObject jobj = new JSONObject(); 
 			jobj.put("userid", userid);
 			String str_json = jobj.toString();
-			req.setAttribute("str_json", str_json);
+
+			req.setAttribute("str_json", str_json);	
 		}
 		return "psw/login/json.not";
 	}  // end of public String idFind(HttpServletRequest req) -------------------------------------------------------
@@ -219,7 +233,6 @@ public class MemberController {
 	// ====================================================== *** 회원정보 수정하기 페이지로 이동 *** ===================================
 	@RequestMapping(value = "/member_edit.mr", method={RequestMethod.GET})
 	public String editMyInfo(HttpServletRequest req, HttpSession session) {
-		session = req.getSession();
 		MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
 		int idx = loginUser.getIdx();
 
@@ -245,29 +258,39 @@ public class MemberController {
 		return "psw/login/editMyInfo.all";
 	}  // end of public String editMyInfo(HttpServletRequest req, HttpSession session) ----------------------------------------
 	
-	/*
+	
 	// ====================================================== *** 회원정보 수정하기 완료 *** ==========================================
-	@RequestMapping(value="/member_editEnd.mr", method={RequestMethod.POST})
-	public String editMyInfoEnd(HttpServletRequest req, HttpSession session, MemberVO mvo, MemberDetailVO mdvo) {  // 회원정보 수정 완료시 메시지 페이지 띄우기
-		String goBackURL = req.getParameter("goBackURL");
-		int n = service.updateMember(mvo, mdvo);
-		
-		session = req.getSession();
+	@RequestMapping(value="/member_editEnd.mr")
+	public String editMyInfoEnd(HttpServletRequest req, HttpSession session, MemberVO mvo, MemberDetailVO mdvo) throws Throwable {  
 		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
 		String loginUserid = loginUser.getUserid();
+		int idx = loginUser.getIdx();
 		
-		if(n > 0 && loginUserid != null) {
-			session.setAttribute("loginUserid", mvo);
+		if (loginUser.getUserid() != null) {
+			if (idx < 1) {
+				String msg = "비정상적인 경로로 들어왔습니다.";
+				String loc = "javascript:history.back()";
+				req.setAttribute("msg", msg);
+				req.setAttribute("loc", loc);
+			} else {
+				mdvo.setFk_member_idx(idx);
+				
+				int n = service.updateMember(mvo, mdvo);
+				
+				if(n == 2 && loginUserid != null) {
+					session.setAttribute("loginUserid", mvo);
+				}
+				String msg = (n == 2) ? "회원정보 수정 성공 ~ !!" : "회원정보 수정 오류입니다.";
+				String ctxpath = req.getContextPath();
+				req.setAttribute("msg", msg);
+				req.setAttribute("loc", ctxpath + "/member_edit.mr");
+			}
 		}
-		String msg = (n>0)?"회원정보 수정 성공 ~ !!":"회원정보 수정 오류입니다.";
-		
-		req.setAttribute("msg", msg);
-		req.setAttribute("loc", goBackURL);
-		
 		return "psw/msg.not";
 	}  // end of public String editMyInfoEnd(HttpServletRequest req, HttpSession session, MemberVO mvo, MemberDetailVO mdvo) ------------------
 	
-	*/
+	
+	
 	
 }
 

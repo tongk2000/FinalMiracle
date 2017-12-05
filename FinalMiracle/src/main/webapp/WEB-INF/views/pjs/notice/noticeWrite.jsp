@@ -6,12 +6,6 @@
 <head>
 <meta charset="UTF-8">
 <title>공지사항 글</title>
-<style>
-	.img {
-		width:20px;
-		heigth:20px;
-	}
-</style>
 </head>
 <body>
 <c:set var="user" value="${map}" /> 
@@ -26,19 +20,19 @@
 				<tbody>
 					<tr>
 						<td>유저 아이디 :</td>
-						<td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="img"> ${user.userid} 팀정보 : ${user.team_idx}</td>
+						<td><img src="<%= request.getContextPath() %>/resources/images/${user.img}"> ${user.userid} 팀정보 : ${user.teamNum}</td>
 					</tr>
 					<tr>
 						<td>제목 :</td>
-						<td><input type="text" value="${user.subject}"/></td>
+						<td><input type="text"/></td>
 					</tr>
 					<tr>
 						<td>내용 :</td>
-						<td><textarea>${user.content}</textarea></td>
+						<td><textarea></textarea></td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
-	</div>
+</div>
 </body>
 </html>
