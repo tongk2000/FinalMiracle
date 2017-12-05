@@ -1,8 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<script type="text/javascript" src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
+<script src="<%= request.getContextPath() %>/resources/js/highcharts.js"></script>
+<script src="<%= request.getContextPath() %>/resources/js/modules/exporting.js"></script>
     
 <style type="text/css">
+
 	table, th, td {border: solid gray 1px;}
 	/* #table {border-collapse: collapse; width: 750px;} */
 	
@@ -11,10 +16,10 @@
     	           cursor: pointer; }
   	
   	/* ==== #142. 파일첨부가 되었으므로 테이블의 가로폭을 늘려보자 ==== */
-  	#table {border-collapse: collaps; width: 920px;}
+  	#table {border-collapse: collaps; width: 100%;}
   	#table th, #table td {padding: 5px;}
   	#table th {background-color: #DDDDDD;}
-	    
+	
 </style>
 
 <script type="text/javascript">
@@ -66,11 +71,107 @@
 		frm.submit();
 	}
 	
+	function callChart(idx){
+		var data_form = {"idx":idx};
+		
+		$.ajax({
+			url: "voteCallChart.mr",
+			type: "GET",
+			data: data_form,
+			dataType: "JSON",
+			success: function(data){
+				$('.modal-body').highcharts({
+			    	chart: {
+			            plotBackgroundColor: null,
+			            plotBorderWidth: null,
+			            plotShadow: false,
+			            type: 'pie'
+			        },
+			        title: {
+			            text: '니가 취업에 성공할 수 있는지?'
+			        },
+			        tooltip: {
+			            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+			        },
+			        plotOptions: {
+			            pie: {
+			                allowPointSelect: true,
+			                cursor: 'pointer',
+			                dataLabels: {
+			                    enabled: true,
+			                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+			                    style: {
+			                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+			                    }
+			                }
+			            }
+			        },
+			        series: [{
+			            name: '득표 수 : ',
+			            colorByPoint: true,
+			            data: [{
+			                name: '응 백수',
+			                y: 56.33
+			            }, {
+			                name: '중소기업 들어감',
+			                y: 24.03,
+			                sliced: true,
+			                selected: true
+			            }, {
+			                name: '중견기업 들어감',
+			                y: 10.38
+			            }, {
+			                name: '대기업 들어감',
+			                y: 4.77
+			            }, {
+			                name: '삼성 들어감',
+			                y: 0.91
+			            }, {
+			                name: '구글 들어감',
+			                y: 0.2
+			            }]
+			        }]
+			    	
+			    });
+			}, error: function(request, status, error){
+				alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+			}
+		});
+	}
+	
+	
+	function goCommAdd(idx){
+		var commcontent = document.getElementById("commcontent"+idx).value;
+		var frm = document.addCommFrm;
+		
+		//alert(idx + commcontent);
+		
+		if(commcontent.trim() == ""){
+			alert("빈 칸은 입력할 수 없습니다.");
+			return;
+		} else {
+			frm.voteidx.value = idx;
+			frm.comment.value = commcontent;
+
+			frm.submit();
+		}
+
+	}
+	
+	
+	function goCommDel(idx){
+		var frm = document.DelCommFrm;
+		
+		frm.delidx.value = idx;
+
+		frm.submit();
+	}
+	
 	
 </script>
 
 <form id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/voteEndList.mr" method="get" enctype="multipart/form-data">
-<div style="padding-left: 10%; border: solid 0px red;">
+<div style="padding-left: 10%; border: solid 0px red; width: 100%;">
 	<h1>투표목록</h1>
 	
 	<div style="margin-top: 20px;">
@@ -91,16 +192,16 @@
 	<table id="table">
 		<thead>
 			<tr>
-				<th style="width: 100px;">투표번호</th>
-				<th style="width: 100px;">팀번호</th>
-				<th style="width: 100px;">팀원번호</th>
-				<th style="width: 200px;">제목</th>
-				<th style="width: 360px;">내용</th>
-				<th style="width: 100px;">시작날짜</th>
-				<th style="width: 100px;">종료날짜</th>
-				<th style="width: 150px;">문항</th>
-				<th style="width: 150px;">비고</th>
-				<th style="width: 300px;">차트</th>
+				<th style="width: 5%;">투표번호</th>
+				<th style="width: 5%;">팀번호</th>
+				<th style="width: 5%;">팀원번호</th>
+				<th style="width: 10%;">제목</th>
+				<th style="width: 20%">내용</th>
+				<th style="width: 5%;">시작날짜</th>
+				<th style="width: 5%;">종료날짜</th>
+				<th style="width: 10%;">문항</th>
+				<th style="width: 10%;">비고</th>
+				<th style="width: 25%;">댓글</th>
 			</tr>
 		</thead>
 		
@@ -124,13 +225,29 @@
 								<br/>
 							</c:if>
 						</c:forEach>
+						<button type="button" data-toggle="modal" data-target="#chartModal" onclick="callChart('${votevo.IDX}')">결과보기</button>
 					</td>
 					<td>
 						<%-- <c:if test="${voteidx eq sessionScope.idx}"> --%>
 							<button type="button" onClick="goDel('${votevo.IDX}');">투표삭제</button>&nbsp;
 						<%-- </c:if> --%>
 					</td>
-					<td></td>
+					<td>
+						<input type="text" id="commcontent${votevo.IDX}" name="commcontent${votevo.IDX}" size="35px;" />
+						<button type="button" onClick="goCommAdd('${votevo.IDX}');">등록</button>&nbsp;
+						<br/>
+						<c:forEach var="votecommvo" items="${voteCommList}" varStatus="status">
+							<c:set value="${votecommvo.FK_VOTE_IDX}" var="votecommidx" />
+							<c:if test="${voteidx eq votecommidx}">
+								${votecommvo.NAME}(${votecommvo.USERID}) : ${votecommvo.CONTENT}
+								<c:if test="${votecommvo.MEMIDX eq sessionScope.loginUser.idx}">
+									<%-- <button type="button" onClick="goCommAdd('${votevo.IDX}', '${votecommvo.IDX}');">수정</button>&nbsp; --%>
+									<button type="button" onClick="goCommDel('${votecommvo.COMMIDX}');">삭제</button>
+								</c:if>
+								<br/>
+							</c:if>
+						</c:forEach>	
+					</td>
 				</tr>
 			</c:forEach>
 		</tbody>
@@ -175,3 +292,36 @@
 	<input type="hidden" name="idx" />
 	<input type="hidden" name="gobackURL" value="${gobackURL}">
 </form>
+
+<form name="addCommFrm" action="<%= request.getContextPath() %>/voteCommAdd.mr" method="get" enctype="multipart/form-data">
+	<input type="hidden" id="voteidx" name="voteidx" />
+	<input type="hidden" id="comment" name="comment" />
+	<input type="hidden" name="gobackURL" value="${gobackURL}" />
+</form>
+
+<form name="DelCommFrm" action="<%= request.getContextPath() %>/voteCommDel.mr" method="get" enctype="multipart/form-data">
+	<input type="hidden" id="delidx" name="delidx" />
+	<input type="hidden" name="gobackURL" value="${gobackURL}" />
+</form>
+
+
+
+<div class="modal fade" id="chartModal" role="dialog">
+	<div class="modal-dialog modal-lg">
+
+<!-- Modal content-->
+	<div class="modal-content">
+	    <div class="modal-header">
+	      <button type="button" class="close" data-dismiss="modal">&times;</button>
+	      <h4 class="modal-title">투표 결과</h4>
+	    </div>
+	    <div class="modal-body" align="center">
+	      <p>Some text in the modal.</p>
+	    </div>
+	    <div class="modal-footer">
+	      <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+	    </div>
+	  </div>
+	  
+	</div>
+</div>

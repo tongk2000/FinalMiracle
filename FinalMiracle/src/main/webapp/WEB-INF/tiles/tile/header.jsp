@@ -16,39 +16,42 @@
 
 <style type="text/css">
 
-.mydiv { display: inline-block; 
-		 border: 1px solid green; }
-
-.mydiv.logo {margin-left: 10px; float: left;
-			 border: 1px solid orange; }
-
-.mydiv.session { margin-top: 10px; float: right;
-				 display: block;
-				 border: 1px solid blue; }
 
 </style>
- 
-<div class="mydiv logo">
 
-	<a href="<%= request.getContextPath() %>/doList.mr"><img src="<%= request.getContextPath() %>/resources/images/logo.png" height="100px;" width="250px;"></a>	
-</div>
 
-<!-- 통합검색메뉴 -->
-<div class="mydiv search">
-	통합검색 : <input type="text"  />	
-</div>
+<div style="border: 3px solid pink;">
 
-<!-- ===== 로그인 성공한 사용자 정보 출력 ===== -->
-<c:if test="${sessionScope.loginUser != null}">
-	<div class="mydiv session">
-		<img src="<%= request.getContextPath() %>/resources/images/${sessionScope.loginUser.img}" style="height: 60px; width: 55px;">&nbsp;&nbsp;
-		아이디 : <span style="color: navy; font-weight: bold;">${sessionScope.loginUser.userid}</span> &nbsp;
-		회원명 : <span style="color: navy; font-weight: bold;">${sessionScope.loginUser.name}</span> &nbsp;
-		<br/>
-		<a href="<%= request.getContextPath() %>/member_edit.mr">[내정보 수정]</a> &nbsp;&nbsp; 
-		<a href="<%= request.getContextPath() %>/member_logout.mr">[로그아웃]</a>
+	<div style="border: 3px solid green; float: left;">
+		<a href="<%= request.getContextPath() %>/doList.mr"><img src="<%= request.getContextPath() %>/resources/images/logo.png" height="100px;" width="250px;"></a>	
 	</div>
-</c:if>
+	
+	<!-- 통합검색메뉴 -->
+	<div style="border: 1px solid blue; float: left;">
+		통합검색 : <input type="text"  />	
+	</div>
+	
+	<!-- ===== 로그인 성공한 사용자 정보 출력 ===== -->
+	<c:if test="${sessionScope.loginUser != null}">
+		<div style="border: 3px solid yellow; float: right; width: 250px; height: 100px;">
+			<div class="user img" style="float: left; width: 40%; border: 2px solid red;">
+				<img src="<%= request.getContextPath() %>/resources/images/${sessionScope.loginUser.img}" style="height: 60px; width: 55px;">&nbsp;&nbsp;
+			</div>
+			<div class="user id" style="float: right; width: 55%; border: 1px solid blue;">
+				아이디 : <span style="color: navy; font-weight: bold;">${sessionScope.loginUser.userid}</span><br>
+				회원명 : <span style="color: navy; font-weight: bold;">${sessionScope.loginUser.name}</span> &nbsp;
+			</div>
+			<br/>
+			<div class="user menu"style="float: right; border: 1px solid cyan;">
+				<a href="<%= request.getContextPath() %>/member_edit.mr">[내정보 수정]</a> &nbsp;&nbsp; 
+				<a href="<%= request.getContextPath() %>/member_logout.mr">[로그아웃]</a>
+			</div>
+		</div>
+	</c:if>
+
+</div>
+
+
 
 
 

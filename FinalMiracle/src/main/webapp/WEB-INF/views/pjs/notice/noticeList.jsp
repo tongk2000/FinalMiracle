@@ -28,10 +28,17 @@
 	.subjectstyle {font-weight: bold;
     	           color: gray;
     	           cursor: pointer; }
+    .grayColor {
+    	background-color:gray;
+    }
+    .selectLine {
+    	background-color:gray;
+    }
 </style>
 <title>Notice 게시판 입니다!</title>
 </head>
 <body>
+	<c:set var="team" value="${userTeam}"></c:set>
 	<div align="center" style="width:80%; margin:auto;">
 		<h2>공지사항 게시판</h2>
 		<form name="frm">
@@ -68,40 +75,60 @@
 									<td>${status.count}</td>									<!-- 번호 -->
 									<td >
 										<a onClick="goUserInfo('${nt.fk_userid}');">
-											<img class="img" src="<%= request.getContextPath()%>/resources/images/${nt.img}" /> 
+											<img class="img" src="<%= request.getContextPath()%>/resources/images/${nt.img}" class="img" /> 
 											<span class="userid">${nt.fk_userid}</span>
 										</a>
 									</td>														<!-- 아이디 -->
-									<td onClick="goView('${nt.fk_userid}')">${nt.subject}</td>	<!-- 제목 -->
+									<td onClick="goView('${nt.n_idx}')">${nt.subject}</td>		<!-- 제목 -->
 									<td>${nt.regday}</td>										<!-- 날짜 -->
 									<td>${nt.readcount}</td>									<!-- 조회수-->
 								</tr>
 							</c:if>
 							<c:if test="${nt.depth > 0}">
-								<tr>
+								<tr class="line">
 									<td>${status.count}</td>									<!-- 번호 -->
 									<td >
 										<a onClick="goUserInfo('${nt.fk_userid}');">
-											<img class="img" src="<%= request.getContextPath()%>/resources/images/${nt.img}" /> 
+											<img class="img" src="<%= request.getContextPath()%>/resources/images/${nt.img}" class="img"/> 
 											<span class="userid">${nt.fk_userid}</span>
 										</a>
 									</td>														<!-- 아이디 -->
-									<td onClick="goView('${nt.fk_userid}')">${nt.subject}</td>	<!-- 제목 -->
+									<td onClick="goView('${nt.n_idx}')">${nt.subject}</td>	<!-- 제목 -->
 									<td>${nt.regday}</td>										<!-- 날짜 -->
 									<td>${nt.readcount}</td>									<!-- 조회수-->
 								</tr>
 							</c:if>
 						</c:forEach>
-					</c:if>	
+					</c:if>
 				</tbody>
 			</table>
-		${pagebar}
+		<div style="float:right;">
+			<c:if test="${userTeam.status == 2}" >
+				<button type="button" onClick="goWrite();">글쓰기</button>
+				<button type="button" id="del" >삭제</button>
+			</c:if>
+		</div>
+		<br/><br/>
+		<div style="margin: 0 auto;">
+			${pagebar}
+		</div>
 	</div>
 	<form name="view">
 		<input type="hidden" name="idx" />
 	</form>
+	<form name="write">
+		<input type="hidden" name="userid" />
+	</form>
 	<script>
 		$(document).ready(function(){
+			$("tr:has(td)").click(function(){ // tr중에서 td를 가지고 있는 tr
+				$(this).addClass("selectLine");
+			});
+			$("#del").click(function(){
+				$(".selectLine").each(function(){
+					
+				});		
+			});
 			keep();
 			$("#displayList").hide();
 			$("#searchString").keyup(function(){
@@ -148,9 +175,34 @@
 			$(document).on("click", ".modalClose", function(){         
 			 $('#userinfo').modal('hide');
 			}); // end of $(".modalClose").click(function() ------------------------------------------------------------------------------------------------------
-			$(".line").bind("click", function(){
-				$(event.target).addClass(".subjectstyle");
+			
+			$(".line").hover(function(){ 
+				$(this).addClass("grayColor");
+			},function(){
+				$(this).removeClass("grayColor");
 			});
+			
+			/* $(".line").click(function(){ 
+				var bool = $(this).prop("ckecked");
+				alert(bool);
+				if(bool) {
+					$(this).removeClass("grayColor");
+				}
+				else {
+					$(this).addClass("grayColor");
+				}
+			});	 */
+			
+			/* $("#del").click(function(){
+				$(".line").each(function(){
+					var index = $(".line").index(this);
+					alert(index);
+					if(bool) {
+									
+					}
+				});
+			}); */
+			
 		});
 		function keep() {
 			<c:if test="${searchType!=null&&searchType!=''}">
@@ -185,6 +237,20 @@
 					alert("실패!");
 				}
 			});
+		}
+		function goView(n_idx) {
+			var frm = document.view;
+			frm.idx.value = n_idx;
+			frm.action="<%=request.getContextPath()%>/noticeView.mr";
+			frm.method="get";
+			frm.submit();
+		}
+		function goWrite() {
+			var frm = document.write;
+			frm.userid.value="${team.userid}";
+			frm.action="<%=request.getContextPath()%>/noticeWrite.mr";
+			frm.method="POST";
+			frm.submit();
 		}
 	</script>
 	<div class="modal fade" id="userinfo" role="dialog"></div>

@@ -2,9 +2,6 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<script type="text/javascript" src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
-<script src="<%= request.getContextPath() %>/resources/js/highcharts.js"></script>
-<script src="<%= request.getContextPath() %>/resources/js/modules/exporting.js"></script>
     
 <style type="text/css">
 	table, th, td {border: solid gray 1px;}
@@ -22,6 +19,7 @@
 </style>
 
 <script type="text/javascript">
+
 	$(document).ready(function(){
 		searchKeep();
 		
@@ -51,6 +49,17 @@
 		}
 	}
 	
+	function goVote(idx, fidx, itemidx, gobackURL){
+		var frm = document.choiceFrm;
+		
+		frm.vote_idx.value = idx;
+		frm.teamwon_idx.value = fidx;
+		frm.voteitem_idx.value = itemidx;
+		frm.gobackURL.value = gobackURL;
+		
+		frm.submit();
+	}
+	
 	function goDel(idx){
 		
 		if(confirm("투표를 삭제하시겠습니까?")){
@@ -70,68 +79,32 @@
 		frm.submit();
 	}
 	
-	function callChart(idx){
-		var data_form = {"idx":idx};
+	function goCommAdd(idx){
+		var commcontent = document.getElementById("commcontent"+idx).value;
+		var frm = document.addCommFrm;
 		
-		$.ajax({
-			url: "voteCallChart.mr",
-			type: "GET",
-			data: data_form,
-			dataType: "JSON",
-			success: function(data){
-				$("#chart").empty();
-				if(data.length > 0){
-					$.each(data, function(entryIndex, entry){
-						
-						$('#chart').highcharts({
-							chart: {
-					            plotBackgroundColor: null,
-					            plotBorderWidth: null,
-					            plotShadow: false,
-					            type: 'pie'
-					        },
-					        title: {
-					            text: '투표 차트'
-					        },
-					        tooltip: {
-					            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-					        },
-					        plotOptions: {
-					            pie: {
-					                allowPointSelect: true,
-					                cursor: 'pointer',
-					                dataLabels: {
-					                    enabled: true,
-					                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-					                    style: {
-					                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-					                    }
-					                }
-					            }
-					        },
-					        series: [{
-					            name: '비율',
-					            colorByPoint: true,
-					            data: [{
-					                name: entry.item,
-					                y: Number(entry.votenum)
-					            
-					            }]
-					        }]
-					    });
-						
-					});
-				} else {
-					$("#chart").html("<tr><td colspan='7' style='color:red;'>검색된 데이터가 없습니다.</td></tr>");
-				}
-					
-			}, error: function(request, status, error){
-				alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
-			}
-		});
-	}
+		//alert(idx + commcontent);
+		
+		if(commcontent.trim() == ""){
+			alert("빈 칸은 입력할 수 없습니다.");
+			return;
+		} else {
+			frm.voteidx.value = idx;
+			frm.comment.value = commcontent;
 
+			frm.submit();
+		}
+
+	}
 	
+	
+	function goCommDel(idx){
+		var frm = document.DelCommFrm;
+		
+		frm.delidx.value = idx;
+
+		frm.submit();
+	}
 	
 </script>
 
@@ -167,7 +140,7 @@
 				<th style="width: 5%;">종료날짜</th>
 				<th style="width: 10%;">문항</th>
 				<th style="width: 10%;">비고</th>
-				<th style="width: 25%;">차트</th>
+				<th style="width: 25%;">댓글</th>
 			</tr>
 		</thead>
 		
@@ -187,20 +160,32 @@
 						<c:forEach var="voteitemvo" items="${voteItemList}" varStatus="status">
 							<c:set value="${voteitemvo.fk_vote_idx}" var="voteitemidx" />
 							<c:if test="${voteidx eq voteitemidx}">
-								<input type="radio" name="voteitem_info" value="${voteitemvo.item}">${voteitemvo.item}<br/>${voteitemvo.votenum}표
+								<input type="radio" name="voteitem_info" value="${voteitemvo.item}">${voteitemvo.item}&nbsp;${voteitemvo.votenum}표
 								<button type="button" onClick="goVote('${votevo.IDX}', '${votevo.FK_TEAMWON_IDX}', '${voteitemvo.idx}', '${gobackURL}');">선택</button>
 								<br>
 							</c:if>
 						</c:forEach>	
-						<button type="button" onclick="callChart('${votevo.IDX}')">차트보기</button>
 					</td>
 					<td>
-						<%-- <c:if test="${voteidx eq sessionScope.idx}"> --%>
+						<%-- <c:if test="${votevo.FK_TEAMWON_IDX eq sessionScope.idx}"> --%>
 							<button type="button" onClick="goDel('${votevo.IDX}');">투표삭제</button>&nbsp;
 						<%-- </c:if> --%>
 					</td>
 					<td>
-						<div id="chart${votevo.IDX}" class="chart" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+						<input type="text" id="commcontent${votevo.IDX}" name="commcontent${votevo.IDX}" size="35px;" />
+						<button type="button" onClick="goCommAdd('${votevo.IDX}');">등록</button>&nbsp;
+						<br/>
+						<c:forEach var="votecommvo" items="${voteCommList}" varStatus="status">
+							<c:set value="${votecommvo.FK_VOTE_IDX}" var="votecommidx" />
+							<c:if test="${voteidx eq votecommidx}">
+								${votecommvo.NAME}(${votecommvo.USERID}) : ${votecommvo.CONTENT}
+								<c:if test="${votecommvo.MEMIDX eq sessionScope.loginUser.idx}">
+									<%-- <button type="button" onClick="goCommAdd('${votevo.IDX}', '${votecommvo.IDX}');">수정</button>&nbsp; --%>
+									<button type="button" onClick="goCommDel('${votecommvo.COMMIDX}');">삭제</button>
+								</c:if>
+								<br/>
+							</c:if>
+						</c:forEach>	
 					</td>
 				</tr>
 			</c:forEach>
@@ -236,15 +221,29 @@
 		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteAdd.mr'">투표작성</button>&nbsp;
 	</div>
 	
+	
+	
+	
 
 </div>
+</form>
+
+<form name="addCommFrm" action="<%= request.getContextPath() %>/voteCommAdd.mr" method="get" enctype="multipart/form-data">
+	<input type="hidden" id="voteidx" name="voteidx" />
+	<input type="hidden" id="comment" name="comment" />
+	<input type="hidden" name="gobackURL" value="${gobackURL}" />
+</form>
+
+<form name="DelCommFrm" action="<%= request.getContextPath() %>/voteCommDel.mr" method="get" enctype="multipart/form-data">
+	<input type="hidden" id="delidx" name="delidx" />
+	<input type="hidden" name="gobackURL" value="${gobackURL}" />
 </form>
 
 <form name="choiceFrm" action="<%= request.getContextPath() %>/voteChoice.mr" method="get" enctype="multipart/form-data">
 	<input type="hidden" name="vote_idx"/>
 	<input type="hidden" name="teamwon_idx"/>
 	<input type="hidden" name="voteitem_idx"/>
-	<input type="hidden" name="gobackURL" />
+	<input type="hidden" name="gobackURL" value="${gobackURL}" />
 </form>
 
 <form name="idxFrm">

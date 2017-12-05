@@ -94,7 +94,7 @@
 				$("#input_confirmCode").val("");
 			}
 		});  // end of $("#btnConfirmCode").click() --------------------
-				
+		
 	});  // end of $(document).ready() ----------------------
 
 </script>
