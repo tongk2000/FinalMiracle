@@ -28,10 +28,6 @@ public class ProjectMangerController {
 	
 	// 모든 폴더, 할일 리스트를 가져오는 메소드
 	@RequestMapping(value="doList.mr", method={RequestMethod.GET})
-<<<<<<< HEAD
-	public String doList (HttpServletRequest req, HttpSession ses) {	
-		List<FolderVO> doList = svc.getAllDoList();
-=======
 	public String doList (HttpServletRequest req) {
 		HttpSession ses = req.getSession();
 		
@@ -55,7 +51,6 @@ public class ProjectMangerController {
 		@SuppressWarnings("unchecked")
 		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo");
 		List<FolderVO> doList = svc.getAllDoList(teamInfo.get("team_idx"));
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle
 		req.setAttribute("doList", doList);
 		
 		return "kdh/doList.all";
