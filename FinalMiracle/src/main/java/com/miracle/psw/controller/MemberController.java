@@ -34,13 +34,12 @@ public class MemberController {
 
 		if (loginUser != null) {
 			String ctxpath = req.getContextPath();
-			String msg = "이미 로그인 중입니다!";
+			String msg = "이미 로그인 중입니다.";
 			req.setAttribute("msg", msg);
 			req.setAttribute("loc", ctxpath + "/doList.mr");
 			return "psw/msg.not";
-		} else {
-			return "psw/login/loginForm.not";
-		}
+		}			
+		return "psw/login/loginForm.not";
 	}
 	@RequestMapping(value="/member_loginEnd.mr", method={RequestMethod.POST})
 	public String loginEnd(HttpServletRequest req, HttpSession session, MemberVO loginUser) {  // 로그인 완료
@@ -282,6 +281,11 @@ public class MemberController {
 				if(n == 2 && loginUserid != null) {
 					session.setAttribute("loginUserid", mvo);
 				}
+				// *** 프로필 내용에 엔터("\r\n")가 들어가 있으면 엔터("\r\n")를 <br/>로 대체시켜서 넘긴다.
+				String profile = mdvo.getProfile();
+				profile = profile.replaceAll("\r\n", "<br/>");
+				mdvo.setProfile(profile);
+				
 				String msg = (n == 2) ? "회원정보 수정 성공 ~ !!" : "회원정보 수정 오류입니다.";
 				String ctxpath = req.getContextPath();
 				req.setAttribute("msg", msg);
