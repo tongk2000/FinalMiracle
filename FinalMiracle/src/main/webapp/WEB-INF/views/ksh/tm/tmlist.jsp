@@ -61,13 +61,19 @@
 
 <form id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/tmList.mr" method="get" enctype="multipart/form-data">
 <div style="padding-left: 10%; border: solid 0px red; width: 100%;">
-	<h1>메모목록</h1>
+	<h1>팀원목록</h1>
 	
 	<div style="margin-top: 20px;">
 		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmList.mr'">팀원 리스트</button>&nbsp;
-		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmAddress'">주소록</button>&nbsp;
-		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmInvite'">팀원 초대</button>&nbsp;
-		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmWithdraw'">팀원 탈퇴</button>&nbsp;
+		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmAddress.mr'">주소록</button>&nbsp;
+		<c:if test="${teamwon_status.equals('1')}">	
+			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmWithdraw.mr'">팀 탈퇴</button>&nbsp;
+		</c:if>
+		<c:if test="${teamwon_status.equals('2')}">
+			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmInvite.mr'">팀원 초대</button>&nbsp;
+			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmWithdrawList.mr'">팀원 탈퇴목록</button>&nbsp;
+			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmDisband.mr'">팀 해체</button>&nbsp;
+		</c:if>
 		<br/>전체 <span style="color: red; font-weight: bold;">${totalCount}</span>&nbsp;
 		목록 수 : 
 		<select name="sizePerPage" id="sizePerPage">
@@ -82,13 +88,12 @@
 	<table id="table">
 		<thead>
 			<tr>
-				<th style="width: 5%;">팀원번호</th>
-				<th style="width: 5%;">팀원아이디</th>
-				<th style="width: 5%;">팀원이름</th>
-				<th style="width: 25%;">팀원사진</th>
-				<th style="width: 30%;">팀원프로필</th>
-				<th style="width: 15%;">팀원가입일</th>
-				<th style="width: 15%;">팀원분류</th>
+				<th style="width: 10%;">팀원번호</th>
+				<th style="width: 10%;">팀원아이디</th>
+				<th style="width: 10%;">팀원이름</th>
+				<th style="width: 45%;">팀원사진</th>
+				<th style="width: 15%;">팀가입일</th>
+				<th style="width: 10%;">팀원분류</th>
 			</tr>
 		</thead>
 		
@@ -96,13 +101,19 @@
 		<tbody>
 			<c:forEach var="tmvo" items="${tmList}" varStatus="status">
 				<tr>
-					<td>${tmvo.idx}</td>
-					<td>${tmvo.userid}</td>
-					<td>${tmvo.name}</td>
-					<td>${tmvo.regdate}</td>
-					<td>${tmvo.profile}</td>
-					<td>${tmvo.img}</td>
-					<td>${tmvo.status}</td>
+					<td>${tmvo.IDX}</td>
+					<td>${tmvo.USERID}</td>
+					<td>${tmvo.NAME}</td>
+					<td>${tmvo.IMG}</td>
+					<td>${tmvo.REGDATE}</td>
+					<td>
+						<c:if test="${tmvo.STATUS.equals('1')}">	
+							팀원
+						</c:if>
+						<c:if test="${tmvo.STATUS.equals('2')}">	
+							팀장
+						</c:if>
+					</td>
 				</tr>
 			</c:forEach>
 		</tbody>

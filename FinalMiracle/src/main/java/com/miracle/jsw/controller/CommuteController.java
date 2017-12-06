@@ -154,6 +154,7 @@ public class CommuteController {
 		
 		HttpSession session = req.getSession();
 		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		session.getAttribute("teamInfo");
 		int idx = loginUser.getIdx();
 		map.put("idx", String.valueOf(idx));
 		
@@ -189,6 +190,7 @@ public class CommuteController {
 			
 			req.setAttribute("teamname", teamname);
 			req.setAttribute("teamWonList", teamWonList);
+			req.setAttribute("tidx", tidx);
 			
 			return "jsw/commuteTL.all";
 			  
@@ -265,7 +267,7 @@ public class CommuteController {
 			map.put("month", month);
 			map.put("startRno", String.valueOf(startRno));
 			map.put("endRno", String.valueOf(endRno));
-			map.put("idx", twidx);
+			map.put("twidx", twidx);
 			
 			if(month != null && !month.trim().isEmpty() && !month.equals("null")){
 				// 검색어가 있는경우

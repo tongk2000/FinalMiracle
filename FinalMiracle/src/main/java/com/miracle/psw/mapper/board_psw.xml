@@ -14,5 +14,46 @@
 		order by idx desc
 	</select>
 	
-
+	<!-- 검색한 faqList 보여주기(페이징 처리 한 것) -->
+	<select id="faqListWithSearch" parameterType="HashMap" resultType="com.miracle.psw.model.FaqBoardVO">
+		select idx, category, subject, content, regDate
+		from
+		( select rownum as rno, v.idx, v.category, v.subject, v.content, v.regDate
+		  from
+		  ( select idx, category, subject, content ,to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+		    from tbl_faq
+		    where status = 1
+		 	and subject like '%'|| #{search} || '%'
+		    order by idx desc 
+		  )V
+		)T
+		where T.rno >= #{startRno} and T.rno <![CDATA[<=]]> #{endRno}
+	</select>
+	<select id="faqListWithNoSearch" resultType="com.miracle.psw.model.FaqBoardVO">
+		select idx, category, subject, content, regDate
+		from
+		( select rownum as rno, v.idx, v.category, v.subject, v.content, v.regDate
+		  from
+		  ( select idx, category, subject, content, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+		    from tbl_faq
+		    where status = 1
+		    order by idx desc 
+		  )V
+		)T
+		where T.rno >= #{startRno} and T.rno <![CDATA[<=]]> #{endRno}
+	</select>
+	
+	<!-- 검색 유무에 따른 페이지바 만들기 -->
+	<select id="getTotalCountWithSearch" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_faq
+		where status = 1
+		and subject like '%'|| #{search} ||'%'
+	</select>
+	<select id="getTotalCountWithNoSearch" resultType="int">
+		select count(*)
+		from tbl_faq
+		where status = 1
+	</select>
+	
 </mapper>
