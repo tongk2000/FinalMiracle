@@ -5,6 +5,7 @@
 
 <!-- ==== #8. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->              
 <mapper namespace="do">
+	<!-- 모든 폴더, 할일 리스트를 가져오는 메소드 -->
 	<select id="getAllDoList" resultType="com.miracle.kdh.model.FolderVO">
 		select idx, fk_teamwon_idx, subject, content
 		     , to_char(startdate, 'yyyy-mm-dd') as startdate
@@ -20,6 +21,7 @@
 		order siblings by category asc
 	</select>
 	
+	<!-- 선택한 폴더의 정보를 가져오는 메소드 -->
 	<select id="getFolderInfo" resultType="com.miracle.kdh.model.FolderVO">
 		select idx, fk_teamwon_idx, subject, content
 		     , to_char(startdate, 'yyyy-mm-dd') as startdate
@@ -28,11 +30,12 @@
 		     , case when trunc(startdate) &lt; sysdate and sysdate &lt; trunc(lastdate)+1 then 1
 		            when trunc(lastdate)+1 &lt; sysdate then -1
 		            else 0 end as dayCnt
-		     , (select avg(importance) from tbl_folder where groupNo = F.groupNo and idx != F.idx) as importanceAvg
+		     , (select avg(importance) from tbl_folder where idx != F.idx start with idx = F.idx connect by prior idx = fk_folder_idx) as importanceAvg
 		from tbl_folder F
 		where idx = #{idx}
 	</select>
 	
+	<!-- 선택한 폴더에 소속된 팀원 리스트를 가져오는 메소드 -->
 	<select id="getFolder_teamwonInfo" resultType="com.miracle.kdh.model.Folder_TeamwonVO">
 		select idx, fk_folder_idx, fk_teamwon_idx, acceptability, status
 		     , (select userid from view_teamwonWithUserid where idx = fk_teamwon_idx) as userid
@@ -42,6 +45,7 @@
 		where fk_folder_idx = #{idx}
 	</select>
 	
+	<!-- 선택한 폴더에 작성된 댓글 리스트를 가져오는 메소드 -->
 	<select id="getFolder_commentInfo" resultType="com.miracle.kdh.model.Folder_CommentVO">
 		select idx, fk_folder_idx, fk_teamwon_idx, content, status, to_char(writeDate, 'yyyy-mm-dd') as writeDate
 		     , (select userid from view_teamwonWithUserid where idx = fk_teamwon_idx) as userid
@@ -50,16 +54,19 @@
 		order by 1
 	</select>
 	
+	<!-- 선택한 폴더의 정보를 수정하기 -->
 	<update id="goModalEdit" parameterType="com.miracle.kdh.model.FolderVO">
 		update tbl_folder set subject=#{subject}, content=#{content}, startDate=to_date(#{startDate}), lastDate=to_date(#{lastDate}), importance=#{importance}
 		where idx = #{idx}
 	</update>
 	
+	<!-- 할일 완료, 미완료 처리하기 -->
 	<update id="setTaskComplete" parameterType="com.miracle.kdh.model.FolderVO">
 		update tbl_folder set status = #{status}
 		where idx = #{idx}
 	</update>
 	
+	<!-- 하위 폴더 추가할때 상위 폴더의 정보 받아오기 -->
 	<resultMap type="HashMap" id="getUpFolder">
 		<result property="groupNo" column="groupNo" javaType="String"/>
 		<result property="depth" column="depth" javaType="String"/>
@@ -71,6 +78,7 @@
 		where idx = #{upIdx}
 	</select>
 	
+	<!-- 현재 팀의 소속된 팀원 목록을 가져오기 -->
 	<resultMap type="HashMap" id="getTeamwonList">
 		<result property="userid" column="userid" javaType="String"/>
 		<result property="idx" column="idx" javaType="String"/>
@@ -80,6 +88,48 @@
 		from view_teamwonwithuserid
 		where fk_team_idx = #{team_idx}
 	</select>
+	
+	<!-- 하위 폴더 추가하기 -->
+	<insert id="addDownElement" parameterType="com.miracle.kdh.model.FolderVO">
+		insert into tbl_folder(idx, fk_teamwon_idx, subject, content, startdate, lastdate, fk_folder_idx, groupNo, depth, category, status, importance)
+		values(seq_folder.nextval, #{fk_teamwon_idx}, #{subject}, #{content}, #{startDate}, #{lastDate}, #{fk_folder_idx}, #{groupNo}, #{depth}, #{category}, 1, #{importance})
+	</insert>
+	
+	<!-- 폴더나 할일 추가할때 담당 팀원 추가하기(가장 최근에 올라온 folderIdx를 구해서 입력주는 방식임) -->
+	<insert id="addDoTeamwon" parameterType="HashMap">
+		insert into tbl_folder_teamwon(idx, fk_folder_idx, fk_teamwon_idx, acceptability, status)
+		select seq_folder_teamwon.nextval, V.*
+		from (
+			<foreach collection="teamwonIdxArr" index="i" separator="UNION ALL">
+				<if test="teamwon_idx == teamwonIdxArr[i]"> <!-- 폴더 만든사람하고 같다면 -->
+					select (select max(idx) from tbl_folder), ${teamwonIdxArr[i]}, 0, 2
+					from dual
+				</if>
+				<if test="teamwon_idx != teamwonIdxArr[i]"> <!-- 폴더 만든사람하고 틀리다면 -->
+					select (select max(idx) from tbl_folder), ${teamwonIdxArr[i]}, 0, 1
+					from dual
+				</if>
+			</foreach>
+		)V
+	</insert>
+	
+	<!-- 방금 추가한 요소를 가져오기 -->
+	<select id="getAddedElement" resultType="com.miracle.kdh.model.FolderVO">
+		select idx, fk_teamwon_idx, subject, content
+		     , to_char(startdate, 'yyyy-mm-dd') as startdate
+		     , to_char(lastdate, 'yyyy-mm-dd') as lastdate
+		     , fk_folder_idx, groupno, depth, category, status, importance
+		     , case when trunc(startdate) &lt; sysdate and sysdate &lt; trunc(lastdate)+1 then 1
+		            when trunc(lastdate)+1 &lt; sysdate then -1
+		            else 0 end as dayCnt
+		from tbl_folder
+		where idx = (select max(idx) from tbl_folder)
+	</select>
+	
+	<!-- 선택한 요소와 그 하위요소들 삭제하기 -->
+	<update id="delElement">
+		
+	</update>
 </mapper>
 
 
