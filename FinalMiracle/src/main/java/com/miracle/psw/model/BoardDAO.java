@@ -19,6 +19,30 @@ public class BoardDAO implements InterBoardDAO {
 		return list;
 	}
 
+	@Override
+	public List<FaqBoardVO> faqListWithSearch(HashMap<String, String> map) {
+		List<FaqBoardVO> vo = sqlsession.selectList("board_psw.faqListWithSearch", map);
+		return vo;
+	}
+
+	@Override
+	public List<FaqBoardVO> faqListWithNoSearch(HashMap<String, String> map) {
+		List<FaqBoardVO> vo = sqlsession.selectList("board_psw.faqListWithNoSearch", map);
+		return vo;
+	}
+
+	@Override
+	public int getTotalCountWithSearch(HashMap<String, String> map) {
+		int cnt = sqlsession.selectOne("board_psw.getTotalCountWithSearch", map);
+		return cnt;
+	}
+
+	@Override
+	public int getTotalCountWithNoSearch() {
+		int cnt = sqlsession.selectOne("board_psw.getTotalCountWithNoSearch");
+		return cnt;
+	}
+
 	
 	
 	

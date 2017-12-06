@@ -18,8 +18,8 @@
 		text-align:center;
 	}
 	.img {
-		width:5%;
-		height:5%;
+		width:25px;
+		height:25px;
 	}
 	div.min{
 		height:10px;

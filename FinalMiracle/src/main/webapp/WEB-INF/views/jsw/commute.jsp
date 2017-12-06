@@ -3,18 +3,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <style type="text/css">
-	table, th, td, input, textarea {border: solid gray 1px;}
-	
-	#table, #table2 {border-collapse: collapse;
-	 		         width: 600px;
-	 		        }
-	#table th, #table td{padding: 5px;}
-	#table th{width: 120px; background-color: #DDDDDD;}
-	#table td{width: 480px;}
-	.long {width: 470px;}
-	.short {width: 120px;} 	
-	
-	a{text-decoration: none;}	
+	table, th, td{
+		border: solid gray 1px;
+		text-align: center;
+	}
+	a{color: black;}	
 
 </style>
 
