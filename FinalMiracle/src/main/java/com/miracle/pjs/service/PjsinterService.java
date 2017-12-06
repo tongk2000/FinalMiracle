@@ -11,9 +11,9 @@ public interface PjsinterService {
 //==========================================================================================================================================================//	
 	
 	// === *** 공지사항 게시판 *** === //
-	List<HashMap<String, String>> getNoticeList(HashMap<String, String> map);  // 공지사항 게시판 페이징리스트를 가져오는 메소드
+	List<HashMap<String, String>> getNoticeList(HashMap<String, Object> map);  // 공지사항 게시판 페이징리스트를 가져오는 메소드
 
-	int getNoticeCount(HashMap<String, String> map); // 공지사항 테이블의 전체 행 수를 반환하는 메소드
+	int getNoticeCount(HashMap<String, Object> map); // 공지사항 테이블의 전체 행 수를 반환하는 메소드
 
 	String getNoticeJSONList(HashMap<String, String> map); // 공지사항 테이블에서 검색 시 json처리를 하기위한 메소드
 	
@@ -26,6 +26,8 @@ public interface PjsinterService {
 	List<ReplyVO> getComment(String idx); // 게시글의 코멘트를 달기위한 메소드
 	
 	int setComment(HashMap<String, String> map); // 공지사항 게시물에 댓글달기
+	
+	int updateReadCount(String idx); // 공지사항 글의 조회수를 늘리는 메소드 
 
 //==========================================================================================================================================================//	
 	
@@ -47,7 +49,8 @@ public interface PjsinterService {
 
 	
 	// 로그인한 유저의 팀정보를 가져오기 위한 메소드
-	HashMap<String, String> getUserTeam(String userid);
+	HashMap<String, String> getUserTeam(HashMap<String, String> team);
+
 
 
 	

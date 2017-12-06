@@ -41,7 +41,7 @@
 				</tbody>
 			</table>
 			댓글	:	<input type="text" /> <button type="button" id="goClick();">쓰기</button>
-			<div id="displayList">ddd</div>
+			<div id="displayList" style="background-color:white;">ddd</div>
 		</div>
 	</div>
 	<script>

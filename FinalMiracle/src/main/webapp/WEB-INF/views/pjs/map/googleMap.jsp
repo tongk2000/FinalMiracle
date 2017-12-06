@@ -59,7 +59,7 @@
 			    // 구글맵 옵션내역 사이트 아래 참조 
 			    // https://developers.google.com/maps/documentation/javascript/reference#MapOptions
 			    var map = new google.maps.Map(document.getElementById('googleMap'), mapOptions);  // <div>태그를 가리킨다. 
-			    	google.maps.event.addDomListener(window, "resize", function() { // 지도를 확대, 축소할 때 관련된 메서드
+			    google.maps.event.addDomListener(window, "resize", function() { // 지도를 확대, 축소할 때 관련된 메서드
 			        var center = map.getCenter();
 			        google.maps.event.trigger(map, "resize");
 			        map.setCenter(center); 
@@ -87,7 +87,7 @@
 				markerArr = new Array(storeArr.length); // 배열의 길이 3!!!
 				for(var i=0; i < storeArr.length; i++){
 					//if(i == 0) { // 디비서 가져온 가계들마다 마커의 색을 각각 주기!!!!
-						var image = "<%= request.getContextPath() %>/resources/images/pointerYellow.png";  // 1번 마커 이미지	
+						var image = "<%= request.getContextPath() %>/resources/images/pointerYellow.png"; 
 					//} 
 					<%-- else if(i == 1) {
 						var image = "<%= request.getContextPath() %>/resources/images/pointerPink.png"; // 2번 마커 이미지
@@ -104,7 +104,7 @@
 						map: map,			 // map (<div id="googleMap"	style="width: 100%; height: 360px; margin: auto;"></div>)
 						icon : image,        // 마커 이미지
 						title : store[0],    // 위에서 정의한 "${store.storeName}" 임 , 즉  디비의  가계이름!! 마커에 커서를 대면 이 이름이 나온다.
-						zIndex : Number(store[3])  // Number() 함수를 꼭 사용해야 함을 잊지 말자. 기본으로 숫자가 작은게 먼저나오고 마커가 겹칠 때 어떤걸 보여줄지 설정하는 것이다.
+						zIndex : Number(store[3])  // Number() 함수를 꼭 사용해야 함을 잊지 말자. zIndex는 우선순위! 우선순위가 높은 마커가 
 					});
 					markerListener(map, markerArr[i]);
 				} // end of for------------------------------	
@@ -137,24 +137,47 @@
 							}); */
 				  // alert(infowindowArrIdx);
 						// 마커를 클릭하면 이전 마커의 모달창을 닫는 기능	
-						  for(var i=0; i<markerArr.length; i++) {   // 생성된 마커의 갯수만큼 반복하여
-							 if(i != (marker.zIndex - 1) ) { // 마커에 클릭하여 발생된 풍선창(풍선윈도우)을 제외한 나머지 다른 마커에 달린 풍선창(풍선윈도우)은
-							 	infowindowArr[i].close();	 // 닫는다.
-							 }
-							 else if(i == (marker.zIndex - 1)) {     // 마커에 클릭하여 발생된 풍선창(풍선윈도우)은
-								 infowindowArr[i].open(map, marker); // map 상에 표시되어 있는 marker 위에 띄운다.
-							 }
-						 }	 		
+						for(var i=0; i<markerArr.length; i++) {   // 생성된 마커의 갯수만큼 반복하여
+							if(i != (marker.zIndex - 1) ) { // 마커에 클릭하여 발생된 풍선창(풍선윈도우)을 제외한 나머지 다른 마커에 달린 풍선창(풍선윈도우)은
+								infowindowArr[i].close();	 // 닫는다.
+							}
+							else if(i == (marker.zIndex - 1)) {     // 마커에 클릭하여 발생된 풍선창(풍선윈도우)은
+							 infowindowArr[i].open(map, marker); // map 상에 표시되어 있는 marker 위에 띄운다.
+							}
+						}	 		
 						// infowindowArr[infowindowArrIdx-2].open(map, marker);  // 풍선창(infowindowArr[infowindowArrIdx-2])을 map 상에 표시되어 있는 marker 위에 띄운다.
 					    // infowindow.open(map, marker); // 풍선창(infowindow)을 map 상에 표시되어 있는 marker 위에 띄운다.
 			  });  // end of google.maps.event.addListener()-------------------
 			 // infowindowArrIdx++;
 		}// end of function markerListener(map, marker)-----------
-		function goDetail(v_pnum)
+		function goDetail(v_pnum) // 모달창을 띄우자
 		{
-			var url = "prodViewDetail.do?pnum="+v_pnum;
-			window.open(url, "prodViewInfo",
-					"width=500px, height=600px, top=50px, left=800px" );
+			var data_form = {"searchString":v_pum};
+			$.ajax({
+				url:"googleMapTeamInfoJSON.mr",
+				type:"get",
+				data:data_form,
+				dataType:"html",
+				success : function(data){
+					var resultHTML ="";
+					if(data.length > 0) { // 검색된 데이터가 있는 경우라면
+						$.each(data, function(entryIndex, entry){
+							var wordstr = entry.searchString;
+							var index = wordstr.toLowerCase().indexOf( $("#searchString").val().toLowerCase() );
+							var len = $("#searchString").val().length;
+							var result = "";
+							result = "<span class='first' style='color:blue;'>" +wordstr.substr(0, index)+ "</span>" + "<span class='second' style='color:white; font-weight:bold;'>" +wordstr.substr(index, len)+ "</span>" + "<span class='third' style='color:blue;'>" +wordstr.substr(index+len, wordstr.length - (index+len) )+ "</span>";  
+							resultHTML += "<span class='one' style='cursor:pointer;'>"+ result +"</span><br/>"; 
+						}); // end of each
+					}
+					else {
+					}
+					$("#displayList").html(resultHTML);
+					$("#displayList").show();	
+				},
+				error : function() {
+				}
+	}); // end of $.ajax
 		}
 		function viewContent(title) {
 			var html =  "<span style='color:red; font-weight:bold;'>"+title+"</span><br/>";
@@ -242,6 +265,7 @@
 	<div id="displayList" style="background-color:black">ㅇ</div>
 </div></div></div></div></div></div></div></div></div></div></div></div>
 <div id="googleMap"	style="width: 30%; height: 200px; margin: auto; margin:20% 30% 20% 35% ; "></div>
+<div class="modal fade" id="userinfo" role="dialog"></div>
 <form name="map">
 	<input type="hidden" name="choice">
 	<input type="hidden" name="searchString">

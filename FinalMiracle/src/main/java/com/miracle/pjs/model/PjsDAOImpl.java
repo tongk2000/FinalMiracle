@@ -18,15 +18,21 @@ public class PjsDAOImpl implements PjsinterDAO {
 	
 	// === *** 공지사항 게시판 *** === //
 	@Override
-	public List<HashMap<String, String>> getNoticeList(HashMap<String, String> map) {
+	public List<HashMap<String, String>> getNoticeList(HashMap<String, Object> map) {
 		// 공지사항 게시판 페이징리스트를 가져오는 메소드
+		for(int i=0; i<map.size(); i++) {
+			System.out.println("=============================map.get===================="+map.size());
+		}
 		List<HashMap<String, String>> list = sqlsession.selectList("pjsfinal.getNoticeList", map);
 		return list;
 	}/* ================================================================================================================================================== */
 	@Override
-	public int getNoticeCount(HashMap<String, String> map) {
+	public int getNoticeCount(HashMap<String, Object> map) {
 		// 공지사항 게시판의 전체 행 수를 반환
-		int cnt = sqlsession.selectOne("pjsfinal.getCount", map);
+		for(int i=0; i<map.size(); i++) {
+			System.out.println("=============================map.get===================="+map.size());
+		}
+		int cnt = sqlsession.selectOne("pjsfinal.getNoticeCount", map);
 		return cnt;
 	}/* ================================================================================================================================================== */
 	@Override
@@ -50,8 +56,7 @@ public class PjsDAOImpl implements PjsinterDAO {
 	@Override
 	public int delNoticeIdx(String idx) {
 		// 공지사항 게시물을 지우는 메소드
-		int n = sqlsession.delete("pjsfinal.delNoticeIdx", idx);
-		System.out.println("======================n======================="+n);
+		int n = sqlsession.update("pjsfinal.delNoticeIdx", idx);
 		return n;
 	}/* ================================================================================================================================================== */
 	@Override
@@ -65,7 +70,14 @@ public class PjsDAOImpl implements PjsinterDAO {
 		// 공지사항 게시글에 리플달기
 		int n = sqlsession.insert("pjsfinal.setComment", map);
 		return n;
+	}/* ================================================================================================================================================== */
+	@Override
+	public int updateReadCount(String idx) {
+		// 공지사항 글의 조회수를 늘리는 메소드
+		int n = sqlsession.update("pjsfinal.updateReadCount", idx);
+		return n;
 	}
+	
 	
 	
 	
@@ -113,12 +125,7 @@ public class PjsDAOImpl implements PjsinterDAO {
 	@Override
 	public List<String> getSearchJSON(HashMap<String, String> map) {
 		// 구글맵 JSON 검색처리
-		System.out.println("===================map.get================="+map.get("choice"));
-		System.out.println("===================map.get================="+map.get("searchString"));
 		List<String> list = sqlsession.selectList("pjsfinal.getSearchJSON", map);
-		for(int i=0; i<list.size(); i++) {
-			System.out.println("===================list.get================="+list.get(i));
-		}
 		return list;
 	}
 	
@@ -126,9 +133,9 @@ public class PjsDAOImpl implements PjsinterDAO {
 
 	
 	@Override
-	public HashMap<String, String> getUserTeam(String userid) {
+	public HashMap<String, String> getUserTeam(HashMap<String, String> map) {
 		// 로그인한 유저의 팀정보를 가져오는 메소드
-		HashMap<String, String> userTeam = sqlsession.selectOne("pjsfinal.getUserTeam", userid); 
+		HashMap<String, String> userTeam = sqlsession.selectOne("pjsfinal.getUserTeam", map);
 		return userTeam;
 	}
 	

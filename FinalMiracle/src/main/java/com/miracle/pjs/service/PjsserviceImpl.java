@@ -22,13 +22,13 @@ public class PjsserviceImpl implements PjsinterService {
 // === *** 공지사항 게시판 *** === //
 //==========================================================================================================================================================//	
 	@Override
-	public List<HashMap<String, String>> getNoticeList(HashMap<String, String> map) {
+	public List<HashMap<String, String>> getNoticeList(HashMap<String, Object> map) {
 		// 공지사항 게시판 페이징리스트를 가져오는 메소드
 		List<HashMap<String, String>> list = dao.getNoticeList(map);
 		return list;
 	}/* ================================================================================================================================================== */
 	@Override
-	public int getNoticeCount(HashMap<String, String> map) {
+	public int getNoticeCount(HashMap<String, Object> map) {
 		// 테이블의 행수를 반환
 		int cnt = dao.getNoticeCount(map);
 		return cnt;
@@ -63,25 +63,32 @@ public class PjsserviceImpl implements PjsinterService {
 		// 공지사항 게시판의 해당 글을 클릭하면 그 글의 내용을 보여주는 메소드
 		HashMap<String, String> map = dao.getIdxTeam(idx);
 		return map;
-	}
+	}/* ================================================================================================================================================== */
 	@Override
 	public int delNoticeIdx(String idx) {
 		// 공지사항 게시물을 지우는 메소드
 		int n = dao.delNoticeIdx(idx);
 		return n;
-	}
+	}/* ================================================================================================================================================== */
 	@Override
 	public List<ReplyVO> getComment(String idx) {
 		// 게시물을 볼 때 그 글의 리플을 보는 메소드
 		List<ReplyVO> list = dao.getComment(idx);
 		return list;
-	}
+	}/* ================================================================================================================================================== */
 	@Override
 	public int setComment(HashMap<String, String> map) {
 		// 공지사항 게시글에 리플 달기
 		int n = dao.setComment(map);
 		return n;
+	}/* ================================================================================================================================================== */
+	@Override
+	public int updateReadCount(String idx) {
+		// 공지사항 글의 조회수 늘리는 메소드
+		int n = dao.updateReadCount(idx);
+		return n;
 	}
+	
 	
 	
 //==========================================================================================================================================================//	
@@ -191,9 +198,9 @@ public class PjsserviceImpl implements PjsinterService {
 	
 	
 	@Override
-	public HashMap<String, String> getUserTeam(String userid) {
+	public HashMap<String, String> getUserTeam(HashMap<String, String> team) {
 		// 로그인한 유저의 팀정보를 가져오는 메소드
-		HashMap<String, String> userTeam = dao.getUserTeam(userid);
+		HashMap<String, String> userTeam = dao.getUserTeam(team);
 		return userTeam;
 	}
 	

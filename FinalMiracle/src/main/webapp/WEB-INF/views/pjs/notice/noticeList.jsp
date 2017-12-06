@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE>
 <html>
 <head>
@@ -42,6 +43,13 @@
 	<div align="center" style="width:80%; margin:auto;">
 		<h2>공지사항 게시판</h2>
 		<form name="frm">
+			<%-- <c:if test="${fn:length(team) > 1}" >
+				<select id="teamNum" name="teamNum" style="font-size:12pt;">
+					<c:forEach var="t" items="${team}">
+						<option value="${t.teamNum}">${t.teamNum}팀</option>
+					</c:forEach>	
+				</select>
+			</c:if> --%>
 			<select id="searchType" name="searchType" style="font-size:12pt;">
 				<option value="fk_userid">아이디</option>
 				<option value="subject">제목</option>
@@ -79,7 +87,7 @@
 											<span class="userid">${nt.fk_userid}</span>
 										</a>
 									</td>														<!-- 아이디 -->
-									<td onClick="goView('${nt.n_idx}')">${nt.subject}</td>		<!-- 제목 -->
+									<td onClick="goView('${nt.n_idx}')"><span style="color:red;">${nt.subject}</span></td>		<!-- 제목 -->
 									<td>${nt.regday}</td>										<!-- 날짜 -->
 									<td>${nt.readcount}</td>									<!-- 조회수-->
 								</tr>
@@ -93,7 +101,7 @@
 											<span class="userid">${nt.fk_userid}</span>
 										</a>
 									</td>														<!-- 아이디 -->
-									<td onClick="goView('${nt.n_idx}')">${nt.subject}</td>	<!-- 제목 -->
+									<td onClick="goView('${nt.n_idx}','${nt.fk_userid}')">${nt.subject}</td>	<!-- 제목 -->
 									<td>${nt.regday}</td>										<!-- 날짜 -->
 									<td>${nt.readcount}</td>									<!-- 조회수-->
 								</tr>
@@ -103,7 +111,7 @@
 				</tbody>
 			</table>
 		<div style="float:right;">
-			<c:if test="${userTeam.status == 2}" >
+			<c:if test="${team.status == 2}" >
 				<button type="button" onClick="goWrite();">글쓰기</button>
 				<button type="button" id="del" >삭제</button>
 			</c:if>
@@ -115,9 +123,11 @@
 	</div>
 	<form name="view">
 		<input type="hidden" name="idx" />
+		<input type="hidden" name="userid" />
 	</form>
 	<form name="write">
 		<input type="hidden" name="userid" />
+		<input type="hidden" name="teamNum" />
 	</form>
 	<script>
 		$(document).ready(function(){
@@ -179,24 +189,23 @@
 			   if (event.keyCode == 27 && modalFlag) {
 			      $('#userinfo').modal('hide');
 			   }
-			}); 
+			}); // end of $(document).on("keydown", function()
 			// 모달창에서 x 나 취소를 누르면 모달창을 닫기
 			$(document).on("click", ".modalClose", function(){         
 			 $('#userinfo').modal('hide');
 			}); // end of $(".modalClose").click(function() ------------------------------------------------------------------------------------------------------
-			
 			$(".line").hover(function(){ 
 				$(this).addClass("grayColor");
 			},function(){
 				$(this).removeClass("grayColor");
-			});
+			}); // end of $(".line").hover
 			
 		}); // $(document).ready
 		function keep() {
-			<c:if test="${searchType!=null&&searchType!=''}">
+			<c:if test='${searchType!=null&&searchType!=""}'>
 				$("#searchType").val("${searchType}");
 			</c:if>
-			<c:if test="${searchString!=null&&searchString!=''}">
+			<c:if test='${searchString!=null&&searchString!=""}'>
 				$("#searchString").val("${searchString}");
 			</c:if>
 		}
@@ -226,16 +235,24 @@
 				}
 			});
 		}
-		function goView(n_idx) {
+		function goView(n_idx, n_userid) {
 			var frm = document.view;
 			frm.idx.value = n_idx;
+			frm.userid.value = n_userid;
 			frm.action="<%=request.getContextPath()%>/noticeView.mr";
 			frm.method="get";
 			frm.submit();
 		}
 		function goWrite() {
+			<c:if test="${team.teamNum != null&&team.teamNum!=''} && ${team.userid != null&&team.userid!=''}" >
+				alert("글쓰기 여기온다.");
+				var teamNum = "${team.teamNum}";
+				var userid = "${team.userid}";
+			</c:if>
+			alert("널이나 빈값이니??0v0");
 			var frm = document.write;
-			frm.userid.value="${team.userid}";
+			frm.teamNum.value= teamNum;
+			frm.userid.value= userid;
 			frm.action="<%=request.getContextPath()%>/noticeWrite.mr";
 			frm.method="POST";
 			frm.submit();
