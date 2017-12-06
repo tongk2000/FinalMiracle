@@ -59,6 +59,28 @@
 		update tbl_folder set status = #{status}
 		where idx = #{idx}
 	</update>
+	
+	<resultMap type="HashMap" id="getUpFolder">
+		<result property="groupNo" column="groupNo" javaType="String"/>
+		<result property="depth" column="depth" javaType="String"/>
+		<result property="subject" column="subject" javaType="String"/>
+		<result property="fk_team_idx" column="fk_team_idx" javaType="String"/>
+	</resultMap>
+	<select id="getUpFolder" resultMap="getUpFolder">
+		select groupNo, depth, subject, (select fk_team_idx from tbl_teamwon where idx = f.fk_teamwon_idx) as fk_team_idx
+		from tbl_folder F
+		where idx = #{upIdx}
+	</select>
+	
+	<resultMap type="HashMap" id="getTeamwonList">
+		<result property="userid" column="userid" javaType="String"/>
+		<result property="idx" column="idx" javaType="String"/>
+	</resultMap>
+	<select id="getTeamwonList" resultMap="getTeamwonList">
+		select userid, idx
+		from view_teamwonwithuserid
+		where fk_team_idx = #{fk_team_idx}
+	</select>
 </mapper>
 
 

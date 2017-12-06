@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -72,6 +73,52 @@ public class ProjectMangerController {
 		svc.setTaskComplete(fvo);
 		return "kdh/json.not";
 	} // end of String do_taskComplete(HttpServletRequest req, FolderVO fvo) ----------------------------------------------
+	
+	// 하위폴더 추가 팝업창 띄우기
+	@RequestMapping(value="do_addDownFolder.mr", method={RequestMethod.GET})
+	public String addDownFolder(HttpServletRequest req) {
+		String upIdx = req.getParameter("upIdx");
+		
+		HashMap<String, String> map = svc.getUpFolder(upIdx);
+		map.put("upIdx",upIdx);
+		
+		req.setAttribute("map", map);
+		
+		return "kdh/popup/addDownFolder.not";
+	} // end of String do_taskComplete(HttpServletRequest req, FolderVO fvo) ----------------------------------------------
+	
+	// 하위폴더 추가 팝업창 띄우기
+	@RequestMapping(value="do_addDownFolderEnd.mr", method={RequestMethod.POST})
+	public String addDownFolderEnd(HttpServletRequest req, FolderVO fvo) {
+		String[] teamwonIdx = req.getParameterValues("teamwonIdx");
+		HashMap<String, String[]> map = new HashMap<String, String[]>(); 
+		map.put("teamwonIdx", teamwonIdx);
+		
+		int result = svc.addDownFolderEnd(fvo, map);
+		
+		req.setAttribute("result", result);
+		
+		return "kdh/popup/addDownFolderEnd.not";
+	} // end of String do_taskComplete(HttpServletRequest req, FolderVO fvo) ----------------------------------------------
+	
+	// 팀원 아이디/팀원번호 가져오기
+	@RequestMapping(value="do_getTeamwonList.mr", method={RequestMethod.POST})
+	public String getTeamwonList(HttpServletRequest req) {
+		String fk_team_idx = req.getParameter("fk_team_idx");
+		List<HashMap<String, String>> teamwonList = svc.getTeamwonList(fk_team_idx);
+		
+		JSONArray jsonList = new JSONArray(); 
+		for(HashMap<String, String> tl : teamwonList) {
+			JSONObject jobj = new JSONObject();
+			jobj.put("userid", tl.get("userid"));	
+			jobj.put("idx", tl.get("idx"));
+			jsonList.put(jobj);
+		}
+		String str_json = jsonList.toString();
+		req.setAttribute("str_json", str_json);
+		System.out.println(str_json);
+		return "kdh/json.not";
+	} // end of public String getTeamwonList(HttpServletRequest req) --------------------------------------------------------------
 }
 
 

@@ -1,5 +1,6 @@
 package com.miracle.kdh.model;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -44,5 +45,42 @@ public class ProjectManagerDAO {
 	// 할일 완료, 미완료 처리하기
 	public void setTaskComplete(FolderVO fvo) { 
 		sql.update("do.setTaskComplete", fvo);
+	} // public void setTaskComplete(FolderVO fvo) -----------------------------------------------------------------------
+
+	public HashMap<String, String> getUpFolder(String upIdx) {
+		HashMap<String, String> map = sql.selectOne("do.getUpFolder",upIdx);
+		return map;
+	}
+
+	public List<HashMap<String, String>> getTeamwonList(String fk_team_idx) {
+		List<HashMap<String, String>> teamwonList = sql.selectList("do.getTeamwonList",fk_team_idx);
+		return teamwonList;
+	}
+
+	public int addDownFolder(FolderVO fvo) {
+		int result = sql.insert("do.addDownFolder",fvo);
+		return result;
+	}
+
+	public int addFolderTeamwon(HashMap<String, String[]> map) {
+		int result = sql.insert("do.addFolderTeamwon",map); 
+		return result;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
