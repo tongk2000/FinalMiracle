@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,17 +15,44 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.miracle.kdh.model.FolderVO;
 import com.miracle.kdh.service.ProjectManagerService;
+import com.miracle.psw.model.MemberVO;
+import com.miracle.psw.service.MemberService;
 
 @Controller
 public class ProjectMangerController {
 	@Autowired
 	ProjectManagerService svc;
 	
+	@Autowired
+	MemberService msvc; // 추후. 팀 세션 정보 추가되면 삭제해야함
+	
 	// 모든 폴더, 할일 리스트를 가져오는 메소드
 	@RequestMapping(value="doList.mr", method={RequestMethod.GET})
 	public String doList (HttpServletRequest req) {
-		List<FolderVO> doList = svc.getAllDoList();
+		HttpSession ses = req.getSession();
+		
+		// 추후. 여기부터 ~~~~~
+		ses.removeAttribute("loginUser");
+		ses.removeAttribute("teamInfo");
+		if(ses.getAttribute("loginUser") == null) {
+			MemberVO mvo = new MemberVO();
+			mvo = msvc.getLoginMember("kdh");
+			ses.setAttribute("loginUser", mvo);
+		}
+		if(ses.getAttribute("teamInfo") == null) {
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("team_idx", "2");
+			map.put("teamwon_idx", "3");
+			map.put("teamwon_status", "2");
+			ses.setAttribute("teamInfo", map);
+		}
+		// 여기까지는 나중에 팀 세션 정보 추가되면 삭제해야함
+		
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo");
+		List<FolderVO> doList = svc.getAllDoList(teamInfo.get("team_idx"));
 		req.setAttribute("doList", doList);
+		
 		return "kdh/doList.all";
 	} // end of String doList (HttpServletRequest req) ----------------------------------------------------------------
 	
@@ -85,27 +113,32 @@ public class ProjectMangerController {
 		req.setAttribute("map", map);
 		
 		return "kdh/popup/addDownFolder.not";
-	} // end of String do_taskComplete(HttpServletRequest req, FolderVO fvo) ----------------------------------------------
+	} // end of String addDownFolder(HttpServletRequest req) ----------------------------------------------
 	
-	// 하위폴더 추가 팝업창 띄우기
+	// 하위폴더 추가하기
 	@RequestMapping(value="do_addDownFolderEnd.mr", method={RequestMethod.POST})
-	public String addDownFolderEnd(HttpServletRequest req, FolderVO fvo) {
-		String[] teamwonIdx = req.getParameterValues("teamwonIdx");
-		HashMap<String, String[]> map = new HashMap<String, String[]>(); 
+	public String addDownFolderEnd(HttpServletRequest req, HttpSession ses, FolderVO fvo) {
+		String[] teamwonIdx = req.getParameterValues("teamwonIdx"); // 추가되는 폴더에 담당 팀원을 받아옴
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("teamwonIdx", teamwonIdx);
+		
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo"); // 추가하는 팀원이 누구인지 세션에서 가져와서
+		fvo.setFk_teamwon_idx( Integer.parseInt(teamInfo.get("teamwon_idx")) ); // FolderVO 에 넣어줌
 		
 		int result = svc.addDownFolderEnd(fvo, map);
 		
 		req.setAttribute("result", result);
 		
 		return "kdh/popup/addDownFolderEnd.not";
-	} // end of String do_taskComplete(HttpServletRequest req, FolderVO fvo) ----------------------------------------------
+	} // end of String addDownFolderEnd(HttpServletRequest req, FolderVO fvo) ----------------------------------------------
 	
 	// 팀원 아이디/팀원번호 가져오기
 	@RequestMapping(value="do_getTeamwonList.mr", method={RequestMethod.POST})
-	public String getTeamwonList(HttpServletRequest req) {
-		String fk_team_idx = req.getParameter("fk_team_idx");
-		List<HashMap<String, String>> teamwonList = svc.getTeamwonList(fk_team_idx);
+	public String getTeamwonList(HttpServletRequest req, HttpSession ses) {
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo"); // 어떤 팀인지를 세션에서 가져와서
+		List<HashMap<String, String>> teamwonList = svc.getTeamwonList(teamInfo.get("team_idx")); // 해당하는 팀번호의 팀원을 가져옴
 		
 		JSONArray jsonList = new JSONArray(); 
 		for(HashMap<String, String> tl : teamwonList) {

@@ -29,7 +29,7 @@
 			}
 			var bool = $("#teamwonList").is(":visible");
 			if(!bool) { // 팀원 표시창이 떠 있지 않다면
-				var frm = {"fk_team_idx":$("#fk_team_idx").val()};
+				var frm = {"team_idx":$("#team_idx").val()};
 				$.ajax({
 					url:"do_getTeamwonList.mr",
 					data:frm,
@@ -166,7 +166,6 @@
 		<input type="hidden" name="fk_folder_idx" value="${map.upIdx}"/>
 		<input type="hidden" name="groupNo" value="${map.groupNo}"/>
 		<input type="hidden" name="depth" value="${map.depth+1}"/>
-		<input type="hidden" name="fk_team_idx" id="fk_team_idx" value="${map.fk_team_idx}"/>
 	</p>
 </form>
 
