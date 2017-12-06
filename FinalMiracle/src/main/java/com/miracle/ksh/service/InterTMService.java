@@ -21,4 +21,12 @@ public interface InterTMService {
 
 	int TeamCreate(HashMap<String, String> tmMap); //팀을 생성해보자
 
+	String getTeamwonIDX(HashMap<String, String> map); //세션에 넣을 팀원번호를 받아오자
+
+	String getTeamwonStatus(HashMap<String, String> map); //세션에 넣을 팀원의 status 값을 받아오자
+
+	List<HashMap<String, String>> tmAddrList1(HashMap<String, String> tmMap); //팀원들의 주소록을 뽑아보자 (노 검색)
+
+	List<HashMap<String, String>> tmAddrList2(HashMap<String, String> tmMap); //팀원들의 주소록을 뽑아보자 (예스 검색)
+
 }

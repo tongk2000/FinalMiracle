@@ -58,4 +58,28 @@ public class TMService implements InterTMService {
 		return n;
 	}
 
+	@Override
+	public String getTeamwonIDX(HashMap<String, String> map) {
+		String teamwon_idx = dao.getTeamwonIDX(map);
+		return teamwon_idx;
+	}
+
+	@Override
+	public String getTeamwonStatus(HashMap<String, String> map) {
+		String teamwon_status = dao.getTeamwonStatus(map);
+		return teamwon_status;
+	}
+
+	@Override
+	public List<HashMap<String, String>> tmAddrList1(HashMap<String, String> tmMap) {
+		List<HashMap<String, String>> Addrlist = dao.tmAddrList1(tmMap);
+		return Addrlist;
+	}
+
+	@Override
+	public List<HashMap<String, String>> tmAddrList2(HashMap<String, String> tmMap) {
+		List<HashMap<String, String>> Addrlist = dao.tmAddrList2(tmMap);
+		return Addrlist;
+	}
+
 }

@@ -67,12 +67,24 @@
  
 	$(document).ready(function() { 
 		
-		$("#teamList1").change(function(){
+		$("#team_idx1").change(function(){
+			var frm = document.teamFrm;
 			
+			frm.action = "<%= request.getContextPath() %>/tmSession.mr";
+			frm.method = "get";
+			frm.submit();
+			
+			<%-- location.href="<%= request.getContextPath() %>/doList.mr"; --%>
 		});
 		
-		$("#teamList2").change(function(){
+		$("#team_idx2").change(function(){
+			var frm = document.teamFrm;
 			
+			frm.action = "<%= request.getContextPath() %>/tmSession.mr";
+			frm.method = "get";
+			frm.submit();
+			
+			<%-- location.href="<%= request.getContextPath() %>/doList.mr"; --%>
 		});
 	 
     });
@@ -98,14 +110,16 @@
 					<span class="mydisplay myfont" style="margin-top: 30px;">팀원인 팀</span>
 				</div>
 				<div class="mydiv" style="margin-left: 5%;">
-					<select class="mydisplay form-control" name="teamList1" id="teamList1" style="size: 200px;">
+					<select class="mydisplay form-control" name="team_idx1" id="team_idx1" style="size: 200px;">
 						<option value="">선택</option>
 						<c:forEach var="teamvo" items="${teamlist1}" varStatus="status">
 							<option value="${teamvo.IDX}">${teamvo.NAME}</option>
+							<input type="hidden" id="teamname" name="teamname" value="${teamvo.NAME}" />
+							<input type="hidden" id="" name="" value="${teamvo.NAME}" />
 						</c:forEach>
 					</select>
 					<br/>
-					<select class="mydisplay form-control" name="teamList2" id="teamList2" style="size: 200px;">
+					<select class="mydisplay form-control" name="team_idx2" id="team_idx2" style="size: 200px;">
 						<option value="">선택</option>
 						<c:forEach var="teamvo" items="${teamlist2}" varStatus="status">
 							<option value="${teamvo.IDX}">${teamvo.NAME}</option>
