@@ -31,33 +31,34 @@
 	
 	
 </script>
+<div align="center" style="border: 1px solid red; width: 30%;">
+	<h1>팀원 출퇴근 정보</h1>
+</div>
+<div align="center" style="border: 1px solid green; width: 30%;">
+	${teamname}팀 팀원 출퇴근 보기
+</div>
 
-<h1>팀원 출퇴근 정보</h1>
 
-${teamname}팀 팀원 출퇴근 보기
-<br/>
-
-
-
-<table>
-	<thead>
-		<tr>
-			<th>팀원번호</th>
-			<th>프로필사진</th>
-			<th>아이디</th>
-			<th>이름</th>
-		</tr>
-	</thead>
-	<tbody>
-		<c:forEach var="map" items="${teamWonList}">
+<div align="center" style="border: 1px solid black; width: 30%;">
+	<table>
+		<thead>
 			<tr>
-				<td>${map.twidx}</td>
-				<td><a href="<%=request.getContextPath() %>/commutetw.mr?idx=${map.midx}&username=${map.username}"><img height="60px" width="60px" src="<%=request.getContextPath() %>/resources/images/${map.img}"></a></td>
-				<td><a href="<%=request.getContextPath() %>/commutetw.mr?idx=${map.midx}&username=${map.username}">${map.userid}</a></td>
-				<td><a href="<%=request.getContextPath() %>/commutetw.mr?idx=${map.midx}&username=${map.username}">${map.username}</a></td>
+				<th>팀원번호</th>
+				<th>프로필사진</th>
+				<th>아이디</th>
+				<th>이름</th>
 			</tr>
-		</c:forEach>
-	</tbody>
-</table>
-
+		</thead>
+		<tbody>
+			<c:forEach var="map" items="${teamWonList}">
+				<tr>
+					<td>${map.twidx}</td>
+					<td><a href="<%=request.getContextPath() %>/commutetw.mr?idx=${map.midx}&username=${map.username}"><img height="60px" width="60px" src="<%=request.getContextPath() %>/resources/images/${map.img}"></a></td>
+					<td><a href="<%=request.getContextPath() %>/commutetw.mr?idx=${map.midx}&username=${map.username}">${map.userid}</a></td>
+					<td><a href="<%=request.getContextPath() %>/commutetw.mr?idx=${map.midx}&username=${map.username}">${map.username}</a></td>
+				</tr>
+			</c:forEach>
+		</tbody>
+	</table>
+</div>
 
