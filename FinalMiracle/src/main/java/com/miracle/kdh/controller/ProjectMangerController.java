@@ -32,8 +32,8 @@ public class ProjectMangerController {
 		HttpSession ses = req.getSession();
 		
 		// 추후. 여기부터 ~~~~~
-		ses.removeAttribute("loginUser");
-		ses.removeAttribute("teamInfo");
+		// ses.removeAttribute("loginUser");
+		// ses.removeAttribute("teamInfo");
 		if(ses.getAttribute("loginUser") == null) {
 			MemberVO mvo = new MemberVO();
 			mvo = msvc.getLoginMember("kdh");
