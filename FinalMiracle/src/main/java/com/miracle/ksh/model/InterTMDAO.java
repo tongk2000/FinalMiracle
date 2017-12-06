@@ -13,4 +13,10 @@ public interface InterTMDAO {
 
 	int TMTotalCount2(HashMap<String, String> tmMap); //팀원 리스트의 총 인원을 알아오자 (예스 검색)
 
+	List<HashMap<String, String>> getTeamList1(String fk_member_idx); //자기가 팀장인 팀 리스트를 뽑아오자
+
+	List<HashMap<String, String>> getTeamList2(String fk_member_idx); //자기가 팀원인 팀 리스트를 뽑아오자
+
+	int TeamCreate(HashMap<String, String> tmMap); //팀을 생성해보자
+
 }

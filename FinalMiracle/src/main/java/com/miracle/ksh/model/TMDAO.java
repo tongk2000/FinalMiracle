@@ -37,4 +37,22 @@ public class TMDAO implements InterTMDAO {
 		return n;
 	}
 
+	@Override
+	public List<HashMap<String, String>> getTeamList1(String fk_member_idx) {
+		List<HashMap<String, String>> teamlist = sqlsession.selectList("kshTM.getTeamList1", fk_member_idx);
+		return teamlist;
+	}
+
+	@Override
+	public List<HashMap<String, String>> getTeamList2(String fk_member_idx) {
+		List<HashMap<String, String>> teamlist = sqlsession.selectList("kshTM.getTeamList2", fk_member_idx);
+		return teamlist;
+	}
+
+	@Override
+	public int TeamCreate(HashMap<String, String> tmMap) {
+		int n = sqlsession.insert("kshTM.TeamCreate", tmMap);
+		return n;
+	}
+
 }

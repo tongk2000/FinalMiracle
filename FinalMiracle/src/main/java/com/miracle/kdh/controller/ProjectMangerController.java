@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,7 +23,7 @@ public class ProjectMangerController {
 	
 	// 모든 폴더, 할일 리스트를 가져오는 메소드
 	@RequestMapping(value="doList.mr", method={RequestMethod.GET})
-	public String doList (HttpServletRequest req) {
+	public String doList (HttpServletRequest req, HttpSession ses) {	
 		List<FolderVO> doList = svc.getAllDoList();
 		req.setAttribute("doList", doList);
 		return "kdh/doList.all";

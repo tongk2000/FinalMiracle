@@ -43,5 +43,34 @@
 		where idx = 1
 		and ${colname} like '%'|| #{search} ||'%'
 	</select>
+	
+	
+	<resultMap type="java.util.HashMap" id="teamListMap">
+		<result property="IDX" 				column="idx" 			javaType="String" />
+ 		<result property="NAME" 			column="name" 			javaType="String" />
+	</resultMap>
+	<select id="getTeamList1" parameterType="String" resultMap="teamListMap">
+		select A.idx, A.name
+		from tbl_team A join tbl_member B
+		on A.fk_member_idx = B.idx
+		where A.fk_member_idx = #{fk_member_idx}
+		order by A.idx desc
+	</select>
+	
+	<select id="getTeamList2" parameterType="String" resultMap="teamListMap">
+		select C.idx, C.name
+		from tbl_member A join tbl_teamwon B
+		on A.idx = B.fk_member_idx join tbl_team C
+		on B.fk_team_idx = C.idx
+		where B.fk_member_idx = #{fk_member_idx}
+		and B.status = 1
+		order by C.idx desc
+	</select>
+	
+	
+	<insert id="TeamCreate" parameterType="String">
+		insert into tbl_team
+		values(seq_team.nextval, #{fk_member_idx}, #{name}, #{tel1}, #{tel2}, #{tel3}, #{post1}, #{post2}, #{addr1}, #{addr2}, 'default.jpg', default, null, 1)
+	</insert>
 
 </mapper>

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.miracle.ksh.model.InterMemoDAO;
 import com.miracle.ksh.model.InterTMDAO;
+import com.miracle.ksh.model.TeamVO;
 
 @Service
 public class TMService implements InterTMService {
@@ -36,6 +37,24 @@ public class TMService implements InterTMService {
 	@Override
 	public int TMTotalCount2(HashMap<String, String> tmMap) {
 		int n = dao.TMTotalCount2(tmMap);
+		return n;
+	}
+
+	@Override
+	public List<HashMap<String, String>> getTeamList1(String fk_member_idx) {
+		List<HashMap<String, String>> teamlist = dao.getTeamList1(fk_member_idx);
+		return teamlist;
+	}
+
+	@Override
+	public List<HashMap<String, String>> getTeamList2(String fk_member_idx) {
+		List<HashMap<String, String>> teamlist = dao.getTeamList2(fk_member_idx);
+		return teamlist;
+	}
+
+	@Override
+	public int TeamCreate(HashMap<String, String> tmMap) {
+		int n = dao.TeamCreate(tmMap);
 		return n;
 	}
 

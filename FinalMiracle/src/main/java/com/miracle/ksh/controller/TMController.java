@@ -4,17 +4,22 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.miracle.ksh.model.TeamVO;
 import com.miracle.ksh.service.InterTMService;
 import com.miracle.ksh.util.MyUtil;
+import com.miracle.psw.model.MemberVO;
 
 @Controller
 public class TMController {
+	
+	HashMap<String, String> map = new HashMap<String, String>();
 	
 	@Autowired
 	private InterTMService service;
@@ -100,5 +105,69 @@ public class TMController {
 		
 		
 		return "ksh/tm/tmlist.all";
+	}
+	
+	@RequestMapping(value="/tmForm.mr", method={RequestMethod.GET})
+	public String tmForm(HttpServletRequest req){
+		
+		HttpSession ses = req.getSession();
+		
+		MemberVO loginUser = (MemberVO) ses.getAttribute("loginUser");
+		
+		//System.out.println("확인용 : " + loginUser.getIdx());
+		
+		String fk_member_idx = String.valueOf(loginUser.getIdx());
+		
+		List<HashMap<String, String>> teamlist1 = service.getTeamList1(fk_member_idx);
+		List<HashMap<String, String>> teamlist2 = service.getTeamList2(fk_member_idx);
+		
+		req.setAttribute("teamlist1", teamlist1);
+		req.setAttribute("teamlist2", teamlist2);
+		
+		return "ksh/tm/tmForm.not";
+	}
+	
+	@RequestMapping(value="/tmCreate.mr", method={RequestMethod.GET})
+	public String tmCreate(HttpServletRequest req){
+		
+		
+		return "ksh/tm/tmCreate.not";
+	}
+	
+	
+	@RequestMapping(value="/tmCreateEnd.mr", method={RequestMethod.POST})
+	public String tmCreateEnd(HttpServletRequest req){
+		
+		HttpSession ses = req.getSession();
+		
+		MemberVO loginUser = (MemberVO) ses.getAttribute("loginUser");
+		
+		String fk_member_idx = String.valueOf(loginUser.getIdx());
+		String name = req.getParameter("String");
+		String hp1 = req.getParameter("hp1");
+		String hp2 = req.getParameter("hp2");
+		String hp3 = req.getParameter("hp3");
+		String post1 = req.getParameter("post1");
+		String post2 = req.getParameter("post2");
+		String addr1 = req.getParameter("addr1");
+		String addr2 = req.getParameter("addr2");
+		
+		HashMap<String, String> tmMap = new HashMap<String, String>();
+		tmMap.put("fk_member_idx", fk_member_idx);
+		tmMap.put("name", name);
+		tmMap.put("hp1", hp1);
+		tmMap.put("hp2", hp2);
+		tmMap.put("hp3", hp3);
+		tmMap.put("post1", post1);
+		tmMap.put("post2", post2);
+		tmMap.put("addr1", addr1);
+		tmMap.put("addr2", addr2);
+		
+		
+		int n = service.TeamCreate(tmMap);
+		
+		req.setAttribute("n", n);
+		
+		return "ksh/msg.not";
 	}
 }
