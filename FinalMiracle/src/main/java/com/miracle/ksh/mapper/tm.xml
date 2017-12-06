@@ -7,41 +7,156 @@
 <mapper namespace="kshTM">
 
 	<resultMap type="java.util.HashMap" id="tmListMap">
-		<result property="RNO" 				column="rno" 			javaType="String" />
  		<result property="IDX" 			column="idx" 			javaType="String" />
+ 		<result property="FK_TEAM_IDX" 			column="fk_team_idx" 			javaType="String" />
  		<result property="USERID" 			column="userid" 			javaType="String" />
  		<result property="NAME" 			column="name" 		javaType="String" />
  		<result property="REGDATE" 			column="regdate" 			javaType="String" />
- 		<result property="PROFILE" 	column="profile" 	javaType="String" />
+ 		<result property="DISDATE" 	column="disdate" 	javaType="String" />
  		<result property="IMG" 			column="img" 			javaType="String" />
  		<result property="STATUS" 	column="status" 	javaType="String" />
 	</resultMap>
 	<select id="tmList1" parameterType="HashMap" resultMap="tmListMap">
-		select rno, idx, userid, name, regdate, profile, img, status
-		from view_memberlist
-		where idx = 1
+		select idx, fk_team_idx, userid, name, regdate, disdate, img, status
+		from (
+		    select rownum as RNO, V.idx, V.fk_team_idx, V.userid, V.name, V.regdate, V.disdate, V.img, V.status
+		    from (
+		        select idx, fk_team_idx, userid, name, regdate, disdate, img, status
+				from view_memberlist
+				where fk_team_idx = #{fk_team_idx}
+				order by idx desc
+		    ) V
+		) T
+		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
 	</select>
 	
-	<select id="tmList2" parameterType="HashMap" resultMap="tmListMap">
-		select rno, idx, userid, name, regdate, profile, img, status
-		from view_memberlist
-		where idx = 1
-		and ${colname} like '%'|| #{search} ||'%'
+	<select id="tmList2" parameterType="HashMap" resultMap="tmListMap">		
+		select idx, fk_team_idx, userid, name, regdate, disdate, img, status
+		from (
+		    select rownum as RNO, V.idx, V.fk_team_idx, V.userid, V.name, V.regdate, V.disdate, V.img, V.status
+		    from (
+		        select idx, fk_team_idx, userid, name, regdate, disdate, img, status
+				from view_memberlist
+				where fk_team_idx = #{fk_team_idx}
+				and ${colname} like '%'|| #{search} ||'%'
+				order by idx desc
+		    ) V
+		) T
+		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
 	</select>
 	
 	
 	<select id="TMTotalCount1" parameterType="HashMap" resultType="int">
 		select count(*)
 		from view_memberlist
-		where idx = 1
+		where fk_team_idx = #{fk_team_idx}
 	</select>
 	
 	
 	<select id="TMTotalCount2" parameterType="HashMap" resultType="int">
 		select count(*)
 		from view_memberlist
-		where idx = 1
+		where fk_team_idx = #{fk_team_idx}
 		and ${colname} like '%'|| #{search} ||'%'
+	</select>
+	
+	
+	<resultMap type="java.util.HashMap" id="teamListMap">
+		<result property="IDX" 				column="idx" 			javaType="String" />
+ 		<result property="NAME" 			column="name" 			javaType="String" />
+	</resultMap>
+	<select id="getTeamList1" parameterType="String" resultMap="teamListMap">
+		select A.idx, A.name
+		from tbl_team A join tbl_member B
+		on A.fk_member_idx = B.idx
+		where A.fk_member_idx = #{fk_member_idx}
+		order by A.idx desc
+	</select>
+	
+	<select id="getTeamList2" parameterType="String" resultMap="teamListMap">
+		select C.idx, C.name
+		from tbl_member A join tbl_teamwon B
+		on A.idx = B.fk_member_idx join tbl_team C
+		on B.fk_team_idx = C.idx
+		where B.fk_member_idx = #{fk_member_idx}
+		and B.status = 1
+		order by C.idx desc
+	</select>
+	
+	
+	<insert id="TeamCreate" parameterType="String">
+		insert into tbl_team
+		values(seq_team.nextval, #{fk_member_idx}, #{name}, #{tel1}, #{tel2}, #{tel3}, #{post1}, #{post2}, #{addr1}, #{addr2}, 'default.jpg', default, null, 1)
+	</insert>
+	
+	
+	<select id="getTeamwonIDX" parameterType="String" resultType="String">
+		select idx
+		from tbl_teamwon
+		where fk_team_idx = #{fk_team_idx}
+		and fk_member_idx = #{fk_member_idx}
+	</select>
+	
+	
+	<select id="getTeamwonStatus" parameterType="String" resultType="String">
+		select status
+		from tbl_teamwon
+		where fk_team_idx = #{fk_team_idx}
+		and fk_member_idx = #{fk_member_idx}
+	</select>
+	
+	
+	<resultMap type="java.util.HashMap" id="tmAddrListMap">
+ 		<result property="IDX" 			column="idx" 			javaType="String" />
+ 		<result property="FK_TEAM_IDX" 			column="fk_team_idx" 			javaType="String" />
+ 		<result property="USERID" 			column="userid" 			javaType="String" />
+ 		<result property="NAME" 			column="name" 		javaType="String" />
+ 		<result property="BIRTH1" 			column="birth1" 			javaType="String" />
+ 		<result property="BIRTH2" 	column="birth2" 	javaType="String" />
+ 		<result property="BIRTH3" 	column="birth3" 	javaType="String" />
+ 		<result property="HP1" 			column="hp1" 			javaType="String" />
+ 		<result property="HP2" 	column="hp2" 	javaType="String" />
+ 		<result property="HP3" 			column="hp3" 			javaType="String" />
+ 		<result property="EMAIL" 	column="email" 	javaType="String" />
+ 		<result property="POST1" 			column="post1" 			javaType="String" />
+ 		<result property="POST2" 	column="post2" 	javaType="String" />
+ 		<result property="ADDR1" 			column="addr1" 			javaType="String" />
+ 		<result property="ADDR2" 	column="addr2" 	javaType="String" />
+ 		<result property="PROFILE" 			column="profile" 			javaType="String" />
+	</resultMap>
+	<select id="tmAddrList1" parameterType="HashMap" resultMap="tmAddrListMap">
+		select idx, fk_team_idx, userid, name, birth1, birth2, birth3, hp1, hp2, hp3,
+		                   email, post1, post2, addr1, addr2, profile
+		from (
+		    select rownum as RNO, V.idx, V.fk_team_idx, V.userid, V.name, V.birth1, V.birth2, V.birth3, V.hp1, V.hp2, V.hp3,
+		                   V.email, V.post1, V.post2, V.addr1, V.addr2, V.profile
+		    from (
+		        select idx, fk_team_idx, userid, name, birth1, birth2, birth3, hp1, hp2, hp3,
+		                   email, post1, post2, addr1, addr2, profile
+		        from view_addresslist
+		        where fk_team_idx = #{fk_team_idx}
+		        order by idx desc
+		    ) V
+		) T
+		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
+	</select>
+	
+	<select id="tmAddrList2" parameterType="HashMap" resultMap="tmAddrListMap">
+		select idx, fk_team_idx, userid, name, birth1, birth2, birth3, hp1, hp2, hp3,
+		                   email, post1, post2, addr1, addr2, profile
+		from (
+		    select rownum as RNO, V.idx, V.fk_team_idx, V.userid, V.name, V.birth1, V.birth2, V.birth3, V.hp1, V.hp2, V.hp3,
+		                   V.email, V.post1, V.post2, V.addr1, V.addr2, V.profile
+		    from (
+		        select idx, fk_team_idx, userid, name, birth1, birth2, birth3, hp1, hp2, hp3,
+		                   email, post1, post2, addr1, addr2, profile
+		        from view_addresslist
+		        where fk_team_idx = #{fk_team_idx}
+		        and ${colname} like '%'|| #{search} ||'%'
+		        order by idx desc
+		    ) V
+		) T
+		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
 	</select>
 
 </mapper>

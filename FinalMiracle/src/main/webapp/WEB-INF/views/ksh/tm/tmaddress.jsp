@@ -88,38 +88,37 @@
 	<table id="table">
 		<thead>
 			<tr>
-				<th style="width: 10%;">팀원번호</th>
-				<th style="width: 10%;">팀원아이디</th>
-				<th style="width: 10%;">팀원이름</th>
-				<th style="width: 45%;">팀원사진</th>
-				<th style="width: 15%;">팀가입일</th>
-				<th style="width: 10%;">팀원분류</th>
+				<th style="width: 5%;">팀원번호</th>
+				<th style="width: 5%;">팀원아이디</th>
+				<th style="width: 5%;">팀원이름</th>
+				<th style="width: 10%;">생년월일</th>
+				<th style="width: 10%;">연락처</th>
+				<th style="width: 15%;">이메일</th>
+				<th style="width: 5%;">우편번호</th>
+				<th style="width: 25%;">주소</th>
+				<th style="width: 20%;">소개글</th>
 			</tr>
 		</thead>
 		
-		<c:if test="${not empty tmList}">
+		<c:if test="${not empty tmAddrList}">
 		<tbody>
-			<c:forEach var="tmvo" items="${tmList}" varStatus="status">
+			<c:forEach var="tmAddr" items="${tmAddrList}" varStatus="status">
 				<tr>
-					<td>${tmvo.IDX}</td>
-					<td>${tmvo.USERID}</td>
-					<td>${tmvo.NAME}</td>
-					<td>${tmvo.IMG}</td>
-					<td>${tmvo.REGDATE}</td>
-					<td>
-						<c:if test="${tmvo.STATUS.equals('1')}">	
-							팀원
-						</c:if>
-						<c:if test="${tmvo.STATUS.equals('2')}">	
-							팀장
-						</c:if>
-					</td>
+					<td>${tmAddr.IDX}</td>
+					<td>${tmAddr.USERID}</td>
+					<td>${tmAddr.NAME}</td>
+					<td>${tmAddr.BIRTH1}/${tmAddr.BIRTH2}/${tmAddr.BIRTH3}</td>
+					<td>${tmAddr.HP1}-${tmAddr.HP2}-${tmAddr.HP3}</td>
+					<td>${tmAddr.EMAIL}</td>
+					<td>${tmAddr.POST1}-${tmAddr.POST2}</td>
+					<td>${tmAddr.ADDR1}<br/>${tmAddr.ADDR2}</td>
+					<td>${tmAddr.PROFILE}</td>
 				</tr>
 			</c:forEach>
 		</tbody>
 		</c:if>
 		
-		<c:if test="${empty tmList}">
+		<c:if test="${empty tmAddrList}">
 		<tbody>
 			<tr>
 				<td colspan="10">팀원 목록이 존재하지 않습니다.</td>

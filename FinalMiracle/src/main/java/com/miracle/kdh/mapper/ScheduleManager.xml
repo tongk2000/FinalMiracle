@@ -14,7 +14,7 @@
 		            when trunc(lastdate)+1 <![CDATA[<]]> sysdate then -1
 		            else 0 end as dayCnt
 		from tbl_folder
-		where status in (0, 1)
+		where status in (0, 1) and fk_teamwon_idx in (select idx from tbl_teamwon where fk_team_idx = #{team_idx})
 		start with fk_folder_idx = 0
 		connect by prior idx = fk_folder_idx
 		order siblings by category asc
@@ -64,10 +64,9 @@
 		<result property="groupNo" column="groupNo" javaType="String"/>
 		<result property="depth" column="depth" javaType="String"/>
 		<result property="subject" column="subject" javaType="String"/>
-		<result property="fk_team_idx" column="fk_team_idx" javaType="String"/>
 	</resultMap>
 	<select id="getUpFolder" resultMap="getUpFolder">
-		select groupNo, depth, subject, (select fk_team_idx from tbl_teamwon where idx = f.fk_teamwon_idx) as fk_team_idx
+		select groupNo, depth, subject
 		from tbl_folder F
 		where idx = #{upIdx}
 	</select>
@@ -79,7 +78,7 @@
 	<select id="getTeamwonList" resultMap="getTeamwonList">
 		select userid, idx
 		from view_teamwonwithuserid
-		where fk_team_idx = #{fk_team_idx}
+		where fk_team_idx = #{team_idx}
 	</select>
 </mapper>
 

@@ -186,7 +186,7 @@
 						class="mydisplay myfont" style="margin-top: 30px;">암&nbsp;&nbsp;&nbsp;호</span>
 				</div>
 				<div class="mydiv" style="margin-left: 5%;">
-					<input class="mydisplay form-control" type="text" name="userid"	id="userid" size="20" /> 
+					<input class="mydisplay form-control" type="text" name="userid"	id="userid" size="20" />
 					<input class="mydisplay form-control" style="margin-top: 15px;" type="password" name="pwd" id="pwd" size="20" />
 				</div>
 				<br /><br />
