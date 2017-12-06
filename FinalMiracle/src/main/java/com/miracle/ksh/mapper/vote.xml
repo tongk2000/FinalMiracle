@@ -39,7 +39,7 @@
 	</select>
 	
 	<select id="VoteItemList" resultType="com.miracle.ksh.model.VoteItemVO">
-		select idx, fk_vote_idx, item, image, votenum
+		select idx, fk_vote_idx, item, votenum
 		from tbl_voteItem
 		order by idx asc
 	</select>
@@ -47,19 +47,13 @@
 	
 	<insert id="VoteAdd" parameterType="java.util.HashMap">
 		insert into tbl_vote
-		values(seq_vote.nextval, 1, #{subject}, #{content}, to_date(#{startdate}, 'yyyy-mm-dd'), to_date(#{enddate}, 'yyyy-mm-dd'), default)
+		values(seq_vote.nextval, #{idx}, #{subject}, #{content}, to_date(#{startdate}, 'yyyy-mm-dd'), to_date(#{enddate}, 'yyyy-mm-dd'), default)
 	</insert>
 	
 	
 	<insert id="VoteItemAdd" parameterType="java.util.HashMap">
 		insert into tbl_voteItem
-		values(seq_vote_item.nextval, #{lastidx}, #{items}, null, default)
-	</insert>
-	
-	
-	<insert id="VoteItemImageAdd" parameterType="java.util.HashMap">
-		insert into tbl_voteItem
-		values(seq_vote_item.nextval, #{lastidx}, #{items}, #{newFileName}, default)
+		values(seq_vote_item.nextval, #{lastidx}, #{items}, default)
 	</insert>
 	
 	
@@ -80,6 +74,7 @@
 		from tbl_vote
 		where status = 1
 		and enddate > sysdate
+		and startdate <![CDATA[<]]> sysdate
 	</select>
 	
 	
@@ -172,6 +167,7 @@
 		from tbl_vote
 		where status = 1
 		and enddate > sysdate
+		and startdate <![CDATA[<]]> sysdate
 		and ${colname} like '%'|| #{search} ||'%'
 	</select>
 	
@@ -284,7 +280,7 @@
 	</select>
 	
 	<select id="VoteItemView" parameterType="String" resultType="com.miracle.ksh.model.VoteItemVO">
-		select idx, fk_vote_idx, item, image, votenum
+		select idx, fk_vote_idx, item, votenum
 		from tbl_voteItem
 		where fk_vote_idx = #{idx}
 		order by idx asc
@@ -307,11 +303,6 @@
 		update tbl_voteItem set item = #{items}
 		where fk_vote_idx = #{idx}
 		and idx = #{itemidx}
-	</update>
-	
-	<update id="VoteItemImageEdit" parameterType="HashMap">
-		update tbl_voteItem set item = #{items}, image = #{newFileName}
-		where fk_vote_idx = #{idx}
 	</update>
 	
 	
@@ -415,7 +406,7 @@
 	
 	<insert id="VoteItemRestAdd" parameterType="java.util.HashMap">
 		insert into tbl_voteItem
-		values(seq_vote_item.nextval, #{idx}, #{none}, null, default)
+		values(seq_vote_item.nextval, #{idx}, #{none}, default)
 	</insert>
 	
 	<delete id="VoteItemRestDel">
@@ -431,10 +422,52 @@
 	
 	
 	<select id="VoteItemChart" parameterType="String" resultType="com.miracle.ksh.model.VoteItemVO">
-		select idx, fk_vote_idx, item, image, votenum
+		select idx, fk_vote_idx, item, votenum
 		from tbl_voteItem
 		where fk_vote_idx = #{idx}
 		order by idx asc
 	</select>
+	
+	
+	<resultMap type="java.util.HashMap" id="VoteCommMap">
+		<result property="COMMIDX" 				column="commidx" 			javaType="String" />
+		<result property="FK_VOTE_IDX" 				column="fk_vote_idx" 			javaType="String" />
+ 		<result property="FK_TEAM_IDX" 			column="fk_team_idx" 			javaType="String" />
+ 		<result property="FK_TEAMWON_IDX" 			column="fk_teamwon_idx" 			javaType="String" />
+ 		<result property="CONTENT" 			column="content" 			javaType="String" />
+ 		<result property="STATUS" 	column="status" 	javaType="String" />
+ 		<result property="MEMIDX" 	column="memidx" 	javaType="String" />
+ 		<result property="NAME" 	column="name" 	javaType="String" />
+ 		<result property="USERID" 	column="userid" 	javaType="String" />
+	</resultMap>
+	<select id="VoteCommList" resultMap="VoteCommMap">
+		select A.idx as commidx, A.fk_vote_idx, B.fk_team_idx, A.fk_teamwon_idx, A.content, A.status, D.idx as memidx, D.name, D.userid
+		from tbl_voteComm A join tbl_teamwon B
+		on A.fk_teamwon_idx = B.idx join tbl_team C
+		on B.fk_team_idx = C.idx join tbl_member D
+		on C.fk_member_idx = D.idx
+		where A.status = 1
+		order by A.idx asc
+	</select>
+	
+	
+	<select id="getFk_teamwon_idx" parameterType="String" resultType="int">
+		select idx
+		from tbl_teamwon
+		where fk_member_idx = 2
+		and fk_team_idx = 1
+	</select>
+	
+	
+	<insert id="addComment" parameterType="HashMap">
+		insert into tbl_voteComm
+		values(seq_vote_comm.nextval, #{voteidx}, 1, #{comment}, default)
+	</insert>
+	
+
+	<update id="DelComment" parameterType="HashMap">
+		update tbl_voteComm set status = 0
+		where idx = #{delidx}
+	</update>
 	
 </mapper>

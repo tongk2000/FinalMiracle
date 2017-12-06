@@ -79,4 +79,12 @@ public interface InterVoteDAO {
 
 	List<VoteItemVO> VoteItemChart(String idx); //차트에 필요한 투표문항 정보들을 얻어오자 (JSON)
 
+	List<HashMap<String, String>> VoteCommList(); //투표 댓글들을 가져와보자
+
+	int getFk_teamwon_idx(String getidx); //팀원번호를 조회해보자
+
+	int addComment(HashMap<String, String> commMap); //댓글을 써보자
+
+	int DelComment(HashMap<String, String> commMap); //댓글을 삭제해보자 (status = 0으로 update)
+
 }

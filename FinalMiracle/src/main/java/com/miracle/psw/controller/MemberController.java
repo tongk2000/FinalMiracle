@@ -63,7 +63,7 @@ public class MemberController {
 			
 			session.removeAttribute("gobackURL");
 		}
-		return "psw/login/loginEndForm.all";
+		return "psw/login/loginEndForm.not";
 	}  // end of public String loginEnd(HttpServletRequest req, HttpSession session, MemberVO loginUser) ----------------
 	
 	// ========================================================================= *** 로그아웃 *** =========================
@@ -119,10 +119,12 @@ public class MemberController {
 			req.setAttribute("userid", userid);
 			req.setAttribute("email", email);
 			req.setAttribute("method", method);
+			
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("userid", userid);
 			map.put("email", email);
 			n = service.getUserExists(map);
+			
 			if (n == 1) {  // 비밀번호 찾기를 위해 입력한 사용자아이디와 이메일이 DB에 등록된 경우...  인증키 메일 발송
 				GoogleMail mail = new GoogleMail();
 				Random rnd = new Random();  // 인증키를 생성한다.
@@ -283,7 +285,7 @@ public class MemberController {
 				String msg = (n == 2) ? "회원정보 수정 성공 ~ !!" : "회원정보 수정 오류입니다.";
 				String ctxpath = req.getContextPath();
 				req.setAttribute("msg", msg);
-				req.setAttribute("loc", ctxpath + "/member_edit.mr");
+				req.setAttribute("loc", ctxpath + "/doList.mr");
 			}
 		}
 		return "psw/msg.not";

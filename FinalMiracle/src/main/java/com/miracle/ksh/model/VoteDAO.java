@@ -236,5 +236,29 @@ public class VoteDAO implements InterVoteDAO {
 		return list;
 	}
 
+	@Override
+	public List<HashMap<String, String>> VoteCommList() {
+		List<HashMap<String, String>> voteCommList = sqlsession.selectList("kshVote.VoteCommList");
+		return voteCommList;
+	}
+
+	@Override
+	public int getFk_teamwon_idx(String getidx) {
+		int n = sqlsession.selectOne("kshVote.getFk_teamwon_idx", getidx);
+		return n;
+	}
+
+	@Override
+	public int addComment(HashMap<String, String> commMap) {
+		int result = sqlsession.insert("kshVote.addComment", commMap);
+		return result;
+	}
+
+	@Override
+	public int DelComment(HashMap<String, String> commMap) {
+		int result = sqlsession.insert("kshVote.DelComment", commMap);
+		return result;
+	}
+
 
 }

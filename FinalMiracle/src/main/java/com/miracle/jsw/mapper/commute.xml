@@ -6,18 +6,47 @@
 <!-- ==== #8. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->              
 <mapper namespace="commute">
 	
-	<update id="startWork">
-		update tbl_worktime set stime = sysdate, status = 1
-		where to_char(wt_date, 'mm-dd') = to_char(sysdate, 'mm-dd')
-		and status = 0
-		and fk_member_idx = 3
+	<update id="startWork" parameterType="int">
+			update tbl_worktime set stime = sysdate, status = 1
+			where to_char(wt_date, 'mm-dd') = to_char(sysdate, 'mm-dd')
+			and status = 0
+			and fk_member_idx = #{idx}
+			and trunc(sysdate)+10/24 >= sysdate
+	</update>
+			
+	<update id="startWorkLate" parameterType="int">
+			update tbl_worktime set stime = sysdate, status = 1, wstatus = 1
+			where to_char(wt_date, 'mm-dd') = to_char(sysdate, 'mm-dd')
+			and status = 0
+			and fk_member_idx = #{idx}
+			and trunc(sysdate)+10/24 <![CDATA[<]]> sysdate
 	</update>
 	
-	<update id="endWork">
-		update tbl_worktime set etime = sysdate, status = 2
-		where to_char(wt_date, 'mm-dd') = to_char(sysdate, 'mm-dd')
-		and status = 1
-		and fk_member_idx = 3
+	<update id="endWork" parameterType="int">
+			update tbl_worktime set etime = sysdate, status = 2
+			where to_char(wt_date, 'mm-dd') = to_char(sysdate, 'mm-dd')
+			and status = 1
+			and fk_member_idx = #{idx}
+			and trunc(sysdate)+20/24 <![CDATA[<=]]> sysdate
+			and wstatus = 0
+	</update>
+	
+	<update id="endWorkEarly" parameterType="int">	
+			update tbl_worktime set etime = sysdate, status = 2 , wstatus = 2
+			where to_char(wt_date, 'mm-dd') = to_char(sysdate, 'mm-dd')
+			and status = 1
+			and fk_member_idx = #{idx}
+			and trunc(sysdate)+20/24 > sysdate
+			and wstatus = 0
+	</update>
+	
+	<update id="workLateAndEarlyGo" parameterType="int">
+			update tbl_worktime set etime = sysdate, status = 2 , wstatus = 4
+			where to_char(wt_date, 'mm-dd') = to_char(sysdate, 'mm-dd')
+			and status = 1
+			and fk_member_idx = #{idx}
+			and trunc(sysdate)+20/24 > sysdate
+			and wstatus = 1
 	</update>
 	
 	
@@ -46,6 +75,7 @@
 		  from tbl_worktime w join tbl_member m
 		  on w.fk_member_idx = m.idx
 		  where m.status = 1
+		  and m.idx = #{idx}
 		  order by wt_idx desc
 		)V
 		)T
@@ -66,6 +96,7 @@
 		  from tbl_worktime w join tbl_member m
 		  on w.fk_member_idx = m.idx
 		  where m.status = 1
+		  and m.idx = #{idx}
 		  and substr(wt_date,4,2) = #{month}
 		  order by wt_idx desc
 		)V
@@ -73,15 +104,17 @@
 		where rno >= #{startRno} and rno <![CDATA[<=]]> #{endRno}
 	</select>
 	
-	<select id="getTotalCount" resultType="int">
+	<select id="getTotalCount" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_worktime
+		where fk_member_idx = #{idx}
 	</select>
 	
 	<select id="getTotalCountMonth" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_worktime
-		where substr(wt_date,4,2) = #{month}
+		where fk_member_idx = #{idx}
+		and substr(wt_date,4,2) = #{month}
 	</select>
 	
 	<resultMap type="java.util.HashMap" id="teamwonlist">
@@ -93,15 +126,21 @@
  		<result property="userid" 		column="userid" 	javaType="String" />	
  		<result property="username" 	column="username" 	javaType="String" />
  		<result property="img" 			column="img" 		javaType="String" />
+ 		<result property="regdate" 		column="regdate" 	javaType="String" />
+ 		<result property="disdate" 		column="disdate" 	javaType="String" />
 	</resultMap>
 	<select id="getTeamWonList" resultMap="teamwonlist" parameterType="HashMap">
-		select t.idx as tidx, t.name as tname, tw.idx as twidx, tw.status as twstatus, m.idx as midx, m.userid as userid, m.name as username, m.img as img
+		select t.idx as tidx, t.name as tname, tw.idx as twidx
+		, tw.status as twstatus, m.idx as midx, m.userid as userid
+		, m.name as username, m.img as img
+		, to_char(tw.regdate, 'yyyy-mm-dd') as regdate
+		, nvl(to_char(tw.disdate, 'yyyy-mm-dd'),'-') as disdate
 		from tbl_team t join tbl_teamwon tw
 		on t.idx = tw.fk_team_idx
 		join tbl_member m
 		on tw.fk_member_idx = m.idx
 		where t.idx = #{tidx}
-		and tw.status = 1
+		and tw.status in (1,0)
 		order by tw.idx
 	</select>
 	
@@ -109,43 +148,68 @@
 	<!--  -->
 	
 	
-	
-	<select id="twcommuteList" resultMap="commutelist" parameterType="HashMap">
-		select wt_idx, wt_date, stime, etime, whour, wminute, status, wstatus, name
+	<resultMap type="java.util.HashMap" id="twcommutelist">
+		<result property="wt_idx" 		column="wt_idx" 	javaType="int" />
+ 		<result property="wt_date" 		column="wt_date" 	javaType="String" />
+ 		<result property="stime" 		column="stime" 		javaType="String" />
+ 		<result property="etime" 		column="etime" 		javaType="String" />
+ 	 	<result property="whour" 		column="whour" 		javaType="String" />
+ 		<result property="wminute" 		column="wminute" 	javaType="String" />	
+ 		<result property="status" 		column="status" 	javaType="int" />
+ 		<result property="wstatus" 		column="wstatus" 	javaType="int" />
+ 		<result property="name" 		column="name" 		javaType="String" />
+ 		<result property="regdate" 		column="regdate" 	javaType="String" />
+ 		<result property="disdate" 		column="disdate" 	javaType="String" />
+ 		<result property="teamidx" 		column="teamidx" 	javaType="int" />
+	</resultMap>
+	<select id="twcommuteList" resultMap="twcommutelist" parameterType="HashMap">
+		select wt_idx, wt_date, stime, etime, whour, wminute, status, wstatus, name, regdate, teamidx, disdate
 		from 
 		(
-		select rownum as rno, wt_idx, wt_date, stime, etime, whour, wminute, status, wstatus, name
+		select rownum as rno, wt_idx, wt_date, stime, etime, whour, wminute, status, wstatus, name, regdate, teamidx, disdate
 		from
 		(
 		  select wt_idx, to_char(wt_date, 'mm-dd') as wt_date, to_char(stime, 'hh24:mi') as stime, to_char(etime, 'hh24:mi') as etime
 		  , to_char(nvl(trunc((etime-stime)*24),0))||'시간' as whour
 		  , to_char(nvl(trunc((((etime-stime)*24)-(trunc((etime-stime)*24)))*60),0))||'분' as wminute
-		  , w.status, wstatus, name
+		  , w.status, wstatus, name 
+      	  , to_char(tw.regdate, 'yyyy-mm-dd') as regdate
+      	  , to_char(tw.disdate, 'yyyy-mm-dd') as disdate
+          , tw.fk_team_idx as teamidx
 		  from tbl_worktime w join tbl_member m
 		  on w.fk_member_idx = m.idx
+          join tbl_teamwon tw
+          on m.idx = tw.fk_member_idx
 		  where m.status = 1
-		  and m.idx = #{idx}
+		  and tw.idx = #{twidx}
+          and (((disdate is null) and (trunc(w.wt_date) >= trunc(tw.regdate))) or ((disdate is not null) and (trunc(w.wt_date) >= trunc(tw.regdate)) and (trunc(w.wt_date) <![CDATA[<=]]> trunc(tw.disdate))))
 		  order by wt_idx desc
 		)V
 		)T
 		where rno >= #{startRno} and rno <![CDATA[<=]]> #{endRno}
 	</select>
 	
-	<select id="twcommuteListMonth" resultMap="commutelist" parameterType="HashMap">
-		select wt_idx, wt_date, stime, etime, whour, wminute, status, wstatus, name
+	<select id="twcommuteListMonth" resultMap="twcommutelist" parameterType="HashMap">
+		select wt_idx, wt_date, stime, etime, whour, wminute, status, wstatus, name, regdate, teamidx, disdate
 		from 
 		(
-		select rownum as rno, wt_idx, wt_date, stime, etime, whour, wminute, status, wstatus, name
+		select rownum as rno, wt_idx, wt_date, stime, etime, whour, wminute, status, wstatus, name, regdate, teamidx, disdate
 		from
 		(
 		  select wt_idx, to_char(wt_date, 'mm-dd') as wt_date, to_char(stime, 'hh24:mi') as stime, to_char(etime, 'hh24:mi') as etime
 		  , to_char(nvl(trunc((etime-stime)*24),0))||'시간' as whour
 		  , to_char(nvl(trunc((((etime-stime)*24)-(trunc((etime-stime)*24)))*60),0))||'분' as wminute
-		  , w.status, wstatus, name
+		  , w.status, wstatus, name 
+      	  , to_char(tw.regdate, 'yyyy-mm-dd') as regdate
+      	  , to_char(tw.disdate, 'yyyy-mm-dd') as disdate
+          , tw.fk_team_idx as teamidx
 		  from tbl_worktime w join tbl_member m
 		  on w.fk_member_idx = m.idx
+          join tbl_teamwon tw
+          on m.idx = tw.fk_member_idx
 		  where m.status = 1
-		  and m.idx = #{idx}
+		  and tw.idx = #{twidx}
+          and (((disdate is null) and (trunc(w.wt_date) >= trunc(tw.regdate))) or ((disdate is not null) and (trunc(w.wt_date) >= trunc(tw.regdate)) and (trunc(w.wt_date) <![CDATA[<=]]> trunc(tw.disdate))))
 		  and substr(wt_date,4,2) = #{month}
 		  order by wt_idx desc
 		)V
@@ -153,21 +217,43 @@
 		where rno >= #{startRno} and rno <![CDATA[<=]]> #{endRno}
 	</select>
 	
-	<select id="getTWTotalCount" resultType="int">
+	<select id="getTWTotalCount" parameterType="HashMap" resultType="int">
 		select count(*)
-		from tbl_worktime
-		where fk_member_idx = #{idx}
+		from tbl_worktime wt join tbl_teamwon tw
+		on wt.fk_member_idx = tw.fk_member_idx
+		where tw.idx = #{twidx}
+		and (((tw.disdate is null) and (trunc(wt.wt_date) >= trunc(tw.regdate))) or ((tw.disdate is not null) and (trunc(wt.wt_date) >= trunc(tw.regdate)) and (trunc(wt.wt_date) <![CDATA[<=]]> trunc(tw.disdate))))
 	</select>
 	
 	<select id="getTWTotalCountMonth" parameterType="HashMap" resultType="int">
 		select count(*)
-		from tbl_worktime
-		where fk_member_idx = #{idx}
-		and substr(wt_date,4,2) = #{month}
+		from tbl_worktime wt join tbl_teamwon tw
+		on wt.fk_member_idx = tw.fk_member_idx
+		where tw.idx = #{twidx}
+		and (((tw.disdate is null) and (trunc(wt.wt_date) >= trunc(tw.regdate))) or ((tw.disdate is not null) and (trunc(wt.wt_date) >= trunc(tw.regdate)) and (trunc(wt.wt_date) <![CDATA[<=]]> trunc(tw.disdate))))
+		and substr(wt.wt_date,4,2) = #{month}
 	</select>
 	
 	
-	
+	<resultMap type="java.util.HashMap" id="userTeamDetail">
+		<result property="midx" 		column="midx" 		javaType="int" />
+ 		<result property="tidx" 		column="tidx" 		javaType="int" />
+ 		<result property="twidx" 		column="twidx" 		javaType="int" />
+ 		<result property="twstatus" 	column="twstatus" 	javaType="int" />
+ 	 	<result property="userid" 		column="userid" 	javaType="String" />
+ 		<result property="username" 	column="username" 	javaType="String" />	
+ 		<result property="teamname" 	column="teamname" 	javaType="String" />
+ 		<result property="teamimg" 		column="teamimg" 	javaType="String" />
+	</resultMap>
+	<select id="getUserTeamDetail" parameterType="HashMap" resultMap="userTeamDetail">
+		select m.idx as midx ,t.idx as tidx ,tw.idx as twidx, tw.status as twstatus, m.userid as userid, m.name as username, t.name as teamname, t.img as teamimg
+		from tbl_teamwon tw join tbl_member m
+		on tw.fk_member_idx = m.idx
+		join tbl_team t
+		on tw.fk_team_idx = t.idx
+		where m.status = 1
+		and m.idx = #{idx}
+	</select>
 	
 	
 	

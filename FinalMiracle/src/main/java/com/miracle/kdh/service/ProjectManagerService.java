@@ -3,8 +3,13 @@ package com.miracle.kdh.service;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.miracle.kdh.model.FolderVO;
 import com.miracle.kdh.model.Folder_CommentVO;
@@ -17,8 +22,8 @@ public class ProjectManagerService {
 	ProjectManagerDAO dao;
 	
 	// 모든 폴더, 할일 리스트를 가져오는 메소드
-	public List<FolderVO> getAllDoList() {
-		List<FolderVO> doList = dao.getAllDoList();
+	public List<FolderVO> getAllDoList(String team_idx) {
+		List<FolderVO> doList = dao.getAllDoList(team_idx);
 		return doList;
 	} // end of List<FolderVO> getAllDoList() ------------------------------------------
 	
@@ -45,10 +50,53 @@ public class ProjectManagerService {
 	public int do_goModalEdit(FolderVO fvo) {
 		int result = dao.do_goModalEdit(fvo);
 		return result;
-	}
+	} // end of int do_goModalEdit(FolderVO fvo) --------------------------------------------------------------------
 
 	// 할일 완료, 미완료 처리하기
 	public void setTaskComplete(FolderVO fvo) {
 		dao.setTaskComplete(fvo);
+	} // end of void setTaskComplete(FolderVO fvo) ---------------------------------------------------------------------
+
+	// 하위폴더 추가시 상위 폴더의 정보를 가져오기
+	public HashMap<String, String> getUpFolder(String upIdx) {
+		HashMap<String, String> map = dao.getUpFolder(upIdx);
+		return map;
+	} // public HashMap<String, String> getUpFolder(int upIdx) --------------------------------------------------------
+
+	public List<HashMap<String, String>> getTeamwonList(String team_idx) {
+		List<HashMap<String, String>> teamwonList = dao.getTeamwonList(team_idx);
+		return teamwonList;
+	}
+
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int addDownFolderEnd(FolderVO fvo, HashMap<String, Object> map) {
+		int result1 = dao.addDownFolder(fvo);
+		int folderIdx = dao.getLastest_FolderIdx();
+		map.put("folderIdx", folderIdx);
+		int result2 = dao.addFolderTeamwon(map);
+		return result1 * result2;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
