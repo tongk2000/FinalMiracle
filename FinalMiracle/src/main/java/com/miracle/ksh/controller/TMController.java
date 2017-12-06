@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.miracle.kdh.model.FolderVO;
 import com.miracle.kdh.service.ProjectManagerService;
 import com.miracle.ksh.model.TeamVO;
+import com.miracle.ksh.model.TeamwonVO;
 import com.miracle.ksh.service.InterTMService;
 import com.miracle.ksh.util.MyUtil;
 import com.miracle.psw.model.MemberVO;
@@ -21,8 +22,6 @@ import com.miracle.psw.service.MemberService;
 
 @Controller
 public class TMController {
-	
-	HashMap<String, String> map = new HashMap<String, String>();
 	
 	@Autowired
 	private InterTMService service;
@@ -323,6 +322,287 @@ public class TMController {
 		req.setAttribute("gobackURL", gobackURL);
 		
 		return "ksh/tm/tmaddress.all";
+	}
+	
+	
+	@RequestMapping(value="/tmWithdraw.mr", method={RequestMethod.GET})
+	public String tmWithdraw(HttpServletRequest req, HttpSession session){
+		
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)session.getAttribute("teamInfo");
+		MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
+		
+		String fk_member_idx = String.valueOf(loginUser.getIdx());
+		String fk_team_idx = teamInfo.get("team_idx");
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("fk_member_idx", fk_member_idx);
+		map.put("fk_team_idx", fk_team_idx);
+		
+		int n = service.tmWithDraw(map);
+		
+		if(n>0){
+			String msg = "팀장이 최종적으로 승인해야 탈퇴 처리 됩니다.";
+			String loc = "tmList.mr";
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		} else {
+			String msg = "탈퇴 요청에 실패하였습니다.";
+			String loc = "tmList.mr";
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		}
+				
+	}
+	
+	@RequestMapping(value="/tmWithdrawList.mr", method={RequestMethod.GET})
+	public String tmWithdrawList(HttpServletRequest req, HttpSession session){
+		
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)session.getAttribute("teamInfo");
+		MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
+
+		String fk_member_idx = String.valueOf(loginUser.getIdx());
+		String fk_team_idx = teamInfo.get("team_idx");
+		String teamwon_status = teamInfo.get("teamwon_status");
+		
+		//System.out.println("확인용 : " + fk_team_idx);
+		
+		List<HashMap<String, String>> reqwdList = null;
+		
+		String colname1 = req.getParameter("colname1");
+		String search1 = req.getParameter("search1");
+		String gobackURL1 = MyUtil.getCurrentURL(req);
+		
+		HashMap<String, String> map1 = new HashMap<String, String>();
+		map1.put("fk_member_idx", fk_member_idx);
+		map1.put("fk_team_idx", fk_team_idx);
+		map1.put("colname1", colname1);
+		map1.put("search1", search1);
+		
+		String str_currentShowPageNo1 = req.getParameter("currentShowPageNo1");
+		String str_sizePerPage1 = req.getParameter("sizePerPage1");
+		
+		int totalCount1 = 0; //총 게시물 건수	
+		int sizePerPage1 = 0; //한 페이지 당 보여줄 게시물 수
+		int currentShowPageNo1 = 0; //현재 보여주는 페이지 번호, 초기치는 1
+		int totalPage1 = 0;//총 페이지 수 (웹브라우저에 보여주는 총 페이지 수)
+		
+		int startRno1 = 0; //시작 행 번호
+		int endRno1 = 0; //끝 행 번호
+		int blockSize1 = 10; //"페이지바"에 보여줄 페이지의 갯수
+		
+		if(str_currentShowPageNo1 == null){
+			//게시판의 초기화면
+			currentShowPageNo1 = 1;
+		} else {
+			currentShowPageNo1 = Integer.parseInt(str_currentShowPageNo1);
+		}
+		
+		if(str_sizePerPage1 == null){
+			//게시판의 초기화면
+			sizePerPage1 = 5;
+		} else {
+			sizePerPage1 = Integer.parseInt(str_sizePerPage1);
+		}
+		
+		startRno1 = ((currentShowPageNo1 - 1) * sizePerPage1) + 1;
+		endRno1 =  startRno1 + sizePerPage1 - 1;
+				
+		map1.put("startRno1", String.valueOf(startRno1));
+		map1.put("endRno1", String.valueOf(endRno1));
+		
+		if( (colname1 != null && search1 != null) && (!colname1.trim().isEmpty() && !search1.trim().isEmpty()) && (!colname1.equals("null") && !search1.equals("null"))){
+			//검색어가 있	는 경우
+			reqwdList = service.tmReqWithDrawList2(map1);
+		} else{
+			//검색어가 없는 경우
+			reqwdList = service.tmReqWithDrawList1(map1);
+		}
+		
+		if( (colname1 != null && search1 != null) && (!colname1.trim().isEmpty() && !search1.trim().isEmpty()) && (!colname1.equals("null") && !search1.equals("null"))){
+			//검색어가 있는 경우
+			totalCount1 = service.TMReqWDTotalCount2(map1);
+		} else{
+			//검색어가 없는 경우
+			totalCount1 = service.TMReqWDTotalCount1(map1);
+		}
+		
+		totalPage1 = (int)Math.ceil((double)totalCount1/sizePerPage1);
+		
+		String pagebar1 = "<ul>";
+		
+		pagebar1 += MyUtil.getPageBarWithSearch(sizePerPage1, blockSize1, totalPage1, currentShowPageNo1, colname1, search1, null, "tmWithdrawList.mr");	
+		
+		pagebar1 += "</ul>";
+		
+		
+		req.setAttribute("pagebar1", pagebar1);
+		req.setAttribute("colname1", colname1);
+		req.setAttribute("search1", search1);
+		req.setAttribute("sizePerPage1", sizePerPage1);
+		req.setAttribute("totalCount1", totalCount1);
+		req.setAttribute("gobakcURL1", gobackURL1);
+		
+		
+		
+		// ==========================================================================================================
+
+		List<TeamwonVO> wdList = null;
+				
+		String colname2 = req.getParameter("colname2");
+		String search2 = req.getParameter("search2");
+		String gobackURL2 = MyUtil.getCurrentURL(req);
+		
+		HashMap<String, String> map2 = new HashMap<String, String>();
+		map2.put("fk_member_idx", fk_member_idx);
+		map2.put("fk_team_idx", fk_team_idx);
+		map2.put("colname1", colname2);
+		map2.put("search1", search2);
+		
+		String str_currentShowPageNo2 = req.getParameter("currentShowPageNo2");
+		String str_sizePerPage2 = req.getParameter("sizePerPage2");
+		
+		int totalCount2 = 0; //총 게시물 건수	
+		int sizePerPage2 = 0; //한 페이지 당 보여줄 게시물 수
+		int currentShowPageNo2 = 0; //현재 보여주는 페이지 번호, 초기치는 1
+		int totalPage2 = 0;//총 페이지 수 (웹브라우저에 보여주는 총 페이지 수)
+		
+		int startRno2 = 0; //시작 행 번호
+		int endRno2 = 0; //끝 행 번호
+		int blockSize2 = 10; //"페이지바"에 보여줄 페이지의 갯수
+		
+		if(str_currentShowPageNo2 == null){
+			//게시판의 초기화면
+			currentShowPageNo2 = 1;
+		} else {
+			currentShowPageNo2 = Integer.parseInt(str_currentShowPageNo2);
+		}
+		
+		if(str_sizePerPage2 == null){
+			//게시판의 초기화면
+			sizePerPage2 = 5;
+		} else {
+			sizePerPage2 = Integer.parseInt(str_sizePerPage2);
+		}
+		
+		startRno2 = ((currentShowPageNo2 - 1) * sizePerPage2) + 1;
+		endRno2 =  startRno2 + sizePerPage2 - 1;
+				
+		map2.put("startRno2", String.valueOf(startRno2));
+		map2.put("endRno2", String.valueOf(endRno2));
+		
+		if( (colname2 != null && search2 != null) && (!colname2.trim().isEmpty() && !search2.trim().isEmpty()) && (!colname2.equals("null") && !search2.equals("null"))){
+			//검색어가 있	는 경우
+			wdList = service.tmWithDrawList2(map2);
+		} else{
+			//검색어가 없는 경우
+			wdList = service.tmWithDrawList1(map2);
+		}
+		
+		if( (colname2 != null && search2 != null) && (!colname2.trim().isEmpty() && !search2.trim().isEmpty()) && (!colname2.equals("null") && !search2.equals("null"))){
+			//검색어가 있는 경우
+			totalCount2 = service.TMWDTotalCount2(map2);
+		} else{
+			//검색어가 없는 경우
+			totalCount2 = service.TMWDTotalCount1(map2);
+		}
+		
+		totalPage2 = (int)Math.ceil((double)totalCount2/sizePerPage2);
+		
+		String pagebar2 = "<ul>";
+		
+		pagebar2 += MyUtil.getPageBarWithSearch(sizePerPage2, blockSize2, totalPage2, currentShowPageNo2, colname2, search2, null, "tmWithdrawList.mr");	
+		
+		pagebar2 += "</ul>";
+		
+		
+		
+		
+		req.setAttribute("pagebar2", pagebar2);
+		req.setAttribute("colname2", colname2);
+		req.setAttribute("search2", search2);
+		req.setAttribute("sizePerPage2", sizePerPage2);
+		req.setAttribute("totalCount2", totalCount2);
+		req.setAttribute("gobakcURL2", gobackURL2);
+				
+		// ==========================================================================================================
+		
+		req.setAttribute("reqwdList", reqwdList);
+		req.setAttribute("wdList", wdList);
+		req.setAttribute("teamwon_status", teamwon_status);	
+		
+		return "ksh/tm/tmwithdraw.all";
+	}
+	
+	
+	@RequestMapping(value="/tmWithdrawEnd.mr", method={RequestMethod.GET})
+	public String tmWithdrawEnd(HttpServletRequest req, HttpSession session){
+		
+		String idx = req.getParameter("idx");
+		String gobackURL = req.getParameter("gobackURL");
+		
+		/*
+		int n = service.tmWithDrawEnd(idx);
+		
+		if(n>0){
+			String msg = "탈퇴 처리가 완료되었습니다.";
+			String loc = gobackURL;
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		} else {
+			String msg = "탈퇴 처리에 실패하였습니다.";
+			String loc = gobackURL;
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		}
+		*/
+		
+		return "ksh/msg.not";
+	}
+	
+	
+	@RequestMapping(value="/tmRestore.mr", method={RequestMethod.GET})
+	public String tmRestore(HttpServletRequest req, HttpSession session){
+		
+		String idx = req.getParameter("idx");
+		String gobackURL = req.getParameter("gobackURL");
+		
+		/*
+		int n = service.tmRestore(idx);
+		
+		if(n>0){
+			String msg = "복구 처리가 완료되었습니다.";
+			String loc = gobackURL;
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		} else {
+			String msg = "복구 처리에 실패하였습니다.";
+			String loc = gobackURL;
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		}
+		*/
+		
+		return "ksh/msg.not";
 	}
 	
 }

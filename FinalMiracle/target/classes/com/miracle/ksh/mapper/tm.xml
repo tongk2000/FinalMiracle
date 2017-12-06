@@ -158,5 +158,130 @@
 		) T
 		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
 	</select>
+	
+	
+	<update id="tmWithDraw" parameterType="HashMap">
+		update tbl_teamwon set disdate = sysdate
+		where fk_team_idx = #{fk_team_idx}
+		and fk_member_idx = #{fk_member_idx}
+	</update>
+	
+	
+	<resultMap type="java.util.HashMap" id="tmWithDrawMap">
+ 		<result property="IDX" 			column="idx" 			javaType="String" />
+ 		<result property="FK_TEAM_IDX" 			column="fk_team_idx" 			javaType="String" />
+ 		<result property="FK_MEMBER_IDX" 			column="fk_member_idx" 			javaType="String" />
+ 		<result property="USERID" 			column="userid" 			javaType="String" />
+ 		<result property="NAME" 			column="name" 		javaType="String" />
+ 		<result property="STATUS" 	column="status" 	javaType="String" />
+ 		<result property="REGDATE" 			column="regdate" 			javaType="String" />
+ 		<result property="DISDATE" 	column="disdate" 	javaType="String" />
+	</resultMap>
+	<select id="tmReqWithDrawList1" resultMap="tmWithDrawMap">
+		select idx, fk_team_idx, fk_member_idx, userid, name, status, regdate, disdate
+		from (
+		    select rownum as RNO, V.idx, V.fk_team_idx, V.fk_member_idx, V.userid, V.name, V.status, V.regdate, V.disdate
+		    from (
+		        select A.idx, A.fk_team_idx, A.fk_member_idx, B.userid, B.name, A.status, A.regdate, A.disdate
+		        from tbl_teamwon A join tbl_member B
+		        on A.fk_member_idx = B.idx
+		        where A.status = 1
+		        and A.fk_team_idx = #{fk_team_idx}
+		        and disdate is not null
+		        order by A.idx desc
+		    ) V
+		) T
+		where T.RNO >= 1 and T.RNO <![CDATA[<=]]> 5
+	</select>
+	
+	<select id="tmReqWithDrawList2" resultMap="tmWithDrawMap">
+		select idx, fk_team_idx, fk_member_idx, userid, name, status, regdate, disdate
+		from (
+		    select rownum as RNO, V.idx, V.fk_team_idx, V.fk_member_idx, V.userid, V.name, V.status, V.regdate, V.disdate
+		    from (
+		        select A.idx, A.fk_team_idx, A.fk_member_idx, B.userid, B.name, A.status, A.regdate, A.disdate
+		        from tbl_teamwon A join tbl_member B
+		        on A.fk_member_idx = B.idx
+		        where A.status = 1
+		        and A.fk_team_idx = #{fk_team_idx}
+		        and ${colname1} like '%'|| #{search1} ||'%'
+		        and disdate is not null
+		        order by A.idx desc
+		    ) V
+		) T
+		where T.RNO >= 1 and T.RNO <![CDATA[<=]]> 5
+	</select>
+	
+	<select id="TMReqWDTotalCount1" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_teamwon A join tbl_member B
+		on A.fk_member_idx = B.idx
+		where A.status = 1
+		and A.fk_team_idx = 2
+		and disdate is not null
+	</select>
+	
+	<select id="TMReqWDTotalCount2" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_teamwon A join tbl_member B
+		on A.fk_member_idx = B.idx
+		where A.status = 1
+		and A.fk_team_idx = 2
+		and ${colname1} like '%'|| #{search1} ||'%'
+		and disdate is not null
+	</select>
+	
+	
+	
+	<select id="tmWithDrawList1" resultMap="tmWithDrawMap">
+		select idx, fk_team_idx, fk_member_idx, userid, name, status, regdate, disdate
+		from (
+		    select rownum as RNO, V.idx, V.fk_team_idx, V.fk_member_idx, V.userid, V.name, V.status, V.regdate, V.disdate
+		    from (
+		        select A.idx, A.fk_team_idx, A.fk_member_idx, B.userid, B.name, A.status, A.regdate, A.disdate
+		        from tbl_teamwon A join tbl_member B
+		        on A.fk_member_idx = B.idx
+		        where A.status = 0
+		        and A.fk_team_idx = #{fk_team_idx}
+		        order by A.idx desc
+		    ) V
+		) T
+		where T.RNO >= 1 and T.RNO <![CDATA[<=]]> 5
+	</select>
+	
+	<select id="tmWithDrawList2" resultMap="tmWithDrawMap">
+		select idx, fk_team_idx, fk_member_idx, userid, name, status, regdate, disdate
+		from (
+		    select rownum as RNO, V.idx, V.fk_team_idx, V.fk_member_idx, V.userid, V.name, V.status, V.regdate, V.disdate
+		    from (
+		        select A.idx, A.fk_team_idx, A.fk_member_idx, B.userid, B.name, A.status, A.regdate, A.disdate
+		        from tbl_teamwon A join tbl_member B
+		        on A.fk_member_idx = B.idx
+		        where A.status = 0
+		        and A.fk_team_idx = #{fk_team_idx}
+		        and ${colname2} like '%'|| #{search2} ||'%'
+		        order by A.idx desc
+		    ) V
+		) T
+		where T.RNO >= 1 and T.RNO <![CDATA[<=]]> 5
+	</select>
+	
+	
+	<select id="TMWDTotalCount1" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_teamwon A join tbl_member B
+		on A.fk_member_idx = B.idx
+		where A.status = 0
+		and A.fk_team_idx = #{fk_team_idx}
+	</select>
+	
+	<select id="TMWDTotalCount2" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_teamwon A join tbl_member B
+		on A.fk_member_idx = B.idx
+		where A.status = 0
+		and A.fk_team_idx = #{fk_team_idx}
+		and ${colname2} like '%'|| #{search2} ||'%'
+	</select>
 
 </mapper>
