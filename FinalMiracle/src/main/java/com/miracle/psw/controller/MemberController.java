@@ -62,7 +62,7 @@ public class MemberController {
 			
 			session.removeAttribute("gobackURL");
 		}
-		return "psw/login/loginEndForm.all";
+		return "psw/login/loginEndForm.not";
 	}  // end of public String loginEnd(HttpServletRequest req, HttpSession session, MemberVO loginUser) ----------------
 	
 	// ========================================================================= *** 로그아웃 *** =========================
