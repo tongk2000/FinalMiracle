@@ -60,6 +60,12 @@
 	.incompleteLine {
 		background-color:red;
 	}
+	.addLine {
+		background-color:blue;
+	}
+	.delElement {
+		background-color:red;
+	}
 </style>
 
 <script type="text/javascript">
@@ -104,7 +110,10 @@
 			var depth = parseInt(getThirdClass($this)); // 클릭한 요소의 깊이 구하기
 			var groupNo = getSecondClass($this);
 			while(1==1) {
-				$this2 = $this.next();
+				if($this.next().attr("id") == undefined) { // 다음 요소가 없을때 undefined 오류 막기 위함
+					break;
+				}
+				var $this2 = $this.next();
 				var depth2 = parseInt(getThirdClass($this2)); // 다음 요소의 깊이 구하기
 				
 				if(depth+1 == depth2) { // 클릭한 요소의 깊이보다 다음 요소의 깊이가 1 크다면 (클릭했을때 +1 깊이만 표시되도록 하기 위해서 구분함)
@@ -268,16 +277,16 @@
 				$status.prop("checked", false);
 				status = "1";
 				
-				$("#"+idx).addClass("incompleteLine"); // 깜빡이는 효과
-				setTimeout(function(){
+				$("#"+idx).addClass("incompleteLine");
+				setTimeout(function(){ // 깜빡이는 효과
 					$("#"+idx).removeClass("incompleteLine");
 				},500);
 			} else {
 				$status.prop("checked", true);
 				status = "0";
 				
-				$("#"+idx).addClass("completeLine"); // 깜빡이는 효과
-				setTimeout(function(){
+				$("#"+idx).addClass("completeLine");
+				setTimeout(function(){ // 깜빡이는 효과
 					$("#"+idx).removeClass("completeLine");
 				},500);
 			}
@@ -320,32 +329,93 @@
 			$(document).trigger("keydown"); // trigger : 해당 이벤트로 전달
 		}); // end of $(".modalClose").click(function() ------------------------------------------------------------------------------------------------------
 		
-		// 모든 테이블 라인 선택시 백그라운드칼라로 옅은 회색 주기 
+		
+		// 테이블 라인 선택시 백그라운드칼라로 옅은 회색 주기 
 		$("tr:has(td)").hover(function(){ // $("tr:has(td)") : tr 태그 중에서 td 태그인것만 선택함. th는 제외함
 			$(this).addClass("selectLine");
 		}, function(){
 			$(this).removeClass("selectLine");
 		}); // end of $("tr").hover(function() --------------------------------------------------------------------------------------------
 		
+		
+		// 우클릭 메뉴에서 삭제 누르면 해당 행 삭제해주기
+		$(document).on("click", "#deleteRcm", function(){
+			var idx = $(".selectedLine").attr("id");
+			var bool = confirm("해당 요소를 정말로 삭제하시겠습니까?\n(포함된 하위 요소 또한 모두 삭제됩니다.)");
+			if(bool) {
+				delElement(idx);
+			}
+		});
 	}); // end of $(document).ready(function() --------------------------------------------------------------------------------------------------------
 	
-	// 상위 폴더 추가(일단 보류;;)
-	function addUpFolder(){
-		$("#span1").css({"margin-left":"${3*15}px"});
-	}
-			
 	
-	// 하위 폴더 추가
-	function addDownFolder(){
-		var upIdx = $(".selectedLine").attr("id");
-		window.open("do_addDownFolder.mr?upIdx="+upIdx, "subwinpop", "left=100px, top=100px, width=400px, height=350px");
-	}
-	
-	
-	// 할일 추가
-	function addTask(){
+	function delElement(idx) {
+		var frm = {"idx":idx};
+		var bool = false;
+		$.ajax({
+			url:,
+			data:frm,
+			dataType:"json",
+			success:function(data){
+				if(parseInt(data.result) > 0) {
+					var bool = true;
+				} else {
+					alert("알 수 없는 오류로 삭제할 수 없습니다.\n관리자에게 문의하세요.");
+				}
+			}, error:function(){
+				alert("알 수 없는 오류로 삭제할 수 없습니다.\n관리자에게 문의하세요.");
+			}
+		});
 		
+		if(bool) {
+			var $this = $("#"+idx);
+			var depth = parseInt(getThirdClass($this)); // 클릭한 요소의 깊이 구하기
+			var groupNo = getSecondClass($this);
+			
+			$("#"+idx).addClass("delElement");
+			while(1==1) {
+				if($this.next().attr("id") == undefined) { // 다음 요소가 없을때 undefined 오류 막기 위함
+					break;
+				}
+				var $this2 = $this.next();
+				var depth2 = parseInt(getThirdClass($this2)); // 다음 요소의 깊이 구하기
+				
+				if(depth < depth2) { // 클릭한 요소의 깊이보다 다음 요소의 깊이가 크다면
+					$this2.addClass("delElement");
+				} else { // 클릭한것과 깊이가 같은 요소가 나오면 break
+					break;
+				}
+				$this = $this2;
+			}
+			setTimeout(function(){
+				$(".delElement").hide(1000);
+			},1000);
+			setTimeout(function(){
+				$(".delElement").remove();
+			},2500);
+			$("#folderRcm").hide();
+			$("#taskRcm").hide();
+		}
 	}
+	
+	// 상위 요소 추가(일단 보류;;)
+	function addUpFolder() {
+		$("#span1").css({"margin-left":"${3*15}px"});
+	} // end of function addUpFolder() ---------------------------------------------------------------------------------------------------------------------------------
+	
+	
+	// 하위 요소 추가
+	function addDownElement() {
+		var upIdx = $(".selectedLine").attr("id");
+		window.open("do_addDownElement.mr?upIdx="+upIdx, "subwinpop", "left=100px, top=100px, width=400px, height=350px");
+	} // end of function addDownElement() -----------------------------------------------------------------------------------------------------------------------------
+	// 하위 요소 추가되었을때 살짝 깜빡여 주기
+	function addLine(id) {
+		$("#"+id).addClass("addLine");
+		setTimeout(function(){
+			$("#"+id).removeClass("addLine");
+		},1000);
+	} // end of function addLine(id) ---------------------------------------------------------------------------------------------------------------------------------
 	
 	
 	// 첫번째 클래스 구해주는 함수
@@ -392,7 +462,7 @@
 		});
 	} // end of function selectTaskInfo(frm) ------------------------------------------------------------------------------------------------
 	
-	
+
 	// 할일 모달창 띄우기
 	function selectTaskInfo(frm) {
 		$.ajax({
@@ -414,7 +484,7 @@
 	<table style="width:100%">
 		<thead>
 			<tr>
-				<th style="width:30%">제목</th>
+				<th style="width:50%">제목</th>
 				<th>시작일</th>
 				<th>마감일</th>
 				<th>중요도</th>
@@ -482,13 +552,10 @@
 			<th class="rcmSubject"></th>
 		</tr>
 		<tr>
-			<td class="rcm" id="addFolderRcm">상위폴더추가</td>
+			<td class="rcm" id="addFolderRcm">상위요소추가</td>
 		</tr>
 		<tr>
-			<td class="rcm" id="addFolderRcm" onclick="addDownFolder()">하위폴더추가</td>
-		</tr>
-		<tr>
-			<td class="rcm" id="addTaskRcm" onclick="addTask()">할일추가</td>
+			<td class="rcm" id="addFolderRcm" onclick="addDownElement()">하위요소추가</td>
 		</tr>
 		<tr>
 			<td class="rcm" id="modalFolderRcm">조회/수정</td>
