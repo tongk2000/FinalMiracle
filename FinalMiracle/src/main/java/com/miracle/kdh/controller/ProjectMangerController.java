@@ -154,7 +154,7 @@ public class ProjectMangerController {
 	} // end of public String getTeamwonList(HttpServletRequest req) --------------------------------------------------------------
 	
 	// 선택한 요소와 그 하위요소들 삭제하기
-	@RequestMapping(value="do_delElement.mr", method={RequestMethod.POST})
+	@RequestMapping(value="do_delElement.mr", method={RequestMethod.GET})
 	public String delElement(HttpServletRequest req) {
 		String idx = req.getParameter("idx");
 		int result = svc.delElement(idx);

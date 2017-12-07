@@ -128,7 +128,11 @@
 	
 	<!-- 선택한 요소와 그 하위요소들 삭제하기 -->
 	<update id="delElement">
-		
+		update tbl_folder set status = -1
+		where idx in (select idx
+		              from tbl_folder
+		              start with idx = #{idx}
+		              connect by prior idx = fk_folder_idx)
 	</update>
 </mapper>
 

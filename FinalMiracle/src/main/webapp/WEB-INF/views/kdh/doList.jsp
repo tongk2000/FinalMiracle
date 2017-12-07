@@ -353,7 +353,7 @@
 		var frm = {"idx":idx};
 		var bool = false;
 		$.ajax({
-			url:,
+			url:"do_delElement.mr",
 			data:frm,
 			dataType:"json",
 			success:function(data){
