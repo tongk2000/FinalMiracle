@@ -133,4 +133,52 @@ public class TMDAO implements InterTMDAO {
 		return n;
 	}
 
+	@Override
+	public int tmWithDrawEnd(String idx) {
+		int n = sqlsession.update("kshTM.tmWithDrawEnd", idx);
+		return n;
+	}
+
+	@Override
+	public int tmRestore(String idx) {
+		int n = sqlsession.update("kshTM.tmRestore", idx);
+		return n;
+	}
+
+	@Override
+	public List<TeamVO> getTeamVO(String team_idx) {
+		List<TeamVO> teamvo = sqlsession.selectList("kshTM.getTeamVO", team_idx);
+		return teamvo;
+	}
+
+	@Override
+	public int insertTeamwon(HashMap<String, String> insertMap) {
+		int m = sqlsession.insert("kshTM.insertTeamwon", insertMap);
+		return m;
+	}
+
+	@Override
+	public int getinsertTeamwonIdx() {
+		int i = sqlsession.selectOne("kshTM.getinsertTeamwonIdx");
+		return i;
+	}
+
+	@Override
+	public int insertDuplicationChk(HashMap<String, String> insertMap) {
+		int x = sqlsession.selectOne("kshTM.insertDuplicationChk", insertMap);
+		return x;
+	}
+
+	@Override
+	public int tmTeamwonListCount(String fk_team_idx) {
+		int n = sqlsession.selectOne("kshTM.tmTeamwonListCount", fk_team_idx);
+		return n;
+	}
+
+	@Override
+	public int tmDel(String fk_team_idx) {
+		int n = sqlsession.update("kshTM.tmDel", fk_team_idx);
+		return n;
+	}
+
 }

@@ -86,7 +86,7 @@
 	
 	<insert id="TeamCreate" parameterType="String">
 		insert into tbl_team
-		values(seq_team.nextval, #{fk_member_idx}, #{name}, #{tel1}, #{tel2}, #{tel3}, #{post1}, #{post2}, #{addr1}, #{addr2}, 'default.jpg', default, null, 1)
+		values(seq_team.nextval, #{fk_member_idx}, #{name}, #{tel1}, #{tel2}, #{tel3}, #{post1}, #{post2}, #{addr1}, #{addr2}, #{newFileName}, default, null, 1)
 	</insert>
 	
 	
@@ -283,5 +283,57 @@
 		and A.fk_team_idx = #{fk_team_idx}
 		and ${colname2} like '%'|| #{search2} ||'%'
 	</select>
+	
+	
+	
+	<update id="kshTM.tmWithDrawEnd">
+		update tbl_teamwon set status = 0, disdate = sysdate
+		where idx = #{idx}
+	</update>
+	
+	<update id="kshTM.tmRestore">
+		update tbl_teamwon set status = 1, disdate = null
+		where idx = #{idx}
+	</update>
+	
+	
+	
+	<select id="getTeamVO" parameterType="String" resultType="com.miracle.ksh.model.TeamVO">
+		select idx, fk_member_idx, name, tel1, tel2, tel3, post1, post2, addr1, addr2, img, regdate, disdate, status
+		from tbl_team
+		where idx = #{team_idx}
+	</select>
+	
+	
+	<insert id="insertTeamwon" parameterType="HashMap">
+		insert into tbl_teamwon
+		values(seq_teamwon.nextval, #{fk_team_idx}, #{fk_member_idx}, 1, sysdate, null)
+	</insert>
+	
+	<select id="getinsertTeamwonIdx" resultType="int">
+		select max(idx)
+		from tbl_teamwon
+	</select>
+	
+	<select id="insertDuplicationChk" resultType="int">
+		select count(*)
+		from tbl_teamwon
+		where fk_member_idx = #{fk_member_idx}
+		and fk_team_idx = #{fk_team_idx}
+	</select>
+	
+	
+	<select id="tmTeamwonListCount" parameterType="String" resultType="int">
+		select count(*)
+		from tbl_teamwon
+		where status = 1
+		and fk_team_idx = #{fk_team_idx}
+	</select>
+	
+	
+	<update id="tmDel" parameterType="String">
+		update tbl_team set disdate = sysdate, status = 0
+		where idx = #{fk_team_idx}
+	</update>
 
 </mapper>
