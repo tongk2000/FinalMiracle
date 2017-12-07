@@ -53,26 +53,35 @@ public class ProjectManagerDAO {
 		return map;
 	} // end of HashMap<String, String> getUpFolder(String upIdx) -----------------------------------------------------------------
 
+	// 현재 팀의 소속된 팀원 목록을 가져오기
 	public List<HashMap<String, String>> getTeamwonList(String team_idx) {
 		List<HashMap<String, String>> teamwonList = sql.selectList("do.getTeamwonList",team_idx);
 		return teamwonList;
-	}
+	} // end of List<HashMap<String, String>> getTeamwonList(String team_idx) -----------------------------------------------------------
 	
-	public int addDownFolder(FolderVO fvo) {
-		int result = sql.insert("do.addDownFolder",fvo);
+	// 하위 폴더 추가하기
+	public int addDownElement(FolderVO fvo) {
+		int result = sql.insert("do.addDownElement",fvo);
 		return result;
-	}
-	
-	// 가장 최근에 추가된 폴더 번호 알아오는 메소드
-	public int getLastest_FolderIdx() {
-		return 0;
-	}
+	} // end of int addDownElement(FolderVO fvo) -------------------------------------------------------------------------------------------
 
-	public int addFolderTeamwon(HashMap<String, Object> map) {
-		int result = sql.insert("do.addFolderTeamwon",map); 
+	// 폴더나 할일 추가할때 담당 팀원 추가하기(가장 최근에 올라온 folderIdx를 구해서 입력주는 방식임)
+	public int addDoTeamwon(HashMap<String, Object> map) {
+		int result = sql.insert("do.addDoTeamwon",map);
 		return result;
-	}
+	} // end of int addDoTeamwon(HashMap<String, Object> map) ------------------------------------------------------------------------
 
+	// 방금 추가한 요소를 가져오기
+	public FolderVO getAddedElement() {
+		FolderVO fvo = sql.selectOne("do.getAddedElement");
+		return fvo;
+	} // end of FolderVO getAddedElement() -----------------------------------------------------------------------------------------------
+
+	// 선택한 요소와 그 하위요소들 삭제하기
+	public int delElement(String idx) {
+		int result = sql.update("do.delElement",idx);
+		return result;
+	} // end of int delElement(String idx) ------------------------------------------------------------------------------------------
 	
 }
 

@@ -55,6 +55,14 @@
 			frm.submit();
 		}
 	}
+	
+	function goWithdraw(){
+		
+		if(confirm("정말로 팀에서 탈퇴하시겠습니까?")){
+
+			location.href="<%= request.getContextPath() %>/tmWithdraw.mr";
+		}
+	}
 
 </script>
 
@@ -67,7 +75,8 @@
 		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmList.mr'">팀원 리스트</button>&nbsp;
 		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmAddress.mr'">주소록</button>&nbsp;
 		<c:if test="${teamwon_status.equals('1')}">	
-			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmWithdraw.mr'">팀 탈퇴</button>&nbsp;
+			<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmWithdraw.mr'">팀 탈퇴</button>&nbsp; --%>
+			<button type="button" onClick="goWithdraw();">팀 탈퇴</button>&nbsp;
 		</c:if>
 		<c:if test="${teamwon_status.equals('2')}">
 			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmInvite.mr'">팀원 초대</button>&nbsp;
@@ -104,7 +113,7 @@
 					<td>${tmvo.IDX}</td>
 					<td>${tmvo.USERID}</td>
 					<td>${tmvo.NAME}</td>
-					<td>${tmvo.IMG}</td>
+					<td><%-- <img src="<%= request.getContextPath() %>/resources/images/${tmvo.IMG}"> --%>${tmvo.IMG}</td>
 					<td>${tmvo.REGDATE}</td>
 					<td>
 						<c:if test="${tmvo.STATUS.equals('1')}">	
