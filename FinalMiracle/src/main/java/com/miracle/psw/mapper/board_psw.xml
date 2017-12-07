@@ -56,4 +56,15 @@
 		where status = 1
 	</select>
 	
+	
+	<!-- FreeList 보여주기 -->
+	
+	
 </mapper>
+
+
+
+
+
+
+

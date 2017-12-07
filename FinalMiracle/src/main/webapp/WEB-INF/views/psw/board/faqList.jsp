@@ -8,7 +8,7 @@
 	#table {border-collapse: collapse; width: 750px;}
 	
 	.subjectstyle {font-weight: bold;
-    	           color: lightgray;
+    	           color: darkgray;
     	           cursor: pointer; }
     	           
 	.faqContent {background-color: lightgray;
@@ -16,14 +16,16 @@
 				 font-weight: bold;} 
 				  
 	.category {display: inline;}
-	
+	.answer {margin-left: 10px;}
 	<%-- accordion css --%>
 	* {
 	  margin: 0;
 	  padding: 0;
 	}
 	
-	dt, dd {padding: 10px;}
+	dt, dd {
+	  padding: 10px;
+	}
 	
 	dt {
 	  background-color: #cfc;
@@ -39,7 +41,9 @@
 	  margin-right: 10px;
 	}
 	
-	dt.on span {background-color: red;}
+	dt.on span {
+	  background-color: red;
+	}
 	
 	dd {
 	  background-color: tan;
@@ -89,13 +93,14 @@
 
 	});  // end of $(document).ready() ----------------------------------
 	
+	// ===================================================== *** 검색폼에 입력한 검색값 유지 하는 함수 *** ================
 	function searchKeep() {
 		<c:if test="${(colname != 'null' && not empty colname) && (search != 'null' && not empty search) }">
 			$("#colname").val("${colname}");
 			$("#search").val("${search}");
 		</c:if>
 	}
-	
+	// ====================================================== *** 검색어 입력시 Frm값 전송 해주는 함수 *** ================
 	function goSearch() {
 		var frm = document.searchFrm;
 		var search = $("#search").val();
@@ -107,6 +112,10 @@
 			frm.submit();
 		}
 	}
+	
+	function goCategory() {
+		
+	}
 
 </script>
 
@@ -114,26 +123,33 @@
 <h1 style="margin-left: 20%;">자주 묻는 질문</h1>
 <div style="padding-left: 10%; border: 1px solid red;">
 	<!-- ========================================= *** Category 분류 항목 *** ================================= -->
-	<div>
-		<div class="category">
-			<a onClick="">[전체]</a>
+	<div style="width: 80%; border: 1px solid maroon;"> 
+		<div class="category" style="margin-left:10%; border: 1px solid orange;">
+			<a href="<%= request.getContextPath() %>/faqList.mr">[전체]</a>
 		</div>
-		<div class="category">
-			<a onClick="">[회원가입]</a>
+		
+		<div class="category" style="margin-left:10%;">
+			<a onClick="">[회원관련]</a>
 		</div>
-		<div class="category">
+		
+		<div class="category" style="margin-left:10%;">
 			<a onClick="">[상담관련]</a>
 		</div>
-		<div class="category">
+		
+		<div class="category" style="margin-left:10%;">
 			<a onClick="">[로그인문제]</a>
-		</div>
+		</div>	
 	</div>
-	<!-- ========================================== *** 아코디언 FAQ 게시판 목록 *** ===================== -->
+	<!-- ========================================== *** 아코디언 FAQ 게시판 목록 *** ============================== -->
 	<div style="border: 1px solid pink; width: 80%;">
 		<dl>
 			<c:forEach var="faq" items="${faqList}" varStatus="status">
-			  <dt class="subject">Q.${faq.subject}</dt>
-			  <dd>A.${faq.content}</dd>
+			  <dt class="subject">
+			  	<span style="color: red;">Q.</span> ${faq.subject}
+			  </dt>
+			  <dd class="answer">
+			  	<span style="color: blue;">A.</span> ${faq.content}
+			  </dd>
 			</c:forEach>
 		</dl>
 	</div>
