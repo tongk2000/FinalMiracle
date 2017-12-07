@@ -130,7 +130,7 @@
 	<!-- === *** 리플 글 가져오기 *** === -->
 	<select id="getComment" parameterType="String" resultType="com.miracle.pjs.model.ReplyVO">
 		select * from tbl_noticereply
-		where idx = #{idx}
+		where fk_idx = #{idx}
 	</select>
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 리플글 입력하기 *** === -->

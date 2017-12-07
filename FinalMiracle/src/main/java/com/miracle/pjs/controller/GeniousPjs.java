@@ -48,7 +48,7 @@ public class GeniousPjs {
 					sizePerPage = 10;
 				}
 				else {
-					try{
+					try{ 
 						sizePerPage = Integer.parseInt(str_sizePerPage);
 					} catch (NumberFormatException e) {
 						String msg="숫자값만 입력하세요!";
@@ -192,25 +192,20 @@ public class GeniousPjs {
 		String nidx = req.getParameter("idx");		 // tbl_notice의 idx
 		String teamidx = req.getParameter("teamidx");// 뷰단에서 받아온 team_idx
 		String sessionid = "pjs";//((MemberVO)session.getAttribute("loginUser")).getUserid();
-		System.out.println("=================nidx====================="+nidx);
-		System.out.println("=================sessionid====================="+sessionid);
-		System.out.println("=================세션값=========================="+(String)session.getAttribute("readCount"));
 		if("1".equals((String)session.getAttribute("readCount"))&&!userid.equals(sessionid)) {
 			// 조회수를 올린다.!!!!!!!!!!!!!!!!!!!!!!!!!
-			System.out.println("============조회수 올리기 실행되니??=====================");
 			int n = service.updateReadCount(nidx);
-			if(n == 0)
-				System.out.println("=======================n========================= "+n+" 디비 실패!");
-			else {
+			if(n > 0)
 				session.removeAttribute("readCount");
-				System.out.println("=======================n========================= "+n+" 디비 성공!");
-			}
+			else 
+				System.out.println("==================디비 업데이트 실패===================");
 		}
 		HashMap<String, String> view = new HashMap<String, String>();
 		view.put("nidx", nidx);
 		view.put("teamidx", teamidx);
 		HashMap<String, String> map =  service.getIdxTeam(view); // team_idx , userid 받는다.
-		List<ReplyVO> comment = service.getComment(nidx);
+		List<ReplyVO> comment = service.getComment(nidx); // 해당 nidx에 해당하는 comment를 가져온다.
+		System.out.println("================코멘트================"+comment.get(0).getReply_content());
 		req.setAttribute("comment", comment);
 		req.setAttribute("map", map);
 		return "pjs/notice/noticeView.all";

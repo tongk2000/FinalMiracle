@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!-- comment(ReplyVO), map(team_idx , userid) 받는다. -->
 <!DOCTYPE>
 <html>
 <head>
@@ -40,13 +39,16 @@
 					</tr>
 				</tbody>
 			</table>
-			댓글	:	<input type="text" /> <button type="button" id="goClick();">쓰기</button>
-			<div id="displayList" style="background-color:white;">ddd</div>
+			댓글 :&nbsp;&nbsp;<input type="text" /> <button type="button" id="goClick();">쓰기</button>
+			<div id="displayList" style="background-color:white;"></div>
 		</div>
 	</div>
+	<!-- comment(ReplyVO), map(team_idx , userid) 받는다. -->
 	<script>
 		$(document).ready(function(){
-			alert("nn");
+			<c:if test="${not empty comment}">
+				$("#displayList").show();
+			</c:if>
 		});
 		function goClick(idx) {
 			alert("여기 옴?");
@@ -58,6 +60,7 @@
 				success:function(data){
 					if(data.length>0) {
 						$("#displayList").html(data);
+						$("#displayList").show();
 					}
 					else {
 						alert("ajax결과"+data);
