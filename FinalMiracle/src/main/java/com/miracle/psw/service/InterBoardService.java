@@ -17,6 +17,8 @@ public interface InterBoardService {
 	
 	int getTotalCountWithNoSearch();
 
+	int add(FaqBoardVO faqvo); // FAQ 게시판 글쓰기
+
  
 
 	

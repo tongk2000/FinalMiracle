@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,10 +93,17 @@ public class BoardController {
 	}  // end of public String faqList(HttpServletRequest req, HttpSession session) --------------------------------
 	
 	// =================================================== *** FAQ 게시판 글쓰기 *** =========================================
-	@RequestMapping(value="/faqAdd.mr")
-	public String faqAdd() {
+	@RequestMapping(value="/faqAdd.mr", method={RequestMethod.GET})
+	public String faqAdd(HttpServletRequest req, HttpServletResponse response) {
 		
 		return "psw/board/faqAdd.all";
+	}
+	@RequestMapping(value="/faqAddEnd.mr", method={RequestMethod.POST})
+	public String faqAddEnd(FaqBoardVO faqvo, HttpServletRequest req) {
+		int n = service.add(faqvo);
+		req.setAttribute("n", n);
+		
+		return "psw/board/faqAddEnd.not";
 	}
 	
 	

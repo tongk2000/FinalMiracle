@@ -56,6 +56,11 @@
 		where status = 1
 	</select>
 	
+	<!-- FAQ 게시판 글쓰기 -->
+	<insert id="add" parameterType="com.miracle.psw.model.FaqBoardVO">
+		insert into tbl_faq(idx, category, subject, content, readCnt, regDate, status)
+		values(seq_faq.nextval, #{category}, #{subject}, #{content}, default, default, default)
+	</insert>
 	
 	<!-- FreeList 보여주기 -->
 	
