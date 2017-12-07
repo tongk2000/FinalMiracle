@@ -62,8 +62,8 @@ public class VoteDAO implements InterVoteDAO {
 	}
 
 	@Override
-	public int VoteTotalCount1() {
-		int n = sqlsession.selectOne("kshVote.VoteTotalCount1");
+	public int VoteTotalCount1(HashMap<String, String> map) {
+		int n = sqlsession.selectOne("kshVote.VoteTotalCount1", map);
 		return n;
 	}
 
@@ -80,8 +80,8 @@ public class VoteDAO implements InterVoteDAO {
 	}
 
 	@Override
-	public int VoteEndTotalCount1() {
-		int n = sqlsession.selectOne("kshVote.VoteEndTotalCount1");
+	public int VoteEndTotalCount1(HashMap<String, String> map) {
+		int n = sqlsession.selectOne("kshVote.VoteEndTotalCount1", map);
 		return n;
 	}
 
@@ -191,8 +191,8 @@ public class VoteDAO implements InterVoteDAO {
 	}
 
 	@Override
-	public int VoteReadyTotalCount1() {
-		int n = sqlsession.selectOne("kshVote.VoteReadyTotalCount1");
+	public int VoteReadyTotalCount1(HashMap<String, String> map) {
+		int n = sqlsession.selectOne("kshVote.VoteReadyTotalCount1", map);
 		return n;
 	}
 

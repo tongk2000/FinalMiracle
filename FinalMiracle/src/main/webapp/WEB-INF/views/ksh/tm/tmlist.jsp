@@ -63,9 +63,31 @@
 			location.href="<%= request.getContextPath() %>/tmWithdraw.mr";
 		}
 	}
+	
+	function goInvite(){
+		var frm = document.inviteFrm;
+		var inputemail = prompt("초대하고 싶은 팀원의 이메일을 입력해주세요.", "")
+		
+		if(inputemail != null){
+			frm.email.value = inputemail;
+			frm.action = "tmInvite.mr";
+			frm.submit();
+		}
+	}
+	
+	function goDisband(){
+		var frm = document.DisbandFrm;
+		var password = prompt("팀장의 비밀번호를 입력해주세요.", "")
+		
+		if(password != null){
+			frm.pwd.value = password;
+			frm.method = "post";
+			frm.action = "tmDisband.mr";
+			frm.submit();
+		}
+	}
 
 </script>
-
 
 <form id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/tmList.mr" method="get" enctype="multipart/form-data">
 <div style="padding-left: 10%; border: solid 0px red; width: 100%;">
@@ -79,9 +101,11 @@
 			<button type="button" onClick="goWithdraw();">팀 탈퇴</button>&nbsp;
 		</c:if>
 		<c:if test="${teamwon_status.equals('2')}">
-			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmInvite.mr'">팀원 초대</button>&nbsp;
+			<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmInvite.mr'">팀원 초대</button>&nbsp; --%>
+			<button type="button" onClick="goInvite();">팀원 초대</button>&nbsp;
 			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmWithdrawList.mr'">팀원 탈퇴목록</button>&nbsp;
-			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmDisband.mr'">팀 해체</button>&nbsp;
+			<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmDisband.mr'">팀 해체</button>&nbsp; --%>
+			<button type="button" onClick="goDisband();">팀 해체</button>&nbsp;
 		</c:if>
 		<br/>전체 <span style="color: red; font-weight: bold;">${totalCount}</span>&nbsp;
 		목록 수 : 
@@ -161,4 +185,12 @@
 <form name="idxFrm">
 	<input type="hidden" name="idx" />
 	<input type="hidden" name="gobackURL" value="${gobackURL}">
+</form>
+
+<form name="inviteFrm">
+	<input type="hidden" name="email" />
+</form>
+
+<form name="DisbandFrm">
+	<input type="hidden" name="pwd" />
 </form>
