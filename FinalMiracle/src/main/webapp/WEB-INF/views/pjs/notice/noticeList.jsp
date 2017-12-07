@@ -87,7 +87,7 @@
 											<span class="userid">${nt.fk_userid}</span>
 										</a>
 									</td>														<!-- 아이디 -->
-									<td onClick="goView('${nt.n_idx}')"><span style="color:red;">${nt.subject}</span></td>		<!-- 제목 -->
+									<td onClick="goView('${nt.n_idx}','${nt.fk_userid}', '${nt.t_idx}')"><span style="color:red;">${nt.subject}</span></td>		<!-- 제목 -->
 									<td>${nt.regday}</td>										<!-- 날짜 -->
 									<td>${nt.readcount}</td>									<!-- 조회수-->
 								</tr>
@@ -101,7 +101,7 @@
 											<span class="userid">${nt.fk_userid}</span>
 										</a>
 									</td>														<!-- 아이디 -->
-									<td onClick="goView('${nt.n_idx}','${nt.fk_userid}')">${nt.subject}</td>	<!-- 제목 -->
+									<td onClick="goView('${nt.n_idx}','${nt.fk_userid}','${nt.t_idx}')" style="left-padding:20*">${nt.subject}</td>	<!-- 제목 -->
 									<td>${nt.regday}</td>										<!-- 날짜 -->
 									<td>${nt.readcount}</td>									<!-- 조회수-->
 								</tr>
@@ -110,6 +110,7 @@
 					</c:if>
 				</tbody>
 			</table>
+			<br/>
 		<div style="float:right;">
 			<c:if test="${team.status == 2}" >
 				<button type="button" onClick="goWrite();">글쓰기</button>
@@ -124,6 +125,7 @@
 	<form name="view">
 		<input type="hidden" name="idx" />
 		<input type="hidden" name="userid" />
+		<input type="hidden" name="teamidx" />
 	</form>
 	<form name="write">
 		<input type="hidden" name="userid" />
@@ -225,7 +227,7 @@
 				success: function(data) {
 					if(data.length>0) {
 						$("#userinfo").html(data);
-						$("#userinfo").modal();
+						$("#userinfo").modal(); // 이게 뭐였지????
 					}
 					else {
 						alert("ajax결과"+data);
@@ -235,10 +237,11 @@
 				}
 			});
 		}
-		function goView(n_idx, n_userid) {
+		function goView(n_idx, n_userid, n_t_idx) {
 			var frm = document.view;
 			frm.idx.value = n_idx;
-			frm.userid.value = n_userid;
+			frm.userid.value = n_userid; 
+			frm.teamidx.value = n_t_idx;
 			frm.action="<%=request.getContextPath()%>/noticeView.mr";
 			frm.method="get";
 			frm.submit();

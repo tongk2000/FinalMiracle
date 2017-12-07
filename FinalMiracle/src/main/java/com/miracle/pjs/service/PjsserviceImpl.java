@@ -59,9 +59,9 @@ public class PjsserviceImpl implements PjsinterService {
 		return map;
 	}/* ================================================================================================================================================== */
 	@Override
-	public HashMap<String, String> getIdxTeam(String idx) {
+	public HashMap<String, String> getIdxTeam(HashMap<String, String> view) {
 		// 공지사항 게시판의 해당 글을 클릭하면 그 글의 내용을 보여주는 메소드
-		HashMap<String, String> map = dao.getIdxTeam(idx);
+		HashMap<String, String> map = dao.getIdxTeam(view);
 		return map;
 	}/* ================================================================================================================================================== */
 	@Override
@@ -83,9 +83,9 @@ public class PjsserviceImpl implements PjsinterService {
 		return n;
 	}/* ================================================================================================================================================== */
 	@Override
-	public int updateReadCount(String idx) {
+	public int updateReadCount(String nidx) {
 		// 공지사항 글의 조회수 늘리는 메소드
-		int n = dao.updateReadCount(idx);
+		int n = dao.updateReadCount(nidx);
 		return n;
 	}
 	
@@ -93,6 +93,9 @@ public class PjsserviceImpl implements PjsinterService {
 	
 //==========================================================================================================================================================//	
 
+	
+	
+	
 	
 	
 // === *** 마음의 소리 게시판 *** === //	
@@ -157,6 +160,8 @@ public class PjsserviceImpl implements PjsinterService {
 
 	
 	
+	
+	
 // === *** 구글맵  *** === //	
 //==========================================================================================================================================================//	
 	@Override
@@ -185,9 +190,23 @@ public class PjsserviceImpl implements PjsinterService {
 		}
 		String googleMap = arr.toString();
 		return googleMap;
+	}/* ================================================================================================================================================== */
+	@Override
+	public HashMap<String, String> getMapFood(String map_idx) {
+		// 구글맵에서 음식점 마커 클릭 시 사용
+		HashMap<String, String> googleMapFood = dao.getMapFood(map_idx);
+		return googleMapFood;
+	}/* ================================================================================================================================================== */
+	@Override
+	public List<HashMap<String, String>> getMapTeam(String map_idx) {
+		// 구글맵에서 팀 정보 마커 클릭 시 사용
+		List<HashMap<String, String>> googleMapTeam = dao.getMapTeam(map_idx);
+		return googleMapTeam;
 	}
+	
 //==========================================================================================================================================================//	
 
+	
 	
 	
 // === *** 쪽지 *** === //
