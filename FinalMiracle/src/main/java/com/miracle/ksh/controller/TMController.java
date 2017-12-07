@@ -295,17 +295,10 @@ public class TMController {
 		
 		session.setAttribute("teamInfo", sessionMap);
 		
-		List<FolderVO> doList = null;
+		String loc = "doList.mr";
+		req.setAttribute("loc", loc);
 		
-		if(fk_team_idx1 == null || fk_team_idx1.trim().isEmpty()){
-			doList = svc.getAllDoList(fk_team_idx2);
-		} else if(fk_team_idx2 == null || fk_team_idx2.trim().isEmpty()){
-			doList = svc.getAllDoList(fk_team_idx1);
-		}
-		
-		req.setAttribute("doList", doList);
-		
-		return "kdh/doList.all";
+		return "ksh/msg.not";
 	}
 	
 	
