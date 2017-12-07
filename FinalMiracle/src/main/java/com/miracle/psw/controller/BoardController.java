@@ -39,8 +39,6 @@ public class BoardController {
 		map.put("colname", colname);
 		map.put("search", search);
 		
-		System.out.println(search);
-		
 		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 		
 		int totalCount = 0;
@@ -63,8 +61,6 @@ public class BoardController {
 		
 		map.put("startRno", String.valueOf(startRno));
 		map.put("endRno", String.valueOf(endRno));
-		
-		System.out.println(startRno+ "  dddd " + endRno);
 		
 		if( (colname != null && search != null) &&
 			(!colname.trim().isEmpty() && !search.trim().isEmpty()) &&
@@ -92,11 +88,24 @@ public class BoardController {
 		req.setAttribute("colname", colname);
 		req.setAttribute("search", search);
 		
-		return "psw/board/faqlist.all";
+		return "psw/board/faqList.all";
 	}  // end of public String faqList(HttpServletRequest req, HttpSession session) --------------------------------
 	
+	// =================================================== *** FAQ 게시판 글쓰기 *** =========================================
+	@RequestMapping(value="/faqAdd.mr")
+	public String faqAdd() {
+		
+		return "psw/board/faqAdd.all";
+	}
 	
 	
+	// ==================================================== *** 자유게시판 목록 *** ========================================
+	@RequestMapping(value="/FreeList.mr", method={RequestMethod.GET})
+	public String freeList() {
+		
+		
+		return "psw/board/freeList.all";
+	}
 	
 	
 }
