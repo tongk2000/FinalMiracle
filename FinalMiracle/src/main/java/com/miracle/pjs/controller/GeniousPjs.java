@@ -29,9 +29,8 @@ public class GeniousPjs {
 		@SuppressWarnings("unchecked")
 		HashMap<String, String> teamInfo = (HashMap<String, String>)session.getAttribute("teamInfo");// 팀의 정보를 가져온다. team_idx, teamwon_idx, teamwon_status
 		HashMap<String, String> team = new HashMap<String, String>();  // 유저아이디와 팀번호가 유일한 유저를 불러온다.
-		team.put("userid", "pjs"); // ((MemberVO) session.getAttribute("loginUser")).getUserid()  // 유저의 아이디를 가져온다.
-		team.put("teamidx", "2"); // teamInfo.get("team_idx")
-		teamInfo.get("");
+		team.put("userid", ((MemberVO) session.getAttribute("loginUser")).getUserid()); // 유저의 아이디를 가져온다.
+		team.put("teamidx", teamInfo.get("team_idx")); 
 		//if(mvo != null) {
 			HashMap<String, String> userTeam = service.getUserTeam(team); // 유저의 팀 정보를 가져온다. teamNum, userid, name, status
 			req.setAttribute("userTeam", userTeam); // 세션에서 얻을 수 없는 유저의 팀정보를 뷰단으로 보내 여러 조건에 비교용으로 쓴다.
@@ -163,31 +162,35 @@ public class GeniousPjs {
 		req.setAttribute("loc", loc);
 		return "pjs/error.not";		
 	}/* ================================================================================================================================================== */
-	@RequestMapping(value="noticeReply.mr", method={RequestMethod.GET})	// 공지사항 게시판글 수정
-	public String noticeEdit(HttpServletRequest req) {
+	@RequestMapping(value="getnoticeReplyList.mr", method={RequestMethod.GET})	// 공지사항 게시판글 수정
+	public String getnoticeReplyList(HttpServletRequest req, HttpSession session) {
 		// 공지사항 게시판의 해당 글을 볼 때 그 글의 코멘트를 가져오는 메소드
-		String idx = req.getParameter("fk_idx");
-		String co = req.getParameter("comment");
+		String nidx = req.getParameter("nidx");				//tbl_notice의 idx
+		List<ReplyVO> comment = service.getComment(nidx);
+		System.out.println("=====================확인용================="+comment.get(0).getRegday()+"       "+comment.size());
+		String sessionid = ((MemberVO)session.getAttribute("loginUser")).getUserid();
+		req.setAttribute("comment", comment);
+		req.setAttribute("sessionid", sessionid);
+		return "pjs/notice/comment.not";
+	}/* ================================================================================================================================================== */
+	@RequestMapping(value="setnoticeReplyList.mr", method={RequestMethod.POST})	// 공지사항 게시판글 수정
+	public void setnoticeReplyList(HttpServletRequest req) {
+		// 공지사항 게시판의 해당 글을 볼 때 그 글의 코멘트를 가져오는 메소드
+		String idx = req.getParameter("idx");
+		String co = req.getParameter("contents");
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("idx", idx);
 		map.put("comment", co);
 		int n = service.setComment(map);
 		if(n == 0) {
-			String msg="댓글달기 실패";
-			String loc="noticeView.mr?idx="+idx;
-			req.setAttribute("msg", msg);
-			req.setAttribute("loc", loc);
-			return "pjs/error.not";
+			System.out.println("================== 삽입실패 ==================");
 		}
 		else {
-			List<ReplyVO> comment = service.getComment(idx);
-			req.setAttribute("comment", comment);
-			return "pjs/notice/comment.not";
+			System.out.println("-----------------삽입성공------------------");
 		}
 	}/* ================================================================================================================================================== */
 	@RequestMapping(value="noticeView.mr", method={RequestMethod.GET})	// 공지사항 게시판글 보기 
 	public String noticeView(HttpServletRequest req, HttpSession session) {
-		System.out.println("여기 온다.");
 		String userid = req.getParameter("userid");  // tbl_notice의 fk_userid
 		String nidx = req.getParameter("idx");		 // tbl_notice의 idx
 		String teamidx = req.getParameter("teamidx");// 뷰단에서 받아온 team_idx
@@ -204,10 +207,11 @@ public class GeniousPjs {
 		view.put("nidx", nidx);
 		view.put("teamidx", teamidx);
 		HashMap<String, String> map =  service.getIdxTeam(view); // team_idx , userid 받는다.
-		List<ReplyVO> comment = service.getComment(nidx); // 해당 nidx에 해당하는 comment를 가져온다.
-		System.out.println("================코멘트================"+comment.get(0).getReply_content());
-		req.setAttribute("comment", comment);
+		//List<ReplyVO> comment = service.getComment(nidx); // 해당 nidx에 해당하는 comment를 가져온다.
+		//req.setAttribute("sessionid", sessionid);
+		//req.setAttribute("comment", comment);
 		req.setAttribute("map", map);
+		req.setAttribute("nidx",nidx);
 		return "pjs/notice/noticeView.all";
 	}
 	
