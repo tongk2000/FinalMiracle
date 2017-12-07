@@ -63,26 +63,28 @@
 		html += '</tr>'
 		
 		
-		var $opener = $(".selectedLine", opener.document);
-		var category = "${returnMap.fvo.category}";
-		var depth = parseInt("${returnMap.fvo.depth}");
+		var $opener = $(".selectedLine", opener.document); // 추가요소의 부모요소 선택자를 잡음
+		var category = "${returnMap.fvo.category}"; // 추가요소의 분류(1:폴더, 2:할일)을 저장함
+		var depth = parseInt("${returnMap.fvo.depth}"); // 추가요소의 깊이를 저장함
 		
-		if(category == '1') {
-			$opener.after(html);
-		} else if (category == '2') {
+		if(category == '1') { // 추가요소가 폴더라면
+			$opener.after(html); // 다음칸에 넣음
+		} else if (category == '2') { // 추가요소가 할일이라면 같은 깊이의 폴더 바로 다음, 혹은 폴더가 없다면 부모요소의 다음에 넣음. 
+			var $next = $opener.next(); // 부모요소의 다음 요소를 저장함
 			while(1==1) {
-				var $next = $opener.next();
-				var depth2 = parseInt(window.opener.getThirdClass($next));
-				
-				if($next.find("modalFolder").hasClass("modalFolder") & depth == depth2) {
-					alert(1);
+				if($next.next().attr("id") == undefined) {
+					break;
+				}
+				var depth2 = parseInt(window.opener.getThirdClass( $next.next()) ); // 다음 요소의 깊이를 저장함
+				if($next.next().find(".modalFolder").hasClass("modalFolder") & depth == depth2) { // 다음 요소가 폴더이면서 깊이가 같다면
+					$next = $next.next();
+				} else if(depth < depth2) { // 다음 요소의 깊이가 더 깊다면
 					$next = $next.next();
 				} else {
-					alert(2);
-					$next.prev().after(html);
 					break;
 				}
 			}
+			$next.after(html);
 		}
 		
 		window.opener.addLine("${returnMap.fvo.idx}"); // 살짝 깜빡여 주도록~

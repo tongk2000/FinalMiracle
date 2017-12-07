@@ -50,10 +50,14 @@ public class ProjectMangerController {
 		
 		@SuppressWarnings("unchecked")
 		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo");
-		List<FolderVO> doList = svc.getAllDoList(teamInfo.get("team_idx"));
-		req.setAttribute("doList", doList);
+		String team_idx = teamInfo.get("team_idx");
 		
-		return "kdh/doList.all";
+		String page = "0"; // 이 메소드는 첫화면이므로 무조건 초기값 0을 줌
+		
+		HashMap<String, Object> map = svc.getAllDoList(team_idx, page); // 할일리스트와 페이징처리를 위한 날짜를 받아옴
+		req.setAttribute("map", map);
+		
+		return "kdh/doList/doList.all";
 	} // end of String doList (HttpServletRequest req) ----------------------------------------------------------------
 	
 	// 선택한 폴더의 모든 정보를 가져오기
@@ -64,7 +68,7 @@ public class ProjectMangerController {
 		req.setAttribute("fvo", map.get("fvo"));
 		req.setAttribute("folder_teamwonList", map.get("folder_teamwonList"));
 		req.setAttribute("folder_commentList", map.get("folder_commentList"));
-		return "kdh/modal/modalFolder.not";
+		return "kdh/doList/modal/modalFolder.not";
 	} // end of String do_getSelectFolderInfo(HttpServletRequest req) -----------------------------------------------
 	
 	// 선택한 할일의 모든 정보를 가져오기
@@ -75,7 +79,7 @@ public class ProjectMangerController {
 		req.setAttribute("fvo", map.get("fvo"));
 		req.setAttribute("folder_teamwonList", map.get("folder_teamwonList"));
 		req.setAttribute("folder_commentList", map.get("folder_commentList"));
-		return "kdh/modal/modalTask.not";
+		return "kdh/doList/modal/modalTask.not";
 	} // end of String do_getSelectFolderInfo(HttpServletRequest req) -----------------------------------------------
 	
 	// 선택한 폴더의 정보를 수정하기
@@ -110,7 +114,7 @@ public class ProjectMangerController {
 		
 		req.setAttribute("map", map);
 		
-		return "kdh/popup/addDownElement.not";
+		return "kdh/doList/popup/addDownElement.not";
 	} // end of String addDownElement(HttpServletRequest req) ----------------------------------------------
 	
 	// 하위요소 추가하기
@@ -130,7 +134,7 @@ public class ProjectMangerController {
 		
 		req.setAttribute("returnMap", returnMap);
 		
-		return "kdh/popup/addDownElementEnd.not";
+		return "kdh/doList/popup/addDownElementEnd.not";
 	} // end of String addDownElementEnd(HttpServletRequest req, FolderVO fvo) ----------------------------------------------
 	
 	// 팀원 아이디/팀원번호 가져오기
@@ -154,11 +158,12 @@ public class ProjectMangerController {
 	} // end of public String getTeamwonList(HttpServletRequest req) --------------------------------------------------------------
 	
 	// 선택한 요소와 그 하위요소들 삭제하기
-	@RequestMapping(value="do_delElement.mr", method={RequestMethod.POST})
+	@RequestMapping(value="do_delElement.mr", method={RequestMethod.GET})
 	public String delElement(HttpServletRequest req) {
 		String idx = req.getParameter("idx");
 		int result = svc.delElement(idx);
-		String str_json = "{result:"+result+"}";
+		
+		String str_json = "{\"result\":\""+result+"\"}"; // JSON 형태로 넘길때는 반드시 {"키값":"밸류값"} 이어야함. 따옴표 주의
 		req.setAttribute("str_json", str_json);
 		return "kdh/json.not";
 	} // end of public String delElement(HttpServletRequest req) --------------------------------------------------------------

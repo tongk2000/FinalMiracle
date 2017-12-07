@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <style>
 	th, td{
@@ -338,27 +339,54 @@
 		}); // end of $("tr").hover(function() --------------------------------------------------------------------------------------------
 		
 		
-		// 우클릭 메뉴에서 삭제 누르면 해당 행 삭제해주기
+		// 우클릭 메뉴에서 삭제 누르면 사용자한테 물어본 후 해당 행 삭제하는 함수 호출하기
 		$(document).on("click", "#deleteRcm", function(){
 			var idx = $(".selectedLine").attr("id");
 			var bool = confirm("해당 요소를 정말로 삭제하시겠습니까?\n(포함된 하위 요소 또한 모두 삭제됩니다.)");
 			if(bool) {
 				delElement(idx);
 			}
-		});
+		}); // $(document).on("click", "#deleteRcm", function() ------------------------------------------------------------------------------------------
+		
 	}); // end of $(document).ready(function() --------------------------------------------------------------------------------------------------------
 	
 	
+	// 선택한 요소를 삭제해주는 함수
 	function delElement(idx) {
-		var frm = {"idx":idx};
-		var bool = false;
+		var frm = {"idx":idx};		
 		$.ajax({
-			url:,
+			url:"do_delElement.mr",
 			data:frm,
 			dataType:"json",
 			success:function(data){
-				if(parseInt(data.result) > 0) {
-					var bool = true;
+				if(parseInt(data.result) > 0) { // DB에서 삭제update에 성공했다면 페이지상에서도 지워준다.
+					var $this = $("#"+idx);
+					var depth = parseInt(getThirdClass($this)); // 클릭한 요소의 깊이 구하기
+					var groupNo = getSecondClass($this);
+					
+					$("#"+idx).addClass("delElement");
+					while(1==1) {
+						if($this.next().attr("id") == undefined) { // 다음 요소가 없을때 undefined 오류 막기 위함
+							break;
+						}
+						var $this2 = $this.next();
+						var depth2 = parseInt(getThirdClass($this2)); // 다음 요소의 깊이 구하기
+						
+						if(depth < depth2) { // 클릭한 요소의 깊이보다 다음 요소의 깊이가 크다면
+							$this2.addClass("delElement");
+						} else { // 클릭한것과 깊이가 같은 요소가 나오면 break
+							break;
+						}
+						$this = $this2;
+					}
+					setTimeout(function(){
+						$(".delElement").hide(1000);
+					},1000);
+					setTimeout(function(){
+						$(".delElement").remove();
+					},2500);
+					$("#folderRcm").hide();
+					$("#taskRcm").hide();
 				} else {
 					alert("알 수 없는 오류로 삭제할 수 없습니다.\n관리자에게 문의하세요.");
 				}
@@ -366,37 +394,8 @@
 				alert("알 수 없는 오류로 삭제할 수 없습니다.\n관리자에게 문의하세요.");
 			}
 		});
-		
-		if(bool) {
-			var $this = $("#"+idx);
-			var depth = parseInt(getThirdClass($this)); // 클릭한 요소의 깊이 구하기
-			var groupNo = getSecondClass($this);
-			
-			$("#"+idx).addClass("delElement");
-			while(1==1) {
-				if($this.next().attr("id") == undefined) { // 다음 요소가 없을때 undefined 오류 막기 위함
-					break;
-				}
-				var $this2 = $this.next();
-				var depth2 = parseInt(getThirdClass($this2)); // 다음 요소의 깊이 구하기
-				
-				if(depth < depth2) { // 클릭한 요소의 깊이보다 다음 요소의 깊이가 크다면
-					$this2.addClass("delElement");
-				} else { // 클릭한것과 깊이가 같은 요소가 나오면 break
-					break;
-				}
-				$this = $this2;
-			}
-			setTimeout(function(){
-				$(".delElement").hide(1000);
-			},1000);
-			setTimeout(function(){
-				$(".delElement").remove();
-			},2500);
-			$("#folderRcm").hide();
-			$("#taskRcm").hide();
-		}
-	}
+	} // end of function delElement(idx) ---------------------------------------------------------------------------------------------------------------------------------
+	
 	
 	// 상위 요소 추가(일단 보류;;)
 	function addUpFolder() {
@@ -479,23 +478,28 @@
 	} // function selectTaskInfo(frm) ------------------------------------------------------------------------------------------------
 </script>
 
-<div class="container" style="width:40%; float:left">
+<div class="container" style="width:100%; float:left">
 	<div><span id="allClose">전체접기</span>  ||  <span id="allOpen">전체펴기</span></div>
-	<table style="width:100%">
+	<table style="width:100%; border:1px solid black;">
 		<thead>
 			<tr>
 				<th style="width:50%">제목</th>
 				<th>시작일</th>
 				<th>마감일</th>
 				<th>중요도</th>
+				<th></th>
+				<th></th>
+				<c:forEach var="pageDate" items="${map.pageDateList}">
+					<th>${pageDate.dayDP}</th>
+				</c:forEach>
 			</tr>
 		</thead>
 		<tbody>
-			<c:if test="${empty doList}"> <!-- 프로젝트 리스트가 비었다면 -->
+			<c:if test="${empty map.doList}"> <!-- 프로젝트 리스트가 비었다면 -->
 				<td colspan="4">등록된 프로젝트가 없습니다.</td>
 			</c:if>
-			<c:if test="${not empty doList}"> <!-- 프로젝트 리스트가 있다면 -->
-				<c:forEach var="dvo" items="${doList}">
+			<c:if test="${not empty map.doList}"> <!-- 프로젝트 리스트가 있다면 -->
+				<c:forEach var="dvo" items="${map.doList}">
 					<tr id="${dvo.idx}" class="folder ${dvo.groupNo} ${dvo.depth}">
 						<td>
 							<span id="span${dvo.idx}" style="margin-left:${dvo.depth*15}px; cursor:pointer;">
@@ -531,6 +535,22 @@
 							<td style="background-color:red;">${dvo.lastDate}</td>
 						</c:if>
 						<td>${dvo.importance}</td>
+						
+						<td></td>
+						<td></td>
+						
+						<c:forEach var="pageDate" items="${map.pageDateList}">
+							<fmt:parseNumber var="startDate" value="${dvo.startDate.replace('-','')}" integerOnly="true"/>
+							<fmt:parseNumber var="lastDate" value="${dvo.lastDate.replace('-','')}" integerOnly="true"/>
+							<fmt:parseNumber var="day" value="${pageDate.day}" integerOnly="true"/>
+						
+							<c:if test="${startDate <= day and day <= lastDate}">
+								<td style="background-color:green; border-top:none; border-bottom:none;"></td>
+							</c:if>
+							<c:if test="${startDate > day or day > lastDate}">
+								<td style="border-top:none; border-bottom:none;"></td>
+							</c:if>
+						</c:forEach>
 					</tr>
 				</c:forEach>
 			</c:if>
@@ -538,13 +558,8 @@
 	</table>
 </div>
 
-<div class="container" style="width:60%; float:right">
-</div>
-
 <div class="modal fade" id="folderInfo" role="dialog"></div>
 <div class="modal fade" id="taskInfo" role="dialog"></div>
-
-
 
 <div id="folderRcm" style="padding:0px;">
 	<table>
