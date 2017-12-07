@@ -100,7 +100,7 @@ public class BoardController {
 	
 	
 	// ==================================================== *** 자유게시판 목록 *** ========================================
-	@RequestMapping(value="/FreeList.mr", method={RequestMethod.GET})
+	@RequestMapping(value="/freeList.mr", method={RequestMethod.GET})
 	public String freeList() {
 		
 		

@@ -123,9 +123,9 @@
 <h1 style="margin-left: 20%;">자주 묻는 질문</h1>
 <div style="padding-left: 10%; border: 1px solid red;">
 	<!-- ========================================= *** Category 분류 항목 *** ================================= -->
-	<div style="width: 80%; border: 1px solid maroon;"> 
+	<div style="width: 90%; border: 1px solid maroon;"> 
 		<div class="category" style="margin-left:10%; border: 1px solid orange;">
-			<a href="<%= request.getContextPath() %>/faqList.mr">[전체]</a>
+			<a onClick="">[분류없음]</a>
 		</div>
 		
 		<div class="category" style="margin-left:10%;">
@@ -137,11 +137,11 @@
 		</div>
 		
 		<div class="category" style="margin-left:10%;">
-			<a onClick="">[로그인문제]</a>
+			<a onClick="">[로그인관련]</a>
 		</div>	
 	</div>
 	<!-- ========================================== *** 아코디언 FAQ 게시판 목록 *** ============================== -->
-	<div style="border: 1px solid pink; width: 80%;">
+	<div style="border: 1px solid pink; width: 90%;">
 		<dl>
 			<c:forEach var="faq" items="${faqList}" varStatus="status">
 			  <dt class="subject">
