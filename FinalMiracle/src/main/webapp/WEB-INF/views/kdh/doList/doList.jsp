@@ -6,6 +6,7 @@
 <style>
 	th, td{
 		border:1px solid black;
+		word-wrap:break-word; /* 글자 넘치면 자동 줄바꿈 */
 	}
 	
 	td.infoClass {
@@ -146,7 +147,7 @@
 		
 				
 		// 우클릭시 메뉴 보여주기
-		$(".folder").bind("contextmenu", function(event) {
+		$(document).on("contextmenu", ".folder", function(event) {
 		    event.preventDefault();
 		    $(this).addClass("selectedLine");
 		    var classname = getFirstClass($(this));
@@ -543,9 +544,17 @@
 							<fmt:parseNumber var="startDate" value="${dvo.startDate.replace('-','')}" integerOnly="true"/>
 							<fmt:parseNumber var="lastDate" value="${dvo.lastDate.replace('-','')}" integerOnly="true"/>
 							<fmt:parseNumber var="day" value="${pageDate.day}" integerOnly="true"/>
-						
+							
 							<c:if test="${startDate <= day and day <= lastDate}">
-								<td style="background-color:green; border-top:none; border-bottom:none;"></td>
+								<c:if test="${dvo.dayCnt == 0}"> <!-- 시작일 전이라면 -->
+									<td style="background-color:lightgreen; border-top:none; border-bottom:none;"></td>
+								</c:if>
+								<c:if test="${dvo.dayCnt == 1}"> <!-- 진행중이라면 -->
+									<td style="background-color:green; border-top:none; border-bottom:none;"></td>
+								</c:if>
+								<c:if test="${dvo.dayCnt == -1}"> <!-- 기한이 지났다면 -->
+									<td style="background-color:red; border-top:none; border-bottom:none;"></td>
+								</c:if>
 							</c:if>
 							<c:if test="${startDate > day or day > lastDate}">
 								<td style="border-top:none; border-bottom:none;"></td>
