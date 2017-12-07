@@ -21,6 +21,7 @@
 		order siblings by category asc
 	</select>
 	
+	
 	<!-- 선택한 폴더의 정보를 가져오는 메소드 -->
 	<select id="getFolderInfo" resultType="com.miracle.kdh.model.FolderVO">
 		select idx, fk_teamwon_idx, subject, content
@@ -35,6 +36,7 @@
 		where idx = #{idx}
 	</select>
 	
+	
 	<!-- 선택한 폴더에 소속된 팀원 리스트를 가져오는 메소드 -->
 	<select id="getFolder_teamwonInfo" resultType="com.miracle.kdh.model.Folder_TeamwonVO">
 		select idx, fk_folder_idx, fk_teamwon_idx, acceptability, status
@@ -45,6 +47,7 @@
 		where fk_folder_idx = #{idx}
 	</select>
 	
+	
 	<!-- 선택한 폴더에 작성된 댓글 리스트를 가져오는 메소드 -->
 	<select id="getFolder_commentInfo" resultType="com.miracle.kdh.model.Folder_CommentVO">
 		select idx, fk_folder_idx, fk_teamwon_idx, content, status, to_char(writeDate, 'yyyy-mm-dd') as writeDate
@@ -54,17 +57,20 @@
 		order by 1
 	</select>
 	
+	
 	<!-- 선택한 폴더의 정보를 수정하기 -->
 	<update id="goModalEdit" parameterType="com.miracle.kdh.model.FolderVO">
 		update tbl_folder set subject=#{subject}, content=#{content}, startDate=to_date(#{startDate}), lastDate=to_date(#{lastDate}), importance=#{importance}
 		where idx = #{idx}
 	</update>
 	
+	
 	<!-- 할일 완료, 미완료 처리하기 -->
 	<update id="setTaskComplete" parameterType="com.miracle.kdh.model.FolderVO">
 		update tbl_folder set status = #{status}
 		where idx = #{idx}
 	</update>
+	
 	
 	<!-- 하위 폴더 추가할때 상위 폴더의 정보 받아오기 -->
 	<resultMap type="HashMap" id="getUpFolder">
@@ -78,6 +84,7 @@
 		where idx = #{upIdx}
 	</select>
 	
+	
 	<!-- 현재 팀의 소속된 팀원 목록을 가져오기 -->
 	<resultMap type="HashMap" id="getTeamwonList">
 		<result property="userid" column="userid" javaType="String"/>
@@ -89,11 +96,13 @@
 		where fk_team_idx = #{team_idx}
 	</select>
 	
+	
 	<!-- 하위 폴더 추가하기 -->
 	<insert id="addDownElement" parameterType="com.miracle.kdh.model.FolderVO">
 		insert into tbl_folder(idx, fk_teamwon_idx, subject, content, startdate, lastdate, fk_folder_idx, groupNo, depth, category, status, importance)
 		values(seq_folder.nextval, #{fk_teamwon_idx}, #{subject}, #{content}, #{startDate}, #{lastDate}, #{fk_folder_idx}, #{groupNo}, #{depth}, #{category}, 1, #{importance})
 	</insert>
+	
 	
 	<!-- 폴더나 할일 추가할때 담당 팀원 추가하기(가장 최근에 올라온 folderIdx를 구해서 입력주는 방식임) -->
 	<insert id="addDoTeamwon" parameterType="HashMap">
@@ -113,6 +122,7 @@
 		)V
 	</insert>
 	
+	
 	<!-- 방금 추가한 요소를 가져오기 -->
 	<select id="getAddedElement" resultType="com.miracle.kdh.model.FolderVO">
 		select idx, fk_teamwon_idx, subject, content
@@ -126,6 +136,7 @@
 		where idx = (select max(idx) from tbl_folder)
 	</select>
 	
+	
 	<!-- 선택한 요소와 그 하위요소들 삭제하기 -->
 	<update id="delElement">
 		update tbl_folder set status = -1
@@ -134,6 +145,61 @@
 		              start with idx = #{idx}
 		              connect by prior idx = fk_folder_idx)
 	</update>
+	
+	
+	<!-- 페이징 처리를 위해 1주간의 날짜를 동적으로 받아오기(뷰단에서 너무 노가다라 다른걸로 대체함;) -->
+	<!-- <resultMap type="HashMap" id="getPageDate">
+		<result property="threeago" column="threeago" javaType="String"/>
+		<result property="threeagoDP" column="threeagoDP" javaType="String"/>
+		<result property="twoago" column="twoago" javaType="String"/>
+		<result property="twoagoDP" column="twoagoDP" javaType="String"/>
+		<result property="oneago" column="oneago" javaType="String"/>
+		<result property="oneagoDP" column="oneagoDP" javaType="String"/>
+		<result property="standard" column="standard" javaType="String"/>
+		<result property="standardDP" column="standardDP" javaType="String"/>
+		<result property="onelater" column="onelater" javaType="String"/>
+		<result property="onelaterDP" column="onelaterDP" javaType="String"/>
+		<result property="twolater" column="twolater" javaType="String"/>
+		<result property="twolaterDP" column="twolaterDP" javaType="String"/>
+		<result property="threelater" column="threelater" javaType="String"/>
+		<result property="threelaterDP" column="threelaterDP" javaType="String"/>
+	</resultMap>
+	<select id="getPageDate" resultMap="getPageDate">
+		select to_char(v.standarddate-3, 'yyyymmdd') as threeago
+		     , to_char(v.standarddate-3, 'mm/dd(dy)') as threeagoDP
+		     , to_char(v.standarddate-2, 'yyyymmdd') as twoago
+		     , to_char(v.standarddate-2, 'mm/dd(dy)') as twoagoDP
+		     , to_char(v.standarddate-1, 'yyyymmdd') as oneago
+		     , to_char(v.standarddate-1, 'mm/dd(dy)') as oneagoDP
+		     , to_char(v.standarddate, 'yyyymmdd') as standard
+		     , to_char(v.standarddate, 'mm/dd(dy)') as standardDP
+		     , to_char(v.standarddate+1, 'yyyymmdd') as onelater
+		     , to_char(v.standarddate+1, 'mm/dd(dy)') as onelaterDP
+		     , to_char(v.standarddate+2, 'yyyymmdd') as twolater
+		     , to_char(v.standarddate+2, 'mm/dd(dy)') as twolaterDP
+		     , to_char(v.standarddate+3, 'yyyymmdd') as threelater
+		     , to_char(v.standarddate+3, 'mm/dd(dy)') as threelaterDP
+		from (
+		  select (sysdate+#{page}) as standarddate
+		  from dual
+		)V
+	</select> -->
+	
+	<!-- 페이징 처리를 위해 1주간의 날짜를 동적으로 수정하기 -->
+	<update id="updatePageDate">
+		update tbl_doPaging_week set day = to_char(sysdate + modification + #{page}, 'yyyymmdd')
+	                               , dayDP = to_char(sysdate + modification + #{page}, 'mm/dd(dy)')
+    </update>
+                   
+    <!-- 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기 -->
+    <resultMap type="HashMap" id="getPageDate">
+    	<result property="day" column="day" javaType="String" />
+    	<result property="dayDP" column="dayDP" javaType="String" />
+    </resultMap>
+    <select id="getPageDate" resultMap="getPageDate">
+		select day, dayDP
+		from tbl_doPaging_week
+	</select>
 </mapper>
 
 

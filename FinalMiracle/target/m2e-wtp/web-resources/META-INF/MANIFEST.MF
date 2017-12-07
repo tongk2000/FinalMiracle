@@ -1,5 +1,10 @@
 Manifest-Version: 1.0
+<<<<<<< HEAD
 Built-By: ShootingStars
 Build-Jdk: 1.8.0_141
+=======
+Built-By: Penna
+Build-Jdk: 1.8.0_151
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 Created-By: Maven Integration for Eclipse
 

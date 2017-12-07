@@ -38,11 +38,16 @@ public class BoardService implements InterBoardService {
 		int cnt = dao.getTotalCountWithSearch(map);
 		return cnt;
 	}
-
 	@Override
 	public int getTotalCountWithNoSearch() {
 		int cnt = dao.getTotalCountWithNoSearch();
 		return cnt;
+	}
+
+	@Override
+	public int add(FaqBoardVO faqvo) {  // FAQ 게시판 글쓰기
+		int n = dao.add(faqvo);
+		return n;
 	}
 
 	

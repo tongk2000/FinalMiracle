@@ -27,11 +27,10 @@ import com.miracle.ksh.model.VoteCommVO;
 import com.miracle.ksh.model.VoteItemVO;
 import com.miracle.ksh.model.VoteVO;
 import com.miracle.ksh.service.InterVoteService;
-import com.miracle.ksh.util.KshFileManager;
 import com.miracle.ksh.util.MyUtil;
-import com.miracle.ksh.util.ThumbnailManager;
 import com.miracle.psw.model.MemberDetailVO;
 import com.miracle.psw.model.MemberVO;
+import com.miracle.psw.util.FileManager;
 
 @Controller
 public class VoteController {
@@ -39,14 +38,11 @@ public class VoteController {
 	@Autowired
 	private InterVoteService service;
 	
-	@Autowired
-	private KshFileManager fileManager;
-	
-	@Autowired
-	private ThumbnailManager thumbnailManager;
-	
 	@RequestMapping(value="/voteList.mr", method={RequestMethod.GET})
 	public String voteList(HttpServletRequest req, HttpSession session){
+		
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)session.getAttribute("teamInfo");
 		
 		List<HashMap<String, String>> voteList = null;
 		List<VoteItemVO> voteItemList = null;
@@ -57,10 +53,13 @@ public class VoteController {
 		String colname = req.getParameter("colname");
 		String search = req.getParameter("search");
 		
+		String fk_team_idx = teamInfo.get("team_idx");
+		String teamwon_status = teamInfo.get("teamwon_status");
 		
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("colname", colname);
 		map.put("search", search);
+		map.put("fk_team_idx", fk_team_idx);
 		
 		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 		String str_sizePerPage = req.getParameter("sizePerPage");
@@ -111,7 +110,7 @@ public class VoteController {
 			totalCount = service.VoteTotalCount2(map);
 		} else{
 			//검색어가 없는 경우
-			totalCount = service.VoteTotalCount1();
+			totalCount = service.VoteTotalCount1(map);
 		}
 		
 		
@@ -125,6 +124,7 @@ public class VoteController {
 		
 		
 		req.setAttribute("gobackURL", gobackURL);
+		req.setAttribute("teamwon_status", teamwon_status);
 		
 		req.setAttribute("pagebar", pagebar);
 		req.setAttribute("colname", colname);
@@ -140,7 +140,10 @@ public class VoteController {
 	}
 	
 	@RequestMapping(value="/voteEndList.mr", method={RequestMethod.GET})
-	public String voteEndList(HttpServletRequest req){
+	public String voteEndList(HttpServletRequest req, HttpSession session){
+		
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)session.getAttribute("teamInfo");
 		
 		List<HashMap<String, String>> voteEndList = null;
 		List<VoteItemVO> voteItemList = null;
@@ -153,11 +156,15 @@ public class VoteController {
 		String colname = req.getParameter("colname");
 		String search = req.getParameter("search");
 		
+		String fk_team_idx = teamInfo.get("team_idx");
+		String teamwon_status = teamInfo.get("teamwon_status");
+		
 		//System.out.println(colname + " / " + search);
 		
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("colname", colname);
 		map.put("search", search);
+		map.put("fk_team_idx", fk_team_idx);
 		
 		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 		String str_sizePerPage = req.getParameter("sizePerPage");
@@ -208,7 +215,7 @@ public class VoteController {
 			totalCount = service.VoteEndTotalCount2(map);
 		} else{
 			//검색어가 없는 경우
-			totalCount = service.VoteEndTotalCount1();
+			totalCount = service.VoteEndTotalCount1(map);
 		}
 		
 		
@@ -222,6 +229,7 @@ public class VoteController {
 		
 		
 		req.setAttribute("gobackURL", gobackURL);
+		req.setAttribute("teamwon_status", teamwon_status);
 		
 		req.setAttribute("pagebar", pagebar);
 		req.setAttribute("colname", colname);
@@ -240,6 +248,9 @@ public class VoteController {
 	@RequestMapping(value="/voteMyList.mr", method={RequestMethod.GET})
 	public String voteMyList(HttpServletRequest req, HttpSession session){
 		
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)session.getAttribute("teamInfo");
+		
 		List<HashMap<String, String>> voteMyList = null;
 		List<VoteItemVO> voteItemList = null;
 		List<HashMap<String, String>> voteCommList = null;
@@ -253,6 +264,10 @@ public class VoteController {
 		String votekind = req.getParameter("votekind");
 		//String fk_teamwon_idx = session.getAttribute("fk_teamwon_idx");
 		
+		String fk_team_idx = teamInfo.get("team_idx");
+		String fk_teamwon_idx = teamInfo.get("teamwon_idx");
+		String teamwon_status = teamInfo.get("teamwon_status");
+		
 		if(votekind == null || votekind.trim().isEmpty() || votekind.equals("null")){
 			votekind = "ing";
 		}
@@ -263,6 +278,8 @@ public class VoteController {
 		map.put("colname", colname);
 		map.put("search", search);
 		map.put("votekind", votekind);
+		map.put("fk_team_idx", fk_team_idx);
+		map.put("fk_teamwon_idx", fk_teamwon_idx);
 		
 		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 		String str_sizePerPage = req.getParameter("sizePerPage");
@@ -328,6 +345,7 @@ public class VoteController {
 		pagebar += "</ul>";
 		
 		req.setAttribute("gobackURL", gobackURL);
+		req.setAttribute("teamwon_status", teamwon_status);                                                                                
 		
 		req.setAttribute("pagebar", pagebar);
 		req.setAttribute("colname", colname);
@@ -718,22 +736,26 @@ public class VoteController {
 	}
 	
 	@RequestMapping(value="/voteReadyList.mr", method={RequestMethod.GET})
-	public String voteReadyList(HttpServletRequest req){
+	public String voteReadyList(HttpServletRequest req, HttpSession session){
+		
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)session.getAttribute("teamInfo");
 		
 		List<HashMap<String, String>> voteReadyList = null;
 		List<VoteItemVO> voteItemList = null;
 		List<HashMap<String, String>> voteCommList = null;
 		
-		String gobackURL = MyUtil.getCurrentURL(req);//돌아갈 페이지를 위해서 현재 페이지의 주소를 뷰단으로 넘겨주자
-		
-		req.setAttribute("gobackURL", gobackURL);
-		
+		String gobackURL = MyUtil.getCurrentURL(req);//돌아갈 페이지를 위해서 현재 페이지의 주소를 뷰단으로 넘겨주자		
 		String colname = req.getParameter("colname");
 		String search = req.getParameter("search");
+		
+		String fk_team_idx = teamInfo.get("team_idx");
+		String teamwon_status = teamInfo.get("teamwon_status");
 		
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("colname", colname);
 		map.put("search", search);
+		map.put("fk_team_idx", fk_team_idx);
 		
 		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 		String str_sizePerPage = req.getParameter("sizePerPage");
@@ -784,7 +806,7 @@ public class VoteController {
 			totalCount = service.VoteReadyTotalCount2(map);
 		} else{
 			//검색어가 없는 경우
-			totalCount = service.VoteReadyTotalCount1();
+			totalCount = service.VoteReadyTotalCount1(map);
 		}
 		
 		
@@ -797,6 +819,7 @@ public class VoteController {
 		pagebar += "</ul>";
 		
 		req.setAttribute("gobackURL", gobackURL);
+		req.setAttribute("teamwon_status", teamwon_status);
 		
 		req.setAttribute("pagebar", pagebar);
 		req.setAttribute("colname", colname);

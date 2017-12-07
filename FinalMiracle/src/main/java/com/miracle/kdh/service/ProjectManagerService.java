@@ -20,9 +20,17 @@ public class ProjectManagerService {
 	ProjectManagerDAO dao;
 	
 	// 모든 폴더, 할일 리스트를 가져오는 메소드
-	public List<FolderVO> getAllDoList(String team_idx) {
-		List<FolderVO> doList = dao.getAllDoList(team_idx);
-		return doList;
+	public HashMap<String, Object> getAllDoList(String team_idx, String page) {
+		List<FolderVO> doList = dao.getAllDoList(team_idx); // 모든 폴더, 할일 리스트를 가져오기
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("doList", doList);
+		
+		int result = dao.updatePageDate(page); // 페이징 처리를 위해 1주간의 날짜를 동적으로 수정하기
+		if(result > 0) {
+			List<HashMap<String, String>> pageDateList = dao.getPageDate(); // 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기
+			map.put("pageDateList", pageDateList);
+		}
+		return map;
 	} // end of List<FolderVO> getAllDoList() ------------------------------------------
 	
 	// 선택한 폴더의 모든 정보를 가져오기

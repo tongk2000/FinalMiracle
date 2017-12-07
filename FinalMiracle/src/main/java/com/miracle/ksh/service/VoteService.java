@@ -71,8 +71,8 @@ public class VoteService implements InterVoteService {
 	}
 
 	@Override
-	public int VoteTotalCount1() {
-		int n = dao.VoteTotalCount1();
+	public int VoteTotalCount1(HashMap<String, String> map) {
+		int n = dao.VoteTotalCount1(map);
 		return n;
 	}
 
@@ -89,8 +89,8 @@ public class VoteService implements InterVoteService {
 	}
 
 	@Override
-	public int VoteEndTotalCount1() {
-		int n = dao.VoteEndTotalCount1();
+	public int VoteEndTotalCount1(HashMap<String, String> map) {
+		int n = dao.VoteEndTotalCount1(map);
 		return n;
 	}
 
@@ -291,8 +291,8 @@ public class VoteService implements InterVoteService {
 	}
 
 	@Override
-	public int VoteReadyTotalCount1() {
-		int n = dao.VoteReadyTotalCount1();
+	public int VoteReadyTotalCount1(HashMap<String, String> map) {
+		int n = dao.VoteReadyTotalCount1(map);
 		return n;
 	}
 
