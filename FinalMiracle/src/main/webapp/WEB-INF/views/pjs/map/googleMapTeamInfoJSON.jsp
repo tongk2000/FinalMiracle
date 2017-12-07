@@ -26,45 +26,55 @@
 				<div style="align: center;">
 					<table>
 						<c:if test="${n == 1}">
-							<thead>
-								<tr>
-									<th>유저번호</th>
-									<th>유저아이디</th>
-									<th>유저이름</th>
-									<th>역활</th>
-								</tr>
-							</thead>
-							<tbody>
-								<c:forEach var="google" items="${googleMap}">
-								<tr>
-									<td>${google.memberidx}</td>
-									<td><img src="<%=request.getContextPath() %>/resources/images/${google.img}"/> ${google.userid}</td>
-									<td>${google.membername}</td>
-									<c:if test="${google.status == 1}">
-										<td>팀원</td>
-									</c:if>
-									<c:if test="${google.status == 2}">
-										<td>팀장</td>
-									</c:if>
-								</tr>
-								</c:forEach>
-							</tbody>					
+							<c:if test="${empty googleMap}">
+								<tr><td colspan="4">데이터가 없습니다.</td></tr>						
+							</c:if>
+							<c:if test="${not empty googleMap}">
+								<thead>
+									<tr>
+										<th>유저번호</th>
+										<th>유저아이디</th>
+										<th>유저이름</th>
+										<th>역활</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:forEach var="google" items="${googleMap}">
+									<tr>
+										<td>${google.memberidx}</td>
+										<td><img src="<%=request.getContextPath() %>/resources/images/${google.img}"/> ${google.userid}</td>
+										<td>${google.membername}</td>
+										<c:if test="${google.status == 1}">
+											<td>팀원</td>
+										</c:if>
+										<c:if test="${google.status == 2}">
+											<td>팀장</td>
+										</c:if>
+									</tr>
+									</c:forEach>
+								</tbody>	
+							</c:if>				
 						</c:if>
 						<c:if test="${n == 0}">
-							<thead>
-								<tr>
-									<th>이미지</th>
-									<th>제목</th>
-									<th>내용</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td><img src="<%=request.getContextPath() %>/resources/images/${googleMap.img}"/></td>
-									<td>${googleMap.subject}</td>
-									<td>${googleMap.contents}</td>
-								</tr>
-							</tbody>					
+							<c:if test="${googleMap==null}">
+								<tr><td colspan="3">데이터가 없습니다.</td></tr>						
+							</c:if>
+							<c:if test="${googleMap!=null}">
+								<thead>
+									<tr>
+										<th>이미지</th>
+										<th>제목</th>
+										<th>내용</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><img src="<%=request.getContextPath() %>/resources/images/${googleMap.img}"/></td>
+										<td>${googleMap.subject}</td>
+										<td>${googleMap.contents}</td>
+									</tr>
+								</tbody>					
+							</c:if>
 						</c:if>
 					</table>
 				</div>

@@ -15,8 +15,11 @@
 		border: 1px solid black;
 		border-collapse:none;
 	}
-	td, th {
+	th {
 		text-align:center;
+	}
+	td {
+		padding-left:5px;
 	}
 	.img {
 		width:25px;
@@ -78,40 +81,29 @@
 					</c:if>
 					<c:if test="${not empty list}">
 						<c:forEach var="nt" items="${list}" varStatus="status">
+							<tr class="line">
+								<td>${status.count}<input type="hidden" value="${nt.n_idx}"/></td><!-- 번호 -->
+								<td >
+									<a onClick="goUserInfo('${nt.fk_userid}');"> <!-- 유저아이디 -->
+										<img class="img" src="<%= request.getContextPath()%>/resources/images/${nt.img}" class="img" /> 
+										<span class="userid">${nt.fk_userid}</span>
+									</a>
+								</td>	
 							<c:if test="${nt.depth == 0}">
-								<tr class="line">
-									<td>${status.count}<input type="hidden" value="${nt.n_idx}"/></td>									<!-- 번호 -->
-									<td >
-										<a onClick="goUserInfo('${nt.fk_userid}');">
-											<img class="img" src="<%= request.getContextPath()%>/resources/images/${nt.img}" class="img" /> 
-											<span class="userid">${nt.fk_userid}</span>
-										</a>
-									</td>														<!-- 아이디 -->
-									<td onClick="goView('${nt.n_idx}','${nt.fk_userid}', '${nt.t_idx}')"><span style="color:red;">${nt.subject}</span></td>		<!-- 제목 -->
-									<td>${nt.regday}</td>										<!-- 날짜 -->
-									<td>${nt.readcount}</td>									<!-- 조회수-->
-								</tr>
+									<td onClick="goView('${nt.n_idx}','${nt.fk_userid}', '${nt.t_idx}')"><span style="color:red;">${nt.subject}</span></td><!-- 제목 -->
 							</c:if>
 							<c:if test="${nt.depth > 0}">
-								<tr class="line">
-									<td>${status.count}</td>									<!-- 번호 -->
-									<td >
-										<a onClick="goUserInfo('${nt.fk_userid}');">
-											<img class="img" src="<%= request.getContextPath()%>/resources/images/${nt.img}" class="img"/> 
-											<span class="userid">${nt.fk_userid}</span>
-										</a>
-									</td>														<!-- 아이디 -->
-									<td onClick="goView('${nt.n_idx}','${nt.fk_userid}','${nt.t_idx}')" style="left-padding:20*">${nt.subject}</td>	<!-- 제목 -->
-									<td>${nt.regday}</td>										<!-- 날짜 -->
-									<td>${nt.readcount}</td>									<!-- 조회수-->
-								</tr>
+									<td onClick="goView('${nt.n_idx}','${nt.fk_userid}','${nt.t_idx}')" style="padding-left:${nt.depth*10}px; color:black; font-weight:bold;">└ [수정글] ${nt.subject}</td><!-- 제목 -->
 							</c:if>
+								<td>${nt.regday}</td><!-- 날짜 -->
+								<td>${nt.readcount}</td><!-- 조회수 -->
+							</tr>		
 						</c:forEach>
 					</c:if>
 				</tbody>
 			</table>
-			<br/>
 		<div style="float:right;">
+			<br/>
 			<c:if test="${team.status == 2}" >
 				<button type="button" onClick="goWrite();">글쓰기</button>
 				<button type="button" id="del" >삭제</button>
