@@ -79,4 +79,58 @@ public class TMDAO implements InterTMDAO {
 		return Addrlist;
 	}
 
+	@Override
+	public int tmWithDraw(HashMap<String, String> map) {
+		int n = sqlsession.update("kshTM.tmWithDraw", map);
+		return n;
+	}
+
+	@Override
+	public List<HashMap<String, String>> tmReqWithDrawList1(HashMap<String, String> map1) {
+		List<HashMap<String, String>> wdlist = sqlsession.selectList("kshTM.tmReqWithDrawList1", map1);
+		return wdlist;
+	}
+	
+	@Override
+	public List<HashMap<String, String>> tmReqWithDrawList2(HashMap<String, String> map1) {
+		List<HashMap<String, String>> wdlist = sqlsession.selectList("kshTM.tmReqWithDrawList2", map1);
+		return wdlist;
+	}
+	
+	@Override
+	public int TMReqWDTotalCount1(HashMap<String, String> map1) {
+		int n = sqlsession.selectOne("kshTM.TMReqWDTotalCount1", map1);
+		return n;
+	}
+	
+	@Override
+	public int TMReqWDTotalCount2(HashMap<String, String> map1) {
+		int n = sqlsession.selectOne("kshTM.TMReqWDTotalCount2", map1);
+		return n;
+	}
+
+	@Override
+	public List<TeamwonVO> tmWithDrawList1(HashMap<String, String> map2) {
+		List<TeamwonVO> wdlist = sqlsession.selectList("kshTM.tmWithDrawList1", map2);
+		return wdlist;
+	}
+
+	@Override
+	public List<TeamwonVO> tmWithDrawList2(HashMap<String, String> map2) {
+		List<TeamwonVO> wdlist = sqlsession.selectList("kshTM.tmWithDrawList2", map2);
+		return wdlist;
+	}
+
+	@Override
+	public int TMWDTotalCount1(HashMap<String, String> map2) {
+		int n = sqlsession.selectOne("kshTM.TMWDTotalCount1", map2);
+		return n;
+	}
+
+	@Override
+	public int TMWDTotalCount2(HashMap<String, String> map2) {
+		int n = sqlsession.selectOne("kshTM.TMWDTotalCount2", map2);
+		return n;
+	}
+
 }

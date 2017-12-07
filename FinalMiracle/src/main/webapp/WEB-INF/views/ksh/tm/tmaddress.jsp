@@ -59,9 +59,9 @@
 </script>
 
 
-<form id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/tmList.mr" method="get" enctype="multipart/form-data">
+<form id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/tmAddress.mr" method="get" enctype="multipart/form-data">
 <div style="padding-left: 10%; border: solid 0px red; width: 100%;">
-	<h1>팀원목록</h1>
+	<h1>주소록</h1>
 	
 	<div style="margin-top: 20px;">
 		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmList.mr'">팀원 리스트</button>&nbsp;
