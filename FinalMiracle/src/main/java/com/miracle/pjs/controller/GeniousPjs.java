@@ -29,8 +29,9 @@ public class GeniousPjs {
 		@SuppressWarnings("unchecked")
 		HashMap<String, String> teamInfo = (HashMap<String, String>)session.getAttribute("teamInfo");// 팀의 정보를 가져온다. team_idx, teamwon_idx, teamwon_status
 		HashMap<String, String> team = new HashMap<String, String>();  // 유저아이디와 팀번호가 유일한 유저를 불러온다.
-		team.put("userid", ((MemberVO) session.getAttribute("loginUser")).getUserid()); // ((MemberVO) session.getAttribute("loginUser")).getUserid()  // 유저의 아이디를 가져온다.
-		team.put("teamidx", teamInfo.get("team_idx")); // teamInfo.get("team_idx")
+		team.put("userid", "pjs"); // ((MemberVO) session.getAttribute("loginUser")).getUserid()  // 유저의 아이디를 가져온다.
+		team.put("teamidx", "2"); // teamInfo.get("team_idx")
+		teamInfo.get("");
 		//if(mvo != null) {
 			HashMap<String, String> userTeam = service.getUserTeam(team); // 유저의 팀 정보를 가져온다. teamNum, userid, name, status
 			req.setAttribute("userTeam", userTeam); // 세션에서 얻을 수 없는 유저의 팀정보를 뷰단으로 보내 여러 조건에 비교용으로 쓴다.
@@ -96,10 +97,10 @@ public class GeniousPjs {
 				map.put("teamNum", userTeam.get("teamNum"));
 			else
 				map.put("teamNum", teamNum);
-			int totalCount = service.getNoticeCount(map); // 조건에 맞는 리스트 행의 수를 구해오는 메소드
+			int totalCount = service.getNoticeCount(map); 
 			int totalPage=(int)Math.ceil((double)totalCount / sizePerPage);
 			String pagebar = MyUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentPage, searchType, searchString, null, "noticeList.mr");
-			List<HashMap<String, String>> list = service.getNoticeList(map); // 조건에 맞는 리스트의 정보를 구해오는 메소드
+			List<HashMap<String, String>> list = service.getNoticeList(map); 
 			req.setAttribute("list", list);
 			req.setAttribute("searchType", searchType);
 			req.setAttribute("searchString", searchString);
@@ -190,7 +191,7 @@ public class GeniousPjs {
 		String userid = req.getParameter("userid");  // tbl_notice의 fk_userid
 		String nidx = req.getParameter("idx");		 // tbl_notice의 idx
 		String teamidx = req.getParameter("teamidx");// 뷰단에서 받아온 team_idx
-		String sessionid = ((MemberVO)session.getAttribute("loginUser")).getUserid();
+		String sessionid = "pjs";//((MemberVO)session.getAttribute("loginUser")).getUserid();
 		System.out.println("=================nidx====================="+nidx);
 		System.out.println("=================sessionid====================="+sessionid);
 		System.out.println("=================세션값=========================="+(String)session.getAttribute("readCount"));
@@ -202,7 +203,7 @@ public class GeniousPjs {
 				System.out.println("=======================n========================= "+n+" 디비 실패!");
 			else {
 				session.removeAttribute("readCount");
-				System.out.println("=======================n========================= "+n+" 디비 실패!");
+				System.out.println("=======================n========================= "+n+" 디비 성공!");
 			}
 		}
 		HashMap<String, String> view = new HashMap<String, String>();

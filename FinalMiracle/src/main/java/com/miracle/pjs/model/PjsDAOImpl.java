@@ -74,6 +74,7 @@ public class PjsDAOImpl implements PjsinterDAO {
 	@Override
 	public int updateReadCount(String nidx) {
 		// 공지사항 글의 조회수를 늘리는 메소드
+		System.out.println("================여기오니?=================="+nidx);
 		int n = sqlsession.update("pjsfinal.updateReadCount", nidx);
 		System.out.println("==============조회수 늘어났나오?=============="+n);
 		return n;

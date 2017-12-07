@@ -93,7 +93,7 @@
 								</tr>
 							</c:if>
 							<c:if test="${nt.depth > 0}">
-								<tr class="line">
+								<tr class="line" style="padding-left: ${nt.depth*20}px;">
 									<td>${status.count}</td>									<!-- 번호 -->
 									<td >
 										<a onClick="goUserInfo('${nt.fk_userid}');">
