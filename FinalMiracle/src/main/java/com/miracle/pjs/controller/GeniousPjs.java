@@ -2,18 +2,14 @@ package com.miracle.pjs.controller;
 
 import java.util.HashMap;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import com.miracle.pjs.model.MapVO;
 import com.miracle.pjs.model.ReplyVO;
-import com.miracle.pjs.model.TeamInfoVO;
 import com.miracle.pjs.service.PjsinterService;
 import com.miracle.pjs.util.MyUtil;
 import com.miracle.psw.model.MemberVO;
@@ -30,11 +26,11 @@ public class GeniousPjs {
 	// ==== *** 공지사항 게시판 *** ==== //
 	@RequestMapping(value="noticeList.mr", method={RequestMethod.GET}) // 공지사항 게시판 리스트
 	public String notice(HttpServletRequest req, HttpSession session) {	
-		MemberVO mvo = (MemberVO) session.getAttribute("loginUser"); // 유저의 정보를 가져온다.
-		TeamInfoVO tvo = (TeamInfoVO)session.getAttribute("teamInfo"); // 팀의 정보를 가져온다.
-		HashMap<String, String> team = new HashMap<String, String>();
-		team.put("userid", mvo.getUserid());
-		team.put("teamidx", String.valueOf(tvo.getFk_team_idx()));
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)session.getAttribute("teamInfo");// 팀의 정보를 가져온다. team_idx, teamwon_idx, teamwon_status
+		HashMap<String, String> team = new HashMap<String, String>();  // 유저아이디와 팀번호가 유일한 유저를 불러온다.
+		team.put("userid", ((MemberVO) session.getAttribute("loginUser")).getUserid()); // ((MemberVO) session.getAttribute("loginUser")).getUserid()  // 유저의 아이디를 가져온다.
+		team.put("teamidx", teamInfo.get("team_idx")); // teamInfo.get("team_idx")
 		//if(mvo != null) {
 			HashMap<String, String> userTeam = service.getUserTeam(team); // 유저의 팀 정보를 가져온다. teamNum, userid, name, status
 			req.setAttribute("userTeam", userTeam); // 세션에서 얻을 수 없는 유저의 팀정보를 뷰단으로 보내 여러 조건에 비교용으로 쓴다.
@@ -190,19 +186,30 @@ public class GeniousPjs {
 	}/* ================================================================================================================================================== */
 	@RequestMapping(value="noticeView.mr", method={RequestMethod.GET})	// 공지사항 게시판글 보기 
 	public String noticeView(HttpServletRequest req, HttpSession session) {
+		System.out.println("여기 온다.");
 		String userid = req.getParameter("userid");  // tbl_notice의 fk_userid
-		String idx = req.getParameter("idx");		 // tbl_notice의 idx
+		String nidx = req.getParameter("idx");		 // tbl_notice의 idx
+		String teamidx = req.getParameter("teamidx");// 뷰단에서 받아온 team_idx
 		String sessionid = ((MemberVO)session.getAttribute("loginUser")).getUserid();
-		if("1".equals((String)session.getAttribute("readCount"))&&userid.equals(sessionid)) {
+		System.out.println("=================nidx====================="+nidx);
+		System.out.println("=================sessionid====================="+sessionid);
+		System.out.println("=================세션값=========================="+(String)session.getAttribute("readCount"));
+		if("1".equals((String)session.getAttribute("readCount"))&&!userid.equals(sessionid)) {
 			// 조회수를 올린다.!!!!!!!!!!!!!!!!!!!!!!!!!
-			int n = service.updateReadCount(idx);
+			System.out.println("============조회수 올리기 실행되니??=====================");
+			int n = service.updateReadCount(nidx);
 			if(n == 0)
 				System.out.println("=======================n========================= "+n+" 디비 실패!");
-			else
+			else {
 				session.removeAttribute("readCount");
+				System.out.println("=======================n========================= "+n+" 디비 실패!");
+			}
 		}
-		HashMap<String, String> map =  service.getIdxTeam(idx); // team_idx , userid 받는다.
-		List<ReplyVO> comment = service.getComment(idx);
+		HashMap<String, String> view = new HashMap<String, String>();
+		view.put("nidx", nidx);
+		view.put("teamidx", teamidx);
+		HashMap<String, String> map =  service.getIdxTeam(view); // team_idx , userid 받는다.
+		List<ReplyVO> comment = service.getComment(nidx);
 		req.setAttribute("comment", comment);
 		req.setAttribute("map", map);
 		return "pjs/notice/noticeView.all";
@@ -216,10 +223,11 @@ public class GeniousPjs {
 	@RequestMapping(value="mindList.mr", method={RequestMethod.GET})
 	public String mindList(HttpServletRequest req, HttpSession session) {
 		MemberVO mvo = (MemberVO) session.getAttribute("loginUser"); // 유저의 정보를 가져온다.
-		TeamInfoVO tvo = (TeamInfoVO)session.getAttribute("teamInfo"); // 팀의 정보를 가져온다.
-		HashMap<String, String> team = new HashMap<String, String>();
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)session.getAttribute("teamInfo"); // 팀의 정보를 가져온다.
+		HashMap<String, String> team = new HashMap<String, String>(); // 유저아이디와 팀번호가 유일한 유저를 불러온다.
 		team.put("userid", mvo.getUserid());
-		team.put("teamidx", String.valueOf(tvo.getFk_team_idx()));
+		team.put("teamidx", teamInfo.get("team_idx"));
 		//if(mvo != null) {
 			HashMap<String, String> userTeam = service.getUserTeam(team); // 유저의 팀 정보를 가져온다. ******************************
 			req.setAttribute("userTeam", userTeam); // 세션에서 얻을 수 없는 유저의 팀정보를 뷰단으로 보내 여러 조건에 비교용으로 쓴다.
@@ -306,7 +314,7 @@ public class GeniousPjs {
 	public String googleMap(HttpServletRequest req) {
 		String choice = req.getParameter("choice");
 		String searchString = req.getParameter("searchString");
-		if(!(choice==null||searchString==null)) {
+		if(!(choice==null||searchString==null||"0".equals(choice))) {
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("choice", choice);
 			map.put("searchString", searchString);
@@ -318,6 +326,8 @@ public class GeniousPjs {
 		else {
 			List<MapVO> list = service.getMap(); // 전체 리스트를 반환한다.
 			req.setAttribute("list", list);
+			req.setAttribute("choice", choice);
+			req.setAttribute("searchString", searchString);
 		}
 		return "pjs/map/googleMap.all";
 	}/* =======================================================================================================1=========================================== */
@@ -326,21 +336,32 @@ public class GeniousPjs {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("searchString", req.getParameter("searchString") );
 		map.put("choice", req.getParameter("choice") );
+		// System.out.println("================처음에 초이스값은?======================="+req.getParameter("choice")); 0 이다.
 		String googleMap = service.getSearchJSON(map);
 		req.setAttribute("googleMap", googleMap);
 		return "pjs/map/googleMapJSON.not";
-	}
+	}/* =======================================================================================================1=========================================== */
 	@RequestMapping(value="googleMapTeamInfoJSON.mr", method={RequestMethod.GET})
 	public String googleMapTeamInfoJSON(HttpServletRequest req) {
+		String map_team_idx = req.getParameter("map_team_idx");
+		String map_idx = req.getParameter("map_idx");
 		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("searchString", req.getParameter("searchString") );
-		map.put("choice", req.getParameter("choice") );
-		String googleMap = service.getSearchJSON(map);
-		req.setAttribute("googleMap", googleMap);
-		return "pjs/map/googleMapJSON.not";
+		map.put("map_idx", map_idx);
+		if(map_team_idx==null||"0".equals(map_team_idx)){ // null이거나 0일 때 음식점 정보를 가져온다.
+			HashMap<String, String> googleMapFood = service.getMapFood(map_idx);
+			req.setAttribute("googleMap", googleMapFood);
+			req.setAttribute("n", "0");
+		}
+		else { // null이 아니면 팀 정보를 가져온다.
+			List<HashMap<String, String>> googleMapTeam = service.getMapTeam(map_idx);
+			req.setAttribute("googleMap", googleMapTeam);
+			req.setAttribute("n", "1");
+		}
+		return "pjs/map/googleMapTeamInfoJSON.not";
 	}
 	
 /*=======================================================================================================================================================*/	
+	
 	
 	// ==== *** 쪽지 *** ==== //
 	@RequestMapping(value="memo.mr", method={RequestMethod.GET})
@@ -348,6 +369,8 @@ public class GeniousPjs {
 		return "pjs/memo/?.all";
 	}
 	
+	
 /*=======================================================================================================================================================*/	
 
+	
 }		

@@ -58,7 +58,7 @@
 		from tbl_notice n join tbl_member m        on n.fk_userid = m.userid
 		                  join tbl_teamwon w       on m.idx = w.fk_member_idx
 		                  join tbl_team t          on w.fk_team_idx = t.idx
-		where w.fk_team_idx = #{teamNum}
+		where w.fk_team_idx = #{teamNum} and n.status = 1
 		<if test='searchType!=null and searchString!=null and !"".equals(searchType) and !"".equals(searchString)'>
 			and ${searchType} like '%'||#{searchString}||'%'
 		</if>
@@ -107,11 +107,11 @@
  	</resultMap>
  <!-- ============================================================================================================================================================= -->	
  	<!-- === *** 게시판의 idx로 해당 글의 정보를 보여주는 뷰단으로 정보전달하기 *** === -->
-	<select id="getIdxTeam" parameterType="String" resultMap="idxTeam">
+	<select id="getIdxTeam" parameterType="HashMap" resultMap="idxTeam">
 		select W.Fk_Team_Idx as team_idx, m.userid as userid, m.img, n.subject, n.content
 		from tbl_notice n join tbl_member m on n.fk_userid = M.Userid 
 						left join tbl_teamwon w on w.fk_member_idx = M.Idx
-		where n.idx = #{idx}
+		where n.idx = #{nidx} and w.fk_team_idx = #{teamidx}
 	</select>
 	<resultMap id="idxTeam" type="HashMap">
  		<result property="team_idx" 			column="team_idx"		javaType="String"></result>
@@ -139,10 +139,10 @@
 		values(seq_noticereply.nextval,#{idx}, #{comment}, default, default, seq_noticereply.nextval, default)
 	</insert>
 <!-- ============================================================================================================================================================= -->	
-	<!-- === *** 리플글 입력하기 *** === -->
+	<!-- === *** 조회수 늘리기 *** === -->
 	<update id="updateReadCount" parameterType="String">
 		update tbl_notice set readCount = readCount + 1
-		where idx = #{idx}
+		where idx = #{nidx}
 	</update>
 <!-- ============================================================================================================================================================= -->	
 	
@@ -217,7 +217,7 @@
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 구글맵 전체 정보를 가져온다. *** === -->
 	<select id="getMap" resultType="com.miracle.pjs.model.MapVO">
-		select * from tbl_map m join tbl_team t on t.idx = m.team_idx
+		select * from tbl_map 
 	</select>
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 구글맵에서 검색한 정보를 가져온다. *** === -->
@@ -243,11 +243,42 @@
 			<when test='"1".equals(choice)'>
 				where team_idx is not null and name like '%'||#{searchString}||'%'
 			</when>
+			<when test='"0".equals(choice) or "".equals(choice)'>
+				where name like '%'||#{searchString}||'%'
+			</when>
 			<when test='"".equals(searchString)'>
 				where 1=2
 			</when>
 		</choose>
 	</select>
+<!-- ============================================================================================================================================================= -->	
+	<!-- === *** 구글맵 전체 정보를 가져온다. *** === -->
+	<select id="getMapFood" parameterType="String" resultMap="googlemapfood">
+		select f.subject, f.contents, f.img
+		from tbl_map m join tbl_map_food f on m.idx = f.fk_idx
+		where m.idx = #{map_idx}
+	</select>
+	<resultMap id="googlemapfood" type="HashMap">
+ 		<result property="subject" 		column="subject" 		javaType="String"></result>
+ 		<result property="contents" 	column="contents" 		javaType="String"></result>
+ 		<result property="img" 			column="img" 			javaType="String"></result>
+ 	</resultMap>
+<!-- ============================================================================================================================================================= -->	
+	<!-- === *** 구글맵 전체 정보를 가져온다. *** === -->
+	<select id="getMapTeam" parameterType="String" resultMap="googlemapteam">
+		select   m.idx as memberidx, m.userid,  m.name as memberName, m.img , w.status
+		from tbl_map p  join tbl_team t on p.team_idx = t.idx
+                        join tbl_teamwon w on w.fk_team_idx = T.Idx
+                        join tbl_member m on W.Fk_Member_Idx = m.idx
+		where p.idx =#{map_idx}
+	</select>
+	<resultMap id="googlemapteam" type="HashMap">
+ 		<result property="memberidx" 		column="memberidx" 		javaType="String"></result>
+ 		<result property="userid" 			column="userid" 		javaType="String"></result>
+ 		<result property="memberName" 		column="memberName" 	javaType="String"></result>
+ 		<result property="img" 				column="img" 			javaType="String"></result>
+ 		<result property="status" 			column="status" 		javaType="String"></result>
+ 	</resultMap>
 <!-- ============================================================================================================================================================= -->	
 	
 
