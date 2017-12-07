@@ -91,6 +91,13 @@ public class BoardController {
 		return "psw/board/faqList.all";
 	}  // end of public String faqList(HttpServletRequest req, HttpSession session) --------------------------------
 	
+	// =================================================== *** FAQ 게시판 글쓰기 *** =========================================
+	@RequestMapping(value="/faqAdd.mr")
+	public String faqAdd() {
+		
+		return "psw/board/faqAdd.all";
+	}
+	
 	
 	// ==================================================== *** 자유게시판 목록 *** ========================================
 	@RequestMapping(value="/FreeList.mr", method={RequestMethod.GET})

@@ -4,11 +4,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>자유게시판</title>
+<title>FAQ 게시판 글쓰기</title>
 </head>
 <body>
 
-	FreeBoard
+	FAQ 게시판 글쓰기
 
 </body>
 </html>
