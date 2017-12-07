@@ -43,6 +43,13 @@ public class BoardDAO implements InterBoardDAO {
 		return cnt;
 	}
 
+	@Override
+	public int add(FaqBoardVO faqvo) {  // FAQ 게시판 글쓰기
+		int n = sqlsession.insert("board_psw.add", faqvo);
+		
+		return n;
+	}
+
 	
 	
 	

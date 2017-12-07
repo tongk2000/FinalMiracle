@@ -8,14 +8,18 @@
 	#table {border-collapse: collapse; width: 750px;}
 	
 	.subjectstyle {font-weight: bold;
-    	           color: lightgray;
+    	           color: darkgray;
     	           cursor: pointer; }
     	           
 	.faqContent {background-color: lightgray;
-				 height: 40px;
+				 
 				 font-weight: bold;} 
 				  
 	.category {display: inline;}
+	
+	.answer {margin-left: 10px;
+	min-height: null;
+	max-height: null;}
 	
 	<%-- accordion css --%>
 	* {
@@ -23,7 +27,9 @@
 	  padding: 0;
 	}
 	
-	dt, dd {padding: 10px;}
+	dt, dd {
+	  padding: 10px;
+	}
 	
 	dt {
 	  background-color: #cfc;
@@ -39,7 +45,9 @@
 	  margin-right: 10px;
 	}
 	
-	dt.on span {background-color: red;}
+	dt.on span {
+	  background-color: red;
+	}
 	
 	dd {
 	  background-color: tan;
@@ -51,19 +59,19 @@
  
 <script type="text/javascript">
 	$(document).ready(function(){
+		// ================================= *** FAQ게시판 제목에 마우스 가져갈 경우 / 다른곳으로 이동한 경우 *** =========
 		$(".subject").bind("mouseover", function(event){
 			 var $target = $(event.target);
 			 $target.addClass("subjectstyle");
-		});
-		  
+		}); 
 		$(".subject").bind("mouseout", function(event){
 			 var $target = $(event.target);
 			 $target.removeClass("subjectstyle");
 		});
-		
+		// ============= *** 검색조건 유지 시키기 *** ===========================
 		searchKeep();
 		
-		// =================== *** accordion으로 FAQ 내용물 보여주기  *** ====================	
+		// =================== *** accordion으로 FAQ 내용물 보여주기  *** =====================================	
 		var acodian = {
 				  click: function(target) {
 				    var _self = this, $target = $(target);
@@ -86,16 +94,21 @@
 				  }
 				};
 				acodian.click('dt');
-
+		// ========================== accordion으로 FAQ 내용물 보여주기  끝 ===========================================
+		
+		
+		
+		
 	});  // end of $(document).ready() ----------------------------------
 	
+	// ===================================================== *** 검색폼에 입력한 검색값 유지 하는 함수 *** ================
 	function searchKeep() {
 		<c:if test="${(colname != 'null' && not empty colname) && (search != 'null' && not empty search) }">
 			$("#colname").val("${colname}");
 			$("#search").val("${search}");
 		</c:if>
 	}
-	
+	// ====================================================== *** 검색어 입력시 Frm값 전송 해주는 함수 *** ================
 	function goSearch() {
 		var frm = document.searchFrm;
 		var search = $("#search").val();
@@ -107,6 +120,11 @@
 			frm.submit();
 		}
 	}
+	
+	// ====================================================== *** 카테고리 분류 메뉴 클릭시 *** =========================
+	function goCategory() {
+		
+	}
 
 </script>
 
@@ -114,26 +132,33 @@
 <h1 style="margin-left: 20%;">자주 묻는 질문</h1>
 <div style="padding-left: 10%; border: 1px solid red;">
 	<!-- ========================================= *** Category 분류 항목 *** ================================= -->
-	<div>
-		<div class="category">
-			<a onClick="">[전체]</a>
+	<div style="width: 90%; border: 1px solid maroon;"> 
+		<div class="category" style="margin-left:10%; border: 1px solid orange;">
+			<a onClick="">[분류없음]</a>
 		</div>
-		<div class="category">
-			<a onClick="">[회원가입]</a>
+		
+		<div class="category" style="margin-left:10%;">
+			<a onClick="">[회원관련]</a>
 		</div>
-		<div class="category">
+		
+		<div class="category" style="margin-left:10%;">
 			<a onClick="">[상담관련]</a>
 		</div>
-		<div class="category">
-			<a onClick="">[로그인문제]</a>
-		</div>
+		
+		<div class="category" style="margin-left:10%;">
+			<a onClick="">[로그인관련]</a>
+		</div>	
 	</div>
-	<!-- ========================================== *** 아코디언 FAQ 게시판 목록 *** ===================== -->
-	<div style="border: 1px solid pink; width: 80%;">
+	<!-- ========================================== *** accordion FAQ 게시판 목록 *** ============================== -->
+	<div style="border: 1px solid pink; width: 90%;">
 		<dl>
 			<c:forEach var="faq" items="${faqList}" varStatus="status">
-			  <dt class="subject">Q.${faq.subject}</dt>
-			  <dd>A.${faq.content}</dd>
+			  <dt class="subject">
+			  	<span style="color: red;">Q.</span> ${faq.subject}
+			  </dt>
+			  <dd class="answer">
+			  	<span style="color: blue; font-weight: bold;">[ A ]</span><br/>${faq.content}<br/>
+			  </dd>
 			</c:forEach>
 		</dl>
 	</div>
