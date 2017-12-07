@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.miracle.kdh.model.FolderVO;
 import com.miracle.kdh.service.ProjectManagerService;
 import com.miracle.ksh.model.TeamVO;
 import com.miracle.ksh.model.TeamwonVO;
@@ -295,17 +294,10 @@ public class TMController {
 		
 		session.setAttribute("teamInfo", sessionMap);
 		
-		List<FolderVO> doList = null;
-		
-	/*	if(fk_team_idx1 == null || fk_team_idx1.trim().isEmpty()){
-			doList = svc.getAllDoList(fk_team_idx2);
-		} else if(fk_team_idx2 == null || fk_team_idx2.trim().isEmpty()){
-			doList = svc.getAllDoList(fk_team_idx1);
-		}*/
-		
-		req.setAttribute("doList", doList);
-		
-		return "kdh/doList.all";
+		String loc = "doList.mr";
+		req.setAttribute("loc", loc);
+
+		return "ksh/msg.not";
 	}
 	
 	
