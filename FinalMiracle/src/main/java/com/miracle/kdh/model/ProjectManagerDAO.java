@@ -12,7 +12,7 @@ public class ProjectManagerDAO {
 	@Autowired
 	SqlSessionTemplate sql;  
 	
-	// 모든 폴더, 할일 리스트를 가져오는 메소드
+	// 모든 폴더, 할일 리스트를 가져오기
 	public List<FolderVO> getAllDoList(String team_idx) {
 		List<FolderVO> doList = sql.selectList("do.getAllDoList", team_idx);
 		return doList;
@@ -83,6 +83,19 @@ public class ProjectManagerDAO {
 		return result;
 	} // end of int delElement(String idx) ------------------------------------------------------------------------------------------
 	
+	// 페이징 처리를 위해 1주간의 날짜를 동적으로 수정하기
+	public int updatePageDate(String page) {
+		System.out.println("page:"+page);
+		int result = sql.update("do.updatePageDate",page);
+		System.out.println("result:"+result);
+		return result;
+	} // end of public int updatePageDate(String page) ------------------------------------------------------------------------------------
+	
+	// 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기
+	public List<HashMap<String, String>> getPageDate() {
+		List<HashMap<String, String>> pageDateList = sql.selectList("do.getPageDate");
+		return pageDateList;
+	} // end of HashMap<String, String> getPageDate(String page) --------------------------------------------------------------------
 }
 
 
