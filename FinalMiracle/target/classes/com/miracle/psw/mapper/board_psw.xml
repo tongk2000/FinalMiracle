@@ -24,12 +24,15 @@
 		    from tbl_faq
 		    where status = 1
 		 	and subject like '%'|| #{search} || '%'
+		 	<if test="category != null">
+		 	and category = #{category}
+		 	</if>
 		    order by idx desc 
 		  )V
 		)T
 		where T.rno >= #{startRno} and T.rno <![CDATA[<=]]> #{endRno}
 	</select>
-	<select id="faqListWithNoSearch" resultType="com.miracle.psw.model.FaqBoardVO">
+	<select id="faqListWithNoSearch" parameterType="HashMap" resultType="com.miracle.psw.model.FaqBoardVO">
 		select idx, category, subject, content, regDate
 		from
 		( select rownum as rno, v.idx, v.category, v.subject, v.content, v.regDate
@@ -37,6 +40,9 @@
 		  ( select idx, category, subject, content, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
 		    from tbl_faq
 		    where status = 1
+		    <if test="category != null">
+		    and category = #{category}
+		    </if>
 		    order by idx desc 
 		  )V
 		)T
@@ -49,11 +55,17 @@
 		from tbl_faq
 		where status = 1
 		and subject like '%'|| #{search} ||'%'
+		<if test="category != null">
+		and category = #{category}
+		</if>
 	</select>
-	<select id="getTotalCountWithNoSearch" resultType="int">
+	<select id="getTotalCountWithNoSearch" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_faq
 		where status = 1
+		<if test="category != null">
+		and category = #{category}
+		</if>
 	</select>
 	
 	<!-- FAQ 게시판 글쓰기 -->
@@ -62,8 +74,38 @@
 		values(seq_faq.nextval, #{category}, #{subject}, #{content}, default, default, default)
 	</insert>
 	
-	<!-- FreeList 보여주기 -->
+	<!-- ============================================================= *** 자유게시판 *** ========================================================== -->	
 	
+	<!-- FreeList 보여주기 -->
+	<select id="freeList" resultType="com.miracle.psw.model.FreeBoardVO">
+		select idx, userid, name, subject, content, readCnt, commentCnt
+		 	 , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+		 	 , status, infoStatus
+		from tbl_free
+		where status = 1
+		order by idx desc
+	</select>
+	
+	<!-- 자유게시판 글쓰기 -->
+	<insert id="freeAdd" parameterType="com.miracle.psw.model.FreeBoardVO">
+		insert into tbl_free(idx, userid, name, subject, content, readCnt, commentCnt, groupno, fk_idx, depthno, regDate, status, infoStatus)
+		values(seq_free.nextval, #{userid}, #{name}, #{subject}, #{content}, default, default, (select max(groupno)+1 from tbl_free), default, default, default, default, default)  
+	</insert>
+	
+	<!-- 자유게시판 글 1개 보여주기 (조건에 따른 글 조회수 1 증가 후) -->
+	<select id="getView" parameterType="String" resultType="com.miracle.psw.model.FreeBoardVO">
+		select idx, userid, name, subject, content, readCnt, commentCnt
+		 	 , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+		 	 , status, infoStatus
+		from tbl_free
+		where status = 1
+		and idx = #{idx}
+	</select>
+	<update id="setAddReadCnt" parameterType="String">
+		update tbl_free set readCnt = readCnt + 1
+		where status = 1
+		and idx = #{idx}
+	</update>
 	
 </mapper>
 

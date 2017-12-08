@@ -29,7 +29,7 @@
 		var html = "";
 		html += '<tr id="${returnMap.fvo.idx}" class="folder ${returnMap.fvo.groupNo} ${returnMap.fvo.depth}">'
 		html += '	<td>'
-		html += '		<span id="span${returnMap.fvo.idx}" style="margin-left:${returnMap.fvo.depth*15}px; cursor:pointer;">'
+		html += '		<span id="span${returnMap.fvo.idx}" style="margin-left:${returnMap.fvo.depth*20}px; cursor:pointer;">'
 							<c:if test="${returnMap.fvo.category == 1}"> <!-- 폴더라면 -->
 		html += '				<span class="modalFolder" id="modalIdx${returnMap.fvo.idx}">'
 									<c:if test="${returnMap.fvo.fk_folder_idx != 0}"> <!-- 최상위 폴더가 아니라면 -->

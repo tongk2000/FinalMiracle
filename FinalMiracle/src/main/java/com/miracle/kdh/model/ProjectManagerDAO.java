@@ -84,16 +84,30 @@ public class ProjectManagerDAO {
 	} // end of int delElement(String idx) ------------------------------------------------------------------------------------------
 	
 	// 페이징 처리를 위해 1주간의 날짜를 동적으로 수정하기
-	public int updatePageDate(String page) {
+	public int updatePageDateWeek(String page) {
 		System.out.println("page:"+page);
-		int result = sql.update("do.updatePageDate",page);
+		int result = sql.update("do.updatePageDateWeek",page);
 		System.out.println("result:"+result);
 		return result;
 	} // end of public int updatePageDate(String page) ------------------------------------------------------------------------------------
 	
 	// 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기
-	public List<HashMap<String, String>> getPageDate() {
-		List<HashMap<String, String>> pageDateList = sql.selectList("do.getPageDate");
+	public List<HashMap<String, String>> getPageDateWeek() {
+		List<HashMap<String, String>> pageDateList = sql.selectList("do.getPageDateWeek");
+		return pageDateList;
+	} // end of HashMap<String, String> getPageDate(String page) --------------------------------------------------------------------
+	
+	// 페이징 처리를 위해 한달간의 날짜를 동적으로 수정하기
+	public int updatePageDateMonth(String page) {
+		System.out.println("page:"+page);
+		int result = sql.update("do.updatePageDateMonth",page);
+		System.out.println("result:"+result);
+		return result;
+	} // end of public int updatePageDate(String page) ------------------------------------------------------------------------------------
+	
+	// 페이징 처리를 위해 수정된 한달간의 날짜를 받아오기
+	public List<HashMap<String, String>> getPageDateMonth() {
+		List<HashMap<String, String>> pageDateList = sql.selectList("do.getPageDateMonth");
 		return pageDateList;
 	} // end of HashMap<String, String> getPageDate(String page) --------------------------------------------------------------------
 }

@@ -48,11 +48,13 @@
 	<h1>FAQ 게시판 글쓰기</h1>
 	
 	<div style="border: 1px solid blue; width: 90%;" >
-		<form name="writeFrm"">
+		<form name="writeFrm">
 			<table id="table">
 				<tr>
-					<th>Question</th>
-					<td><input type="text" name="subject" class="long" /></td>
+					<th>[Q]질문</th>
+					<td>
+						<input type="text" name="subject" class="long" />
+					</td>
 				</tr>
 				<tr>
 					<th>분류</th>
@@ -66,7 +68,7 @@
 					</td>
 				</tr>
 				<tr>
-	            	<th>Answer</th>
+	            	<th>[A]답변</th>
 	            	<td>
 	            		<textarea name="content" id="content" class="summernote"></textarea>
 	            	</td>

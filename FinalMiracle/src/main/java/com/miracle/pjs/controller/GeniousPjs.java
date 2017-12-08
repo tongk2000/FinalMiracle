@@ -118,9 +118,11 @@ public class GeniousPjs {
 	public String noticeJSON(HttpServletRequest req) {	
 		String searchString = req.getParameter("searchString");
 		String searchType = req.getParameter("searchType");
+		String t_idx = req.getParameter("t_idx");
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("searchString", searchString);
 		map.put("searchType", searchType);
+		map.put("t_idx", t_idx);
 		String list = service.getNoticeJSONList(map);
 		req.setAttribute("list", list);
 		return "pjs/notice/noticeListJSON.not";
@@ -136,14 +138,28 @@ public class GeniousPjs {
 	@RequestMapping(value="noticeWrite.mr", method={RequestMethod.POST})	// 공지사항 게시판글 쓰기 
 	public String noticeWrite(HttpServletRequest req) {
 		// 게시판을 클릭해서 글을 쓸 경우
-		String userid = req.getParameter("userid"); // teamNum
+		String userid = req.getParameter("userid");
 		String teamNum = req.getParameter("teamNum");
 		HashMap<String, String> team = new HashMap<String, String>();
 		team.put("userid", userid);
 		team.put("teamidx", teamNum);
 		HashMap<String, String> map = service.getUserTeam(team); // teamNum , userid , teamNum , status 받는다.  ******************************
 		req.setAttribute("map", map);
+		System.out.println("========================글쓰기 여기오니?=====================");
 		return "pjs/notice/noticeWrite.all";
+	}/* ================================================================================================================================================== */
+	@RequestMapping(value="noticeWriteEnd.mr", method={RequestMethod.POST})	// 공지사항 게시판글 쓰기 
+	public String noticeWriteEnd(HttpServletRequest req) {
+		// 게시판을 클릭해서 글을 쓸 경우
+		String userid = req.getParameter("userid");
+		String teamNum = req.getParameter("teamNum");
+		HashMap<String, String> team = new HashMap<String, String>();
+		team.put("userid", userid);
+		team.put("teamidx", teamNum);
+		HashMap<String, String> map = service.getUserTeam(team); // teamNum , userid , teamNum , status 받는다.  ******************************
+		req.setAttribute("map", map);
+		System.out.println("========================글쓰기 여기오니?=====================");
+		return "pjs/notice/error.not";
 	}/* ================================================================================================================================================== */
 	@RequestMapping(value="noticeDel.mr", method={RequestMethod.GET})	// 공지사항 게시판글 삭제
 	public String noticeDel(HttpServletRequest req) {
@@ -311,32 +327,37 @@ public class GeniousPjs {
 
 	// ==== *** 구글맵 *** ==== //
 	@RequestMapping(value="googleMap.mr", method={RequestMethod.GET})
-	public String googleMap(HttpServletRequest req) {
+	public String googleMap(HttpServletRequest req, HttpSession session) {
 		String choice = req.getParameter("choice");
 		String searchString = req.getParameter("searchString");
-		if(!(choice==null||searchString==null||"0".equals(choice))) {
+		if(!(choice==null||searchString==null||!"0".equals(choice))) {
+			System.out.println("=================구글맵 리스트 여기오니?=================");
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("choice", choice);
 			map.put("searchString", searchString);
 			List<MapVO> list = service.getMapWithSearch(map); // 전체 리스트를 반환한다.
+			for(MapVO vo : list) {
+				System.out.println("=============구글맵 리스트============="+vo.getIdx());
+			}
 			req.setAttribute("list", list);
 			req.setAttribute("choice", choice);
 			req.setAttribute("searchString", searchString);
 		}
 		else {
+			System.out.println("=================구글맵 리스트 여기오면 안되=================");
 			List<MapVO> list = service.getMap(); // 전체 리스트를 반환한다.
 			req.setAttribute("list", list);
 			req.setAttribute("choice", choice);
 			req.setAttribute("searchString", searchString);
 		}
-		return "pjs/map/googleMap.all";
+		return "pjs/map/googleMap.not";
 	}/* =======================================================================================================1=========================================== */
 	@RequestMapping(value="googleMapJSON.mr", method={RequestMethod.GET})
 	public String googleMapJSON(HttpServletRequest req) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("searchString", req.getParameter("searchString") );
 		map.put("choice", req.getParameter("choice") );
-		// System.out.println("================처음에 초이스값은?======================="+req.getParameter("choice")); 0 이다.
+		//System.out.println("================처음에 초이스값은?======================="+req.getParameter("choice"));
 		String googleMap = service.getSearchJSON(map);
 		req.setAttribute("googleMap", googleMap);
 		return "pjs/map/googleMapJSON.not";
@@ -350,6 +371,7 @@ public class GeniousPjs {
 		if(map_team_idx==null||"0".equals(map_team_idx)){ // null이거나 0일 때 음식점 정보를 가져온다.
 			HashMap<String, String> googleMapFood = service.getMapFood(map_idx);
 			req.setAttribute("googleMap", googleMapFood);
+			System.out.println("=============정보온다.================");
 			req.setAttribute("n", "0");
 		}
 		else { // null이 아니면 팀 정보를 가져온다.

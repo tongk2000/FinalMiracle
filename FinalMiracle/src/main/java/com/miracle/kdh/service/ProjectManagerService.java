@@ -19,16 +19,25 @@ public class ProjectManagerService {
 	@Autowired
 	ProjectManagerDAO dao;
 	
-	// 모든 폴더, 할일 리스트를 가져오는 메소드
-	public HashMap<String, Object> getAllDoList(String team_idx, String page) {
+	// 페이징처리된 모든 폴더, 할일 리스트를 가져오는 메소드
+	public HashMap<String, Object> getAllDoList(String team_idx, String page, String term) {
 		List<FolderVO> doList = dao.getAllDoList(team_idx); // 모든 폴더, 할일 리스트를 가져오기
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("doList", doList);
 		
-		int result = dao.updatePageDate(page); // 페이징 처리를 위해 1주간의 날짜를 동적으로 수정하기
-		if(result > 0) {
-			List<HashMap<String, String>> pageDateList = dao.getPageDate(); // 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기
-			map.put("pageDateList", pageDateList);
+		if(term.equals("7")) {
+			int result = dao.updatePageDateWeek(page); // 페이징 처리를 위해 1주간의 날짜를 동적으로 수정하기
+			if(result > 0) {
+				List<HashMap<String, String>> pageDateList = dao.getPageDateWeek(); // 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기
+				map.put("pageDateList", pageDateList);
+			}
+		} else if(term.equals("30")) {
+			int result = dao.updatePageDateMonth(page); // 페이징 처리를 위해 1주간의 날짜를 동적으로 수정하기
+			if(result > 0) {
+				List<HashMap<String, String>> pageDateList = dao.getPageDateMonth(); // 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기
+				System.out.println(pageDateList.size());
+				map.put("pageDateList", pageDateList);
+			}
 		}
 		return map;
 	} // end of List<FolderVO> getAllDoList() ------------------------------------------
@@ -81,7 +90,7 @@ public class ProjectManagerService {
 		int result1 = dao.addDownElement(fvo); // 하위 폴더 추가하기
 		int result2 = dao.addDoTeamwon(map); // 폴더나 할일 추가할때 담당 팀원 추가하기(가장 최근에 올라온 folderIdx를 구해서 입력주는 방식임)
 		fvo = dao.getAddedElement(); // 방금 추가한 요소를 가져오기
-		List<HashMap<String, String>> pageDateList = dao.getPageDate(); // 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기
+		List<HashMap<String, String>> pageDateList = dao.getPageDateWeek(); // 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기 TODO 한달방식 추가해줘야함
 		
 		HashMap<String, Object> returnMap = new HashMap<String, Object>();
 		returnMap.put("result", result1*result2);

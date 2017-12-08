@@ -105,7 +105,7 @@
 		<div style="float:right;">
 			<br/>
 			<c:if test="${team.status == 2}" >
-				<button type="button" onClick="goWrite();">글쓰기</button>
+				<button type="button" onClick="goWrite()">글쓰기</button>
 				<button type="button" id="del" >삭제</button>
 			</c:if>
 		</div>
@@ -148,7 +148,7 @@
 				if($("#searchType").val()==null||$("#searchType").val()=="") {
 					$("#searchType").val("fk_userid");
 				}
-				var data_form = {"searchString":$("#searchString").val(), "searchType":$("#searchType").val()};
+				var data_form = {"searchString":$("#searchString").val(), "searchType":$("#searchType").val(), "t_idx":${team.teamNum}};
 				$.ajax({
 					url:"noticeListJSON.mr",
 					type:"get",
@@ -239,15 +239,17 @@
 			frm.submit();
 		}
 		function goWrite() {
-			<c:if test="${team.teamNum != null&&team.teamNum!=''} && ${team.userid != null&&team.userid!=''}" >
-				alert("글쓰기 여기온다.");
-				var teamNum = "${team.teamNum}";
-				var userid = "${team.userid}";
+			<c:if test="${team.teamNum != null&&team.teamNum!=''}" >
+				var t_teamNum = ${team.teamNum};
 			</c:if>
-			alert("널이나 빈값이니??0v0");
+			<c:if test="${team.userid != null&&team.userid!=''}">
+				var m_userid = "${team.userid}";
+			</c:if>
+			alert("여기오니2");
 			var frm = document.write;
-			frm.teamNum.value= teamNum;
-			frm.userid.value= userid;
+			frm.teamNum.value= t_teamNum;
+			frm.userid.value= m_userid;
+			alert("여기오니3");
 			frm.action="<%=request.getContextPath()%>/noticeWrite.mr";
 			frm.method="POST";
 			frm.submit();

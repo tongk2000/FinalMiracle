@@ -9,7 +9,7 @@
 </head>
 <body>
 <c:set var="user" value="${map}" /> 
-	<div>
+	<div align="center">
 		<div style="align: center;">
 			<table>
 				<thead>
@@ -20,7 +20,7 @@
 				<tbody>
 					<tr>
 						<td>유저 아이디 :</td>
-						<td><img src="<%= request.getContextPath() %>/resources/images/${user.img}"> ${user.userid} 팀정보 : ${user.teamNum}</td>
+						<td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" style="width:25px; heigth:25px;"> ${user.userid} 팀정보 : ${user.teamNum}</td>
 					</tr>
 					<tr>
 						<td>제목 :</td>
@@ -32,7 +32,16 @@
 					</tr>
 				</tbody>
 			</table>
+			<div style="display:block;"><button type="button" onClick="writeEnd();">완료</button></div>
 		</div>
 	</div>
+	<form>
+		<input type="hidden" name=""/>
+	</form>
+	<script>
+		function writeEnd() {
+			
+		}
+	</script>
 </body>
 </html>
