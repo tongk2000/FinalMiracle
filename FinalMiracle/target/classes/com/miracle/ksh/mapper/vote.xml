@@ -467,13 +467,13 @@
  		<result property="NAME" 	column="name" 	javaType="String" />
  		<result property="USERID" 	column="userid" 	javaType="String" />
 	</resultMap>
-	<select id="VoteCommList" resultMap="VoteCommMap">
-		select A.idx as commidx, A.fk_vote_idx, B.fk_team_idx, A.fk_teamwon_idx, A.content, A.status, D.idx as memidx, D.name, D.userid
+	<select id="VoteCommList" parameterType="HashMap" resultMap="VoteCommMap">
+		select A.idx as commidx, A.fk_vote_idx, B.fk_team_idx, A.fk_teamwon_idx, A.content, A.status, C.idx as memidx, C.name, C.userid
 		from tbl_voteComm A join tbl_teamwon B
-		on A.fk_teamwon_idx = B.idx join tbl_team C
-		on B.fk_team_idx = C.idx join tbl_member D
-		on C.fk_member_idx = D.idx
+		on A.fk_teamwon_idx = B.idx join tbl_member C
+		on B.fk_member_idx = C.idx
 		where A.status = 1
+		and B.fk_team_idx = #{fk_team_idx}
 		order by A.idx asc
 	</select>
 	
@@ -488,7 +488,7 @@
 	
 	<insert id="addComment" parameterType="HashMap">
 		insert into tbl_voteComm
-		values(seq_vote_comm.nextval, #{voteidx}, 1, #{comment}, default)
+		values(seq_vote_comm.nextval, #{voteidx}, #{fk_teamwon_idx}, #{comment}, default)
 	</insert>
 	
 

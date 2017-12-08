@@ -337,8 +337,8 @@ public class VoteService implements InterVoteService {
 	}
 
 	@Override
-	public List<HashMap<String, String>> VoteCommList() {
-		List<HashMap<String, String>> voteCommList = dao.VoteCommList();
+	public List<HashMap<String, String>> VoteCommList(HashMap<String, String> map) {
+		List<HashMap<String, String>> voteCommList = dao.VoteCommList(map);
 		return voteCommList;
 	}
 

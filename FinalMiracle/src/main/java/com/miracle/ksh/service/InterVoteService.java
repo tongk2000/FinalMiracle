@@ -83,7 +83,7 @@ public interface InterVoteService {
 
 	List<VoteItemVO> VoteItemChart(String idx); //차트에 필요한 투표문항 정보들을 얻어오자 (JSON)
 
-	List<HashMap<String, String>> VoteCommList(); //투표 댓글들을 가져와보자
+	List<HashMap<String, String>> VoteCommList(HashMap<String, String> map); //투표 댓글들을 가져와보자
 
 	int getFk_teamwon_idx(String getidx); //팀원번호를 조회해보자
 

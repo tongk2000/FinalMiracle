@@ -97,12 +97,12 @@ public class VoteController {
 			//검색어가 있	는 경우
 			voteList = service.VoteListYesPaging2(map);
 			voteItemList = service.VoteItemList();
-			voteCommList = service.VoteCommList();
+			voteCommList = service.VoteCommList(map);
 		} else{
 			//검색어가 없는 경우
 			voteList = service.VoteListYesPaging1(map);
 			voteItemList = service.VoteItemList();
-			voteCommList = service.VoteCommList();
+			voteCommList = service.VoteCommList(map);
 		}
 		
 		if( (colname != null && search != null) && (!colname.trim().isEmpty() && !search.trim().isEmpty()) && (!colname.equals("null") && !search.equals("null"))){
@@ -202,12 +202,12 @@ public class VoteController {
 			//검색어가 있	는 경우
 			voteEndList = service.VoteEndListYesPaging2(map);
 			voteItemList = service.VoteItemList();
-			voteCommList = service.VoteCommList();
+			voteCommList = service.VoteCommList(map);
 		} else{
 			//검색어가 없는 경우
 			voteEndList = service.VoteEndListYesPaging1(map);
 			voteItemList = service.VoteItemList();
-			voteCommList = service.VoteCommList();
+			voteCommList = service.VoteCommList(map);
 		}
 		
 		if( (colname != null && search != null) && (!colname.trim().isEmpty() && !search.trim().isEmpty()) && (!colname.equals("null") && !search.equals("null"))){
@@ -317,12 +317,12 @@ public class VoteController {
 			//검색어가 있	는 경우
 			voteMyList = service.VoteMyListYesPaging2(map);
 			voteItemList = service.VoteItemList();
-			voteCommList = service.VoteCommList();
+			voteCommList = service.VoteCommList(map);
 		} else{
 			//검색어가 없는 경우
 			voteMyList = service.VoteMyListYesPaging1(map);
 			voteItemList = service.VoteItemList();
-			voteCommList = service.VoteCommList();
+			voteCommList = service.VoteCommList(map);
 		}
 		
 		if( (colname != null && search != null) && (!colname.trim().isEmpty() && !search.trim().isEmpty()) && (!colname.equals("null") && !search.equals("null"))){
@@ -370,7 +370,7 @@ public class VoteController {
 	
 	
 	@RequestMapping(value="/voteAddEnd.mr", method={RequestMethod.POST})
-	public String voteAddEnd(MultipartHttpServletRequest req){
+	public String voteAddEnd(HttpServletRequest req){
 		
 		HttpSession session = req.getSession();
 		
@@ -487,19 +487,23 @@ public class VoteController {
 	
 	
 	@RequestMapping(value="/voteChoice.mr", method={RequestMethod.GET})
-	public String voteChoice(HttpServletRequest req){
+	public String voteChoice(HttpServletRequest req, HttpSession session){
+		
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)session.getAttribute("teamInfo");
 		
 		String vote_idx = req.getParameter("vote_idx");
 		String voteitem_idx = req.getParameter("voteitem_idx");
-		String teamwon_idx = req.getParameter("teamwon_idx");
+		//String teamwon_idx = req.getParameter("teamwon_idx");
 		//String ip = req.getRemoteAddr();
 		String gobackURL = req.getParameter("gobackURL");
+		String fk_teamwon_idx = teamInfo.get("teamwon_idx");
 		
 		//System.out.println("확인 : " + ip);
 
 		HashMap<String, String> mapVotedChk = new HashMap<String, String>();
 		mapVotedChk.put("vote_idx", vote_idx);
-		mapVotedChk.put("teamwon_idx", teamwon_idx);
+		mapVotedChk.put("teamwon_idx", fk_teamwon_idx);
 		
 		String cnt = service.VotedCheck(mapVotedChk); //중복투표를 검사해보자
 		
@@ -520,7 +524,7 @@ public class VoteController {
 			HashMap<String, String> mapVoted = new HashMap<String, String>();
 			mapVoted.put("vote_idx", vote_idx);
 			mapVoted.put("voteitem_idx", voteitem_idx);
-			mapVoted.put("teamwon_idx", teamwon_idx);
+			mapVoted.put("teamwon_idx", fk_teamwon_idx);
 			
 			int n = service.VotedAdd(mapVoted);
 			
@@ -793,12 +797,12 @@ public class VoteController {
 			//검색어가 있	는 경우
 			voteReadyList = service.VoteReadyListYesPaging2(map);
 			voteItemList = service.VoteItemList();
-			voteCommList = service.VoteCommList();
+			voteCommList = service.VoteCommList(map);
 		} else{
 			//검색어가 없는 경우
 			voteReadyList = service.VoteReadyListYesPaging1(map);
 			voteItemList = service.VoteItemList();
-			voteCommList = service.VoteCommList();
+			voteCommList = service.VoteCommList(map);
 		}
 		
 		if( (colname != null && search != null) && (!colname.trim().isEmpty() && !search.trim().isEmpty()) && (!colname.equals("null") && !search.equals("null"))){
@@ -848,10 +852,10 @@ public class VoteController {
 			if(list != null){
 				for(VoteItemVO vo : list){
 					JSONObject jsonObj = new JSONObject();
-					jsonObj.put("no", vo.getIdx());
+					jsonObj.put("idx", vo.getIdx());
 					jsonObj.put("name", vo.getFk_vote_idx());
-					jsonObj.put("email", vo.getItem());
-					jsonObj.put("addr", vo.getVotenum());
+					jsonObj.put("item", vo.getItem());
+					jsonObj.put("votenum", vo.getVotenum());
 					
 					jsonMap.put(jsonObj);
 				}
@@ -867,28 +871,30 @@ public class VoteController {
 	
 	
 	@RequestMapping(value="/voteCommAdd.mr", method={RequestMethod.GET})
-	public String voteCommAdd(HttpServletRequest req, HttpServletResponse response){
+	public String voteCommAdd(HttpServletRequest req, HttpSession session){
 		
-		HttpSession session = req.getSession();
-		
-		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)session.getAttribute("teamInfo");
+		//MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
 		
 		String gobackURL = req.getParameter("gobackURL");
 		String comment = req.getParameter("comment");
 		String voteidx = req.getParameter("voteidx");
-		String getidx = String.valueOf(loginUser.getIdx());
+		//String getidx = String.valueOf(loginUser.getIdx());
+		String fk_teamwon_idx = teamInfo.get("teamwon_idx");
 		
-		//System.out.println(comment + " / " + voteidx + " / " + getidx);
-		System.out.println(gobackURL);
+		//System.out.println("확인용 : " + comment + " / " + voteidx + " / " + fk_teamwon_idx);
+		//System.out.println(gobackURL);
 
-		int fk_teamwon_idx = service.getFk_teamwon_idx(getidx);
+		//int fk_teamwon_idx = service.getFk_teamwon_idx(getidx);
 		
-		String str_idx = String.valueOf(fk_teamwon_idx);
+		//String str_idx = String.valueOf(fk_teamwon_idx);
 		
 		HashMap<String, String> commMap = new HashMap<String, String>();
 		commMap.put("comment", comment);
 		commMap.put("voteidx", voteidx);
-		commMap.put("fk_teamwon_idx", str_idx);
+		commMap.put("fk_teamwon_idx", fk_teamwon_idx);
+		
 		
 		
 		int result = service.addComment(commMap);

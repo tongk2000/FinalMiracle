@@ -160,7 +160,7 @@
 			 event.preventDefault();
 			 return;
 		 }
-		 document.loginFrm.action = "<%= request.getContextPath() %>/inviteLoginEnd.mr";
+		 document.loginFrm.action = "<%= request.getContextPath() %>/tminviteLoginEnd.mr";
 		 document.loginFrm.method = "post";
 		 document.loginFrm.submit();
 		 
