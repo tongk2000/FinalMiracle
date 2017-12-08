@@ -186,19 +186,35 @@
 	</select> -->
 	
 	<!-- 페이징 처리를 위해 1주간의 날짜를 동적으로 수정하기 -->
-	<update id="updatePageDate">
+	<update id="updatePageDateWeek">
 		update tbl_doPaging_week set day = to_char(sysdate + modification + #{page}, 'yyyymmdd')
 	                               , dayDP = to_char(sysdate + modification + #{page}, 'mm/dd(dy)')
     </update>
-                   
+    
     <!-- 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기 -->
-    <resultMap type="HashMap" id="getPageDate">
+    <resultMap type="HashMap" id="getPageDateWeek">
     	<result property="day" column="day" javaType="String" />
     	<result property="dayDP" column="dayDP" javaType="String" />
     </resultMap>
-    <select id="getPageDate" resultMap="getPageDate">
+    <select id="getPageDateWeek" resultMap="getPageDateWeek">
 		select day, dayDP
 		from tbl_doPaging_week
+	</select>
+	
+	<!-- 페이징 처리를 위해 한달간의 날짜를 동적으로 수정하기 -->
+	<update id="updatePageDateMonth">
+		update tbl_doPaging_month set day = to_char(sysdate + modification + #{page}, 'yyyymmdd')
+	                                , dayDP = to_char(sysdate + modification + #{page}, 'dd')
+    </update>
+    
+    <!-- 페이징 처리를 위해 수정된 한달간의 날짜를 받아오기 -->
+    <resultMap type="HashMap" id="getPageDateMonth">
+    	<result property="day" column="day" javaType="String" />
+    	<result property="dayDP" column="dayDP" javaType="String" />
+    </resultMap>
+    <select id="getPageDateMonth" resultMap="getPageDateMonth">
+		select day, dayDP
+		from tbl_doPaging_month
 	</select>
 </mapper>
 

@@ -4,10 +4,17 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <style>
-	th, td{
+	th, td:not(.pageDateLine){
 		border:1px solid black;
 		word-wrap:break-word; /* 글자 넘치면 자동 줄바꿈 */
 	}
+	
+	th {
+		position: sticky;
+	    top: -1px;
+	    z-index: 10;
+	    background-color:lightgray;
+    }
 	
 	td.infoClass {
 		border-top:ridge;
@@ -71,12 +78,15 @@
 </style>
 
 <script type="text/javascript">
+	window.onload = function(){
+		document.getElementById("term").value = "${term}";
+		document.getElementById("page").value = "${page}";
+	}
 	
 	$(document).ready(function(){
 		var changeFlag = false; // 모달창에서 변경된 값이 있는지 체크하는 변수
 		$("#folderRcm").hide();
 		$("#taskRcm").hide();
-		
 		
 		// 폴더 모달창 띄우기(값만 가지고 함수로 이동하게됨)
 		$(".modalFolder").click(function(){
@@ -106,7 +116,7 @@
 		
 				
 		// 선택한 폴더 접고 펴기
-		$(".folder").click(function(){
+		$(document).on("click", ".element", function(){
 			var $this = $(this);
 			var idx = $this.attr("id");
 			var depth = parseInt(getThirdClass($this)); // 클릭한 요소의 깊이 구하기
@@ -133,7 +143,7 @@
 				}
 				$this = $this2; // 다음의 다음 요소를 찾기 위함
 			}
-		}); // end of $(".folder").click(function() -----------------------------------------------------------------------------------------------
+		}); // end of $(".element").click(function() -----------------------------------------------------------------------------------------------
 		
 				
 		// 마우스 클릭 이벤트 있으면 일단 우클릭 메뉴 없애주기
@@ -147,7 +157,7 @@
 		
 				
 		// 우클릭시 메뉴 보여주기
-		$(document).on("contextmenu", ".folder", function(event) {
+		$(document).on("contextmenu", ".element", function(event) {
 		    event.preventDefault();
 		    $(this).addClass("selectedLine");
 		    var classname = getFirstClass($(this));
@@ -161,19 +171,19 @@
 		    	$("#taskRcm").css({top:event.pageY+"px", left:event.pageX+"px"}).show();
 		    }
 		    return false;
-		}); // end of $(".folder").bind("contextmenu", function(event) --------------------------------------------------------------------
+		}); // end of $(".element").bind("contextmenu", function(event) --------------------------------------------------------------------
 				
 				
 		// 폴더 전체 닫기
 		$("#allClose").click(function(){
-			$(".folder").hide();
+			$(".element").hide();
 			$(".0").show();
 		}); // end of $("#allClose").click(function() -------------------------------------------------------------------------------------
 		
 				
 		// 폴더 전체 펴기
 		$("#allOpen").click(function(){ 
-			$(".folder").show();
+			$(".element").show();
 		}); // end of $("#allOpen").click(function() ---------------------------------------------------------------------------------------------
 		
 				
@@ -477,12 +487,57 @@
 			}
 		});
 	} // function selectTaskInfo(frm) ------------------------------------------------------------------------------------------------
+	
+	// 이전 날짜로 페이징 처리하기 위해 페이지 값을 가져오기
+	function beforeDate() {
+		var val = document.getElementById("page").value;
+		var term = document.getElementById("term").value;
+		document.getElementById("page").value = parseInt(val) - parseInt(term);
+		changePageDate();
+	} // end of function beforeDate() --------------------------------------------------------------------------------------------------
+	
+	// 이후 날짜로 페이징 처리하기 위해 페이지 값을 가져오기
+	function afterDate() {
+		var val = document.getElementById("page").value;
+		var term = document.getElementById("term").value;
+		document.getElementById("page").value = parseInt(val) + parseInt(term);
+		changePageDate();
+	} // end of function afterDate() --------------------------------------------------------------------------------------------------
+	
+	// 수정된 페이지 값을 이용해서 새롭게 페이징 처리하기
+	function changePageDate() {
+		document.pageDateFrm.submit();
+	} // end of function changePageDate() -------------------------------------------------------------------------------------------------
+	
 </script>
 
 <div class="container" style="width:100%; float:left">
-	<div><span id="allClose">전체접기</span>  ||  <span id="allOpen">전체펴기</span></div>
 	<table style="width:100%; border:1px solid black;">
 		<thead>
+			<tr>
+				<th colspan="4">
+					<span id="allClose">전체접기</span>  ||  <span id="allOpen">전체펴기</span>
+				</th>
+				<th></th>
+				<th></th>
+				<th colspan="${map.pageDateList.size()}" style="text-align:center;">2017</th>
+			</tr>
+			<tr>
+				<th colspan="4"></th>
+				<th></th>
+				<th></th>
+				<th colspan="${map.pageDateList.size()}" style="text-align:center;">
+					<form name="pageDateFrm" method="get" action="do_changePageDate.mr">
+						<span id="btn_before" onclick="beforeDate()">◀</span>
+						<select id="term" name="term" onchange="changePageDate()">
+							<option value="7">주간</option>
+							<option value="30">월간</option>
+						</select>
+						<span id="btn_after" onclick="afterDate()">▶</span>
+						<input type="hidden" id="page" name="page" value="0"/>
+					</form>
+				</th>
+			</tr>
 			<tr>
 				<th style="width:50%">제목</th>
 				<th>시작일</th>
@@ -501,13 +556,13 @@
 			</c:if>
 			<c:if test="${not empty map.doList}"> <!-- 프로젝트 리스트가 있다면 -->
 				<c:forEach var="dvo" items="${map.doList}">
-					<tr id="${dvo.idx}" class="folder ${dvo.groupNo} ${dvo.depth}">
+					<tr id="${dvo.idx}" class="element ${dvo.groupNo} ${dvo.depth}">
 						<td>
-							<span id="span${dvo.idx}" style="margin-left:${dvo.depth*15}px; cursor:pointer;">
+							<span id="span${dvo.idx}" style="margin-left:${dvo.depth*20}px; cursor:pointer;">
 								<c:if test="${dvo.category == 1}"> <!-- 폴더라면 -->
 									<span class="modalFolder" id="modalIdx${dvo.idx}">
 										<c:if test="${dvo.fk_folder_idx != 0}"> <!-- 최상위 폴더가 아니라면 -->
-											└
+											▷
 										</c:if>
 										<span class="modalFolder subject" id="modalIdx${dvo.idx}">${dvo.subject}</span>
 									</span>
@@ -545,20 +600,19 @@
 							<fmt:parseNumber var="lastDate" value="${dvo.lastDate.replace('-','')}" integerOnly="true"/>
 							<fmt:parseNumber var="day" value="${pageDate.day}" integerOnly="true"/>
 							
-							<c:if test="${startDate <= day and day <= lastDate}">
-								<c:if test="${dvo.dayCnt == 0}"> <!-- 시작일 전이라면 -->
-									<td style="background-color:lightgreen; border-top:none; border-bottom:none;"></td>
+							<td class="pageDateLine" style="border-left:0.5px solid lightgray" align="center">
+								<c:if test="${startDate <= day and day <= lastDate}">
+									<c:if test="${dvo.dayCnt == 0}"> <!-- 시작일 전이라면 -->
+										<div style="height:19px; width:100%; background-color:lightgreen;"></div>
+									</c:if>
+									<c:if test="${dvo.dayCnt == 1}"> <!-- 진행중이라면 -->
+										<div style="height:19px; width:100%; background-color:green;"></div>
+									</c:if>
+									<c:if test="${dvo.dayCnt == -1}"> <!-- 기한이 지났다면 -->
+										<div style="height:19px; width:100%; background-color:red;"></div>
+									</c:if>
 								</c:if>
-								<c:if test="${dvo.dayCnt == 1}"> <!-- 진행중이라면 -->
-									<td style="background-color:green; border-top:none; border-bottom:none;"></td>
-								</c:if>
-								<c:if test="${dvo.dayCnt == -1}"> <!-- 기한이 지났다면 -->
-									<td style="background-color:red; border-top:none; border-bottom:none;"></td>
-								</c:if>
-							</c:if>
-							<c:if test="${startDate > day or day > lastDate}">
-								<td style="border-top:none; border-bottom:none;"></td>
-							</c:if>
+							</td>
 						</c:forEach>
 					</tr>
 				</c:forEach>
@@ -607,10 +661,6 @@
 		</tr>
 	</table>
 </div>
-
-
-
-
 
 
 

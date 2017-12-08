@@ -26,7 +26,7 @@ public class ProjectMangerController {
 	@Autowired
 	MemberService msvc; // 추후. 팀 세션 정보 추가되면 삭제해야함
 	
-	// 모든 폴더, 할일 리스트를 가져오는 메소드
+	// 초기 페이지의 모든 폴더, 할일 리스트를 가져오기
 	@RequestMapping(value="doList.mr", method={RequestMethod.GET})
 	public String doList (HttpServletRequest req) {
 		HttpSession ses = req.getSession();
@@ -52,13 +52,36 @@ public class ProjectMangerController {
 		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo");
 		String team_idx = teamInfo.get("team_idx");
 		
-		String page = "0"; // 이 메소드는 첫화면이므로 무조건 초기값 0을 줌
+		String page = "0"; // 첫화면이므로 초기값 0을 줌
+		String term = "7"; // 첫화면이므로 초기값 7을 줌
+		req.setAttribute("term", term);	// 페이징 값 유지용
+		req.setAttribute("page", page);	// 페이징 값 유지용
 		
-		HashMap<String, Object> map = svc.getAllDoList(team_idx, page); // 할일리스트와 페이징처리를 위한 날짜를 받아옴
+		HashMap<String, Object> map = svc.getAllDoList(team_idx, page, term); // 할일리스트와 페이징처리를 위한 날짜를 받아옴
 		req.setAttribute("map", map);
 		
 		return "kdh/doList/doList.all";
 	} // end of String doList (HttpServletRequest req) ----------------------------------------------------------------
+	
+	// 페이지 이동한 모든 폴더, 할일 리스트를 가져오기
+	@RequestMapping(value="do_changePageDate.mr", method={RequestMethod.GET})
+	public String changePageDate(HttpServletRequest req) {
+		HttpSession ses = req.getSession();
+		
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo");
+		String team_idx = teamInfo.get("team_idx");
+		
+		String term = req.getParameter("term"); // 페이징 기간을 가져옴
+		String page = (String)req.getParameter("page"); // 페이징 이동할 페이지를 가져옴
+		req.setAttribute("term", term);	// 페이징 값 유지용
+		req.setAttribute("page", page);	// 페이징 값 유지용
+		
+		HashMap<String, Object> map = svc.getAllDoList(team_idx, page, term); // 할일리스트와 페이징처리를 위한 날짜를 받아옴
+		req.setAttribute("map", map);
+		
+		return "kdh/doList/doList.all";
+	}
 	
 	// 선택한 폴더의 모든 정보를 가져오기
 	@RequestMapping(value="do_getSelectFolderInfo.mr", method={RequestMethod.GET})
