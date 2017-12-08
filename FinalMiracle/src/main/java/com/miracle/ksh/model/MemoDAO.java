@@ -38,8 +38,8 @@ public class MemoDAO implements InterMemoDAO {
 	}
 
 	@Override
-	public List<String> getfolderList() {
-		List<String> folderlist = sqlsession.selectList("kshMemo.getfolderList");
+	public List<String> getfolderList(String fk_member_idx) {
+		List<String> folderlist = sqlsession.selectList("kshMemo.getfolderList", fk_member_idx);
 		return folderlist;
 	}
 

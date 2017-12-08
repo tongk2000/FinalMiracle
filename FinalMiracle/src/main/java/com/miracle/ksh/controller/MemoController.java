@@ -37,7 +37,7 @@ public class MemoController {
 		String search = req.getParameter("search");
 		String gobackURL = MyUtil.getCurrentURL(req);
 		
-		List<String> folderlist = service.getfolderList();
+		List<String> folderlist = service.getfolderList(fk_member_idx);
 		
 		HashMap<String, String> memoMap = new HashMap<String, String>();
 		memoMap.put("fk_member_idx", fk_member_idx);
@@ -133,9 +133,13 @@ public class MemoController {
 	
 	
 	@RequestMapping(value="/memoAdd.mr", method={RequestMethod.GET})
-	public String memoAdd(HttpServletRequest req){
+	public String memoAdd(HttpServletRequest req, HttpSession session){
 
-		List<String> folderlist = service.getfolderList();
+		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		
+		String fk_member_idx = String.valueOf(loginUser.getIdx());
+		
+		List<String> folderlist = service.getfolderList(fk_member_idx);
 
 		req.setAttribute("folderlist", folderlist);
 		
@@ -172,7 +176,11 @@ public class MemoController {
 	
 	
 	@RequestMapping(value="/memoEdit.mr", method={RequestMethod.GET})
-	public String memoEdit(HttpServletRequest req){
+	public String memoEdit(HttpServletRequest req, HttpSession session){
+		
+		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		
+		String fk_member_idx = String.valueOf(loginUser.getIdx());
 		
 		String idx = req.getParameter("idx");
 		String gobackURL = req.getParameter("gobackURL");
@@ -180,7 +188,7 @@ public class MemoController {
 		System.out.println("확인용 : " + idx);
 		
 		List<MemoVO> memovo = service.getMemoVO(idx);
-		List<String> folderlist = service.getfolderList();
+		List<String> folderlist = service.getfolderList(fk_member_idx);
 
 		req.setAttribute("memovo", memovo);
 		req.setAttribute("folderlist", folderlist);
