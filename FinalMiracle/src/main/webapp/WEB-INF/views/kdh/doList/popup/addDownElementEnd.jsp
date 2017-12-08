@@ -69,20 +69,19 @@
 						<fmt:parseNumber var="lastDate" value="${returnMap.fvo.lastDate.replace('-','')}" integerOnly="true"/>
 						<fmt:parseNumber var="day" value="${pageDate.day}" integerOnly="true"/>
 						
-						<c:if test="${startDate <= day and day <= lastDate}">
-							<c:if test="${returnMap.fvo.dayCnt == 0}"> <!-- 시작일 전이라면 -->
-		html += '				<td style="background-color:lightgreen; border-top:none; border-bottom:none;"></td>'
+		html += '		<td class="pageDateLine ${day}" style="border-left:0.5px solid lightgray" align="center">'
+							<c:if test="${startDate <= day and day <= lastDate}">
+								<c:if test="${returnMap.fvo.dayCnt == 0}"> <!-- 시작일 전이라면 -->
+		html += '					<div class="${day}" style="height:19px; width:100%; background-color:lightgreen;"></div>'
+								</c:if>
+								<c:if test="${returnMap.fvo.dayCnt == 1}"> <!-- 진행중이라면 -->
+		html += '					<div class="${day}" style="height:19px; width:100%; background-color:green;"></div>'
+								</c:if>
+								<c:if test="${returnMap.fvo.dayCnt == -1}"> <!-- 기한이 지났다면 -->
+		html += '					<div class="${day}" style="height:19px; width:100%; background-color:red;"></div>'
+								</c:if>
 							</c:if>
-							<c:if test="${returnMap.fvo.dayCnt == 1}"> <!-- 진행중이라면 -->
-		html += '				<td style="background-color:green; border-top:none; border-bottom:none;"></td>'
-							</c:if>
-							<c:if test="${returnMap.fvo.dayCnt == -1}"> <!-- 기한이 지났다면 -->
-		html += '				<td style="background-color:red; border-top:none; border-bottom:none;"></td>'
-							</c:if>
-						</c:if>
-						<c:if test="${startDate > day or day > lastDate}">
-		html += '			<td style="border-top:none; border-bottom:none;"></td>'
-						</c:if>
+		html += '		</td>'
 					</c:forEach>
 		html += '</tr>'
 		
@@ -112,6 +111,7 @@
 			$this.after(html);
 		}
 		
+		window.opener.todayLine();
 		window.opener.addLine("${returnMap.fvo.idx}"); // 살짝 깜빡여 주도록~
 		window.close();
 	}

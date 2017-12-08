@@ -5,19 +5,17 @@ public class VoteItemVO {
 	private int idx;
 	private int fk_vote_idx;
 	private String item;
-	private String image;
 	private int votenum;
 	
 	
 	public VoteItemVO() {	}
 
 
-	public VoteItemVO(int idx, int fk_vote_idx, String item, String image, int votenum) {
+	public VoteItemVO(int idx, int fk_vote_idx, String item, int votenum) {
 		super();
 		this.idx = idx;
 		this.fk_vote_idx = fk_vote_idx;
 		this.item = item;
-		this.image = image;
 		this.votenum = votenum;
 	}
 
@@ -49,16 +47,6 @@ public class VoteItemVO {
 
 	public void setItem(String item) {
 		this.item = item;
-	}
-
-
-	public String getImage() {
-		return image;
-	}
-
-
-	public void setImage(String image) {
-		this.image = image;
 	}
 
 

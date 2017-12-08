@@ -138,9 +138,7 @@ public class TMController {
 	@RequestMapping(value="/tmForm.mr", method={RequestMethod.GET})
 	public String tmForm(HttpServletRequest req, HttpSession session){
 		
-		HttpSession ses = req.getSession();
-		
-		MemberVO loginUser = (MemberVO) ses.getAttribute("loginUser");
+		MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
 		
 		System.out.println("확인용 : " + loginUser.getIdx());
 		
@@ -191,7 +189,7 @@ public class TMController {
 		MemberVO loginUser = (MemberVO) ses.getAttribute("loginUser");
 		
 		String fk_member_idx = String.valueOf(loginUser.getIdx());
-		String name = req.getParameter("String");
+		String name = req.getParameter("name");
 		String hp1 = req.getParameter("hp1");
 		String hp2 = req.getParameter("hp2");
 		String hp3 = req.getParameter("hp3");
@@ -200,7 +198,7 @@ public class TMController {
 		String addr1 = req.getParameter("addr1");
 		String addr2 = req.getParameter("addr2");
 		
-		MultipartFile attach = (MultipartFile) req.getFiles("attach");
+		List<MultipartFile> attach = req.getFiles("attach");
 		
 		String newFileName = "default.jpg";
 		
@@ -211,7 +209,7 @@ public class TMController {
 			String path = root + "resources"+File.separator+"files";
 			// path 가 첨부파일들을 저장할 WAS(톰캣)의 폴더가 된다. 
 			
-			String fileName = attach.getOriginalFilename();
+			String fileName = attach.get(0).getOriginalFilename();
 		     
 		    // jpg, jpeg, png, gif, bmp만 업로드 되도록 수정
 		    if(fileName.toLowerCase().endsWith(".jpg") ||
@@ -233,15 +231,17 @@ public class TMController {
 				// WAS 디스크에 저장될 thumbnail 파일명 
 				
 				try {
-					 bytes = attach.getBytes();
+					 bytes = attach.get(0).getBytes();
 					 
-					 newFileName = fileManager.doFileUpload(bytes, attach.getOriginalFilename(), path);			 
+					 newFileName = fileManager.doFileUpload(bytes, attach.get(0).getOriginalFilename(), path);			 
 				} catch (Exception e) {
 					
 				}
 		    }
 			
-		}// end of if------------------------------
+		} else {
+			newFileName = "defaultImg.png";
+		}
 		
 		HashMap<String, String> tmMap = new HashMap<String, String>();
 		tmMap.put("fk_member_idx", fk_member_idx);
@@ -282,8 +282,6 @@ public class TMController {
 	@RequestMapping(value="/tmSession.mr", method={RequestMethod.GET})
 	public String tmSession(HttpServletRequest req, HttpSession session){
 		
-		session = req.getSession();
-		
 		MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
 		
 		String fk_member_idx = String.valueOf(loginUser.getIdx());
@@ -301,6 +299,8 @@ public class TMController {
 		String teamwon_idx = service.getTeamwonIDX(map);
 		String teamwon_status = service.getTeamwonStatus(map);
 		
+		//System.out.println("세션 : " + teamwon_idx + " / " + teamwon_status);
+		
 		HashMap<String, String> sessionMap = new HashMap<String, String>();
 		if(fk_team_idx1 == null || fk_team_idx1.trim().isEmpty()){
 			sessionMap.put("team_idx", fk_team_idx2);
@@ -310,7 +310,7 @@ public class TMController {
 		sessionMap.put("teamwon_idx", teamwon_idx);
 		sessionMap.put("teamwon_status", teamwon_status);
 		
-		//System.out.println("확인용 : " + fk_member_idx + " / " + fk_team_idx1 + " / " + fk_team_idx2 + " / " + teamwon_idx + " / " + teamwon_status);
+		System.out.println("확인용 : " + fk_member_idx + " / " + fk_team_idx1 + " / " + fk_team_idx2 + " / " + teamwon_idx + " / " + teamwon_status);
 		
 		session.setAttribute("teamInfo", sessionMap);
 		
@@ -769,6 +769,8 @@ public class TMController {
 		}
 		
 		String fk_member_idx = String.valueOf(loginUser.getIdx());
+		
+		System.out.println("확인용 : " + team_idx + " / " + fk_member_idx);
 		
 		HashMap<String, String> insertMap = new HashMap<String, String>();
 		insertMap.put("fk_team_idx", team_idx);

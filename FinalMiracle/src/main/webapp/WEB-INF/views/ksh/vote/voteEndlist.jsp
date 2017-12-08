@@ -80,59 +80,39 @@
 			data: data_form,
 			dataType: "JSON",
 			success: function(data){
-				$('.modal-body').highcharts({
-			    	chart: {
-			            plotBackgroundColor: null,
-			            plotBorderWidth: null,
-			            plotShadow: false,
-			            type: 'pie'
-			        },
-			        title: {
-			            text: '니가 취업에 성공할 수 있는지?'
-			        },
-			        tooltip: {
-			            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-			        },
-			        plotOptions: {
-			            pie: {
-			                allowPointSelect: true,
-			                cursor: 'pointer',
-			                dataLabels: {
-			                    enabled: true,
-			                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-			                    style: {
-			                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-			                    }
-			                }
-			            }
-			        },
-			        series: [{
-			            name: '득표 수 : ',
-			            colorByPoint: true,
-			            data: [{
-			                name: '응 백수',
-			                y: 56.33
-			            }, {
-			                name: '중소기업 들어감',
-			                y: 24.03,
-			                sliced: true,
-			                selected: true
-			            }, {
-			                name: '중견기업 들어감',
-			                y: 10.38
-			            }, {
-			                name: '대기업 들어감',
-			                y: 4.77
-			            }, {
-			                name: '삼성 들어감',
-			                y: 0.91
-			            }, {
-			                name: '구글 들어감',
-			                y: 0.2
-			            }]
-			        }]
-			    	
-			    });
+				var processed_json = new Array();   
+                $.getJSON('http://localhost:9090/miracle/voteCallChart.mr?idx='+idx, function(data) {
+	                    // Populate series
+	                    for (i = 0; i < data.length; i++){
+	                        processed_json.push([data[i].item, data[i].votenum]);
+	                    }
+	                 
+	                    // draw chart
+	                    $('.modal-body').highcharts({
+	                    chart: {
+	                        type: "column"
+	                    },
+	                    title: {
+	                        text: "투표 차트 결과"
+	                    },
+	                    xAxis: {
+	                        type: 'category',
+	                        allowDecimals: false,
+	                        title: {
+	                            text: "표"
+	                        }
+	                    },
+	                    yAxis: {
+	                        title: {
+	                            text: "표 수"
+	                        }
+	                    },
+	                    series: [{
+		                    name: '표 수',
+	                        data: processed_json
+	                    }]
+	                });
+                });
 			}, error: function(request, status, error){
 				alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
 			}
@@ -316,7 +296,7 @@
 	      <h4 class="modal-title">투표 결과</h4>
 	    </div>
 	    <div class="modal-body" align="center">
-	      <p>Some text in the modal.</p>
+	      <p>CHART</p>
 	    </div>
 	    <div class="modal-footer">
 	      <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>

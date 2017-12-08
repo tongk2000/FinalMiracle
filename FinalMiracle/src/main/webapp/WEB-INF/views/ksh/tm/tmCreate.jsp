@@ -321,7 +321,7 @@ th#th {
 
 <body>
 	<div class="content" align="center">
-		<form name="createFrm">
+		<form name="createFrm" enctype="multipart/form-data">
 			<table id="tblMemberRegister" style="margin-bottom: 30px;">
 				<thead>
 					<tr>
