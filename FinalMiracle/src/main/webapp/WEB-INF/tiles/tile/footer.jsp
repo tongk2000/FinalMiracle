@@ -2,20 +2,17 @@
     pageEncoding="UTF-8"%>
 <script type="text/javascript">
 	function launchMap() {
-		$.ajax({
+	   /*$.ajax({
 			url:"googleMap.mr",
 			dataType:"html",
 			success:function(data){
 				$("#launchMapBody").html(data);
 				$("#launchMapModal").modal();
 			}
-		});
+		}); */
 	}
 	
 </script>
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAGoOx5t16lxp_DW2Y8WpN2gJB9U3fzPRg"></script>
 
 <a data-toggle="modal" href="#myModal" class="btn btn-primary" onclick="launchMap()">Launch modal</a>
 
@@ -26,8 +23,10 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h4 class="modal-title">googleMap</h4>
           </div>
-          <div class="modal-body" id="launchMapBody">
+          
+          <div class="modal-body" id="launchMapBody"> <!-- ? -->
           </div>
+          
           <div class="modal-footer">
             <a href="#" data-dismiss="modal" class="btn">Close</a>
           </div>
@@ -35,5 +34,5 @@
     </div>
 </div>
 
-<div class="modal fade" id="mapInfo" role="dialog">
-</div>
+<!-- <div class="modal fade" id="mapInfo" role="dialog">
+</div> -->

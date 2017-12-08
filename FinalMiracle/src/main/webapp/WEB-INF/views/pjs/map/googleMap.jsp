@@ -35,6 +35,8 @@
 		height:1px;
 	}
 </style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAGoOx5t16lxp_DW2Y8WpN2gJB9U3fzPRg"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
 			google.maps.event.addDomListener(window, 'load', initialize); // 구글사에서 그대로 따옴!!! ====== 구글맵 생성
@@ -50,7 +52,7 @@
 			        streetViewControl : true,  // 스트리트 뷰 컨트롤에는 지도로 드래그해서 스트리트 뷰를 활성화할 수 있는 펙맨 아이콘이 있다. 기본적으로 이 컨트롤은 지도의 오른쪽 아래 근처에 나타난다.
 			        scaleControl: true,        // 배율 컨트롤은 지도 배율 요소를 표시한다. 이 컨트롤은 기본적으로 비활성화되어 있다.
 			    };
-			    var map = new google.maps.Map(document.getElementById('googleMap'), mapOptions);  // <div>태그를 가리킨다. 
+			    var map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);  // <div>태그를 가리킨다. 
 			    google.maps.event.addDomListener(window, "resize", function() { // 지도를 확대, 축소할 때 관련된 메서드
 			        var center = map.getCenter();
 			        google.maps.event.trigger(map, "resize");
@@ -121,7 +123,7 @@
 		
 		function goDetail(map_idx, map_team_idx) // 모달창을 띄우자
 		{
-			var data_form = {"map_idx":map_idx, "map_team_idx":map_team_idx};
+			/* var data_form = {"map_idx":map_idx, "map_team_idx":map_team_idx};
 			alert("map_idx"+map_idx+" map_team_idx"+map_team_idx);
 			$.ajax({
 				url:"googleMapTeamInfoJSON.mr",
@@ -140,7 +142,7 @@
 				error : function() {
 					alert("에러");
 				}
-			}); // end of $.ajax
+			}); // end of $.ajax */
 		}
 		function viewContent(title) {
 			var html =  "<span style='color:red; font-weight:bold;'>"+title+"</span><br/>";
@@ -217,7 +219,6 @@
 	}
 </script>
 
-화면에 나오는 창은 밑에 div 하나만 존재한다.!!!
 <select id="choice" name="choice" style="font-size:12pt;">
 	<option value="0" selected> 전체</option>
 	<option value="1" >팀정보</option>
@@ -229,7 +230,7 @@
 <div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height">
 	<div id="displayList" style="background-color:black">ㅇ</div>
 </div></div></div></div></div></div></div></div></div></div></div></div>
-<div id="googleMap"	style="width: 30%; height: 200px; margin: auto; margin:20% 30% 20% 35% ; ">2323</div>
+<div id="googleMap"	style="width: 30%; height: 200px; margin: auto; margin:20% 30% 20% 35% ; "></div>
 <form name="map">
 	<input type="hidden" name="choice">
 	<input type="hidden" name="searchString">

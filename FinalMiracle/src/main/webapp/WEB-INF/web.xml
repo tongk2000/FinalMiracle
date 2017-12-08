@@ -46,17 +46,7 @@
 	    </init-param>
 	</filter>
 	
-	<filter-mapping>
-	    <filter-name>encodingFilter</filter-name>
-	    <url-pattern>*</url-pattern>
-	</filter-mapping>
-		
-	<!-- 웹 애플리케이션 요청 시 시작파일을 지정한다. -->
-	<welcome-file-list>
-	    <welcome-file>member_login.mr</welcome-file>
-	</welcome-file-list>	
 </web-app>
-
 
 
 
