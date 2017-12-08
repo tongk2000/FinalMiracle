@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.miracle.psw.model.FaqBoardVO;
+import com.miracle.psw.model.FreeBoardVO;
+import com.miracle.psw.model.MemberVO;
 import com.miracle.psw.service.InterBoardService;
 import com.miracle.psw.util.MyUtil;
 
@@ -36,9 +38,15 @@ public class BoardController {
 		String colname = req.getParameter("colname");
 		String search = req.getParameter("search");
 		
+		String category = req.getParameter("category");
+		
+		
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("colname", colname);
 		map.put("search", search);
+		map.put("category", category);
+		
+		System.out.println(category);
 		
 		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 		
@@ -76,7 +84,7 @@ public class BoardController {
 			(!colname.equals("null") && !search.equals("null")) ) {  // 검색어가 있는 경우
 			totalCount = service.getTotalCountWithSearch(map);
 		} else {  // 검색어가 없는경우
-			totalCount = service.getTotalCountWithNoSearch();
+			totalCount = service.getTotalCountWithNoSearch(map);
 		}
 		totalPage = (int)Math.ceil((double)totalCount/sizePerPage);
 		
@@ -107,13 +115,59 @@ public class BoardController {
 	}
 	
 	
-	// ==================================================== *** 자유게시판 목록 *** ========================================
+	//////////////////////////////////////////////////////////////////////////////////////////// 자유게시판  //////////////////////
+	
+	
+	// ==================================================== *** 자유게시판 목록 보여주기 *** ========================================
 	@RequestMapping(value="/freeList.mr", method={RequestMethod.GET})
-	public String freeList() {
+	public String freeList(HttpServletRequest req, HttpSession session) {
+		List<FreeBoardVO> freeList = service.freeList();
 		
+		String gobackURL = MyUtil.getCurrentURL(req);
+		req.setAttribute("gobackURL", gobackURL);
+		
+		req.setAttribute("freeList", freeList);
 		
 		return "psw/board/freeList.all";
 	}
+	
+	// ===================================================== *** 자유게시판 글 1개 보여주기 *** =====================================
+	@RequestMapping(value="/freeView.mr", method={RequestMethod.GET})
+	public String freeView(HttpServletRequest req, HttpSession session, FreeBoardVO freevo){
+		String idx = req.getParameter("idx");
+		String gobackURL = req.getParameter("gobackURL");
+		
+		freevo = null;
+		
+		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		String userid = null;
+		
+		if(loginUser != null) {
+			userid = loginUser.getUserid();
+		}
+		freevo = service.getView(idx, userid);
+		
+		req.setAttribute("freevo", freevo);
+		req.setAttribute("gobackURL", gobackURL);
+		
+		return "psw/board/freeView.all";
+	}
+	
+	// ===================================================== *** 자유게시판 글 쓰기 *** ============================================
+	@RequestMapping(value="/freeAdd.mr", method={RequestMethod.GET})
+	public String freeAdd() {  // 글쓰기 폼페이지 띄우기
+		
+		return "psw/board/freeAdd.all";
+	}
+	@RequestMapping(value="/freeAddEnd.mr", method={RequestMethod.POST})
+	public String freeAddEnd(FreeBoardVO freevo, HttpServletRequest req) {
+		int n = service.freeAdd(freevo);
+		req.setAttribute("n", n);
+		
+		return "psw/board/freeAddEnd.not";
+	}
+	
+	
 	
 	
 }

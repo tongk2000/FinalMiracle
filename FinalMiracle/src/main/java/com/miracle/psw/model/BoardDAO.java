@@ -38,8 +38,8 @@ public class BoardDAO implements InterBoardDAO {
 	}
 
 	@Override
-	public int getTotalCountWithNoSearch() {
-		int cnt = sqlsession.selectOne("board_psw.getTotalCountWithNoSearch");
+	public int getTotalCountWithNoSearch(HashMap<String, String> map) {
+		int cnt = sqlsession.selectOne("board_psw.getTotalCountWithNoSearch", map);
 		return cnt;
 	}
 
@@ -50,9 +50,42 @@ public class BoardDAO implements InterBoardDAO {
 		return n;
 	}
 
+	// ================================================================== *** 자유게시판 *** ==============================
+	@Override
+	public List<FreeBoardVO> freeList() {
+		List<FreeBoardVO> vo = sqlsession.selectList("board_psw.freeList");
+		return vo;
+	}
+
+	@Override
+	public int freeAdd(FreeBoardVO freevo) {
+		int n = sqlsession.insert("board_psw.freeAdd", freevo);
+		return n;
+	}
+
+	@Override
+	public FreeBoardVO getView(String idx) {  // 선택한 1개 글 보여주기
+		FreeBoardVO vo = sqlsession.selectOne("board_psw.getView", idx);
+		return vo;
+	}
+
+	@Override
+	public void setAddReadCnt(String idx) {  // 선택한 1개 글이 다른 사용자의 글일 경우 readCnt 1 증가시키기
+		sqlsession.update("board_psw.setAddReadCnt", idx);	
+	}
+
 	
 	
 	
 	
 	
 }
+
+
+
+
+
+
+
+
+

@@ -46,6 +46,9 @@
 	    </init-param>
 	</filter>
 	
+	<welcome-file-list>
+        <welcome-file>member_login.mr</welcome-file>
+    </welcome-file-list>
 </web-app>
 
 

@@ -178,7 +178,9 @@
 		</table>
 		
 		<p id="hiddenInfo">
-			<input type="hidden" name="fk_folder_idx" value="${map.upIdx}"/>
+			<input type="hidden" name="fk_folder_idx" value="${upIdx}"/>
+			<input type="hidden" name="term" value="${term}"/>
+			<input type="hidden" name="page" value="${page}"/>
 			<input type="hidden" name="groupNo" value="${map.groupNo}"/>
 			<input type="hidden" name="depth" value="${map.depth+1}"/>
 		</p>
