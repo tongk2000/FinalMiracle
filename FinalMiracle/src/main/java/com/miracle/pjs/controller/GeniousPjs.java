@@ -143,9 +143,8 @@ public class GeniousPjs {
 		HashMap<String, String> team = new HashMap<String, String>();
 		team.put("userid", userid);
 		team.put("teamidx", teamNum);
-		HashMap<String, String> map = service.getUserTeam(team); // teamNum , userid , teamNum , status 받는다.  ******************************
+		HashMap<String, String> map = service.getUserTeam(team); // teamNum , userid , teamNum , memberNum, status 받는다.  ******************************
 		req.setAttribute("map", map);
-		System.out.println("========================글쓰기 여기오니?=====================");
 		return "pjs/notice/noticeWrite.all";
 	}/* ================================================================================================================================================== */
 	@RequestMapping(value="noticeWriteEnd.mr", method={RequestMethod.POST})	// 공지사항 게시판글 쓰기 
@@ -153,12 +152,25 @@ public class GeniousPjs {
 		// 게시판을 클릭해서 글을 쓸 경우
 		String userid = req.getParameter("userid");
 		String teamNum = req.getParameter("teamNum");
+		String subject = req.getParameter("subject");
+		String content = req.getParameter("content");
 		HashMap<String, String> team = new HashMap<String, String>();
 		team.put("userid", userid);
 		team.put("teamidx", teamNum);
-		HashMap<String, String> map = service.getUserTeam(team); // teamNum , userid , teamNum , status 받는다.  ******************************
-		req.setAttribute("map", map);
-		System.out.println("========================글쓰기 여기오니?=====================");
+		team.put("subject", subject);
+		team.put("content", content);
+		int n = service.setNoticeWrite(team);
+		String msg="";
+		String loc="";
+		if(n>0) {
+			msg="입력성공!";
+			loc="location.href='../../miracle/noticeList.mr;";
+		} else {
+			msg="입력실패!";
+			loc="location.href='../../miracle/noticeList.mr;";
+		}
+		req.setAttribute("msg", msg);
+		req.setAttribute("loc", loc);
 		return "pjs/notice/error.not";
 	}/* ================================================================================================================================================== */
 	@RequestMapping(value="noticeDel.mr", method={RequestMethod.GET})	// 공지사항 게시판글 삭제
@@ -183,7 +195,6 @@ public class GeniousPjs {
 		// 공지사항 게시판의 해당 글을 볼 때 그 글의 코멘트를 가져오는 메소드
 		String nidx = req.getParameter("nidx");				//tbl_notice의 idx
 		List<ReplyVO> comment = service.getComment(nidx);
-		System.out.println("=====================확인용================="+comment.get(0).getRegday()+"       "+comment.size());
 		String sessionid = ((MemberVO)session.getAttribute("loginUser")).getUserid();
 		req.setAttribute("comment", comment);
 		req.setAttribute("sessionid", sessionid);
@@ -197,13 +208,8 @@ public class GeniousPjs {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("idx", idx);
 		map.put("comment", co);
-		int n = service.setComment(map);
-		if(n == 0) {
-			System.out.println("================== 삽입실패 ==================");
-		}
-		else {
-			System.out.println("-----------------삽입성공------------------");
-		}
+		int n = service.setComment(map); 
+		if(n>0) System.out.println("댓글 입력 성공");
 	}/* ================================================================================================================================================== */
 	@RequestMapping(value="noticeView.mr", method={RequestMethod.GET})	// 공지사항 게시판글 보기 
 	public String noticeView(HttpServletRequest req, HttpSession session) {
@@ -216,8 +222,6 @@ public class GeniousPjs {
 			int n = service.updateReadCount(nidx);
 			if(n > 0)
 				session.removeAttribute("readCount");
-			else 
-				System.out.println("==================디비 업데이트 실패===================");
 		}
 		HashMap<String, String> view = new HashMap<String, String>();
 		view.put("nidx", nidx);
@@ -229,8 +233,26 @@ public class GeniousPjs {
 		req.setAttribute("map", map);
 		req.setAttribute("nidx",nidx);
 		return "pjs/notice/noticeView.all";
-	}
-	
+	}/* ================================================================================================================================================== */
+	@RequestMapping(value="noticeEditWrite.mr", method={RequestMethod.POST})	// 공지사항 게시판글 수정
+	public String noticeEditWrite(HttpServletRequest req) {
+		// 공지사항 게시판의 수정글을 쓰는 메소드
+		String nidx = req.getParameter("nidx");
+		String userid = req.getParameter("userid");
+		String teamNum = req.getParameter("teamNum");
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("nidx", nidx);
+		map.put("userid", userid);
+		map.put("teamNum", teamNum);
+		req.setAttribute("map", map);
+		return "pjs/notice/noticeEditWrite.all";
+	}/* ================================================================================================================================================== */
+	@RequestMapping(value="noticeEditWriteEnd.mr", method={RequestMethod.POST})	// 공지사항 게시판글 수정
+	public String noticeEditWriteEnd(HttpServletRequest req) {
+		// 수정글 쓰기 완료
+		return "pjs/notice/noticeEditWriteEnd.all";
+	}/* ================================================================================================================================================== */
+
 	
 	
 /*=======================================================================================================================================================*/	

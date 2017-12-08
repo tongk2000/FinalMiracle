@@ -131,7 +131,7 @@
 		
 		function goDetail(map_idx, map_team_idx) // 모달창을 띄우자
 		{
-			/* var data_form = {"map_idx":map_idx, "map_team_idx":map_team_idx};
+			var data_form = {"map_idx":map_idx, "map_team_idx":map_team_idx};
 			alert("map_idx"+map_idx+" map_team_idx"+map_team_idx);
 			$.ajax({
 				url:"googleMapTeamInfoJSON.mr",
@@ -150,7 +150,7 @@
 				error : function() {
 					alert("에러");
 				}
-			}); // end of $.ajax */
+			}); // end of $.ajax 
 		}
 		function viewContent(title) {
 			var html =  "<span style='color:red; font-weight:bold;'>"+title+"</span><br/>";
@@ -233,7 +233,7 @@
 
 
 <div class="modal-body" id="launchMapBody">
-	화면에 나오는 창은 밑에 div 하나만 존재한다.!!!
+	<!-- 화면에 나오는 창은 밑에 div 하나만 존재한다.!!! -->
 	<select id="choice" name="choice" style="font-size:12pt;">
 		<option value="0" selected> 전체</option>
 		<option value="1" >팀정보</option>
@@ -247,8 +247,8 @@
 		<div id="displayList" style="background-color:black; z-index:1000">ㅇ</div>
 	</div>
 	
-	<div id="googleMap"	style="width: 30%; height: 200px; margin: auto; margin:20% 30% 20% 35% ; ">2323</div>
-	
+	<div id="googleMap"	style="width: 30%; height: 200px; margin: auto; margin:20% 30% 20% 35% ; "></div>
+	<div class="modal fade" id="mapInfo" role="dialog"></div>
 	<form name="map">
 		<input type="hidden" name="choice">
 		<input type="hidden" name="searchString">
