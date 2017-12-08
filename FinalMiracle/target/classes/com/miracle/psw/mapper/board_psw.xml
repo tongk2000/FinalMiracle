@@ -74,8 +74,8 @@
 		values(seq_faq.nextval, #{category}, #{subject}, #{content}, default, default, default)
 	</insert>
 	
-	<!-- ============================================================= *** 자유게시판 *** ========================================================== -->	
 	
+	<!-- ============================================================= *** 자유게시판 *** ========================================================== -->	
 	<!-- FreeList 보여주기 -->
 	<select id="freeList" resultType="com.miracle.psw.model.FreeBoardVO">
 		select idx, userid, name, subject, content, readCnt, commentCnt
@@ -106,6 +106,61 @@
 		where status = 1
 		and idx = #{idx}
 	</update>
+	
+	<!-- 검색한 freeList 보여주기(페이징 처리 한 것) -->
+	<select id="freeListWithSearch" parameterType="HashMap" resultType="com.miracle.psw.model.FreeBoardVO">
+		select idx, userid, name, subject, content, readCnt, commentCnt
+	         , groupno, fk_idx, depthno
+	         , regDate, status, infoStatus
+		from
+		( select rownum as rno, v.idx, v.userid, v.name, v.subject, v.content, v.readCnt, v.commentCnt
+		       , v.groupno, v.fk_idx, v.depthno
+		       , v.regDate, v.status, v.infoStatus
+		  from
+		  ( select idx, userid, name, subject, content, readCnt, commentCnt, groupno, fk_idx, depthno
+		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+		         , status, infoStatus
+		    from tbl_free
+		    where status = 1
+		    and ${colname} like '%'|| #{search} ||'%'
+		    order by idx desc 
+		  )V
+		)T
+		where T.rno >= #{startRno} and T.rno <![CDATA[<=]]> #{endRno}
+	</select>
+	<select id="freeListWithNoSearch" parameterType="HashMap" resultType="com.miracle.psw.model.FreeBoardVO">
+		select idx, userid, name, subject, content, readCnt, commentCnt
+	         , groupno, fk_idx, depthno
+	         , regDate, status, infoStatus
+		from
+		( select rownum as rno, v.idx, v.userid, v.name, v.subject, v.content, v.readCnt, v.commentCnt
+		       , v.groupno, v.fk_idx, v.depthno
+		       , v.regDate, v.status, v.infoStatus
+		  from
+		  ( select idx, userid, name, subject, content, readCnt, commentCnt, groupno, fk_idx, depthno
+		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+		         , status, infoStatus
+		    from tbl_free
+		    where status = 1
+		    order by idx desc 
+		  )V
+		)T
+		where T.rno >= #{startRno} and T.rno <![CDATA[<=]]> #{endRno}
+	</select>
+	
+	<!-- 검색 유무에 따른 페이지바 만들기 -->
+	<select id="getFreeTotalCountWithSearch" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_free
+		where status = 1
+		and ${colname} like '%'|| #{search} ||'%'
+	</select>
+	<select id="getFreeTotalCountWithNoSearch" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_free
+		where status = 1
+	</select>
+	
 	
 </mapper>
 

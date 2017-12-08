@@ -11,9 +11,17 @@
 
 <style type="text/css">
 
-	table tr th, td {
+	table tr, td {
+		border: 1px dashed gray;
+		border-left: none;
+		border-right: none;
+	}
+	
+	table th {
 		border: 1px solid gray;
-		padding: 5px;
+		border-left: none;
+		border-right: none;
+		background-color: lightgray;
 	}
 	
 	.subjectStyle {
@@ -35,7 +43,15 @@
 			var $target = $(event.target);
 			$target.removeClass("subjectStyle");
 		});
+		searchKeep();
 	});  // end of $(document).ready() ---------------------------------
+	
+	function searchKeep(){
+		<c:if test="${(colname != 'null' && not empty colname) && (search != 'null' && not empty search)}">
+			$("#colname").val("${colname}");
+			$("#search").vla("${search}");
+		</c:if>
+	}
 	
 	function goView(idx, gobackURL){
 		var frm = document.idxFrm;
@@ -47,12 +63,24 @@
 		frm.submit();
 	}
 	
+	function goSearch(){
+		var frm = document.searchFrm;
+		var search = $("#search").val();
+		
+		if(search.trim()==""){
+			alert("검색어를 입력하세요!!");
+			return;
+		} else {
+			frm.submit();
+		}
+	}
+	
 </script>
 
 </head>
 
 <body>
-	<div style="border: 1px solid pink; margin-left: 10%;">
+	<div style="border: 1px solid pink; margin-left: 10%; width: 90%;">
 		<h1>자유게시판</h1>
 		<!-- 글 검색용 폼 생성 -->
 		<div>
@@ -60,20 +88,21 @@
 				<select name="colname" id="colname">
 					<option value="subject">제목</option>
 					<option value="content">내용</option>
-					<option value="userid">작성자</option>
+					<option value="userid">아이디</option>
+					<option value="name">성명</option>
 				</select>
 				<input type="text" name="search" id="search" size="40px" />
 				<button type="button" onClick="goSearch();">검색</button>
 			</form>
 		</div>
 		<br/>
-		<div>
-			<table id="freeboard">
+		<div style="width: 100%;">
+			<table id="freeboard" style="width: 90%;">
 				<thead>
 					<tr>
 						<th>글번호</th>
 						<th>아이디</th>
-						<th>작성자</th>
+						<th>성명</th>
 						<th>글제목</th>
 						<th>조회수</th>
 						<th>등록일자</th>
@@ -83,9 +112,7 @@
 					<c:forEach var="free" items="${freeList}" varStatus="status">
 						<tr>
 							<td>${free.idx}</td>
-							<td>
-								${free.userid}
-							</td>
+							<td>${free.userid}</td>
 							<td>${free.name}</td>
 							<td class="subject" onClick="goView('${free.idx}','${gobackURL}')">${free.subject}</td>
 							<td>${free.readCnt}</td>
@@ -104,9 +131,11 @@
 	</div>
 	
 	<!-- 페이지 바 만들기 -->
+	<div style="width: 80%; margin-left: 10%;">
+		${pagebar}
+	</div>
 	
-	
-	<!-- 해당 글  조회용 폼 생성 -->
+	<!-- 해당 글 조회용 폼 생성 -->
 	<form name="idxFrm">
 		<input type="hidden" name="idx" />
 		<input type="hidden" name="gobackURL" />

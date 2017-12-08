@@ -52,15 +52,14 @@
 		<tr>
 			<th>등록일자</th>
 			<td>${freevo.regDate}</td>
-		</tr>		
-		
+		</tr>
 	</table>
 	
 	<br/>
 	
 	<button type="button" onClick="javascript:location.href='${gobackURL}'">목록보기</button>
-	<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/edit.action?seq=${boardvo.seq}'">수정</button>
-	<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/del.action?seq=${boardvo.seq}'">삭제</button>
+	<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/freeEdit.mr?seq=${freevo.idx}'">수정</button>
+	<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/freeDel.mr?seq=${freevo.idx}'">삭제</button>
 		
 	<br/><br/>
 	
