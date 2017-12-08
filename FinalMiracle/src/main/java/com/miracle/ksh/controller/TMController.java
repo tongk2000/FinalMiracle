@@ -142,7 +142,7 @@ public class TMController {
 		
 		MemberVO loginUser = (MemberVO) ses.getAttribute("loginUser");
 		
-		//System.out.println("확인용 : " + loginUser.getIdx());
+		System.out.println("확인용 : " + loginUser.getIdx());
 		
 		String fk_member_idx = String.valueOf(loginUser.getIdx());
 		
