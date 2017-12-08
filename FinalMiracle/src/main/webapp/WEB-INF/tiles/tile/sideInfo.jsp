@@ -18,7 +18,7 @@
     <h3 class="side-title">side-info</h3>
     <ul>
       <li><a href="<%= request.getContextPath() %>/doList.mr">일정관리</a></li>
-      <li><a href="<%=serverName%><%= request.getContextPath() %>/chating.mr">채팅</a></li>
+      <li><a href="<%=serverName%><%= request.getContextPath() %>/chatting.mr">채팅</a></li>
       <li><a href="<%= request.getContextPath() %>/commute.mr">출퇴근 체크</a></li>
       <li><a href="<%= request.getContextPath() %>/chatting.mr">채팅</a></li>
       <li><a href="<%= request.getContextPath() %>/faqList.mr">FAQ게시판</a></li>
