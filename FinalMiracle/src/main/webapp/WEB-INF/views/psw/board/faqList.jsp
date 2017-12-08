@@ -149,9 +149,9 @@
 <h1 style="margin-left: 20%;">자주 묻는 질문</h1>
 <div style="padding-left: 10%; border: 1px solid red;">
 	<!-- ========================================= *** Category 분류 항목 *** ================================= -->
-	<div style="width: 90%; border: 1px solid maroon;"> 
-		<div class="category" style="margin-left:10%; border: 1px solid orange;">
-			<a onClick="goCategory('0');">[분류없음]</a>
+	<div style="width: 90%;"> 
+		<div class="category" style="margin-left:10%;">
+			<a onClick="goCategory('0');">[기타문의]</a>
 		</div>
 		
 		<div class="category" style="margin-left:10%;">
@@ -163,7 +163,7 @@
 		</div>
 		
 		<div class="category" style="margin-left:10%;">
-			<a onClick="goCategory('3')">[로그인관련]</a>
+			<a onClick="goCategory('3')">[업무관련]</a>
 		</div>	
 	</div>
 	<!-- ========================================== *** accordion FAQ 게시판 목록 *** ============================== -->

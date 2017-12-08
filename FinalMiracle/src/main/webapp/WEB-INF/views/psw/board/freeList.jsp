@@ -13,13 +13,13 @@
 
 	table tr th, td {
 		border: 1px solid gray;
-		padding: 10px;
+		padding: 5px;
 	}
 	
 	.subjectStyle {
 		color: dimgray;
 		font-weight: bold;
-		font-size: 14pt;
+		font-size: 12pt;
 		cursor: pointer;
 	}
 
@@ -47,16 +47,12 @@
 		frm.submit();
 	}
 	
-	
-	
 </script>
 
 </head>
 
 <body>
-	
-
-	<div style="border: 1px solid red; margin-left: 10%;">
+	<div style="border: 1px solid pink; margin-left: 10%;">
 		<h1>자유게시판</h1>
 		<!-- 글 검색용 폼 생성 -->
 		<div>
@@ -77,7 +73,7 @@
 					<tr>
 						<th>글번호</th>
 						<th>아이디</th>
-						<th>글쓴이</th>
+						<th>작성자</th>
 						<th>글제목</th>
 						<th>조회수</th>
 						<th>등록일자</th>
@@ -87,7 +83,9 @@
 					<c:forEach var="free" items="${freeList}" varStatus="status">
 						<tr>
 							<td>${free.idx}</td>
-							<td>${free.userid}</td>
+							<td>
+								${free.userid}
+							</td>
 							<td>${free.name}</td>
 							<td class="subject" onClick="goView('${free.idx}','${gobackURL}')">${free.subject}</td>
 							<td>${free.readCnt}</td>
@@ -104,6 +102,9 @@
 		</div>
 		<br/>
 	</div>
+	
+	<!-- 페이지 바 만들기 -->
+	
 	
 	<!-- 해당 글  조회용 폼 생성 -->
 	<form name="idxFrm">
