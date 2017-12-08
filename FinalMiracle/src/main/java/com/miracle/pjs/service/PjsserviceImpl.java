@@ -87,8 +87,13 @@ public class PjsserviceImpl implements PjsinterService {
 		// 공지사항 글의 조회수 늘리는 메소드
 		int n = dao.updateReadCount(nidx);
 		return n;
+	}/* ================================================================================================================================================== */
+	@Override
+	public int setNoticeWrite(HashMap<String, String> team) {
+		// 공지사항 글쓰기 완료 메소드
+		int n = dao.setNoticeWrite(team);
+		return n;
 	}
-	
 	
 	
 //==========================================================================================================================================================//	

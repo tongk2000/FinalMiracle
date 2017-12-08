@@ -17,6 +17,7 @@
 	}
 	th {
 		text-align:center;
+		background-color:gray;
 	}
 	td {
 		padding-left:5px;
@@ -105,7 +106,7 @@
 		<div style="float:right;">
 			<br/>
 			<c:if test="${team.status == 2}" >
-				<button type="button" onClick="goWrite()">글쓰기</button>
+				<button type="button" onClick="goWrite();">글쓰기</button>
 				<button type="button" id="del" >삭제</button>
 			</c:if>
 		</div>
@@ -245,16 +246,13 @@
 			<c:if test="${team.userid != null&&team.userid!=''}">
 				var m_userid = "${team.userid}";
 			</c:if>
-			alert("여기오니2");
 			var frm = document.write;
 			frm.teamNum.value= t_teamNum;
-			frm.userid.value= m_userid;
-			alert("여기오니3");
 			frm.action="<%=request.getContextPath()%>/noticeWrite.mr";
-			frm.method="POST";
+			frm.method="post";
 			frm.submit();
 		}
 	</script>
-	<div class="modal fade" id="userinfo" role="dialog"></div>
+	<div class="modal fade" id="userinfo" role="dialog" style="z-index:1000;"></div>
 </body>
 </html>

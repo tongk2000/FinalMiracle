@@ -8,10 +8,10 @@
 <title>공지사항 글</title>
 </head>
 <body>
-<c:set var="user" value="${map}" /> 
-	<div align="center">
-		<div style="align: center;">
-			<table>
+<c:set var="user" value="${map}" />  <!-- userid, teamNum -->
+	<div style="border: 1px solid green; width:100%;">
+		<div style="border: 1px solid yellow;">
+			<table style="border: 1px solid red; width: 80%;">
 				<thead>
 					<tr>
 						<th colspan="2">공지글</th>
@@ -19,28 +19,42 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td>유저 아이디 :</td>
-						<td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" style="width:25px; heigth:25px;"> ${user.userid} 팀정보 : ${user.teamNum}</td>
+						<td width="12%">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="img"> &nbsp;&nbsp; ${user.userid}</td>
 					</tr>
 					<tr>
-						<td>제목 :</td>
-						<td><input type="text"/></td>
+						<td width="12%">팀정보 : </td><td>${user.team_idx}</td>
 					</tr>
 					<tr>
+						<td width="12%">제목 : </td>
+						<td><input id="subject" type="text"/></td>
+					</tr>
+					<tr style="min-height: 200px;">
 						<td>내용 :</td>
-						<td><textarea></textarea></td>
+						<td height="200px"><input id="content" name="content" style="min-height:250px; min-width:400px;"/></td>
 					</tr>
 				</tbody>
 			</table>
-			<div style="display:block;"><button type="button" onClick="writeEnd();">완료</button></div>
+			<div style="display:block; float:right;"><button type="button" onClick="writeEnd();">완료</button></div>
 		</div>
 	</div>
-	<form>
-		<input type="hidden" name=""/>
+	<form name="end">
+		<input type="hidden" name="userid">
+		<input type="hidden" name="teamNum">
+		<input type="hidden" name="subject">
+		<input type="hidden" name="content">
 	</form>
 	<script>
 		function writeEnd() {
-			
+			var frm = document.end;
+			var subject = $("#subject").val();
+			var content = $("#content").val();
+			frm.userid.value = "${user.userid}";
+			frm.teamNum.value = "${user.teamNum}";
+			frm.subject.value = subject;
+			frm.content.value = content;
+			frm.action="<%=request.getContextPath()%>/noticeWriteEnd.mr";
+			frm.method="post";
+			frm.submit();
 		}
 	</script>
 </body>

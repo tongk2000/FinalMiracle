@@ -22,14 +22,12 @@
 	</thead>
 	<tbody>
 		<c:if test="${empty comment}" >
-				<tr class="hrline"><td colspan="3"><hr></td></tr>
 				<tr>
 					<td colspan="3">댓글이 없습니다.</td>
 				</tr>
 		</c:if>
 		<c:if test="${not empty comment}" >
 			<c:forEach var="reply" items="${comment}">
-				<tr class="hrline"><td colspan="3"><hr></td></tr>
 				<tr class="lastComment">
 					<td class="first">${sessionid}</td><td class="second">${reply.reply_content}</td><td class="third">${reply.regday}</td>
 				</tr>
