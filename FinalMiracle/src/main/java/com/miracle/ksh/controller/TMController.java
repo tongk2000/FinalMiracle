@@ -239,7 +239,9 @@ public class TMController {
 				}
 		    }
 			
-		}// end of if------------------------------
+		} else {
+			newFileName = "defaultImg.png";
+		}
 		
 		HashMap<String, String> tmMap = new HashMap<String, String>();
 		tmMap.put("fk_member_idx", fk_member_idx);
