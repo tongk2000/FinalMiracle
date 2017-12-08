@@ -114,8 +114,6 @@
 						<option value="">선택</option>
 						<c:forEach var="teamvo" items="${teamlist1}" varStatus="status">
 							<option value="${teamvo.IDX}">${teamvo.NAME}</option>
-							<input type="hidden" id="teamname" name="teamname" value="${teamvo.NAME}" />
-							<input type="hidden" id="" name="" value="${teamvo.NAME}" />
 						</c:forEach>
 					</select>
 					<br/>

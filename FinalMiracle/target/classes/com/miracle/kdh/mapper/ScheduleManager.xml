@@ -195,9 +195,10 @@
     <resultMap type="HashMap" id="getPageDateWeek">
     	<result property="day" column="day" javaType="String" />
     	<result property="dayDP" column="dayDP" javaType="String" />
+    	<result property="month" column="month" javaType="String" />
     </resultMap>
     <select id="getPageDateWeek" resultMap="getPageDateWeek">
-		select day, dayDP
+		select day, dayDP, substr(day,1,6) as month
 		from tbl_doPaging_week
 	</select>
 	
@@ -211,9 +212,10 @@
     <resultMap type="HashMap" id="getPageDateMonth">
     	<result property="day" column="day" javaType="String" />
     	<result property="dayDP" column="dayDP" javaType="String" />
+    	<result property="month" column="month" javaType="String" />
     </resultMap>
     <select id="getPageDateMonth" resultMap="getPageDateMonth">
-		select day, dayDP
+		select day, dayDP, substr(day,1,6) as month
 		from tbl_doPaging_month
 	</select>
 </mapper>

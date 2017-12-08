@@ -34,6 +34,8 @@ public class ProjectMangerController {
 		// 추후. 여기부터 ~~~~~
 		// ses.removeAttribute("loginUser");
 		// ses.removeAttribute("teamInfo");
+		
+		
 		if(ses.getAttribute("loginUser") == null) {
 			MemberVO mvo = new MemberVO();
 			mvo = msvc.getLoginMember("kdh");
@@ -46,6 +48,8 @@ public class ProjectMangerController {
 			map.put("teamwon_status", "2");
 			ses.setAttribute("teamInfo", map);
 		}
+		
+		
 		// 여기까지는 나중에 팀 세션 정보 추가되면 삭제해야함
 		
 		@SuppressWarnings("unchecked")
@@ -131,9 +135,14 @@ public class ProjectMangerController {
 	@RequestMapping(value="do_addDownElement.mr", method={RequestMethod.GET})
 	public String addDownElement(HttpServletRequest req) {
 		String upIdx = req.getParameter("upIdx");
+		req.setAttribute("upIdx",upIdx); // 상위폴더값 유지용
 		
 		HashMap<String, String> map = svc.getUpFolder(upIdx);
-		map.put("upIdx",upIdx);
+		
+		String term = req.getParameter("term"); // 페이징 기간을 가져옴
+		String page = (String)req.getParameter("page"); // 페이징 이동할 페이지를 가져옴
+		req.setAttribute("term", term);	// 페이징 값 유지용
+		req.setAttribute("page", page);	// 페이징 값 유지용
 		
 		req.setAttribute("map", map);
 		
@@ -153,7 +162,10 @@ public class ProjectMangerController {
 		
 		map.put("teamwon_idx", Integer.parseInt(teamInfo.get("teamwon_idx")) ); // 폴더팀원목록에도 넣어줌(status 다르게 해주기 위함)
 		
-		HashMap<String, Object> returnMap = svc.addDownElementEnd(fvo, map); // 트랜잭션 결과와 새로 추가된 요소의 정보를 가져옴 
+		String term = req.getParameter("term"); // 페이징 기간을 가져옴
+		String page = (String)req.getParameter("page"); // 페이징 이동할 페이지를 가져옴
+		
+		HashMap<String, Object> returnMap = svc.addDownElementEnd(fvo, map, term, page); // 트랜잭션 결과와 새로 추가된 요소의 정보를 가져옴 
 		
 		req.setAttribute("returnMap", returnMap);
 		

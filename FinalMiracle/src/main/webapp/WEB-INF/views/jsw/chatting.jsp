@@ -4,6 +4,19 @@
 
 <script type="text/javascript" src="/board/resources/js/json2.js"></script>
 
+<style type="text/css">
+	
+	#circle {
+		width: 100px;
+		height: 100px;
+		background: red;
+		-moz-border-radius: 50px;
+		-webkit-border-radius: 50px;
+		border-radius: 50px;
+	}
+	
+</style>
+
 <script type="text/javascript" >
 
     $(document).ready(function(){
@@ -15,8 +28,9 @@
     	var pathname = window.location.pathname; // '/'부터 오른쪽에 있는 모든 경로
     	// 	alert("pathname : " + pathname);
     	    // 결과값  pathname : /board/chatting/multichat.action
+    	    // /miracle/chatting.mr
     	 	
-    	var appCtx = pathname.substring(0, pathname.indexOf("/",7));  // "전체 문자열".indexOf("검사할 문자", 시작순서인덱스번호);   
+    	var appCtx = pathname.substring(0, pathname.indexOf("/",1));  // "전체 문자열".indexOf("검사할 문자", 시작순서인덱스번호);   
     	// 	alert("appCtx : " + appCtx);
     	    // 결과값  appCtx : /board/chatting
     	 	
@@ -25,10 +39,10 @@
     	 	// 결과값   root : 192.168.10.36:9090/board/chatting
     	 	
     	
-    	var wsUrl = "ws://"+root+"/multichatstart.action";
-    	 // var websocket = new WebSocket("ws://192.168.10.36:9090/board/chatting/multichatstart.action");
-    	var websocket = new WebSocket(wsUrl);        
-        
+    	var wsUrl = "ws://"+root+"/chattingstart.mr";
+    	 // var websocket = new WebSocket("ws://192.168.10.72:9090/board/chatting/multichatstart.action");
+    	var websocket = new WebSocket(wsUrl);
+    	// ws://192.168.10.72:9090/miracle/chatting.mr
     	// alert(wsUrl);
     	
     	// >>>> Javascript WebSocket 이벤트 정리 <<<< 
@@ -41,7 +55,7 @@
     	
 	    // === 웹소켓에 최초로 연결이 되었을 경우에 실행되어지는 콜백함수
     	websocket.onopen = function() {
-    	//	alert("웹소켓 연결됨!!");
+    		// alert("웹소켓 연결됨!!");
     		$("#chatStatus").text("Info: connection opened.");
     	
     	/*	
@@ -104,11 +118,27 @@
 </script>
 </head>
 <body>
+	<div style="float: left; width: 200px; height: 500px; border: 1px solid red;">
 
-	<div id="chatStatus"></div>
-	<input type="button" id="sendMessage" value="엔터" />
+	채팅방 목록
+		<div style="border: 1px solid yellow;">
+			<c:forEach var="room" items="${roomList}">
+				<div>${room.roomname} <span style="color: gray;">[${room.personnum}]</span>
+					<c:if test="${room.notreadmessage != 0}">
+						<span style="background-color: red;">${room.notreadmessage}</span>
+					</c:if>
+				</div>
+			</c:forEach>
+			
+			<div>채팅방 이름 <span style="color: gray;">[5]</span></div>
+		</div>
+	</div>
+	<div style="float: left;">
+	<div id="chatMessage" style="overFlow: auto; height: 500px; border: 1px solid blue; width: 600px;"></div>
+    <div id="chatStatus"></div>
     <input type="text" id="message" placeholder="메시지 내용"/>
-    <input type="text" id="to" placeholder="귓속말대상"/>
-    <div id="chatMessage" style="overFlow: auto; max-height: 500px;"></div>
+    <input type="button" id="sendMessage" value="전송" />
+    <input type="hidden" id="to" placeholder="귓속말대상"/>
+    </div>
 </body>
 </html>

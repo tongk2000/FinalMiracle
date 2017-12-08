@@ -16,6 +16,10 @@
 	    background-color:lightgray;
     }
 	
+	.pointer{
+		cursor:pointer;
+	}
+	
 	td.infoClass {
 		border-top:ridge;
 		border-bottom:ridge;
@@ -75,12 +79,22 @@
 	.delElement {
 		background-color:red;
 	}
+	
+	.line-in-middle {
+	  background: linear-gradient(to right, 
+	                              transparent 0%, 
+	                              transparent calc(50% - 0.81px), 
+	                              blue calc(50% - 0.8px), 
+	                              blue calc(50% + 0.8px), 
+	                              transparent calc(50% + 0.81px), 
+	                              transparent 100%);
+	}
 </style>
 
 <script type="text/javascript">
 	window.onload = function(){
-		document.getElementById("term").value = "${term}";
 		document.getElementById("page").value = "${page}";
+		todayLine();
 	}
 	
 	$(document).ready(function(){
@@ -417,7 +431,10 @@
 	// 하위 요소 추가
 	function addDownElement() {
 		var upIdx = $(".selectedLine").attr("id");
-		window.open("do_addDownElement.mr?upIdx="+upIdx, "subwinpop", "left=100px, top=100px, width=400px, height=350px");
+		var term = $("#term").val();
+		var page = $("#page").val();
+		
+		window.open("do_addDownElement.mr?upIdx="+upIdx+"&term="+term+"&page="+page, "subwinpop", "left=100px, top=100px, width=400px, height=350px");
 	} // end of function addDownElement() -----------------------------------------------------------------------------------------------------------------------------
 	// 하위 요소 추가되었을때 살짝 깜빡여 주기
 	function addLine(id) {
@@ -488,27 +505,54 @@
 		});
 	} // function selectTaskInfo(frm) ------------------------------------------------------------------------------------------------
 	
-	// 이전 날짜로 페이징 처리하기 위해 페이지 값을 가져오기
+	// 하루전으로 페이징 처리하기 위해 페이지 값을 가져오기
 	function beforeDate() {
+		var val = document.getElementById("page").value;
+		document.getElementById("page").value = parseInt(val) - 1;
+		changePageDate();
+	} // end of function beforeDate() --------------------------------------------------------------------------------------------------
+	
+	// 이전 기간으로 페이징 처리하기 위해 페이지 값을 가져오기
+	function beforeTerm() {
 		var val = document.getElementById("page").value;
 		var term = document.getElementById("term").value;
 		document.getElementById("page").value = parseInt(val) - parseInt(term);
 		changePageDate();
 	} // end of function beforeDate() --------------------------------------------------------------------------------------------------
 	
-	// 이후 날짜로 페이징 처리하기 위해 페이지 값을 가져오기
+	// 하루뒤로 페이징 처리하기 위해 페이지 값을 가져오기
 	function afterDate() {
+		var val = document.getElementById("page").value;
+		document.getElementById("page").value = parseInt(val) + 1;
+		changePageDate();
+	} // end of function afterDate() --------------------------------------------------------------------------------------------------
+	
+	// 이후 기간으로 페이징 처리하기 위해 페이지 값을 가져오기
+	function afterTerm() {
 		var val = document.getElementById("page").value;
 		var term = document.getElementById("term").value;
 		document.getElementById("page").value = parseInt(val) + parseInt(term);
 		changePageDate();
 	} // end of function afterDate() --------------------------------------------------------------------------------------------------
 	
+	// 오늘 날짜로 돌아가는 함수
+	function callToday() {
+		document.getElementById("page").value = 0;
+		changePageDate();
+	} // end of function callToday() -----------------------------------------------------------------------------------------------------
+	
 	// 수정된 페이지 값을 이용해서 새롭게 페이징 처리하기
 	function changePageDate() {
 		document.pageDateFrm.submit();
 	} // end of function changePageDate() -------------------------------------------------------------------------------------------------
 	
+	// 오늘 날짜에는 가운데 선 그어주기
+	function todayLine() {
+		<jsp:useBean id="today" class="java.util.Date"/>
+		<fmt:formatDate value="${today}" var="now" pattern="yyyyMMdd"/> // 오늘 날짜를 구해서
+		var now = ${now};
+		$("."+now).addClass("line-in-middle"); // 클래스가 오늘 날짜인건 전부 가운데 줄 그어주는 css 추가
+	} // end of function todayLine() --------------------------------------------------------------------------------------------------------------
 </script>
 
 <div class="container" style="width:100%; float:left">
@@ -523,17 +567,25 @@
 				<th colspan="${map.pageDateList.size()}" style="text-align:center;">2017</th>
 			</tr>
 			<tr>
-				<th colspan="4"></th>
+				<th colspan="4">
+					<div style="margin-left:20px; border-left:10px solid lightgreen; height:10px; display:inline;"></div>진행전
+					<div style="margin-left:10px; border-left:10px solid green; height:10px; display:inline;"></div>진행중
+					<div style="margin-left:10px; border-left:10px solid red; height:10px; display:inline;"></div>기한만료
+				</th>
 				<th></th>
 				<th></th>
 				<th colspan="${map.pageDateList.size()}" style="text-align:center;">
 					<form name="pageDateFrm" method="get" action="do_changePageDate.mr">
-						<span id="btn_before" onclick="beforeDate()">◀</span>
+						<span class="pointer" onclick="beforeTerm()">◀</span>
+						<span class="pointer" onclick="beforeDate()">◁</span>
 						<select id="term" name="term" onchange="changePageDate()">
 							<option value="7">주간</option>
-							<option value="30">월간</option>
+							<option value="30" 
+								<c:if test="${term == 30}">selected</c:if>
+							>월간</option>
 						</select>
-						<span id="btn_after" onclick="afterDate()">▶</span>
+						<span class="pointer" onclick="afterDate()">▷</span>
+						<span class="pointer" onclick="afterTerm()">▶</span>
 						<input type="hidden" id="page" name="page" value="0"/>
 					</form>
 				</th>
@@ -546,7 +598,7 @@
 				<th></th>
 				<th></th>
 				<c:forEach var="pageDate" items="${map.pageDateList}">
-					<th>${pageDate.dayDP}</th>
+					<th class="pointer" ondblClick="callToday()">${pageDate.dayDP}</th> <!-- 날짜부분 더블클릭시 오늘날짜로 돌려주는 함수 호출 -->
 				</c:forEach>
 			</tr>
 		</thead>
@@ -600,18 +652,19 @@
 							<fmt:parseNumber var="lastDate" value="${dvo.lastDate.replace('-','')}" integerOnly="true"/>
 							<fmt:parseNumber var="day" value="${pageDate.day}" integerOnly="true"/>
 							
-							<td class="pageDateLine" style="border-left:0.5px solid lightgray" align="center">
+							<td class="pageDateLine ${day}" style="border-left:0.5px solid lightgray;" align="center">
+								
 								<c:if test="${startDate <= day and day <= lastDate}">
 									<c:if test="${dvo.dayCnt == 0}"> <!-- 시작일 전이라면 -->
-										<div style="height:19px; width:100%; background-color:lightgreen;"></div>
+										<div class="${day}" style="height:19px; width:100%; background-color:lightgreen;"></div>
 									</c:if>
 									<c:if test="${dvo.dayCnt == 1}"> <!-- 진행중이라면 -->
-										<div style="height:19px; width:100%; background-color:green;"></div>
+										<div class="${day}" style="height:19px; width:100%; background-color:green;"></div>
 									</c:if>
 									<c:if test="${dvo.dayCnt == -1}"> <!-- 기한이 지났다면 -->
-										<div style="height:19px; width:100%; background-color:red;"></div>
+										<div class="${day}" style="height:19px; width:100%; background-color:red;"></div>
 									</c:if>
-								</c:if>
+								</c:if>								
 							</td>
 						</c:forEach>
 					</tr>
