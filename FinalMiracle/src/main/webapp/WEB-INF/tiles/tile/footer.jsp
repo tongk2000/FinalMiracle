@@ -14,6 +14,9 @@
 	
 </script>
 
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAGoOx5t16lxp_DW2Y8WpN2gJB9U3fzPRg"></script>
+
 <a data-toggle="modal" href="#myModal" class="btn btn-primary" onclick="launchMap()">Launch modal</a>
 
 <div class="modal" id="launchMapModal" aria-hidden="true" style="display: none; z-index: 1080; heigth:1000px;">

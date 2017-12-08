@@ -2,9 +2,6 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
  
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAGoOx5t16lxp_DW2Y8WpN2gJB9U3fzPRg"></script>
-
 <style>
 	#div_name {
 		width: 70%;
@@ -40,7 +37,7 @@
 </style>
 <script type="text/javascript">
 	$(document).ready(function() {
-			/* google.maps.event.addDomListener(window, 'load', initialize); // 구글사에서 그대로 따옴!!! ====== 구글맵 생성
+			google.maps.event.addDomListener(window, 'load', initialize); // 구글사에서 그대로 따옴!!! ====== 구글맵 생성
 			function initialize(){ // 사용자가 커스텀마이즈 할 수 있다.									    ====== 구글맵 처음 시작할 때
 			    var mapOptions = { // 구글 맵 옵션 설정
 			        zoom : 10, // 기본 확대율(줌 크기조절) , 숫자가 클수록 줌 크기가 확대되는 것이다. 숫자가 작아질 수록 광대역을 볼 수 있다.
@@ -76,7 +73,7 @@
 					</c:forEach>
 				];
 			    setMarkers(map, storeArr);	// 여기서 map은 지도 <div id="googleMap"	style="width: 100%; height: 360px; margin: auto;"></div>를 가리킴
-			} // end of function initialize()-------------------------------- */
+			} // end of function initialize()--------------------------------
 			var markerArr;  // 전역변수로 사용됨.
 			function setMarkers(map, storeArr){ // 지도 값과 3이 들어간다.!!!!
 				markerArr = new Array(storeArr.length); // 배열의 길이 3!!!
@@ -120,6 +117,8 @@
 						}	 		
 			  });  // end of google.maps.event.addListener()-------------------
 		}// end of function markerListener(map, marker)-----------
+		
+		
 		function goDetail(map_idx, map_team_idx) // 모달창을 띄우자
 		{
 			var data_form = {"map_idx":map_idx, "map_team_idx":map_team_idx};
@@ -230,8 +229,7 @@
 <div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height">
 	<div id="displayList" style="background-color:black">ㅇ</div>
 </div></div></div></div></div></div></div></div></div></div></div></div>
-<div id="googleMap"	style="width: 30%; height: 200px; margin: auto; margin:20% 30% 20% 35% ; "></div>
-<!-- <div class="modal fade" id="mapInfo" role="dialog"></div> -->
+<div id="googleMap"	style="width: 30%; height: 200px; margin: auto; margin:20% 30% 20% 35% ; ">2323</div>
 <form name="map">
 	<input type="hidden" name="choice">
 	<input type="hidden" name="searchString">
