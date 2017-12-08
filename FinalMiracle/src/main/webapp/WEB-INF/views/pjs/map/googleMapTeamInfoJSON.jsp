@@ -7,11 +7,6 @@
 		heigth:25px;
 	}
 </style>
-<script>
-	$(document).ready(function(){
-		alert("이미지 있니");
-	});
-</script>
 <div class="modal-dialog">
 	<%-- Modal content --%>
 	<div class="modal-content" align="center">
