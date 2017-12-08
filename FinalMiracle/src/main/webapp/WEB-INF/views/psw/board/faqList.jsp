@@ -1,7 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-     
+
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/resources/jqueryuicss/jquery-ui.css" />
+<link href="<%=request.getContextPath() %>/resources/summernote/summernote.css" rel="stylesheet">
+
+<script type="text/javascript" src="<%= request.getContextPath() %>/resources/jqueryuijs/jquery-ui.js"></script>
+<script src="<%=request.getContextPath() %>/resources/summernote/summernote.js"></script>
+<script src="<%=request.getContextPath() %>/resources/summernote/lang/summernote-ko-KR.js"></script>
 
 <style type="text/css">
 	table, th, td {border: solid gray 1px;}
@@ -15,7 +21,10 @@
 				 
 				 font-weight: bold;} 
 				  
-	.category {display: inline;}
+	.category {display: inline;
+			   cursor: pointer;
+			   color: navy;
+			   font-size: 13pt;}
 	
 	.answer {margin-left: 10px;
 	min-height: null;
@@ -59,6 +68,14 @@
  
 <script type="text/javascript">
 	$(document).ready(function(){
+		$('.summernote').summernote({
+		      height: 300,          // 기본 높이값
+		      minHeight: null,      // 최소 높이값(null은 제한 없음)
+		      maxHeight: null,      // 최대 높이값(null은 제한 없음)
+		      focus: true,          // 페이지가 열릴때 포커스를 지정함
+		      lang: 'ko-KR'         // 한국어 지정(기본값은 en-US)
+	    });
+		
 		// ================================= *** FAQ게시판 제목에 마우스 가져갈 경우 / 다른곳으로 이동한 경우 *** =========
 		$(".subject").bind("mouseover", function(event){
 			 var $target = $(event.target);
@@ -95,10 +112,7 @@
 				};
 				acodian.click('dt');
 		// ========================== accordion으로 FAQ 내용물 보여주기  끝 ===========================================
-		
-		
-		
-		
+
 	});  // end of $(document).ready() ----------------------------------
 	
 	// ===================================================== *** 검색폼에 입력한 검색값 유지 하는 함수 *** ================
@@ -122,8 +136,11 @@
 	}
 	
 	// ====================================================== *** 카테고리 분류 메뉴 클릭시 *** =========================
-	function goCategory() {
+	function goCategory(category) {
+		var frm = document.categoryFrm;
 		
+		frm.category.value = category;
+		frm.submit();
 	}
 
 </script>
@@ -134,19 +151,19 @@
 	<!-- ========================================= *** Category 분류 항목 *** ================================= -->
 	<div style="width: 90%; border: 1px solid maroon;"> 
 		<div class="category" style="margin-left:10%; border: 1px solid orange;">
-			<a onClick="">[분류없음]</a>
+			<a onClick="goCategory('0');">[분류없음]</a>
 		</div>
 		
 		<div class="category" style="margin-left:10%;">
-			<a onClick="">[회원관련]</a>
+			<a onClick="goCategory('1')">[회원관련]</a>
 		</div>
 		
 		<div class="category" style="margin-left:10%;">
-			<a onClick="">[상담관련]</a>
+			<a onClick="goCategory('2')">[상담관련]</a>
 		</div>
 		
 		<div class="category" style="margin-left:10%;">
-			<a onClick="">[로그인관련]</a>
+			<a onClick="goCategory('3')">[로그인관련]</a>
 		</div>	
 	</div>
 	<!-- ========================================== *** accordion FAQ 게시판 목록 *** ============================== -->
@@ -154,7 +171,7 @@
 		<dl>
 			<c:forEach var="faq" items="${faqList}" varStatus="status">
 			  <dt class="subject">
-			  	<span style="color: red;">Q.</span> ${faq.subject}
+			  	<span style="color: red;">Q.</span>${faq.subject}
 			  </dt>
 			  <dd class="answer">
 			  	<span style="color: blue; font-weight: bold;">[ A ]</span><br/>${faq.content}<br/>
@@ -190,6 +207,15 @@
 	</div>
 
 </div>
+
+
+<!-- category frm -->
+<div>
+	<form name="categoryFrm" action="<%= request.getContextPath() %>/faqList.mr" method="get">
+		<input type="hidden" name="category" />
+	</form>
+</div>
+
 
 
 
