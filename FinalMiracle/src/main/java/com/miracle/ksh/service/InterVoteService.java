@@ -25,13 +25,13 @@ public interface InterVoteService {
 
 	int VoteNumUpdate(String voteitem_idx); //해당하는 투표 문항에 득표 수를 올려보자
 
-	int VoteTotalCount1(); //현재 투표 글의 전체 수를 알아보자
+	int VoteTotalCount1(HashMap<String, String> map); //현재 투표 글의 전체 수를 알아보자
 
 	List<HashMap<String, String>> VoteListYesPaging1(HashMap<String, String> map); //투표리스트를 띄워보자 (예스 페이징)
 
 	List<HashMap<String, String>> VoteEndListYesPaging1(HashMap<String, String> map); //종료된 투표리스트를 띄워보자 (예스 페이징)
 
-	int VoteEndTotalCount1(); //종료된 투표 글의 전체 수를 알아오자
+	int VoteEndTotalCount1(HashMap<String, String> map); //종료된 투표 글의 전체 수를 알아오자
 
 	int VotedAdd(HashMap<String, String> mapVoted); //투표할 경우 기록 테이블에 남겨보자
 
@@ -67,7 +67,7 @@ public interface InterVoteService {
 
 	List<HashMap<String, String>> VoteReadyListYesPaging2(HashMap<String, String> map); //시작전 투표리스트를 띄워보자 (예스 페이징, 예스 검색)
 
-	int VoteReadyTotalCount1(); //시작전 투표글의 전체 수를 알아오자 (노 검색)
+	int VoteReadyTotalCount1(HashMap<String, String> map); //시작전 투표글의 전체 수를 알아오자 (노 검색)
 
 	int VoteReadyTotalCount2(HashMap<String, String> map); //시작전 투표글의 전체 수를 알아오자 (예스 검색)
 

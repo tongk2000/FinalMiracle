@@ -168,10 +168,10 @@ public class MyUtil {
 		String str_pageNo = "";
 		
 		if (pageNo == 1) {
-			str_pageNo = "&nbsp;[이전"+blockSize+"페이지]";
+			str_pageNo = "&nbsp;[Before "+blockSize+" Page]";
 		}
 		else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"\" >"+"[이전"+blockSize+"페이지]</a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"\" >"+"[Before "+blockSize+" Page]</a>&nbsp;"; 
 		}
 		
 		pageBar += str_pageNo;
@@ -190,10 +190,10 @@ public class MyUtil {
 		}
 		
 		if (pageNo > totalPage) {
-			str_pageNo = "&nbsp;[다음"+blockSize+"페이지]";
+			str_pageNo = "&nbsp;[Next "+blockSize+" Page]";
 		}
 		else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"\" >"+"[다음"+blockSize+"페이지]</a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"\" >"+"[Next "+blockSize+" Page]</a>&nbsp;"; 
 		}
 		
 		pageBar += str_pageNo;	
@@ -213,9 +213,9 @@ public class MyUtil {
 		String str_pageNo = "";
 		
 		if (pageNo == 1) {
-			str_pageNo = "&nbsp;[이전"+blockSize+"페이지]";
+			str_pageNo = "&nbsp;[Before "+blockSize+" Page]";
 		} else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" >"+"[이전"+blockSize+"페이지]</a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" >"+"[Before "+blockSize+" Page]</a>&nbsp;"; 
 		}
 		
 		pageBar += str_pageNo;
@@ -233,9 +233,9 @@ public class MyUtil {
 		}
 		
 		if (pageNo > totalPage) {
-			str_pageNo = "&nbsp;[다음"+blockSize+"페이지]";
+			str_pageNo = "&nbsp;[Next "+blockSize+" Page]";
 		} else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" >"+"[다음"+blockSize+"페이지]</a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" >"+"[Next "+blockSize+" Page]</a>&nbsp;"; 
 		}
 		pageBar += str_pageNo;	
 		
@@ -243,7 +243,7 @@ public class MyUtil {
 	}// end of String getPageBarWithSearch(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String searchType, String searchString, String period, String url)--------------------	
 	
 	
-	// **** 돌아갈 URL 페이지의 값을 알기 위해서 먼저 현재 URL 주소를 얻어오는 메소드 **** //
+	// **** 돌아갈 URL Page의 값을 알기 위해서 먼저 현재 URL 주소를 얻어오는 메소드 **** //
 	public static String getCurrentURL(HttpServletRequest req) {
 		String currentURL = req.getRequestURL().toString();  // ==> 확인용 currentURL => http://localhost:9090/MyMVC/memberList.do
 		String method = req.getMethod();

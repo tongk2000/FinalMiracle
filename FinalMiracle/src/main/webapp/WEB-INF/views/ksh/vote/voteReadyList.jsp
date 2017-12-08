@@ -215,7 +215,7 @@
 	<input type="hidden" name="vote_idx"/>
 	<input type="hidden" name="teamwon_idx"/>
 	<input type="hidden" name="voteitem_idx"/>
-	<input type="hidden" name="gobackURL" />
+	<input type="hidden" name="gobackURL" value="${gobackURL}" />
 </form>
 
 <form name="idxFrm">

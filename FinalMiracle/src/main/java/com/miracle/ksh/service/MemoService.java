@@ -40,8 +40,8 @@ public class MemoService implements InterMemoService {
 	}
 
 	@Override
-	public List<String> getfolderList() {
-		List<String> folderList = dao.getfolderList();
+	public List<String> getfolderList(String fk_member_idx) {
+		List<String> folderList = dao.getfolderList(fk_member_idx);
 		return folderList;
 	}
 

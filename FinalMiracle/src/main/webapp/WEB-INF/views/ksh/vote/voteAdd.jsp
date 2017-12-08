@@ -101,12 +101,6 @@
 		
 	}
 	
-	function goReset() {
-		var addFrm = document.addFrm;
-		addFrm.reset();
-		$("#result").empty();
-	}
-	
 	function goImageFile(){
 		
 		var html = "";
@@ -175,7 +169,6 @@
 		<br/>
 		
 		<button type="button" class="btn btn-primary" style="margin-right: 10px;" onClick="goAdd();">투표등록</button>
-		<button type="button" class="btn btn-primary" style="margin-right: 10px;" onClick="goReset();">초기화</button>
 		<button type="button" class="btn btn-primary" style="margin-right: 10px;" onClick="javascript:location.href='<%= request.getContextPath() %>/voteList.mr'">투표목록</button> 
 	
 	</form>

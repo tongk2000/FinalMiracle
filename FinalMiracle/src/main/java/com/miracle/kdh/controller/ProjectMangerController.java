@@ -26,7 +26,7 @@ public class ProjectMangerController {
 	@Autowired
 	MemberService msvc; // 추후. 팀 세션 정보 추가되면 삭제해야함
 	
-	// 모든 폴더, 할일 리스트를 가져오는 메소드
+	// 초기 페이지의 모든 폴더, 할일 리스트를 가져오기
 	@RequestMapping(value="doList.mr", method={RequestMethod.GET})
 	public String doList (HttpServletRequest req) {
 		HttpSession ses = req.getSession();
@@ -50,11 +50,38 @@ public class ProjectMangerController {
 		
 		@SuppressWarnings("unchecked")
 		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo");
-		List<FolderVO> doList = svc.getAllDoList(teamInfo.get("team_idx"));
-		req.setAttribute("doList", doList);
+		String team_idx = teamInfo.get("team_idx");
 		
-		return "kdh/doList.all";
+		String page = "0"; // 첫화면이므로 초기값 0을 줌
+		String term = "7"; // 첫화면이므로 초기값 7을 줌
+		req.setAttribute("term", term);	// 페이징 값 유지용
+		req.setAttribute("page", page);	// 페이징 값 유지용
+		
+		HashMap<String, Object> map = svc.getAllDoList(team_idx, page, term); // 할일리스트와 페이징처리를 위한 날짜를 받아옴
+		req.setAttribute("map", map);
+		
+		return "kdh/doList/doList.all";
 	} // end of String doList (HttpServletRequest req) ----------------------------------------------------------------
+	
+	// 페이지 이동한 모든 폴더, 할일 리스트를 가져오기
+	@RequestMapping(value="do_changePageDate.mr", method={RequestMethod.GET})
+	public String changePageDate(HttpServletRequest req) {
+		HttpSession ses = req.getSession();
+		
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo");
+		String team_idx = teamInfo.get("team_idx");
+		
+		String term = req.getParameter("term"); // 페이징 기간을 가져옴
+		String page = (String)req.getParameter("page"); // 페이징 이동할 페이지를 가져옴
+		req.setAttribute("term", term);	// 페이징 값 유지용
+		req.setAttribute("page", page);	// 페이징 값 유지용
+		
+		HashMap<String, Object> map = svc.getAllDoList(team_idx, page, term); // 할일리스트와 페이징처리를 위한 날짜를 받아옴
+		req.setAttribute("map", map);
+		
+		return "kdh/doList/doList.all";
+	}
 	
 	// 선택한 폴더의 모든 정보를 가져오기
 	@RequestMapping(value="do_getSelectFolderInfo.mr", method={RequestMethod.GET})
@@ -64,7 +91,7 @@ public class ProjectMangerController {
 		req.setAttribute("fvo", map.get("fvo"));
 		req.setAttribute("folder_teamwonList", map.get("folder_teamwonList"));
 		req.setAttribute("folder_commentList", map.get("folder_commentList"));
-		return "kdh/modal/modalFolder.not";
+		return "kdh/doList/modal/modalFolder.not";
 	} // end of String do_getSelectFolderInfo(HttpServletRequest req) -----------------------------------------------
 	
 	// 선택한 할일의 모든 정보를 가져오기
@@ -75,7 +102,7 @@ public class ProjectMangerController {
 		req.setAttribute("fvo", map.get("fvo"));
 		req.setAttribute("folder_teamwonList", map.get("folder_teamwonList"));
 		req.setAttribute("folder_commentList", map.get("folder_commentList"));
-		return "kdh/modal/modalTask.not";
+		return "kdh/doList/modal/modalTask.not";
 	} // end of String do_getSelectFolderInfo(HttpServletRequest req) -----------------------------------------------
 	
 	// 선택한 폴더의 정보를 수정하기
@@ -96,15 +123,13 @@ public class ProjectMangerController {
 	// 할일 완료, 미완료 처리하기
 	@RequestMapping(value="do_taskComplete.mr", method={RequestMethod.GET})
 	public String do_taskComplete(HttpServletRequest req, FolderVO fvo) {
-		System.out.println("idx"+fvo.getIdx());
-		System.out.println("status"+fvo.getStatus());
 		svc.setTaskComplete(fvo);
 		return "kdh/json.not";
 	} // end of String do_taskComplete(HttpServletRequest req, FolderVO fvo) ----------------------------------------------
 	
 	// 하위폴더 추가 팝업창 띄우기
-	@RequestMapping(value="do_addDownFolder.mr", method={RequestMethod.GET})
-	public String addDownFolder(HttpServletRequest req) {
+	@RequestMapping(value="do_addDownElement.mr", method={RequestMethod.GET})
+	public String addDownElement(HttpServletRequest req) {
 		String upIdx = req.getParameter("upIdx");
 		
 		HashMap<String, String> map = svc.getUpFolder(upIdx);
@@ -112,26 +137,28 @@ public class ProjectMangerController {
 		
 		req.setAttribute("map", map);
 		
-		return "kdh/popup/addDownFolder.not";
-	} // end of String addDownFolder(HttpServletRequest req) ----------------------------------------------
+		return "kdh/doList/popup/addDownElement.not";
+	} // end of String addDownElement(HttpServletRequest req) ----------------------------------------------
 	
-	// 하위폴더 추가하기
-	@RequestMapping(value="do_addDownFolderEnd.mr", method={RequestMethod.POST})
-	public String addDownFolderEnd(HttpServletRequest req, HttpSession ses, FolderVO fvo) {
-		String[] teamwonIdx = req.getParameterValues("teamwonIdx"); // 추가되는 폴더에 담당 팀원을 받아옴
+	// 하위요소 추가하기
+	@RequestMapping(value="do_addDownElementEnd.mr", method={RequestMethod.POST})
+	public String addDownElementEnd(HttpServletRequest req, HttpSession ses, FolderVO fvo) {
+		String[] teamwonIdxArr = req.getParameterValues("teamwonIdx"); // 추가되는 요소에 지정된 담당 팀원목록을 받아옴
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("teamwonIdx", teamwonIdx);
+		map.put("teamwonIdxArr", teamwonIdxArr);
 		
 		@SuppressWarnings("unchecked")
 		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo"); // 추가하는 팀원이 누구인지 세션에서 가져와서
 		fvo.setFk_teamwon_idx( Integer.parseInt(teamInfo.get("teamwon_idx")) ); // FolderVO 에 넣어줌
 		
-		int result = svc.addDownFolderEnd(fvo, map);
+		map.put("teamwon_idx", Integer.parseInt(teamInfo.get("teamwon_idx")) ); // 폴더팀원목록에도 넣어줌(status 다르게 해주기 위함)
 		
-		req.setAttribute("result", result);
+		HashMap<String, Object> returnMap = svc.addDownElementEnd(fvo, map); // 트랜잭션 결과와 새로 추가된 요소의 정보를 가져옴 
 		
-		return "kdh/popup/addDownFolderEnd.not";
-	} // end of String addDownFolderEnd(HttpServletRequest req, FolderVO fvo) ----------------------------------------------
+		req.setAttribute("returnMap", returnMap);
+		
+		return "kdh/doList/popup/addDownElementEnd.not";
+	} // end of String addDownElementEnd(HttpServletRequest req, FolderVO fvo) ----------------------------------------------
 	
 	// 팀원 아이디/팀원번호 가져오기
 	@RequestMapping(value="do_getTeamwonList.mr", method={RequestMethod.POST})
@@ -152,6 +179,17 @@ public class ProjectMangerController {
 		System.out.println(str_json);
 		return "kdh/json.not";
 	} // end of public String getTeamwonList(HttpServletRequest req) --------------------------------------------------------------
+	
+	// 선택한 요소와 그 하위요소들 삭제하기
+	@RequestMapping(value="do_delElement.mr", method={RequestMethod.GET})
+	public String delElement(HttpServletRequest req) {
+		String idx = req.getParameter("idx");
+		int result = svc.delElement(idx);
+		
+		String str_json = "{\"result\":\""+result+"\"}"; // JSON 형태로 넘길때는 반드시 {"키값":"밸류값"} 이어야함. 따옴표 주의
+		req.setAttribute("str_json", str_json);
+		return "kdh/json.not";
+	} // end of public String delElement(HttpServletRequest req) --------------------------------------------------------------
 }
 
 

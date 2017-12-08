@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<title>하위 폴더 추가</title>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>하위 요소 추가</title>
 
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/resources/jqueryuicss/jquery-ui.css" />
@@ -8,6 +13,7 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/BootStrapStudy/js/bootstrap.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/resources/jqueryuijs/jquery-ui.js"></script>
+</head>
 
 <style type="text/css">
 	#teamwonList{
@@ -115,12 +121,12 @@
 		
 	}); // end of $(document).ready(function() -----------------------------------------------------------------------------------------------
 	
-	function addDownFolder() {
-		var frm = document.addDownFolderFrm;
+	function addDownElement() {
+		var frm = document.addDownElementFrm;
 		frm.method = "post";
-		frm.action = "do_addDownFolderEnd.mr";
+		frm.action = "do_addDownElementEnd.mr";
 		frm.submit();
-	} // end of function addDownFolder() ---------------------------------------------------------------------------------------------------
+	} // end of function addDownElement() ---------------------------------------------------------------------------------------------------
 	
 	function cancel() {
 		var bool = confirm("정말로 창을 닫으시겠습니까?");
@@ -129,51 +135,59 @@
 		} 
 	} // end of function cancel() ------------------------------------------------------------------------------------------------------------
 </script>
-
-<form name="addDownFolderFrm">
-	<table style="width:400px;">
-		<tr style="width:400px;">
-			<td style="width:100px;">상위폴더</td> <td style="width:300px;">${map.subject}</td>
-		</tr>
-		<tr>
-			<td>만든사람</td> <td>${sessionScope.loginUser.userid}</td>
-		</tr>
-		<tr>
-			<td>폴더제목</td> <td><input type="text" name="subject"/></td>
-		</tr>
-		<tr>
-			<td>폴더개요</td> <td><input type="text" name="content"/></td>
-		</tr>
-		<tr>
-			<td>담당추가</td>
-			<td id="addTeamwon">
-				<div style="float:left; width:50px;" id="btn_add">추가▷</div>
-				<div style="float:left; width:250px;" id="selectedTeamwon"></div>
-			</td>
-		</tr>
-		<tr>
-			<td>시작일</td> <td><input type="text" name="startdate"/></td>
-		</tr>
-		<tr>
-			<td>마감일</td> <td><input type="text" name="lastdate"/></td>
-		</tr>
-		<tr>
-			<td>중요도</td> <td><input type="text" name="importance"/></td>
-		</tr>
-	</table>
+<body>
+	<form name="addDownElementFrm">
+		<table style="width:400px;">
+			<tr style="width:400px;">
+				<td style="width:100px;">상위요소</td> <td style="width:300px;">${map.subject}</td>
+			</tr>
+			<tr>
+				<td>요소</td>
+				<td>
+					<select name="category">
+						<option value="1" selected>폴더</option>
+						<option value="2">할일</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>만든사람</td> <td>${sessionScope.loginUser.userid}</td>
+			</tr>
+			<tr>
+				<td>요소제목</td> <td><input type="text" name="subject"/></td>
+			</tr>
+			<tr>
+				<td>요소개요</td> <td><input type="text" name="content"/></td>
+			</tr>
+			<tr>
+				<td>담당추가</td>
+				<td id="addTeamwon">
+					<div style="float:left; width:50px;" id="btn_add">추가▷</div>
+					<div style="float:left; width:250px;" id="selectedTeamwon"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>시작일</td> <td><input type="text" name="startDate"/></td>
+			</tr>
+			<tr>
+				<td>마감일</td> <td><input type="text" name="lastDate"/></td>
+			</tr>
+			<tr>
+				<td>중요도</td> <td><input type="text" name="importance"/></td>
+			</tr>
+		</table>
+		
+		<p id="hiddenInfo">
+			<input type="hidden" name="fk_folder_idx" value="${map.upIdx}"/>
+			<input type="hidden" name="groupNo" value="${map.groupNo}"/>
+			<input type="hidden" name="depth" value="${map.depth+1}"/>
+		</p>
+	</form>
 	
-	<p id="hiddenInfo">
-		<input type="hidden" name="fk_folder_idx" value="${map.upIdx}"/>
-		<input type="hidden" name="groupNo" value="${map.groupNo}"/>
-		<input type="hidden" name="depth" value="${map.depth+1}"/>
-	</p>
-</form>
-
-<button onclick="addDownFolder();">추가</button> <!-- form 안에 버튼이 들어가 있으면 오류 남발함. -->
-<button onclick="cancel();">취소</button>
-
-
-
+	<button onclick="addDownElement();">추가</button> <!-- form 안에 버튼이 들어가 있으면 오류 남발함. -->
+	<button onclick="cancel();">취소</button>
+</body>
+</html>
 
 
 

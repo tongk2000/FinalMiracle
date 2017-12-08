@@ -15,7 +15,7 @@ public interface InterMemoService {
 
 	int MemoTotalCount2(HashMap<String, String> memoMap); //메모 리스트의 총 개수를 가져오자 (예스 검색)
 
-	List<String> getfolderList(); //메모분류 리스트를 뽑아오자
+	List<String> getfolderList(String fk_member_idx); //메모분류 리스트를 뽑아오자
 
 	int MemoAdd(HashMap<String, String> memoMap); //메모를 써보자
 

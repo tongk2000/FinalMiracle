@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE>
 <html>
 <head>
@@ -14,12 +15,15 @@
 		border: 1px solid black;
 		border-collapse:none;
 	}
-	td, th {
+	th {
 		text-align:center;
 	}
+	td {
+		padding-left:5px;
+	}
 	.img {
-		width:5%;
-		height:5%;
+		width:25px;
+		height:25px;
 	}
 	div.min{
 		height:10px;
@@ -42,6 +46,13 @@
 	<div align="center" style="width:80%; margin:auto;">
 		<h2>공지사항 게시판</h2>
 		<form name="frm">
+			<%-- <c:if test="${fn:length(team) > 1}" >
+				<select id="teamNum" name="teamNum" style="font-size:12pt;">
+					<c:forEach var="t" items="${team}">
+						<option value="${t.teamNum}">${t.teamNum}팀</option>
+					</c:forEach>	
+				</select>
+			</c:if> --%>
 			<select id="searchType" name="searchType" style="font-size:12pt;">
 				<option value="fk_userid">아이디</option>
 				<option value="subject">제목</option>
@@ -49,7 +60,7 @@
 			<input type="text" id="searchString" name="searchString" />
 			<button type="button" id="btnClick" onClick="goSearch();">검색</button><br/>
 		</form>	
-			<div><div class="min"><div class="min"><div class="min"><div class="min"><div class="min"><div class="min">
+			<div class="min"><div class="min"><div class="min"><div class="min"><div class="min"><div class="min"><div class="min">
 				<div id="displayList" style="background-color:red; width:150px; margin-left: 28px; border-top: 0px; border: solid black 1px;"></div>
 			</div></div></div></div></div></div></div>
 			<table style="width:100%;">
@@ -70,41 +81,31 @@
 					</c:if>
 					<c:if test="${not empty list}">
 						<c:forEach var="nt" items="${list}" varStatus="status">
+							<tr class="line">
+								<td>${status.count}<input type="hidden" value="${nt.n_idx}"/></td><!-- 번호 -->
+								<td >
+									<a onClick="goUserInfo('${nt.fk_userid}');"> <!-- 유저아이디 -->
+										<img class="img" src="<%= request.getContextPath()%>/resources/images/${nt.img}" class="img" /> 
+										<span class="userid">${nt.fk_userid}</span>
+									</a>
+								</td>	
 							<c:if test="${nt.depth == 0}">
-								<tr class="line">
-									<td>${status.count}</td>									<!-- 번호 -->
-									<td >
-										<a onClick="goUserInfo('${nt.fk_userid}');">
-											<img class="img" src="<%= request.getContextPath()%>/resources/images/${nt.img}" class="img" /> 
-											<span class="userid">${nt.fk_userid}</span>
-										</a>
-									</td>														<!-- 아이디 -->
-									<td onClick="goView('${nt.n_idx}')">${nt.subject}</td>		<!-- 제목 -->
-									<td>${nt.regday}</td>										<!-- 날짜 -->
-									<td>${nt.readcount}</td>									<!-- 조회수-->
-								</tr>
+									<td onClick="goView('${nt.n_idx}','${nt.fk_userid}', '${nt.t_idx}')"><span style="color:red;">${nt.subject}</span></td><!-- 제목 -->
 							</c:if>
 							<c:if test="${nt.depth > 0}">
-								<tr class="line">
-									<td>${status.count}</td>									<!-- 번호 -->
-									<td >
-										<a onClick="goUserInfo('${nt.fk_userid}');">
-											<img class="img" src="<%= request.getContextPath()%>/resources/images/${nt.img}" class="img"/> 
-											<span class="userid">${nt.fk_userid}</span>
-										</a>
-									</td>														<!-- 아이디 -->
-									<td onClick="goView('${nt.n_idx}')">${nt.subject}</td>	<!-- 제목 -->
-									<td>${nt.regday}</td>										<!-- 날짜 -->
-									<td>${nt.readcount}</td>									<!-- 조회수-->
-								</tr>
+									<td onClick="goView('${nt.n_idx}','${nt.fk_userid}','${nt.t_idx}')" style="padding-left:${nt.depth*10}px; color:black; font-weight:bold;">└ [수정글] ${nt.subject}</td><!-- 제목 -->
 							</c:if>
+								<td>${nt.regday}</td><!-- 날짜 -->
+								<td>${nt.readcount}</td><!-- 조회수 -->
+							</tr>		
 						</c:forEach>
 					</c:if>
 				</tbody>
 			</table>
 		<div style="float:right;">
-			<c:if test="${userTeam.status == 2}" >
-				<button type="button" onClick="goWrite();">글쓰기</button>
+			<br/>
+			<c:if test="${team.status == 2}" >
+				<button type="button" onClick="goWrite()">글쓰기</button>
 				<button type="button" id="del" >삭제</button>
 			</c:if>
 		</div>
@@ -115,19 +116,31 @@
 	</div>
 	<form name="view">
 		<input type="hidden" name="idx" />
+		<input type="hidden" name="userid" />
+		<input type="hidden" name="teamidx" />
 	</form>
 	<form name="write">
 		<input type="hidden" name="userid" />
+		<input type="hidden" name="teamNum" />
 	</form>
 	<script>
 		$(document).ready(function(){
 			$("tr:has(td)").click(function(){ // tr중에서 td를 가지고 있는 tr
-				$(this).addClass("selectLine");
+				var bool = $(this).hasClass("selectLine"); // 한번 더 클릭하면 클래스 삭제
+				alert(bool);
+				if(bool) {
+					$(this).removeClass("selectLine");
+				}
+				else {
+					$(this).addClass("selectLine");
+				}
 			});
 			$("#del").click(function(){
 				$(".selectLine").each(function(){
-					
-				});		
+					var idx = $(this).find("input").val();
+					alert(idx);
+					location.href="<%=request.getContextPath()%>/noticeDel.mr?idx="+idx;
+				});
 			});
 			keep();
 			$("#displayList").hide();
@@ -135,7 +148,7 @@
 				if($("#searchType").val()==null||$("#searchType").val()=="") {
 					$("#searchType").val("fk_userid");
 				}
-				var data_form = {"searchString":$("#searchString").val(), "searchType":$("#searchType").val()};
+				var data_form = {"searchString":$("#searchString").val(), "searchType":$("#searchType").val(), "t_idx":${team.teamNum}};
 				$.ajax({
 					url:"noticeListJSON.mr",
 					type:"get",
@@ -170,45 +183,23 @@
 			   if (event.keyCode == 27 && modalFlag) {
 			      $('#userinfo').modal('hide');
 			   }
-			}); 
+			}); // end of $(document).on("keydown", function()
 			// 모달창에서 x 나 취소를 누르면 모달창을 닫기
 			$(document).on("click", ".modalClose", function(){         
 			 $('#userinfo').modal('hide');
 			}); // end of $(".modalClose").click(function() ------------------------------------------------------------------------------------------------------
-			
 			$(".line").hover(function(){ 
 				$(this).addClass("grayColor");
 			},function(){
 				$(this).removeClass("grayColor");
-			});
+			}); // end of $(".line").hover
 			
-			/* $(".line").click(function(){ 
-				var bool = $(this).prop("ckecked");
-				alert(bool);
-				if(bool) {
-					$(this).removeClass("grayColor");
-				}
-				else {
-					$(this).addClass("grayColor");
-				}
-			});	 */
-			
-			/* $("#del").click(function(){
-				$(".line").each(function(){
-					var index = $(".line").index(this);
-					alert(index);
-					if(bool) {
-									
-					}
-				});
-			}); */
-			
-		});
+		}); // $(document).ready
 		function keep() {
-			<c:if test="${searchType!=null&&searchType!=''}">
+			<c:if test='${searchType!=null&&searchType!=""}'>
 				$("#searchType").val("${searchType}");
 			</c:if>
-			<c:if test="${searchString!=null&&searchString!=''}">
+			<c:if test='${searchString!=null&&searchString!=""}'>
 				$("#searchString").val("${searchString}");
 			</c:if>
 		}
@@ -228,7 +219,7 @@
 				success: function(data) {
 					if(data.length>0) {
 						$("#userinfo").html(data);
-						$("#userinfo").modal();
+						$("#userinfo").modal(); // 이게 뭐였지????
 					}
 					else {
 						alert("ajax결과"+data);
@@ -238,16 +229,27 @@
 				}
 			});
 		}
-		function goView(n_idx) {
+		function goView(n_idx, n_userid, n_t_idx) {
 			var frm = document.view;
 			frm.idx.value = n_idx;
+			frm.userid.value = n_userid; 
+			frm.teamidx.value = n_t_idx;
 			frm.action="<%=request.getContextPath()%>/noticeView.mr";
 			frm.method="get";
 			frm.submit();
 		}
 		function goWrite() {
+			<c:if test="${team.teamNum != null&&team.teamNum!=''}" >
+				var t_teamNum = ${team.teamNum};
+			</c:if>
+			<c:if test="${team.userid != null&&team.userid!=''}">
+				var m_userid = "${team.userid}";
+			</c:if>
+			alert("여기오니2");
 			var frm = document.write;
-			frm.userid.value="${team.userid}";
+			frm.teamNum.value= t_teamNum;
+			frm.userid.value= m_userid;
+			alert("여기오니3");
 			frm.action="<%=request.getContextPath()%>/noticeWrite.mr";
 			frm.method="POST";
 			frm.submit();

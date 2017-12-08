@@ -12,7 +12,7 @@ public class ProjectManagerDAO {
 	@Autowired
 	SqlSessionTemplate sql;  
 	
-	// 모든 폴더, 할일 리스트를 가져오는 메소드
+	// 모든 폴더, 할일 리스트를 가져오기
 	public List<FolderVO> getAllDoList(String team_idx) {
 		List<FolderVO> doList = sql.selectList("do.getAllDoList", team_idx);
 		return doList;
@@ -53,27 +53,63 @@ public class ProjectManagerDAO {
 		return map;
 	} // end of HashMap<String, String> getUpFolder(String upIdx) -----------------------------------------------------------------
 
+	// 현재 팀의 소속된 팀원 목록을 가져오기
 	public List<HashMap<String, String>> getTeamwonList(String team_idx) {
 		List<HashMap<String, String>> teamwonList = sql.selectList("do.getTeamwonList",team_idx);
 		return teamwonList;
-	}
+	} // end of List<HashMap<String, String>> getTeamwonList(String team_idx) -----------------------------------------------------------
 	
-	public int addDownFolder(FolderVO fvo) {
-		int result = sql.insert("do.addDownFolder",fvo);
+	// 하위 폴더 추가하기
+	public int addDownElement(FolderVO fvo) {
+		int result = sql.insert("do.addDownElement",fvo);
 		return result;
-	}
-	
-	// 가장 최근에 추가된 폴더 번호 알아오는 메소드
-	public int getLastest_FolderIdx() {
-		return 0;
-	}
+	} // end of int addDownElement(FolderVO fvo) -------------------------------------------------------------------------------------------
 
-	public int addFolderTeamwon(HashMap<String, Object> map) {
-		int result = sql.insert("do.addFolderTeamwon",map); 
+	// 폴더나 할일 추가할때 담당 팀원 추가하기(가장 최근에 올라온 folderIdx를 구해서 입력주는 방식임)
+	public int addDoTeamwon(HashMap<String, Object> map) {
+		int result = sql.insert("do.addDoTeamwon",map);
 		return result;
-	}
+	} // end of int addDoTeamwon(HashMap<String, Object> map) ------------------------------------------------------------------------
 
+	// 방금 추가한 요소를 가져오기
+	public FolderVO getAddedElement() {
+		FolderVO fvo = sql.selectOne("do.getAddedElement");
+		return fvo;
+	} // end of FolderVO getAddedElement() -----------------------------------------------------------------------------------------------
+
+	// 선택한 요소와 그 하위요소들 삭제하기
+	public int delElement(String idx) {
+		int result = sql.update("do.delElement",idx);
+		return result;
+	} // end of int delElement(String idx) ------------------------------------------------------------------------------------------
 	
+	// 페이징 처리를 위해 1주간의 날짜를 동적으로 수정하기
+	public int updatePageDateWeek(String page) {
+		System.out.println("page:"+page);
+		int result = sql.update("do.updatePageDateWeek",page);
+		System.out.println("result:"+result);
+		return result;
+	} // end of public int updatePageDate(String page) ------------------------------------------------------------------------------------
+	
+	// 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기
+	public List<HashMap<String, String>> getPageDateWeek() {
+		List<HashMap<String, String>> pageDateList = sql.selectList("do.getPageDateWeek");
+		return pageDateList;
+	} // end of HashMap<String, String> getPageDate(String page) --------------------------------------------------------------------
+	
+	// 페이징 처리를 위해 한달간의 날짜를 동적으로 수정하기
+	public int updatePageDateMonth(String page) {
+		System.out.println("page:"+page);
+		int result = sql.update("do.updatePageDateMonth",page);
+		System.out.println("result:"+result);
+		return result;
+	} // end of public int updatePageDate(String page) ------------------------------------------------------------------------------------
+	
+	// 페이징 처리를 위해 수정된 한달간의 날짜를 받아오기
+	public List<HashMap<String, String>> getPageDateMonth() {
+		List<HashMap<String, String>> pageDateList = sql.selectList("do.getPageDateMonth");
+		return pageDateList;
+	} // end of HashMap<String, String> getPageDate(String page) --------------------------------------------------------------------
 }
 
 
