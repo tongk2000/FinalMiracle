@@ -20,10 +20,7 @@
       <li><a href="<%= request.getContextPath() %>/doList.mr">일정관리</a></li>
       <li><a href="#">채팅</a></li>
       <li><a href="<%= request.getContextPath() %>/commute.mr">출퇴근 체크</a></li>
-<<<<<<< HEAD
       <li><a href="<%= request.getContextPath() %>/chatting.mr">채팅</a></li>
-=======
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
       <li><a href="<%= request.getContextPath() %>/faqList.mr">FAQ게시판</a></li>
       <li><a href="<%= request.getContextPath() %>/noticeList.mr">공지사항</a></li>
       <li><a href="<%= request.getContextPath() %>/mindList.mr">마음의소리</a></li>
