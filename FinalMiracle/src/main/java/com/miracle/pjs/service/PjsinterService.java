@@ -28,6 +28,8 @@ public interface PjsinterService {
 	int setComment(HashMap<String, String> map); // 공지사항 게시물에 댓글달기
 	
 	int updateReadCount(String idx); // 공지사항 글의 조회수를 늘리는 메소드 
+	
+	int setNoticeWrite(HashMap<String, String> team); // 글쓰기 완료 메소드
 
 //==========================================================================================================================================================//	
 	
@@ -54,6 +56,8 @@ public interface PjsinterService {
 	
 	// 로그인한 유저의 팀정보를 가져오기 위한 메소드
 	HashMap<String, String> getUserTeam(HashMap<String, String> team);
+
+	
 
 
 

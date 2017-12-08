@@ -27,6 +27,8 @@ public interface PjsinterDAO {
 	
 	int updateReadCount(String idx); // 공지사항 게시글의 조회수 늘리는 메소드
 	
+	int setNoticeWrite(HashMap<String, String> team); // 글쓰기 완료 메소드
+	
 	
 //==========================================================================================================================================================//	
 	
@@ -58,7 +60,6 @@ public interface PjsinterDAO {
 	
 	// 로그인한 유저의 팀정보를 가져오는 메소드
 	HashMap<String, String> getUserTeam(HashMap<String, String> team);
-
 
 
 
