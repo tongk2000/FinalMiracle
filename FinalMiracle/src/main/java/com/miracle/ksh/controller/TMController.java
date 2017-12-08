@@ -1,5 +1,6 @@
 package com.miracle.ksh.controller;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,15 +11,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.miracle.kdh.model.FolderVO;
 import com.miracle.kdh.service.ProjectManagerService;
 import com.miracle.ksh.model.TeamVO;
 import com.miracle.ksh.model.TeamwonVO;
 import com.miracle.ksh.service.InterTMService;
 import com.miracle.ksh.util.MyUtil;
+import com.miracle.psw.model.MemberDetailVO;
 import com.miracle.psw.model.MemberVO;
+import com.miracle.psw.service.InterMemberService;
 import com.miracle.psw.service.MemberService;
+import com.miracle.psw.util.FileManager;
+import com.miracle.psw.util.GoogleMail;
 
 @Controller
 public class TMController {
@@ -27,10 +33,17 @@ public class TMController {
 	private InterTMService service;
 	
 	@Autowired
+	private InterMemberService servicepsw;
+	
+	@Autowired
 	ProjectManagerService svc;
 	
 	@Autowired
 	MemberService msvc;
+	
+	@Autowired
+	private FileManager fileManager;
+	
 	
 	@RequestMapping(value="/tmList.mr", method={RequestMethod.GET})
 	public String tmList(HttpServletRequest req, HttpSession session){
@@ -123,7 +136,7 @@ public class TMController {
 	}
 	
 	@RequestMapping(value="/tmForm.mr", method={RequestMethod.GET})
-	public String tmForm(HttpServletRequest req){
+	public String tmForm(HttpServletRequest req, HttpSession session){
 		
 		HttpSession ses = req.getSession();
 		
@@ -142,6 +155,26 @@ public class TMController {
 		return "ksh/tm/tmForm.not";
 	}
 	
+	@RequestMapping(value="/tmFormHeader.mr", method={RequestMethod.GET})
+	public String tmFormHeader(HttpServletRequest req, HttpSession session){
+		
+		HttpSession ses = req.getSession();
+		
+		MemberVO loginUser = (MemberVO) ses.getAttribute("loginUser");
+		
+		//System.out.println("확인용 : " + loginUser.getIdx());
+		
+		String fk_member_idx = String.valueOf(loginUser.getIdx());
+		
+		List<HashMap<String, String>> teamlist1 = service.getTeamList1(fk_member_idx);
+		List<HashMap<String, String>> teamlist2 = service.getTeamList2(fk_member_idx);
+		
+		req.setAttribute("teamlist1", teamlist1);
+		req.setAttribute("teamlist2", teamlist2);
+		
+		return "/WEB-INF/tiles/tile/header.jsp";
+	}
+	
 	@RequestMapping(value="/tmCreate.mr", method={RequestMethod.GET})
 	public String tmCreate(HttpServletRequest req){
 		
@@ -151,7 +184,7 @@ public class TMController {
 	
 	
 	@RequestMapping(value="/tmCreateEnd.mr", method={RequestMethod.POST})
-	public String tmCreateEnd(HttpServletRequest req){
+	public String tmCreateEnd(MultipartHttpServletRequest req){
 		
 		HttpSession ses = req.getSession();
 		
@@ -167,6 +200,49 @@ public class TMController {
 		String addr1 = req.getParameter("addr1");
 		String addr2 = req.getParameter("addr2");
 		
+		MultipartFile attach = (MultipartFile) req.getFiles("attach");
+		
+		String newFileName = "default.jpg";
+		
+		if(attach != null && !attach.isEmpty()) {
+			// WAS 의 webapp 의 절대경로를 알아와야 한다. 
+			HttpSession session = req.getSession();
+			String root = session.getServletContext().getRealPath("/"); 
+			String path = root + "resources"+File.separator+"files";
+			// path 가 첨부파일들을 저장할 WAS(톰캣)의 폴더가 된다. 
+			
+			String fileName = attach.getOriginalFilename();
+		     
+		    // jpg, jpeg, png, gif, bmp만 업로드 되도록 수정
+		    if(fileName.toLowerCase().endsWith(".jpg") ||
+		            fileName.toLowerCase().endsWith(".jpeg") ||
+		            fileName.toLowerCase().endsWith(".png") ||
+		            fileName.toLowerCase().endsWith(".gif") ||
+		            fileName.toLowerCase().endsWith(".bmp")) {
+		    	
+		    	newFileName = "";
+				// WAS(톰캣) 디스크에 저장할 파일명 
+				
+				byte[] bytes = null;
+				// 첨부파일을 WAS(톰캣) 디스크에 저장할때 사용되는 용도 
+				
+				//long fileSize = 0;
+				// 파일크기를 읽어오기 위한 용도
+				
+				//String thumbnailFileName = ""; 
+				// WAS 디스크에 저장될 thumbnail 파일명 
+				
+				try {
+					 bytes = attach.getBytes();
+					 
+					 newFileName = fileManager.doFileUpload(bytes, attach.getOriginalFilename(), path);			 
+				} catch (Exception e) {
+					
+				}
+		    }
+			
+		}// end of if------------------------------
+		
 		HashMap<String, String> tmMap = new HashMap<String, String>();
 		tmMap.put("fk_member_idx", fk_member_idx);
 		tmMap.put("name", name);
@@ -177,13 +253,30 @@ public class TMController {
 		tmMap.put("post2", post2);
 		tmMap.put("addr1", addr1);
 		tmMap.put("addr2", addr2);
+		tmMap.put("newFileName", newFileName);
 		
 		
 		int n = service.TeamCreate(tmMap);
 		
-		req.setAttribute("n", n);
+		if(n > 0){
+			String msg = "팀 생성이 완료되었습니다.";
+			String loc = "tmForm.mr";
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		} else {
+			String msg = "팀 생성에 실패하였습니다..";
+			String loc = "tmForm.mr";
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		}
 		
-		return "ksh/msg.not";
+		
 	}
 	
 	@RequestMapping(value="/tmSession.mr", method={RequestMethod.GET})
@@ -221,17 +314,13 @@ public class TMController {
 		
 		session.setAttribute("teamInfo", sessionMap);
 		
-		List<FolderVO> doList = null;
+		String msg = "";
+		String loc = "doList.mr";
 		
-		if(fk_team_idx1 == null || fk_team_idx1.trim().isEmpty()){
-			doList = svc.getAllDoList(fk_team_idx2);
-		} else if(fk_team_idx2 == null || fk_team_idx2.trim().isEmpty()){
-			doList = svc.getAllDoList(fk_team_idx1);
-		}
-		
-		req.setAttribute("doList", doList);
-		
-		return "kdh/doList.all";
+		req.setAttribute("msg", msg);
+		req.setAttribute("loc", loc);
+
+		return "ksh/msg.not";
 	}
 	
 	
@@ -548,7 +637,7 @@ public class TMController {
 		String idx = req.getParameter("idx");
 		String gobackURL = req.getParameter("gobackURL");
 		
-		/*
+		
 		int n = service.tmWithDrawEnd(idx);
 		
 		if(n>0){
@@ -568,9 +657,6 @@ public class TMController {
 			
 			return "ksh/msg.not";
 		}
-		*/
-		
-		return "ksh/msg.not";
 	}
 	
 	
@@ -580,7 +666,7 @@ public class TMController {
 		String idx = req.getParameter("idx");
 		String gobackURL = req.getParameter("gobackURL");
 		
-		/*
+		
 		int n = service.tmRestore(idx);
 		
 		if(n>0){
@@ -600,7 +686,213 @@ public class TMController {
 			
 			return "ksh/msg.not";
 		}
-		*/
+	}
+	
+	
+	@RequestMapping(value="/tmInvite.mr", method={RequestMethod.GET})
+	public String tmInvite(HttpServletRequest req, HttpSession session){
+		
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)session.getAttribute("teamInfo");
+		
+		String team_idx = teamInfo.get("team_idx");
+		String email = req.getParameter("email");
+		String msg = "";
+		String loc = "";
+		
+		List<TeamVO> teamlist = service.getTeamVO(team_idx);
+		
+		TeamVO teamvo = teamlist.get(0);
+		
+		GoogleMail gmail = new GoogleMail();
+		
+		if(teamvo.toString().trim().isEmpty()){
+			msg = "메일을 보내는 데 실패하였습니다.";
+			loc = "tmList.mr";
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		} else {
+			try {
+				gmail.sendmail_Invite(email, teamvo);
+			} catch (Exception e) {
+				e.printStackTrace();
+				msg = "메일을 보내는 데 실패하였습니다.";
+			}
+			
+			msg = "메일이 성공적으로 발송하였습니다.";
+			loc = "tmList.mr";
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		}
+
+	}
+	
+	
+	@RequestMapping(value="/tminviteLogin.mr", method={RequestMethod.GET})
+	public String tminviteLogin(HttpServletRequest req, HttpSession session){
+		
+		String team_idx = req.getParameter("team_idx");
+		
+		req.setAttribute("team_idx", team_idx);
+		
+		return "ksh/tm/invitelogin.not";
+	}
+	
+	@RequestMapping(value="/tminviteLoginEnd.mr", method={RequestMethod.POST})
+	public String tminviteLoginEnd(HttpServletRequest req, HttpSession session, MemberVO loginUser){
+
+		String userid = req.getParameter("userid");
+		String pwd = req.getParameter("pwd");
+		String team_idx = req.getParameter("team_idx");
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("userid", userid);
+		map.put("pwd", pwd);
+		
+		int n = servicepsw.loginEnd(map);
+		req.setAttribute("n", n);
+		
+		if (n == 1) {
+			loginUser = servicepsw.getLoginMember(userid);  // 로그인 정보 받아오기
+			session.setAttribute("loginUser", loginUser);
+			String gobackURL = (String)session.getAttribute("gobackURL");
+			
+			req.setAttribute("gobackURL", gobackURL);
+			
+			session.removeAttribute("gobackURL");
+		}
+		
+		String fk_member_idx = String.valueOf(loginUser.getIdx());
+		
+		HashMap<String, String> insertMap = new HashMap<String, String>();
+		insertMap.put("fk_team_idx", team_idx);
+		insertMap.put("fk_member_idx", fk_member_idx);
+		
+		int x = service.insertDuplicationChk(insertMap);
+		
+		if(x == 0){
+			int m = service.insertTeamwon(insertMap);
+			
+			int i = service.getinsertTeamwonIdx();
+			
+			HashMap<String, String> sessionMap = new HashMap<String, String>();
+			sessionMap.put("team_idx", team_idx);
+			sessionMap.put("teamwon_idx", String.valueOf(i));
+			sessionMap.put("teamwon_status", "1");
+			
+			session.setAttribute("teamInfo", sessionMap);
+			
+			req.setAttribute("m", m);
+			
+			return "ksh/tm/inviteloginEnd.not";
+		} else {
+			String msg = "해당 팀은 이미 가입을 한 상태입니다.";
+			String loc = "javascript:history.back()";
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		}
+		
+	}
+	
+	
+	@RequestMapping(value="/tmDisband.mr", method={RequestMethod.POST})
+	public String tmDisband(HttpServletRequest req, HttpSession session){
+		
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)session.getAttribute("teamInfo");
+		MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
+		
+		String pw = loginUser.getPwd(); //로그인 세션 비번값
+		String pwd = req.getParameter("pwd"); //다시 입력한 비번값
+		String fk_team_idx = teamInfo.get("team_idx");
+		
+		String msg = "";
+		String loc = "";
+		
+		if(pw == pwd && pw.equals(pwd) && pwd.equals(pw)){
+			
+			int n = service.tmTeamwonListCount(fk_team_idx);
+			
+			if(n == 0){
+				
+				int m = service.tmDel(fk_team_idx);
+				
+				if(m > 0){
+					msg = "팀 삭제가 완료되었습니다.";
+					loc = "tmForm.mr";
+					
+					req.setAttribute("msg", msg);
+					req.setAttribute("loc", loc);
+					
+					return "ksh/msg.not";
+				} else {
+					msg = "팀 삭제가 실패되었습니다.";
+					loc = "javascript:history.back()";
+					
+					req.setAttribute("msg", msg);
+					req.setAttribute("loc", loc);
+					
+					return "ksh/msg.not";
+				}
+		
+			} else {
+				
+				msg = "팀을 삭제하시려면 팀장을 제외한 모든 팀원들은 탈퇴 상태이어야 합니다.";
+				loc = "javascript:history.back()";
+				
+				req.setAttribute("msg", msg);
+				req.setAttribute("loc", loc);
+				
+				return "ksh/msg.not";
+			}	
+		} else {
+			msg = "비밀번호가 일치하지 않습니다.";
+			loc = "javascript:history.back()";
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		}	
+	}
+	
+	
+	@RequestMapping(value="/tmRegister.mr", method={RequestMethod.GET})
+	public String tmRegister(HttpServletRequest req){
+		
+		String team_idx = req.getParameter("team_idx");
+		
+		req.setAttribute("team_idx", team_idx);
+		
+		
+		return "ksh/tm/inviteRegister.not";
+	}
+	
+	
+	@RequestMapping(value="/tmRegisterEnd.mr", method={RequestMethod.POST})
+	public String tmRegisterEnd(HttpServletRequest req, MemberVO mvo, MemberDetailVO mdvo) throws Throwable {
+		
+		String team_idx = req.getParameter("team_idx");
+		
+		int n = servicepsw.registerMember(mvo, mdvo); 
+
+		if(n == 2) {
+			String msg = "Miracle World 의 가족이 되신걸 환영합니다.";
+			String loc = "tminviteLogin.mr";
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+		}
+		
+		req.setAttribute("team_idx", team_idx);
 		
 		return "ksh/msg.not";
 	}

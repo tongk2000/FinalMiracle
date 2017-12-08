@@ -11,6 +11,8 @@ import com.miracle.ksh.model.InterTMDAO;
 import com.miracle.ksh.model.TeamVO;
 import com.miracle.ksh.model.TeamwonVO;
 
+import oracle.net.aso.i;
+
 @Service
 public class TMService implements InterTMService {
 	
@@ -134,6 +136,54 @@ public class TMService implements InterTMService {
 	@Override
 	public int TMWDTotalCount2(HashMap<String, String> map2) {
 		int n = dao.TMWDTotalCount2(map2);
+		return n;
+	}
+
+	@Override
+	public int tmWithDrawEnd(String idx) {
+		int n = dao.tmWithDrawEnd(idx);
+		return n;
+	}
+
+	@Override
+	public int tmRestore(String idx) {
+		int n = dao.tmRestore(idx);
+		return n;
+	}
+
+	@Override
+	public List<TeamVO> getTeamVO(String team_idx) {
+		List<TeamVO> teamvo = dao.getTeamVO(team_idx);
+		return teamvo;
+	}
+
+	@Override
+	public int insertTeamwon(HashMap<String, String> insertMap) {
+		int m = dao.insertTeamwon(insertMap);
+		return m;
+	}
+
+	@Override
+	public int getinsertTeamwonIdx() {
+		int i = dao.getinsertTeamwonIdx();
+		return i;
+	}
+
+	@Override
+	public int insertDuplicationChk(HashMap<String, String> insertMap) {
+		int x = dao.insertDuplicationChk(insertMap);
+		return x;
+	}
+
+	@Override
+	public int tmTeamwonListCount(String fk_team_idx) {
+		int n = dao.tmTeamwonListCount(fk_team_idx);
+		return n;
+	}
+
+	@Override
+	public int tmDel(String fk_team_idx) {
+		int n = dao.tmDel(fk_team_idx);
 		return n;
 	}
 

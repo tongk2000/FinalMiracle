@@ -14,7 +14,7 @@
       <li><a href="<%= request.getContextPath() %>/freeList.mr">자유게시판</a></li>
       <li><a href="<%= request.getContextPath() %>/voteList.mr">투표</a></li>
       <li><a href="<%= request.getContextPath() %>/tmList.mr">팀원관리</a></li>
-      <li><a href="#">메모</a></li>
+      <li><a href="<%= request.getContextPath() %>/memoList.mr">메모</a></li>
       <li><a href="#">쪽지</a></li>
     </ul>
 </div>

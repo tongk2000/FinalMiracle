@@ -1,11 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <style>
-	th, td{
+	th, td:not(.pageDateLine){
 		border:1px solid black;
+		word-wrap:break-word; /* 글자 넘치면 자동 줄바꿈 */
 	}
+	
+	th {
+		position: sticky;
+	    top: -1px;
+	    z-index: 10;
+	    background-color:lightgray;
+    }
 	
 	td.infoClass {
 		border-top:ridge;
@@ -69,12 +78,15 @@
 </style>
 
 <script type="text/javascript">
+	window.onload = function(){
+		document.getElementById("term").value = "${term}";
+		document.getElementById("page").value = "${page}";
+	}
 	
 	$(document).ready(function(){
 		var changeFlag = false; // 모달창에서 변경된 값이 있는지 체크하는 변수
 		$("#folderRcm").hide();
 		$("#taskRcm").hide();
-		
 		
 		// 폴더 모달창 띄우기(값만 가지고 함수로 이동하게됨)
 		$(".modalFolder").click(function(){
@@ -104,7 +116,7 @@
 		
 				
 		// 선택한 폴더 접고 펴기
-		$(".folder").click(function(){
+		$(document).on("click", ".element", function(){
 			var $this = $(this);
 			var idx = $this.attr("id");
 			var depth = parseInt(getThirdClass($this)); // 클릭한 요소의 깊이 구하기
@@ -131,7 +143,7 @@
 				}
 				$this = $this2; // 다음의 다음 요소를 찾기 위함
 			}
-		}); // end of $(".folder").click(function() -----------------------------------------------------------------------------------------------
+		}); // end of $(".element").click(function() -----------------------------------------------------------------------------------------------
 		
 				
 		// 마우스 클릭 이벤트 있으면 일단 우클릭 메뉴 없애주기
@@ -145,7 +157,7 @@
 		
 				
 		// 우클릭시 메뉴 보여주기
-		$(".folder").bind("contextmenu", function(event) {
+		$(document).on("contextmenu", ".element", function(event) {
 		    event.preventDefault();
 		    $(this).addClass("selectedLine");
 		    var classname = getFirstClass($(this));
@@ -159,19 +171,19 @@
 		    	$("#taskRcm").css({top:event.pageY+"px", left:event.pageX+"px"}).show();
 		    }
 		    return false;
-		}); // end of $(".folder").bind("contextmenu", function(event) --------------------------------------------------------------------
+		}); // end of $(".element").bind("contextmenu", function(event) --------------------------------------------------------------------
 				
 				
 		// 폴더 전체 닫기
 		$("#allClose").click(function(){
-			$(".folder").hide();
+			$(".element").hide();
 			$(".0").show();
 		}); // end of $("#allClose").click(function() -------------------------------------------------------------------------------------
 		
 				
 		// 폴더 전체 펴기
 		$("#allOpen").click(function(){ 
-			$(".folder").show();
+			$(".element").show();
 		}); // end of $("#allOpen").click(function() ---------------------------------------------------------------------------------------------
 		
 				
@@ -338,27 +350,54 @@
 		}); // end of $("tr").hover(function() --------------------------------------------------------------------------------------------
 		
 		
-		// 우클릭 메뉴에서 삭제 누르면 해당 행 삭제해주기
+		// 우클릭 메뉴에서 삭제 누르면 사용자한테 물어본 후 해당 행 삭제하는 함수 호출하기
 		$(document).on("click", "#deleteRcm", function(){
 			var idx = $(".selectedLine").attr("id");
 			var bool = confirm("해당 요소를 정말로 삭제하시겠습니까?\n(포함된 하위 요소 또한 모두 삭제됩니다.)");
 			if(bool) {
 				delElement(idx);
 			}
-		});
+		}); // $(document).on("click", "#deleteRcm", function() ------------------------------------------------------------------------------------------
+		
 	}); // end of $(document).ready(function() --------------------------------------------------------------------------------------------------------
 	
 	
+	// 선택한 요소를 삭제해주는 함수
 	function delElement(idx) {
-		var frm = {"idx":idx};
-		var bool = false;
+		var frm = {"idx":idx};		
 		$.ajax({
 			url:"do_delElement.mr",
 			data:frm,
 			dataType:"json",
 			success:function(data){
-				if(parseInt(data.result) > 0) {
-					var bool = true;
+				if(parseInt(data.result) > 0) { // DB에서 삭제update에 성공했다면 페이지상에서도 지워준다.
+					var $this = $("#"+idx);
+					var depth = parseInt(getThirdClass($this)); // 클릭한 요소의 깊이 구하기
+					var groupNo = getSecondClass($this);
+					
+					$("#"+idx).addClass("delElement");
+					while(1==1) {
+						if($this.next().attr("id") == undefined) { // 다음 요소가 없을때 undefined 오류 막기 위함
+							break;
+						}
+						var $this2 = $this.next();
+						var depth2 = parseInt(getThirdClass($this2)); // 다음 요소의 깊이 구하기
+						
+						if(depth < depth2) { // 클릭한 요소의 깊이보다 다음 요소의 깊이가 크다면
+							$this2.addClass("delElement");
+						} else { // 클릭한것과 깊이가 같은 요소가 나오면 break
+							break;
+						}
+						$this = $this2;
+					}
+					setTimeout(function(){
+						$(".delElement").hide(1000);
+					},1000);
+					setTimeout(function(){
+						$(".delElement").remove();
+					},2500);
+					$("#folderRcm").hide();
+					$("#taskRcm").hide();
 				} else {
 					alert("알 수 없는 오류로 삭제할 수 없습니다.\n관리자에게 문의하세요.");
 				}
@@ -366,37 +405,8 @@
 				alert("알 수 없는 오류로 삭제할 수 없습니다.\n관리자에게 문의하세요.");
 			}
 		});
-		
-		if(bool) {
-			var $this = $("#"+idx);
-			var depth = parseInt(getThirdClass($this)); // 클릭한 요소의 깊이 구하기
-			var groupNo = getSecondClass($this);
-			
-			$("#"+idx).addClass("delElement");
-			while(1==1) {
-				if($this.next().attr("id") == undefined) { // 다음 요소가 없을때 undefined 오류 막기 위함
-					break;
-				}
-				var $this2 = $this.next();
-				var depth2 = parseInt(getThirdClass($this2)); // 다음 요소의 깊이 구하기
-				
-				if(depth < depth2) { // 클릭한 요소의 깊이보다 다음 요소의 깊이가 크다면
-					$this2.addClass("delElement");
-				} else { // 클릭한것과 깊이가 같은 요소가 나오면 break
-					break;
-				}
-				$this = $this2;
-			}
-			setTimeout(function(){
-				$(".delElement").hide(1000);
-			},1000);
-			setTimeout(function(){
-				$(".delElement").remove();
-			},2500);
-			$("#folderRcm").hide();
-			$("#taskRcm").hide();
-		}
-	}
+	} // end of function delElement(idx) ---------------------------------------------------------------------------------------------------------------------------------
+	
 	
 	// 상위 요소 추가(일단 보류;;)
 	function addUpFolder() {
@@ -477,32 +487,82 @@
 			}
 		});
 	} // function selectTaskInfo(frm) ------------------------------------------------------------------------------------------------
+	
+	// 이전 날짜로 페이징 처리하기 위해 페이지 값을 가져오기
+	function beforeDate() {
+		var val = document.getElementById("page").value;
+		var term = document.getElementById("term").value;
+		document.getElementById("page").value = parseInt(val) - parseInt(term);
+		changePageDate();
+	} // end of function beforeDate() --------------------------------------------------------------------------------------------------
+	
+	// 이후 날짜로 페이징 처리하기 위해 페이지 값을 가져오기
+	function afterDate() {
+		var val = document.getElementById("page").value;
+		var term = document.getElementById("term").value;
+		document.getElementById("page").value = parseInt(val) + parseInt(term);
+		changePageDate();
+	} // end of function afterDate() --------------------------------------------------------------------------------------------------
+	
+	// 수정된 페이지 값을 이용해서 새롭게 페이징 처리하기
+	function changePageDate() {
+		document.pageDateFrm.submit();
+	} // end of function changePageDate() -------------------------------------------------------------------------------------------------
+	
 </script>
 
-<div class="container" style="width:40%; float:left">
-	<div><span id="allClose">전체접기</span>  ||  <span id="allOpen">전체펴기</span></div>
-	<table style="width:100%">
+<div class="container" style="width:100%; float:left">
+	<table style="width:100%; border:1px solid black;">
 		<thead>
+			<tr>
+				<th colspan="4">
+					<span id="allClose">전체접기</span>  ||  <span id="allOpen">전체펴기</span>
+				</th>
+				<th></th>
+				<th></th>
+				<th colspan="${map.pageDateList.size()}" style="text-align:center;">2017</th>
+			</tr>
+			<tr>
+				<th colspan="4"></th>
+				<th></th>
+				<th></th>
+				<th colspan="${map.pageDateList.size()}" style="text-align:center;">
+					<form name="pageDateFrm" method="get" action="do_changePageDate.mr">
+						<span id="btn_before" onclick="beforeDate()">◀</span>
+						<select id="term" name="term" onchange="changePageDate()">
+							<option value="7">주간</option>
+							<option value="30">월간</option>
+						</select>
+						<span id="btn_after" onclick="afterDate()">▶</span>
+						<input type="hidden" id="page" name="page" value="0"/>
+					</form>
+				</th>
+			</tr>
 			<tr>
 				<th style="width:50%">제목</th>
 				<th>시작일</th>
 				<th>마감일</th>
 				<th>중요도</th>
+				<th></th>
+				<th></th>
+				<c:forEach var="pageDate" items="${map.pageDateList}">
+					<th>${pageDate.dayDP}</th>
+				</c:forEach>
 			</tr>
 		</thead>
 		<tbody>
-			<c:if test="${empty doList}"> <!-- 프로젝트 리스트가 비었다면 -->
+			<c:if test="${empty map.doList}"> <!-- 프로젝트 리스트가 비었다면 -->
 				<td colspan="4">등록된 프로젝트가 없습니다.</td>
 			</c:if>
-			<c:if test="${not empty doList}"> <!-- 프로젝트 리스트가 있다면 -->
-				<c:forEach var="dvo" items="${doList}">
-					<tr id="${dvo.idx}" class="folder ${dvo.groupNo} ${dvo.depth}">
+			<c:if test="${not empty map.doList}"> <!-- 프로젝트 리스트가 있다면 -->
+				<c:forEach var="dvo" items="${map.doList}">
+					<tr id="${dvo.idx}" class="element ${dvo.groupNo} ${dvo.depth}">
 						<td>
-							<span id="span${dvo.idx}" style="margin-left:${dvo.depth*15}px; cursor:pointer;">
+							<span id="span${dvo.idx}" style="margin-left:${dvo.depth*20}px; cursor:pointer;">
 								<c:if test="${dvo.category == 1}"> <!-- 폴더라면 -->
 									<span class="modalFolder" id="modalIdx${dvo.idx}">
 										<c:if test="${dvo.fk_folder_idx != 0}"> <!-- 최상위 폴더가 아니라면 -->
-											└
+											▷
 										</c:if>
 										<span class="modalFolder subject" id="modalIdx${dvo.idx}">${dvo.subject}</span>
 									</span>
@@ -531,6 +591,29 @@
 							<td style="background-color:red;">${dvo.lastDate}</td>
 						</c:if>
 						<td>${dvo.importance}</td>
+						
+						<td></td>
+						<td></td>
+						
+						<c:forEach var="pageDate" items="${map.pageDateList}">
+							<fmt:parseNumber var="startDate" value="${dvo.startDate.replace('-','')}" integerOnly="true"/>
+							<fmt:parseNumber var="lastDate" value="${dvo.lastDate.replace('-','')}" integerOnly="true"/>
+							<fmt:parseNumber var="day" value="${pageDate.day}" integerOnly="true"/>
+							
+							<td class="pageDateLine" style="border-left:0.5px solid lightgray" align="center">
+								<c:if test="${startDate <= day and day <= lastDate}">
+									<c:if test="${dvo.dayCnt == 0}"> <!-- 시작일 전이라면 -->
+										<div style="height:19px; width:100%; background-color:lightgreen;"></div>
+									</c:if>
+									<c:if test="${dvo.dayCnt == 1}"> <!-- 진행중이라면 -->
+										<div style="height:19px; width:100%; background-color:green;"></div>
+									</c:if>
+									<c:if test="${dvo.dayCnt == -1}"> <!-- 기한이 지났다면 -->
+										<div style="height:19px; width:100%; background-color:red;"></div>
+									</c:if>
+								</c:if>
+							</td>
+						</c:forEach>
 					</tr>
 				</c:forEach>
 			</c:if>
@@ -538,13 +621,8 @@
 	</table>
 </div>
 
-<div class="container" style="width:60%; float:right">
-</div>
-
 <div class="modal fade" id="folderInfo" role="dialog"></div>
 <div class="modal fade" id="taskInfo" role="dialog"></div>
-
-
 
 <div id="folderRcm" style="padding:0px;">
 	<table>
@@ -583,10 +661,6 @@
 		</tr>
 	</table>
 </div>
-
-
-
-
 
 
 

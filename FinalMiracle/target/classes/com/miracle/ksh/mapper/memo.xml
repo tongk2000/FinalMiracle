@@ -241,10 +241,11 @@
 	</select>
 	
 	
-	<select id="getfolderList" resultType="String">
+	<select id="getfolderList" parameterType="String" resultType="String">
 		select distinct groups
 		from tbl_memo
 		where not groups in ('중요', '휴지통', '전체')
+		and fk_member_idx = #{fk_member_idx}
 	</select>
 	
 	

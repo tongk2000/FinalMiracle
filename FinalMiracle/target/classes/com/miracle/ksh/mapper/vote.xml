@@ -22,6 +22,7 @@
 		from tbl_vote A join tbl_teamwon B
 		on A.fk_teamwon_idx = B.idx
 		where A.status = 1
+		and B.fk_team_idx = #{fk_team_idx}
 		and enddate > sysdate
 		and startdate <![CDATA[<]]> sysdate
 		order by idx desc
@@ -34,6 +35,7 @@
 		from tbl_vote A join tbl_teamwon B
 		on A.fk_teamwon_idx = B.idx
 		where A.status = 1
+		and B.fk_team_idx = #{fk_team_idx}
 		and enddate <![CDATA[<]]> sysdate
 		order by idx desc
 	</select>
@@ -69,10 +71,12 @@
 	</update>
 	
 	
-	<select id="VoteTotalCount1" resultType="int">
+	<select id="VoteTotalCount1" parameterType="HashMap" resultType="int">
 		select count(*)
-		from tbl_vote
-		where status = 1
+		from tbl_vote A join tbl_teamwon B
+		on A.fk_teamwon_idx = B.idx
+		where A.status = 1
+		and B.fk_team_idx = #{fk_team_idx}
 		and enddate > sysdate
 		and startdate <![CDATA[<]]> sysdate
 	</select>
@@ -89,6 +93,7 @@
 				from tbl_vote A join tbl_teamwon B
 				on A.fk_teamwon_idx = B.idx
 				where A.status = 1
+				and B.fk_team_idx = #{fk_team_idx}
 				and enddate >= sysdate
 				and startdate <![CDATA[<]]> sysdate
 				order by idx desc
@@ -109,6 +114,7 @@
 				from tbl_vote A join tbl_teamwon B
 				on A.fk_teamwon_idx = B.idx
 				where A.status = 1
+				and B.fk_team_idx = #{fk_team_idx}
 				and enddate <![CDATA[<]]> sysdate
 				order by idx desc
 			) V
@@ -117,10 +123,12 @@
 	</select>
 	
 	
-	<select id="VoteEndTotalCount1" resultType="int">
+	<select id="VoteEndTotalCount1" parameterType="HashMap" resultType="int">
 		select count(*)
-		from tbl_vote
-		where status = 1
+		from tbl_vote A join tbl_teamwon B
+		on A.fk_teamwon_idx = B.idx
+		where A.status = 1
+		and B.fk_team_idx = #{fk_team_idx}
 		and enddate <![CDATA[<]]> sysdate
 	</select>
 	
@@ -152,6 +160,7 @@
 				from tbl_vote A join tbl_teamwon B
 				on A.fk_teamwon_idx = B.idx
 				where A.status = 1
+				and B.fk_team_idx = #{fk_team_idx}
 				and enddate >= sysdate
 				and startdate <![CDATA[<]]> sysdate
 				and ${colname} like '%'|| #{search} ||'%'
@@ -164,8 +173,10 @@
 	
 	<select id="VoteTotalCount2" parameterType="HashMap" resultType="int">
 		select count(*)
-		from tbl_vote
-		where status = 1
+		from tbl_vote A join tbl_teamwon B
+		on A.fk_teamwon_idx = B.idx
+		where A.status = 1
+		and B.fk_team_idx = #{fk_team_idx}
 		and enddate > sysdate
 		and startdate <![CDATA[<]]> sysdate
 		and ${colname} like '%'|| #{search} ||'%'
@@ -183,6 +194,7 @@
 				from tbl_vote A join tbl_teamwon B
 				on A.fk_teamwon_idx = B.idx
 				where A.status = 1
+				and B.fk_team_idx = #{fk_team_idx}
 				and enddate <![CDATA[<]]> sysdate
 				and ${colname} like '%'|| #{search} ||'%'
 				order by idx desc
@@ -194,8 +206,10 @@
 	
 	<select id="VoteEndTotalCount2" parameterType="HashMap" resultType="int">
 		select count(*)
-		from tbl_vote
-		where status = 1
+		from tbl_vote A join tbl_teamwon B
+		on A.fk_teamwon_idx = B.idx
+		where A.status = 1
+		and B.fk_team_idx = #{fk_team_idx}
 		and enddate <![CDATA[<]]> sysdate
 		and ${colname} like '%'|| #{search} ||'%'
 	</select>
@@ -210,21 +224,21 @@
 				      to_char(A.enddate, 'yyyy-mm-dd') as enddate, A.status
 				from tbl_vote A join tbl_teamwon B
 				on A.fk_teamwon_idx = B.idx
-				where 1=1
+				where B.fk_team_idx = #{fk_team_idx}
                 <if test="votekind.equals('ing')">
                 	and A.status = 1
-                	and fk_teamwon_idx = 1
+                	and A.fk_teamwon_idx = #{fk_teamwon_idx}
                 	and enddate >= sysdate
 					and startdate <![CDATA[<]]> sysdate
                 </if>
                 <if test="votekind.equals('end')">
 	                and A.status = 1
-	                and fk_teamwon_idx = 1
+	                and A.fk_teamwon_idx = #{fk_teamwon_idx}
                 	and enddate <![CDATA[<]]> sysdate
                 </if>
                 <if test="votekind.equals('ready')">
 	                and A.status = 1
-	                and fk_teamwon_idx = 1
+	                and A.fk_teamwon_idx = #{fk_teamwon_idx}
                 	and enddate >= sysdate
                 	and startdate >= sysdate
                 </if>
@@ -245,7 +259,8 @@
 				from tbl_vote A join tbl_teamwon B
 				on A.fk_teamwon_idx = B.idx
 				where A.status = 1
-                and fk_teamwon_idx = 1
+				and B.fk_team_idx = #{fk_team_idx}
+                and A.fk_teamwon_idx = #{fk_teamwon_idx}
                 and ${colname} like '%'|| #{search} ||'%'
                 <if test='votekind.equals("ing")'>
                 	and enddate > sysdate
@@ -317,7 +332,7 @@
 				from tbl_vote A join tbl_teamwon B
 				on A.fk_teamwon_idx = B.idx
 				where A.status = 1
-                and fk_teamwon_idx = 1
+                and B.fk_team_idx = #{fk_team_idx}
                 and enddate >= sysdate
                 and startdate >= sysdate
 				order by idx desc
@@ -337,7 +352,7 @@
 				from tbl_vote A join tbl_teamwon B
 				on A.fk_teamwon_idx = B.idx
 				where A.status = 1
-                and fk_teamwon_idx = 1
+                and B.fk_team_idx = #{fk_team_idx}
                 and ${colname} like '%'|| #{search} ||'%'
                 and enddate >= sysdate
                 and startdate >= sysdate
@@ -347,18 +362,22 @@
 		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
 	</select>
 	
-	<select id="VoteReadyTotalCount1" resultType="int">
+	<select id="VoteReadyTotalCount1" parameterType="HashMap" resultType="int">
 		select count(*)
-		from tbl_vote
-		where status = 1
+		from tbl_vote A join tbl_teamwon B
+		on A.fk_teamwon_idx = B.idx
+		where A.status = 1
+		and B.fk_team_idx = #{fk_team_idx}
 		and enddate >= sysdate
 		and startdate >= sysdate
 	</select>
 	
 	<select id="VoteReadyTotalCount2" parameterType="HashMap" resultType="int">
 		select count(*)
-		from tbl_vote
-		where status = 1
+		from tbl_vote A join tbl_teamwon B
+		on A.fk_teamwon_idx = B.idx
+		where A.status = 1
+		and B.fk_team_idx = #{fk_team_idx}
 		and enddate >= sysdate
 		and startdate >= sysdate
 		and ${colname} like '%'|| #{search} ||'%'
@@ -367,16 +386,20 @@
 	
 	<select id="VoteMyTotalCount1" parameterType="HashMap" resultType="int">
 		select count(*)
-		from tbl_vote
-		where status = 1
+		from tbl_vote A join tbl_teamwon B
+		on A.fk_teamwon_idx = B.idx
+		where A.status = 1
 		<if test="votekind.equals('ing')">
+			and B.fk_team_idx = #{fk_team_idx}
 			and enddate >= sysdate
 			and startdate <![CDATA[<]]> sysdate
 		</if>
 		<if test="votekind.equals('end')">
+			and B.fk_team_idx = #{fk_team_idx}
 			and enddate <![CDATA[<]]> sysdate
 		</if>
 		<if test="votekind.equals('ready')">
+			and B.fk_team_idx = #{fk_team_idx}
 			and enddate >= sysdate
 			and startdate >= sysdate
 		</if>
@@ -385,18 +408,22 @@
 	
 	<select id="VoteMyTotalCount2" parameterType="HashMap" resultType="int">
 		select count(*)
-		from tbl_vote
-		where status = 1
+		from tbl_vote A join tbl_teamwon B
+		on A.fk_teamwon_idx = B.idx
+		where A.status = 1
 		<if test="votekind.equals('ing')">
+			and B.fk_team_idx = #{fk_team_idx}
 			and enddate >= sysdate
 			and startdate <![CDATA[<]]> sysdate
 			and ${colname} like '%'|| #{search} ||'%'
 		</if>
 		<if test="votekind.equals('end')">
+			and B.fk_team_idx = #{fk_team_idx}
 			and enddate <![CDATA[<]]> sysdate
 			and ${colname} like '%'|| #{search} ||'%'
 		</if>
 		<if test="votekind.equals('ready')">
+			and B.fk_team_idx = #{fk_team_idx}
 			and enddate >= sysdate
 			and startdate >= sysdate
 			and ${colname} like '%'|| #{search} ||'%'

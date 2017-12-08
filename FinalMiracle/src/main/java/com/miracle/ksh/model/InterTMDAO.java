@@ -45,4 +45,20 @@ public interface InterTMDAO {
 
 	int TMWDTotalCount2(HashMap<String, String> map2); //현재 탈퇴 상태인 총 명수를 구해보자 (예스 검색)
 
+	int tmWithDrawEnd(String idx); //탈퇴 요청한 회원을 최종적으로 탈퇴 처리를 해보자
+
+	int tmRestore(String idx); //탈퇴된 회원을 복구하는 처리를 해보자
+
+	List<TeamVO> getTeamVO(String team_idx); //초대 메일을 보낼 때 필요한 팀의 정보들을 가져오자
+
+	int insertTeamwon(HashMap<String, String> insertMap); //초대 메일을 통하여 로그인 했을 경우 팀원으로 추가해주자
+
+	int getinsertTeamwonIdx(); //초대 메일을 통하여 로그인하고 추가된 팀원번호를 구해보자
+
+	int insertDuplicationChk(HashMap<String, String> insertMap);  //초대 메일로 팀원에 들어갔을 때 중복이 있는지 체크하자
+
+	int tmTeamwonListCount(String fk_team_idx); //팀에서 팀장을 제외한 팀원들이 남아있는지 알아보자
+
+	int tmDel(String fk_team_idx); //팀을 삭제해보자
+
 }

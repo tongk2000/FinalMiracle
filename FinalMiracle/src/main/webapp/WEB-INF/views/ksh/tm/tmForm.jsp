@@ -130,6 +130,7 @@
 				<div class="mydiv" style="margin-left: 20%;">
 					&nbsp;&nbsp;&nbsp;
 					<button class="btn btn-success" style="width: 100px; font-size: 14pt;" type="button" id="teamCreate" onclick="javascript:location.href='<%= request.getContextPath() %>/tmCreate.mr'">팀 생성</button>
+					<button class="btn btn-danger" style="width: 100px; font-size: 14pt;" type="button" id="logout" onclick="javascript:location.href='<%= request.getContextPath() %>/member_logout.mr'">로그아웃</button>
 				</div>
 			</form>
 		</div>
