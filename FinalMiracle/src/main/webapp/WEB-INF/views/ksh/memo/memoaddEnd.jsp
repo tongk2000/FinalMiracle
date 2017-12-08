@@ -6,12 +6,12 @@
 	
 	<c:if test="${n == 1}">
 		alert("메모를 작성하였습니다.");
-		location.href="<%= request.getContextPath() %>/${gobackURL}";
+		location.href="<%= request.getContextPath() %>/memoList.mr";
 	</c:if>
 	
 	<c:if test="${n != 1}">
 		alert("메모 작성에 실패하였습니다.");
-		location.href="<%= request.getContextPath() %>/${gobackURL}";
+		location.href="<%= request.getContextPath() %>/memoList.mr";
 	</c:if>
 
 	
