@@ -32,8 +32,8 @@
 </head>
 <body>
 <c:set var="user" value="${map}" /> 
-	<div>
-		<div style="align: center;">
+	<div align="center">
+		<div >
 			<table>
 				<thead>
 					<tr>

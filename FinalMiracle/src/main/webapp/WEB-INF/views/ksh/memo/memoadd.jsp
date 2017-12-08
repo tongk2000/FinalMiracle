@@ -61,12 +61,6 @@
 		
 	}
 	
-	function goReset() {
-		var addFrm = document.addFrm;
-		addFrm.reset();
-		$("#result").empty();
-	}
-	
 </script>
 
 <div>
@@ -110,7 +104,6 @@
 		<br/>
 		
 		<button type="button" class="btn btn-primary" style="margin-right: 10px;" onClick="goAdd();">메모등록</button>
-		<button type="button" class="btn btn-primary" style="margin-right: 10px;" onClick="goReset();">초기화</button>
 		<button type="button" class="btn btn-primary" style="margin-right: 10px;" onClick="javascript:location.href='<%= request.getContextPath() %>/memoList.mr'">메모목록</button> 
 	
 	</form>

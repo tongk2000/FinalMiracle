@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAGoOx5t16lxp_DW2Y8WpN2gJB9U3fzPRg"></script>
+ 
 <style>
 	#div_name {
 		width: 70%;
@@ -37,7 +36,7 @@
 	}
 </style>
 <script type="text/javascript">
-	$(document).ready(function(){
+	$(document).ready(function() {
 			google.maps.event.addDomListener(window, 'load', initialize); // 구글사에서 그대로 따옴!!! ====== 구글맵 생성
 			function initialize(){ // 사용자가 커스텀마이즈 할 수 있다.									    ====== 구글맵 처음 시작할 때
 			    var mapOptions = { // 구글 맵 옵션 설정
@@ -92,7 +91,6 @@
 						title : store[0],    // 위에서 정의한 "${store.storeName}" 임 , 즉  디비의  가계이름!! 마커에 커서를 대면 이 이름이 나온다.
 						zIndex : Number(store[3])  // Number() 함수를 꼭 사용해야 함을 잊지 말자. zIndex는 우선순위! 우선순위가 높은 마커가 
 					});
-					alert("team_idx"+team_idx);
 					markerListener(map, markerArr[i], team_idx);
 				} // end of for------------------------------	
 			}// end of setMarkers(map, locations)--------------------------
@@ -106,7 +104,7 @@
 			infowindowArr.push(infowindow); // 풍선창(풍선윈도우)을 배열속에 집어넣기
 			google.maps.event.addListener(marker, 'click', 
 				 function(){ 
-			               alert("team_idx"+team_idx);
+			               //alert("team_idx"+team_idx);
 			               goDetail(marker.zIndex, team_idx);  // 매장번호(marker.zIndex)를 넘겨서 매장지점 상세정보 보여주기와 같은 팝업창 띄우기
 						// 마커를 클릭하면 이전 마커의 모달창을 닫는 기능	
 						for(var i=0; i<markerArr.length; i++) {   // 생성된 마커의 갯수만큼 반복하여
@@ -119,6 +117,8 @@
 						}	 		
 			  });  // end of google.maps.event.addListener()-------------------
 		}// end of function markerListener(map, marker)-----------
+		
+		
 		function goDetail(map_idx, map_team_idx) // 모달창을 띄우자
 		{
 			var data_form = {"map_idx":map_idx, "map_team_idx":map_team_idx};
@@ -216,20 +216,37 @@
 		</c:if>
 	}
 </script>
-<%-- 화면에 나오는 창은 밑에 div 하나만 존재한다.!!! --%>
+
+화면에 나오는 창은 밑에 div 하나만 존재한다.!!!
 <select id="choice" name="choice" style="font-size:12pt;">
 	<option value="0" selected> 전체</option>
 	<option value="1" >팀정보</option>
 	<option value="-1">맛집정보</option>
 </select>
+
 <input type="text" name="searchString" id="searchString"/>
 <button type="button" id="goSearch">검색</button>
 <div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height"><div class="height">
 	<div id="displayList" style="background-color:black">ㅇ</div>
 </div></div></div></div></div></div></div></div></div></div></div></div>
-<div id="googleMap"	style="width: 30%; height: 200px; margin: auto; margin:20% 30% 20% 35% ; "></div>
-<div class="modal fade" id="mapInfo" role="dialog"></div>
+<div id="googleMap"	style="width: 30%; height: 200px; margin: auto; margin:20% 30% 20% 35% ; ">2323</div>
 <form name="map">
 	<input type="hidden" name="choice">
 	<input type="hidden" name="searchString">
-</form> 
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

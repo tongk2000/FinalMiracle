@@ -10,34 +10,34 @@
 	<!-- === *** 공지사항 게시판 리스트 전체를 불러온다. *** === --><!-- 바뀜 -->
 	<!-- === *** 공지사항 게시판에서 검색한 리스트를 불러온다. *** === -->
 	<select id="getNoticeList" parameterType="HashMap" resultMap="noticeMap">
-		select t.*
-		from
-		(
-		  select rownum as rno, v.*
-		  from
-		  (
-		    select n.idx as n_idx,n.fk_userid, n.subject, to_char(n.regday, 'yyyy-mm-dd hh24:mi:ss') as regday, n.readcount
-		          , n.depth, n.status, m.img, t.idx as t_idx
-		    from tbl_notice n join tbl_member m        on n.fk_userid = m.userid
-		                      join tbl_teamwon w       on m.idx = w.fk_member_idx
-		                      join tbl_team t          on w.fk_team_idx = t.idx
-		    where n.status = 1 and m.status = 1
-		    <if test='searchType!=null and searchString!=null and !"".equals(searchType) and !"".equals(searchString)'>
-				  and ${searchType} like '%'||#{searchString}||'%'
-			</if>
-			<!-- <if test='teamNum==null||"".equals(teamNum)'>
-				and t.idx in 
-				<foreach collection="tn" item="teamNum" open="(" close=")" separator=",">
-					 #{teamNum}
-				</foreach>
-			</if>
-			<if test='teamNum!=null||!"".equals(teamNum)'> -->
-				and t.idx = #{teamNum}
-			<!-- </if> -->	
-		    order by n.idx desc
-		  ) v
-		)t
-		where rno between #{sNum} and #{eNum}
+			select t.*
+			from
+			(
+			  select rownum as rno, v.*
+			  from
+			  (
+			    select n.idx as n_idx,n.fk_userid, n.subject, to_char(n.regday, 'yyyy-mm-dd hh24:mi:ss') as regday, n.readcount
+			          , n.depth, n.status, m.img, t.idx as t_idx, n.groupno
+			    from tbl_notice n join tbl_member m        on n.fk_userid = m.userid
+			                      join tbl_teamwon w       on m.idx = w.fk_member_idx
+			                      join tbl_team t          on w.fk_team_idx = t.idx
+			    where n.status = 1 and m.status = 1
+			    <if test='searchType!=null and searchString!=null and !"".equals(searchType) and !"".equals(searchString)'>
+					  and ${searchType} like '%'||#{searchString}||'%'
+				</if>
+				<!-- <if test='teamNum==null||"".equals(teamNum)'>
+					and t.idx in 
+					<foreach collection="tn" item="teamNum" open="(" close=")" separator=",">
+						 #{teamNum}
+					</foreach>
+				</if>
+				<if test='teamNum!=null||!"".equals(teamNum)'> -->
+					and t.idx = #{teamNum}
+				<!-- </if> -->	
+			    order by n.groupno desc, n.idx asc
+			  )v
+			)t
+			where rno between #{sNum} and #{eNum}
 	</select>
 	
 	<resultMap id="noticeMap" type="HashMap">
@@ -50,6 +50,7 @@
  		<result property="status" 			column="status" 		javaType="String"></result>
  		<result property="img" 				column="img" 			javaType="String"></result>
  		<result property="t_idx" 			column="t_idx" 			javaType="String"></result>
+ 		<result property="groupno" 			column="groupno" 		javaType="String"></result>
  	</resultMap>
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 총 행의 수를 불러온다. *** === -->
@@ -77,13 +78,17 @@
 	<select id="getNoticeJSONList" parameterType="HashMap" resultType="String">
 		<if test="'fk_userid'.equals(searchType)">
 			select fk_userid
-			from tbl_notice
-			where ${searchType} like '%'||#{searchString}||'%'
+			from tbl_notice n join tbl_member m        on n.fk_userid = m.userid
+		                      join tbl_teamwon w       on m.idx = w.fk_member_idx
+		                      join tbl_team t          on w.fk_team_idx = t.idx
+			where ${searchType} like '%'||#{searchString}||'%' and n.status = 1 and m.status = 1 and t.idx = #{t_idx}
 		</if>
 		<if test="'subject'.equals(searchType)">
 			select subject
-			from tbl_notice
-			where ${searchType} like '%'||#{searchString}||'%'
+			from tbl_notice n join tbl_member m        on n.fk_userid = m.userid
+		                      join tbl_teamwon w       on m.idx = w.fk_member_idx
+		                      join tbl_team t          on w.fk_team_idx = t.idx
+			where ${searchType} like '%'||#{searchString}||'%' and n.status = 1 and m.status = 1 and t.idx = #{t_idx}
 		</if>
 	</select>
 <!-- ============================================================================================================================================================= -->	
@@ -231,6 +236,9 @@
 		<if test='"1".equals(choice)'>
 			where team_idx is not null and name like '%'||#{searchString}||'%'
 		</if>
+		<if test='"0".equals(choice)'>
+			where name like '%'||#{searchString}||'%'
+		</if>
 	</select>
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 구글맵에서 JSON검색 *** === -->
@@ -244,7 +252,7 @@
 			<when test='"1".equals(choice)'>
 				where team_idx is not null and name like '%'||#{searchString}||'%'
 			</when>
-			<when test='"0".equals(choice) or "".equals(choice)'>
+			<when test='"0".equals(choice) or "".equals(choice) or choice==null' >
 				where name like '%'||#{searchString}||'%'
 			</when>
 			<when test='"".equals(searchString)'>
@@ -286,7 +294,7 @@
 
 	<!-- === *** 로그인한 유저의 팀정보를 가져오는 메소드 *** === -->
 	<select id="getUserTeam" parameterType="HashMap" resultMap="userTeam">
-		select t.idx as teamNum, m.userid, m.idx as memberNum, w.status
+		select t.idx as teamNum, m.userid, m.idx as memberNum, w.status, m.img
 		from tbl_member m join tbl_teamwon w on m.idx = w.fk_member_idx
 		                  join tbl_team t on w.fk_team_idx = t.idx
 		where m.userid = #{userid} and t.idx = #{teamidx}
@@ -296,6 +304,7 @@
  		<result property="userid" 			column="userid" 		javaType="String"></result>
  		<result property="memberNum" 		column="memberNum" 		javaType="String"></result>
  		<result property="status" 			column="status" 		javaType="String"></result>
+ 		<result property="img" 				column="img" 			javaType="String"></result>
  	</resultMap>
 
 

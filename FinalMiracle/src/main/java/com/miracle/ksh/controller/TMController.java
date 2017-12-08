@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.miracle.kdh.model.FolderVO;
 import com.miracle.kdh.service.ProjectManagerService;
 import com.miracle.ksh.model.TeamVO;
 import com.miracle.ksh.model.TeamwonVO;
@@ -137,7 +136,7 @@ public class TMController {
 	}
 	
 	@RequestMapping(value="/tmForm.mr", method={RequestMethod.GET})
-	public String tmForm(HttpServletRequest req){
+	public String tmForm(HttpServletRequest req, HttpSession session){
 		
 		HttpSession ses = req.getSession();
 		
@@ -154,6 +153,26 @@ public class TMController {
 		req.setAttribute("teamlist2", teamlist2);
 		
 		return "ksh/tm/tmForm.not";
+	}
+	
+	@RequestMapping(value="/tmFormHeader.mr", method={RequestMethod.GET})
+	public String tmFormHeader(HttpServletRequest req, HttpSession session){
+		
+		HttpSession ses = req.getSession();
+		
+		MemberVO loginUser = (MemberVO) ses.getAttribute("loginUser");
+		
+		//System.out.println("확인용 : " + loginUser.getIdx());
+		
+		String fk_member_idx = String.valueOf(loginUser.getIdx());
+		
+		List<HashMap<String, String>> teamlist1 = service.getTeamList1(fk_member_idx);
+		List<HashMap<String, String>> teamlist2 = service.getTeamList2(fk_member_idx);
+		
+		req.setAttribute("teamlist1", teamlist1);
+		req.setAttribute("teamlist2", teamlist2);
+		
+		return "/WEB-INF/tiles/tile/header.jsp";
 	}
 	
 	@RequestMapping(value="/tmCreate.mr", method={RequestMethod.GET})
@@ -295,9 +314,12 @@ public class TMController {
 		
 		session.setAttribute("teamInfo", sessionMap);
 		
+		String msg = "";
 		String loc = "doList.mr";
-		req.setAttribute("loc", loc);
 		
+		req.setAttribute("msg", msg);
+		req.setAttribute("loc", loc);
+
 		return "ksh/msg.not";
 	}
 	

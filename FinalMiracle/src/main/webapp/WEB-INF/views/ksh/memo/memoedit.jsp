@@ -61,12 +61,6 @@
 		
 	}
 	
-	function goReset() {
-		var EditFrm = document.EditFrm;
-		EditFrm.reset();
-		$("#result").empty();
-	}
-	
 </script>
 
 <div>
@@ -119,7 +113,6 @@
 		<br/>
 		
 		<button type="button" class="btn btn-primary" style="margin-right: 10px;" onClick="goEdit();">메모수정</button>
-		<button type="button" class="btn btn-primary" style="margin-right: 10px;" onClick="goReset();">초기화</button>
 		<button type="button" class="btn btn-primary" style="margin-right: 10px;" onClick="javascript:location.href='<%= request.getContextPath() %>/${gobackURL}'">메모목록</button> 
 		
 		<c:forEach var="memo" items="${memovo}" varStatus="status">
