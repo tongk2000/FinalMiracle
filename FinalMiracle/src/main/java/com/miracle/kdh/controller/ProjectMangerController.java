@@ -34,6 +34,8 @@ public class ProjectMangerController {
 		// 추후. 여기부터 ~~~~~
 		// ses.removeAttribute("loginUser");
 		// ses.removeAttribute("teamInfo");
+		
+		
 		if(ses.getAttribute("loginUser") == null) {
 			MemberVO mvo = new MemberVO();
 			mvo = msvc.getLoginMember("kdh");
@@ -46,6 +48,8 @@ public class ProjectMangerController {
 			map.put("teamwon_status", "2");
 			ses.setAttribute("teamInfo", map);
 		}
+		
+		
 		// 여기까지는 나중에 팀 세션 정보 추가되면 삭제해야함
 		
 		@SuppressWarnings("unchecked")

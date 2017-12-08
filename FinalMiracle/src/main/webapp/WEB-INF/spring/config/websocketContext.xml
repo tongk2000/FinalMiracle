@@ -10,16 +10,16 @@
 						http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
  
-   <!-- 웹채팅 쓸때 알아서 설정하도록~ 
-	<beans:bean id="echoHandler" class="com.spring.chatting.websocket.WebsocketEchoHandler" init-method="init" />
+   
+	<beans:bean id="echoHandler" class="com.miracle.jsw.handler.WebsocketEchoHandler" init-method="init" />
 	<websocket:handlers>
-		<websocket:mapping path="/chatting/multichatstart.action" handler="echoHandler" />
-		websocket:handlers 태그에 websocket:mapping 아래 websocket:handshake-interceptors에
+		<websocket:mapping path="/chattingstart.mr" handler="echoHandler" />
+		<!-- websocket:handlers 태그에 websocket:mapping 아래 websocket:handshake-interceptors에
 			 HttpSessionHandshakeInterceptor를 추가하면 WebSocketHandler에 접근하기 전에
-			 HttpSession에 접근하여 HttpSession에 저장된 값을 읽어 들여 WebSocketHandler에서 사용할 수 있도록 처리해줌.
+			 HttpSession에 접근하여 HttpSession에 저장된 값을 읽어 들여 WebSocketHandler에서 사용할 수 있도록 처리해줌. -->
 		<websocket:handshake-interceptors>
 			<beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor" />
 		</websocket:handshake-interceptors>
 	</websocket:handlers>
-    -->
+    
 </beans:beans>

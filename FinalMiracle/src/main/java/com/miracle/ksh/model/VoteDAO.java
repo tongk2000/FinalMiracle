@@ -237,8 +237,8 @@ public class VoteDAO implements InterVoteDAO {
 	}
 
 	@Override
-	public List<HashMap<String, String>> VoteCommList() {
-		List<HashMap<String, String>> voteCommList = sqlsession.selectList("kshVote.VoteCommList");
+	public List<HashMap<String, String>> VoteCommList(HashMap<String, String> map) {
+		List<HashMap<String, String>> voteCommList = sqlsession.selectList("kshVote.VoteCommList", map);
 		return voteCommList;
 	}
 
