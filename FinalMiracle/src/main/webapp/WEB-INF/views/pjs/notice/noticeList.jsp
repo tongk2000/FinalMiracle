@@ -17,7 +17,8 @@
 	}
 	th {
 		text-align:center;
-		background-color:gray;
+		background-color:black;
+		color:white;
 	}
 	td {
 		padding-left:5px;
@@ -54,7 +55,7 @@
 					</c:forEach>	
 				</select>
 			</c:if> --%>
-			<select id="searchType" name="searchType" style="font-size:12pt;">
+			<select id="searchType" name="searchType" style="font-size:12pt; ">
 				<option value="fk_userid">아이디</option>
 				<option value="subject">제목</option>
 			</select>
@@ -83,21 +84,21 @@
 					<c:if test="${not empty list}">
 						<c:forEach var="nt" items="${list}" varStatus="status">
 							<tr class="line">
-								<td>${status.count}<input type="hidden" value="${nt.n_idx}"/></td><!-- 번호 -->
-								<td >
+								<td width="5%">${status.count}<input type="hidden" value="${nt.n_idx}"/></td><!-- 번호 -->
+								<td width="15%">
 									<a onClick="goUserInfo('${nt.fk_userid}');"> <!-- 유저아이디 -->
 										<img class="img" src="<%= request.getContextPath()%>/resources/images/${nt.img}" class="img" /> 
 										<span class="userid">${nt.fk_userid}</span>
 									</a>
 								</td>	
 							<c:if test="${nt.depth == 0}">
-									<td onClick="goView('${nt.n_idx}','${nt.fk_userid}', '${nt.t_idx}')"><span style="color:red;">${nt.subject}</span></td><!-- 제목 -->
+									<td width="45%" onClick="goView('${nt.n_idx}','${nt.fk_userid}', '${nt.t_idx}')"><span style="color:red; margin-left:10px;">${nt.subject}</span></td><!-- 제목 -->
 							</c:if>
 							<c:if test="${nt.depth > 0}">
-									<td onClick="goView('${nt.n_idx}','${nt.fk_userid}','${nt.t_idx}')" style="padding-left:${nt.depth*10}px; color:black; font-weight:bold;">└ [수정글] ${nt.subject}</td><!-- 제목 -->
+									<td width="45%" onClick="goView('${nt.n_idx}','${nt.fk_userid}','${nt.t_idx}')" style="margin-left:10px; padding-left:${nt.depth*10}px; color:black; font-weight:bold; ">└ [답글] ${nt.subject}</td><!-- 제목 -->
 							</c:if>
-								<td>${nt.regday}</td><!-- 날짜 -->
-								<td>${nt.readcount}</td><!-- 조회수 -->
+								<td width="25%">${nt.regday}</td><!-- 날짜 -->
+								<td width="10%">${nt.readcount}</td><!-- 조회수 -->
 							</tr>		
 						</c:forEach>
 					</c:if>
@@ -110,7 +111,7 @@
 				<button type="button" id="del" >삭제</button>
 			</c:if>
 		</div>
-		<br/><br/>
+		<br/><br/><br/><br/>
 		<div style="margin: 0 auto;">
 			${pagebar}
 		</div>
@@ -137,11 +138,13 @@
 				}
 			});
 			$("#del").click(function(){
+				var cnt=0;
+				var idx = new Array();
 				$(".selectLine").each(function(){
-					var idx = $(this).find("input").val();
-					alert(idx);
-					location.href="<%=request.getContextPath()%>/noticeDel.mr?idx="+idx;
+					idx[cnt] = $(this).find("input").val();
+					cnt++;
 				});
+				location.href="<%=request.getContextPath()%>/noticeDel.mr?idx="+idx;
 			});
 			keep();
 			$("#displayList").hide();
@@ -241,13 +244,15 @@
 		}
 		function goWrite() {
 			<c:if test="${team.teamNum != null&&team.teamNum!=''}" >
-				var t_teamNum = ${team.teamNum};
+				var t_teamNum = "${team.teamNum}";
+				alert(t_teamNum);
 			</c:if>
 			<c:if test="${team.userid != null&&team.userid!=''}">
 				var m_userid = "${team.userid}";
 			</c:if>
 			var frm = document.write;
 			frm.teamNum.value= t_teamNum;
+			frm.userid.value=m_userid;
 			frm.action="<%=request.getContextPath()%>/noticeWrite.mr";
 			frm.method="post";
 			frm.submit();
