@@ -1,6 +1,9 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%
+request.setCharacterEncoding("UTF-8");
+%>
 <!DOCTYPE>
 <html>
 <head>
@@ -76,8 +79,8 @@
 					</c:if>
 					<c:if test="${not empty list}">
 						<c:forEach var="md" items="${list}" varStatus="status">
-							<tr> <!-- m_idx, fk_userid subject regday readcount img, depth, status, t_idx, groupno, tstatus -->
-								<td width="5%">${status.count}</td>	<!-- 번호 -->
+							<tr> <!-- d_idx, fk_userid subject regday readcount img, depth, status, t_idx, groupno, tstatus -->
+								<td width="5%">${status.count}<input type="hidden" value="${md.d_idx}"/></td>	<!-- 번호 -->
 								<c:if test="${md.tstatus == 2 || sessionScope.loginUser.userid == md.fk_userid}">
 									<td width="15%">
 										<a onClick="goUserInfo('${md.fk_userid}');">
@@ -115,11 +118,14 @@
 						</c:forEach>
 					</c:if>	
 				</tbody>
-			</table><br/>
-			<c:if test="${user.status == 1}" >
-				<button type="button" id="del">삭제</button>
-				<button type="button" onClick="goWrite();">글쓰기</button>
-			</c:if>
+			</table>
+			<br/>
+			<div style="float:right;">
+				<c:if test="${user.status == 1}" >
+					<button type="button" id="del">삭제</button>
+					<button type="button" onClick="goWrite();">글쓰기</button>
+				</c:if>
+			</div>	
 		</form>
 		<br/><br/>
 		${pagebar}
@@ -143,6 +149,7 @@
 				$(".selectLine").each(function(){
 					idx[cnt] = $(this).find("input").val();
 					cnt++;
+					alert("idx"+$(this).find("input").val());
 				});
 				location.href="<%=request.getContextPath()%>/mindDel.mr?idx="+idx;
 			});

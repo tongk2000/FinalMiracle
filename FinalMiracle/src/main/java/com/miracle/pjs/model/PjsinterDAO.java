@@ -19,7 +19,9 @@ public interface PjsinterDAO {
 	
 	HashMap<String, String> getIdxTeam(HashMap<String, String> view); // 공지사항 게시판의 해당 행의 내용을 보여주는 메소드
 
-	int delNoticeIdx(List<String> list); // 공지사항 게시물을 지우는 메소드
+//	int delNoticeIdx(List<String> list); // 공지사항 게시물을 지우는 메소드
+//	int delNoticeIdx(HashMap<String,String> paramap); // 공지사항 게시물을 지우는 메소드
+	int delNoticeIdx(HashMap<String, String[]> paramap); // 공지사항 게시물을 지우는 메소드
 	
 	List<ReplyVO> getComment(String idx); // 공지사항 게시물의 리플을 얻는 메소드 
 	
@@ -53,7 +55,8 @@ public interface PjsinterDAO {
 	int updateMindReadCount(String idx); // 조회수 올려주는 메소드
 	
 	int updateMindCheckNum(String nidx); // 대기, 확인, 답변완료 상태변경 메소드
-
+	
+	int delMindIdx(HashMap<String,String[]> paramap); // 마음의 소리 다중행 삭제
 	
 	
 //==========================================================================================================================================================//	
@@ -73,8 +76,32 @@ public interface PjsinterDAO {
 //==========================================================================================================================================================//	
 
 	
+	
+	
+//==========================================================================================================================================================//	
+	
+	// === *** 쪽지 *** === //
+	int getSenderMemo(HashMap<String, String> map);
+
+	List<HashMap<String, String>> getSenderMemoList(HashMap<String, String> map); // sender가 보낸 쪽지 리스트를 반환한다.
+
+	int getReceiverMemo(HashMap<String, String> map); // 쪽지를 받은 사람의 받은 쪽지 갯수를 리턴한다.
+
+	List<HashMap<String, String>> getReceiverMemoList(HashMap<String, String> map); // 받은 쪽지의 리스트를 반환한다.
+
+//==========================================================================================================================================================//	
+
+	
+	
+	
+	
+	
+	
 	// 로그인한 유저의 팀정보를 가져오는 메소드
 	HashMap<String, String> getUserTeam(HashMap<String, String> team);
+
+	
+
 
 
 }
