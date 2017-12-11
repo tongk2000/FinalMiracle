@@ -140,8 +140,6 @@ public class BoardController {
 		
 		String fk_team_idx = teamInfo.get("team_idx");
 		String fk_teamwon_idx = teamInfo.get("teamwon_idx");
-		
-		System.out.println(fk_teamwon_idx);
 
 		String colname = req.getParameter("colname");
 		String search = req.getParameter("search");
@@ -152,8 +150,6 @@ public class BoardController {
 		
 		map.put("fk_team_idx", fk_team_idx);
 		map.put("fk_teamwon_idx", fk_teamwon_idx);
-		
-		System.out.println(fk_teamwon_idx);
 		
 		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 		
@@ -250,6 +246,43 @@ public class BoardController {
 		req.setAttribute("n", n);
 		
 		return "psw/board/freeAddEnd.not";
+	}
+	
+	// ======================================================== *** 자유게시판 글 수정하기 *** ========================================
+	@RequestMapping(value="/freeEdit.mr", method={RequestMethod.GET})
+	public String freeEdit(HttpServletRequest req, HttpServletResponse response, HttpSession session) {
+		String idx = req.getParameter("idx"); // 수정할 게시글 글번호 받아오기
+		
+		// 수정해야 할 글 전체내용 가져오기
+		FreeBoardVO freevo = service.getViewWithNoReadCnt(idx);  // 글 조회수(readCnt) 증가없이 글 불러오기
+		
+		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		
+		if(!loginUser.getUserid().equals(freevo.getUserid())) {
+			String msg = "다른 회원님의 글은 수정이 불가능합니다.";
+			String loc = "javascript.history.back();";
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			return "psw/msg.not";
+		} else {
+			req.setAttribute("freevo", freevo);
+			return "psw/board/freeEdit.all";
+		}
+	}
+	
+	@RequestMapping(value="/freeEditEnd.mr", method={RequestMethod.POST})
+	public String freeEditEnd(FreeBoardVO freevo, HttpServletRequest req) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("idx", String.valueOf(freevo.getIdx()));
+		map.put("subject", freevo.getSubject());
+		map.put("content", freevo.getContent());
+		
+		int result = service.freeEdit(map);
+		
+		req.setAttribute("result", result);
+		req.setAttribute("idx", freevo.getIdx());
+		
+		return "psw/board/freeEditEnd.not";
 	}
 	
 	

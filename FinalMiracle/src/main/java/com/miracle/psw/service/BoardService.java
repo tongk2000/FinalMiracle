@@ -69,17 +69,17 @@ public class BoardService implements InterBoardService {
 
 	@Override
 	public FreeBoardVO getView(String idx, String userid) {  // 자유게시판 클릭한 게시글 1개 보여주기
-		FreeBoardVO vo = dao.getView(idx);  // 자유게시판 글 보여주기
+		FreeBoardVO vo = dao.getView(idx);  // 자유게시판 글 보여주기 
 		
 		if(userid != null && !vo.getUserid().equals(userid)) {
-			dao.setAddReadCnt(idx); // 자유게시판 글 조회수 1 증가시키기
+			dao.setAddReadCnt(idx); // 자유게시판 글(readCnt) 조회수 1 증가시키기
 			vo = dao.getView(idx);
 		}
 		return vo;
 	}
 
 	@Override
-	public FreeBoardVO getViewWithNoReadCnt(String idx) {  // 자유게시판 글 조회수 증가 없이 보여주기
+	public FreeBoardVO getViewWithNoReadCnt(String idx) {  // 자유게시판 글 조회수(readCnt) 증가 없이 보여주기
 		FreeBoardVO vo = dao.getView(idx);
 		return vo;
 	}
@@ -105,6 +105,12 @@ public class BoardService implements InterBoardService {
 	public int getFreeTotalCountWithNoSearch(HashMap<String, String> map) {
 		int cnt = dao.getFreeTotalCountWithNoSearch(map);
 		return cnt;
+	}
+
+	@Override
+	public int freeEdit(HashMap<String, Object> map) {  // 1개 글 수정하기
+		int n = dao.freeEdit(map);
+		return n;
 	}
 	
 	

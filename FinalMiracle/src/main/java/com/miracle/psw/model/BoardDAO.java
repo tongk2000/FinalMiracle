@@ -96,6 +96,12 @@ public class BoardDAO implements InterBoardDAO {
 		int cnt = sqlsession.selectOne("board_psw.getFreeTotalCountWithNoSearch", map);
 		return cnt;
 	}
+
+	@Override
+	public int freeEdit(HashMap<String, Object> map) {
+		int n = sqlsession.update("board_psw.freeEdit", map);
+		return n;
+	}
 	
 	
 
