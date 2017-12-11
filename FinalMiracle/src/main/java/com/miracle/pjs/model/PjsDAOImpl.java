@@ -53,10 +53,33 @@ public class PjsDAOImpl implements PjsinterDAO {
 		HashMap<String, String> map = sqlsession.selectOne("pjsfinal.getIdxTeam", view);
 		return map;
 	}/* ================================================================================================================================================== */
-	@Override
+	/*@Override
 	public int delNoticeIdx(List<String> list) {
 		// 공지사항 게시물을 지우는 메소드
 		int n = sqlsession.update("pjsfinal.delNoticeIdx", list);
+		return n;
+	}*//* ================================================================================================================================================== */
+	/*@Override
+	public int delNoticeIdx(HashMap<String,String> paramap) {
+		// 공지사항 게시물을 지우는 메소드
+		
+		int sum = 0;
+		int n = 0;
+		
+		for(int i=0; i<paramap.size(); i++) {
+			String paraidx = paramap.get("paraidx"+i);
+			n = sqlsession.update("pjsfinal.delNoticeIdx", paraidx);
+			sum += n;
+		}
+		
+	//	int n = sqlsession.update("pjsfinal.delNoticeIdx", paramap);
+		return sum;
+	}*//* ================================================================================================================================================== */
+	@Override
+	public int delNoticeIdx(HashMap<String, String[]> paramap) {
+		// 공지사항 게시물을 지우는 메소드
+		// System.out.println("====> idxes : " + idxes);
+		int n = sqlsession.update("pjsfinal.delNoticeIdx", paramap);
 		return n;
 	}/* ================================================================================================================================================== */
 	@Override
@@ -162,6 +185,12 @@ public class PjsDAOImpl implements PjsinterDAO {
 		int n = sqlsession.update("pjsfinal.updateMindCheckNum", nidx);
 		return n;
 	}
+	@Override
+	public int delMindIdx(HashMap<String,String[]> paramap) {
+		// 마음의 소리 다중행 삭제
+		int n = sqlsession.update("pjsfinal.delMindIdx", paramap);
+		return n;
+	}
 	
 	
 
@@ -205,12 +234,47 @@ public class PjsDAOImpl implements PjsinterDAO {
 //==========================================================================================================================================================//	
 
 	
+	
+
+	
+//==========================================================================================================================================================//	
+
+	// === *** 쪽지 *** === //
+	@Override
+	public int getSenderMemo(HashMap<String, String> map) {
+		// 쪽지 보낸 사람의 쪽지 수 반환
+		int n = sqlsession.selectOne("pjsfinal.getSenderMemo",map); // userid, teamNum 을 보냄!
+		return n;
+	}
+	@Override
+	public List<HashMap<String, String>> getSenderMemoList(HashMap<String, String> map) {
+		// sender가 보낸 쪽지 리스트를 반환한다.
+		List<HashMap<String, String>> list = sqlsession.selectList("pjsfinal.getSenderMemoList", map);
+		return list;
+	}
+	@Override
+	public int getReceiverMemo(HashMap<String, String> map) {
+		// 받은 쪽지의 갯수를 리턴한다.
+		int n = sqlsession.selectOne("pjsfinal.getReceiverMemo", map);
+		return n;
+	}
+	@Override
+	public List<HashMap<String, String>> getReceiverMemoList(HashMap<String, String> map) {
+		// 받은 쪽지의 리스트를 반환
+		List<HashMap<String, String>> list = sqlsession.selectList("pjsfinal.getReceiverMemoList",map);
+		return list;
+	}
+	
+//==========================================================================================================================================================//	
+	
 	@Override
 	public HashMap<String, String> getUserTeam(HashMap<String, String> map) {
 		// 로그인한 유저의 팀정보를 가져오는 메소드
 		HashMap<String, String> userTeam = sqlsession.selectOne("pjsfinal.getUserTeam", map);
 		return userTeam;
 	}
+	
+	
 	
 
 }

@@ -21,7 +21,9 @@ public interface PjsinterService {
 	
 	HashMap<String, String> getIdxTeam(HashMap<String, String> view); // 공지사항의 해당 행을 선택하면 그 글의 정보를 보여주는 메소드
 	
-	int delNoticeIdx(List<String> list); // 공지사항 게시판을 지우는 메소드
+	// int delNoticeIdx(List<String> list); // 공지사항 게시판을 지우는 메소드
+	// int delNoticeIdx(HashMap<String,String> paramap); // 공지사항 게시판을 지우는 메소드
+	int delNoticeIdx(HashMap<String, String[]> paramap); // 공지사항 게시판을 지우는 메소드
 	
 	List<ReplyVO> getComment(String idx); // 게시글의 코멘트를 달기위한 메소드
 	
@@ -52,6 +54,8 @@ public interface PjsinterService {
 	
 	int updateMindCheckNum(String nidx); // 대기, 확인, 답변 변경해주는 메소드
 	
+	int delMindIdx(HashMap<String,String[]> paramap); // 마음의 소리 다중 삭제
+	
 //==========================================================================================================================================================//	
 	
 	// === *** 구글맵 *** === //
@@ -66,10 +70,28 @@ public interface PjsinterService {
 	List<HashMap<String, String>> getMapTeam(String map_idx); // 구글맵에서 팀 정보 마커 클릭 시 사용
 
 //==========================================================================================================================================================//	
+	
+	// === *** 쪽지 *** === //
+	
+	int getSenderMemo(HashMap<String, String> map); // 쪽지 보낸 사람의 총 보낸 편지 수를 반환
 
+	List<HashMap<String, String>> getSenderMemoList(HashMap<String, String> map); // sender의 보낸 쪽지 리스트를 반환한다.
+	
+	int getReceiverMemo(HashMap<String, String> map); // 쪽지 받은 사람의 총 받은 쪽지 갯수를 반환
+
+	List<HashMap<String, String>> getReceiverMemoList(HashMap<String, String> map); // 받은 쪽지 리스트를 반환
+
+//==========================================================================================================================================================//	
+
+	
+	
 	
 	// 로그인한 유저의 팀정보를 가져오기 위
 
 	HashMap<String, String> getUserTeam(HashMap<String, String> team);
 
+	
+
+	
+	
 }

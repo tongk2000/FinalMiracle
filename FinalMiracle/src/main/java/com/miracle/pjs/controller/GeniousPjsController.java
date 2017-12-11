@@ -1,6 +1,5 @@
 package com.miracle.pjs.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,15 +17,13 @@ import com.miracle.pjs.service.PjsinterService;
 import com.miracle.pjs.util.MyUtil;
 import com.miracle.psw.model.MemberVO;
 
-
 @Controller
-public class GeniousPjs {
+public class GeniousPjsController {
 	
 	@Autowired
 	private PjsinterService service;
 
 /*=======================================================================================================================================================*/	
-	
 	// ==== *** 공지사항 게시판 *** ==== //
 	@RequestMapping(value="noticeList.mr", method={RequestMethod.GET}) // 공지사항 게시판 리스트
 	public String notice(HttpServletRequest req, HttpSession session) {	
@@ -36,7 +33,7 @@ public class GeniousPjs {
 		team.put("userid", ((MemberVO) session.getAttribute("loginUser")).getUserid()); // 유저의 아이디를 가져온다.
 		team.put("teamidx", teamInfo.get("team_idx")); 
 		//if(mvo != null) {
-			HashMap<String, String> userTeam = service.getUserTeam(team); // 유저의 팀 정보를 가져온다. teamNum, userid, name, status
+			HashMap<String, String> userTeam = service.getUserTeam(team); // 유저의 팀 정보를 가져온다.  teamNum, m.userid, m.idx as memberNum, w.status, m.img
 			req.setAttribute("userTeam", userTeam); // 세션에서 얻을 수 없는 유저의 팀정보를 뷰단으로 보내 여러 조건에 비교용으로 쓴다.
 			session.setAttribute("readCount", "1"); // 게시판 리스트에서 게시글을 읽어야만 readcont가 올라가도록 설정!
 			/* ============================== 페이징 처리 시 필요한 변수들! ============================== */
@@ -179,14 +176,17 @@ public class GeniousPjs {
 	public String noticeDel(HttpServletRequest req) {
 		// 게시판에서 삭제버튼을 눌렸을 때
 		String str_idx = req.getParameter("idx");
-		String[] idx = str_idx.split(",");
-		List<String> list = new ArrayList<String>();
-		for(int i=0; i<idx.length; i++) {
-			list.add(idx[i]);
-			System.out.println("=======================idx[i]======================"+idx[i]);
-		}
-		int n = service.delNoticeIdx(list);
+		System.out.println("str_idx => " + str_idx);
+		// 46,21
+		String[] idxArr = str_idx.split(",");
+		
+		HashMap<String,String[]> paramap = new HashMap<String,String[]>();
+		paramap.put("idxArr", idxArr);
+		
+		int n = service.delNoticeIdx(paramap);
+		
 		String loc="location.href='noticeList.mr;'";
+		
 		if(n > 0) {
 			String msg = "삭제 성공!";
 			req.setAttribute("msg", msg);
@@ -195,6 +195,7 @@ public class GeniousPjs {
 			String msg = "삭제 실패";
 			req.setAttribute("msg", msg);
 		}
+		
 		req.setAttribute("loc", loc);
 		return "pjs/error.not";		
 	}/* ================================================================================================================================================== */
@@ -282,6 +283,7 @@ public class GeniousPjs {
 		req.setAttribute("loc", loc);
 		return "pjs/error.not";
 	}/* ================================================================================================================================================== */
+/*=======================================================================================================================================================*/	
 
 	
 	
@@ -289,10 +291,10 @@ public class GeniousPjs {
 	
 	
 /*=======================================================================================================================================================*/	
-	
 	// ==== *** 마음의 소리 게시판 *** ==== //
 	@RequestMapping(value="mindList.mr", method={RequestMethod.GET})
 	public String mindList(HttpServletRequest req, HttpSession session) {
+		// 팀장인 사람의 userid를 불러와야 한다.
 		MemberVO mvo = (MemberVO) session.getAttribute("loginUser"); // 유저의 정보를 가져온다.
 		@SuppressWarnings("unchecked")
 		HashMap<String, String> teamInfo = (HashMap<String, String>)session.getAttribute("teamInfo"); // team_idx, teamwon_idx, teamwon_status
@@ -442,14 +444,15 @@ public class GeniousPjs {
 		// 1. 게시판을 클릭해서 글을 볼 목적일 경우
 		// 게시판에서 삭제버튼을 눌렸을 때
 		String str_idx = req.getParameter("idx");
-		String[] idx = str_idx.split(",");
-		List<String> list = new ArrayList<String>();
-		for(int i=0; i<idx.length; i++) {
-			list.add(idx[i]);
-			System.out.println("=======================idx[i]======================"+idx[i]);
-		}
-		int n = service.delNoticeIdx(list);
-		String loc="location.href='noticeList.mr;'";
+		System.out.println("str_idx => " + str_idx);
+		// 46,47
+		String[] idxArr = str_idx.split(",");
+		
+		HashMap<String,String[]> paramap = new HashMap<String,String[]>();
+		paramap.put("idxArr", idxArr);
+		
+		int n = service.delMindIdx(paramap);
+		String loc="location.href='mindList.mr;'";
 		if(n > 0) {
 			String msg = "삭제 성공!";
 			req.setAttribute("msg", msg);
@@ -468,7 +471,8 @@ public class GeniousPjs {
 		HashMap<String, String> userinfo = service.getViewContent(id);
 		req.setAttribute("userinfo", userinfo);
 		return "pjs/mind/mindUserInfo.all";
-	}
+	}/* ================================================================================================================================================== */
+/*=======================================================================================================================================================*/	
 	
 	
 	
@@ -476,27 +480,21 @@ public class GeniousPjs {
 	
 	
 /*=======================================================================================================================================================*/	
-
 	// ==== *** 구글맵 *** ==== //
 	@RequestMapping(value="googleMap.mr", method={RequestMethod.GET})
 	public String googleMap(HttpServletRequest req, HttpSession session) {
 		String choice = req.getParameter("choice");
 		String searchString = req.getParameter("searchString");
 		if(!(choice==null||searchString==null||!"0".equals(choice))) {
-			System.out.println("=================구글맵 리스트 여기오니?=================");
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("choice", choice);
 			map.put("searchString", searchString);
 			List<MapVO> list = service.getMapWithSearch(map); // 전체 리스트를 반환한다.
-			for(MapVO vo : list) {
-				System.out.println("=============구글맵 리스트============="+vo.getIdx());
-			}
 			req.setAttribute("list", list);
 			req.setAttribute("choice", choice);
 			req.setAttribute("searchString", searchString);
 		}
 		else {
-			System.out.println("=================구글맵 리스트 여기오면 안되=================");
 			List<MapVO> list = service.getMap(); // 전체 리스트를 반환한다.
 			req.setAttribute("list", list);
 			req.setAttribute("choice", choice);
@@ -523,7 +521,6 @@ public class GeniousPjs {
 		if(map_team_idx==null||"0".equals(map_team_idx)){ // null이거나 0일 때 음식점 정보를 가져온다.
 			HashMap<String, String> googleMapFood = service.getMapFood(map_idx);
 			req.setAttribute("googleMap", googleMapFood);
-			System.out.println("=============정보온다.================");
 			req.setAttribute("n", "0");
 		}
 		else { // null이 아니면 팀 정보를 가져온다.
@@ -532,19 +529,101 @@ public class GeniousPjs {
 			req.setAttribute("n", "1");
 		}
 		return "pjs/map/googleMapTeamInfoJSON.not";
-	}
-	
+	}/* ================================================================================================================================================== */
 /*=======================================================================================================================================================*/	
 	
 	
+	
+	
+	
+/*=======================================================================================================================================================*/	
 	// ==== *** 쪽지 *** ==== //
-	@RequestMapping(value="memo.mr", method={RequestMethod.GET})
-	public String memo(HttpServletRequest req) {
-		return "pjs/memo/?.all";
-	}
-	
-	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="memomemory.mr", method={RequestMethod.GET})
+	public String memomemory(HttpServletRequest req, HttpSession ses) {
+		HashMap<String, String> team = new HashMap<String, String>();  // 유저아이디와 팀번호가 유일한 유저를 불러온다.
+		team.put("userid", ((MemberVO) ses.getAttribute("loginUser")).getUserid()); // 유저의 아이디를 가져온다.
+		team.put("teamidx", ((HashMap<String, String>)ses.getAttribute("teamInfo")).get("team_idx")); 
+		HashMap<String, String> userTeam = service.getUserTeam(team); // 유저의 팀 정보를 가져온다.  teamNum, m.userid, m.idx as memberNum, w.status, m.img		
+		int sizePerPage=10;
+		int currentPage=0;
+		try {
+			currentPage = Integer.parseInt(req.getParameter("currentPage"));
+			if(currentPage<0){
+				currentPage=1;
+			}
+		} catch(NumberFormatException e){
+			currentPage=1;
+		}
+		int blockSize=3;
+		String sNum = String.valueOf( ((currentPage - 1)*sizePerPage)+1 );
+		String eNum = String.valueOf( Integer.parseInt(sNum) + sizePerPage - 1 );
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("userid", userTeam.get("userid"));
+		map.put("teamNum", userTeam.get("teamNum"));
+		map.put("sNum", sNum);
+		map.put("eNum", eNum);
+		int totalCount = service.getSenderMemo(map); 
+		int totalPage=(int)Math.ceil((double)totalCount / sizePerPage);
+		List<HashMap<String, String>> list = service.getSenderMemoList(map);// 리스트 가저요기
+		String pagebar = MyUtil.getPageBar(sizePerPage, blockSize, totalPage, currentPage, "memomemory.mr");
+		
+		req.setAttribute("list", list); // IDX, SUBJECT, CONTENT, SENDER, SSTATUS, NAME, TEAMNUM, IMG, writedate
+		req.setAttribute("pagebar", pagebar);
+		req.setAttribute("userTeam", userTeam); // teamNum, m.userid, m.idx as memberNum, w.status, m.img  필요없다고 판단 시 빼자!
+		return "pjs/memo/memoSenderList.all";
+	}/* =======================================================================================================1=========================================== */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="memoreceiver.mr", method={RequestMethod.GET})
+	public String memosender(HttpServletRequest req, HttpSession ses) {
+		HashMap<String, String> team = new HashMap<String, String>();  // 유저아이디와 팀번호가 유일한 유저를 불러온다.
+		team.put("userid", ((MemberVO) ses.getAttribute("loginUser")).getUserid()); // 유저의 아이디를 가져온다.
+		team.put("teamidx", ((HashMap<String, String>)ses.getAttribute("teamInfo")).get("team_idx")); 
+		HashMap<String, String> userTeam = service.getUserTeam(team); // 유저의 팀 정보를 가져온다.  teamNum, m.userid, m.idx as memberNum, w.status, m.img		
+		int sizePerPage=10;
+		int currentPage=0;
+		try {
+			currentPage = Integer.parseInt(req.getParameter("currentPage"));
+			if(currentPage<0){
+				currentPage=1;
+			}
+		} catch(NumberFormatException e){
+			currentPage=1;
+		}
+		int blockSize=3;
+		String sNum = String.valueOf( ((currentPage - 1)*sizePerPage)+1 );
+		String eNum = String.valueOf( Integer.parseInt(sNum) + sizePerPage - 1 );
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("userid", userTeam.get("userid"));
+		map.put("teamNum", userTeam.get("teamNum"));
+		map.put("sNum", sNum);
+		map.put("eNum", eNum);
+		int totalCount = service.getReceiverMemo(map); 
+		int totalPage=(int)Math.ceil((double)totalCount / sizePerPage);
+		List<HashMap<String, String>> list = service.getReceiverMemoList(map);// 리스트 가저요기
+		String pagebar = MyUtil.getPageBar(sizePerPage, blockSize, totalPage, currentPage, "memomemory.mr");
+		
+		req.setAttribute("list", list); // idx, receiver, rreadcount, readdate, subject, content , sender, writedate, name, img
+		req.setAttribute("pagebar", pagebar);
+		req.setAttribute("userTeam", userTeam); // teamNum, m.userid, m.idx as memberNum, w.status, m.img  필요없다고 판단 시 빼자!
+		return "pjs/memo/memoReceiverList.all";
+	}/* =======================================================================================================1=========================================== */
+	@SuppressWarnings("unchecked") // 컴파일러가 일반적으로 경고하는 내용 중 "이건 하지마"하고 제외시킬 때
+	@RequestMapping(value="memoWrite.mr", method={RequestMethod.GET})
+	public String memoWrite(HttpServletRequest req, HttpSession ses) {
+		HashMap<String, String> team = new HashMap<String, String>();  // 유저아이디와 팀번호가 유일한 유저를 불러온다.
+		team.put("userid", ((MemberVO) ses.getAttribute("loginUser")).getUserid()); // 유저의 아이디를 가져온다.
+		team.put("teamidx", ((HashMap<String, String>)ses.getAttribute("teamInfo")).get("team_idx")); 
+		HashMap<String, String> userTeam = service.getUserTeam(team); // 유저와 유저의 팀 정보를 가져온다.  teamNum, m.userid, m.idx as memberNum, w.status, m.img
+		
+		req.setAttribute("userTeam", userTeam);
+		return "pjs/memo/memoWrite.all";
+	}/* ================================================================================================================================================== */
+
+
 /*=======================================================================================================================================================*/	
 
+	
+	
 	
 }		
