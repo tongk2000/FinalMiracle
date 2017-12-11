@@ -132,19 +132,19 @@
 	<!-- ========================================= *** Category 분류 항목 *** ================================= -->
 	<div style="width: 90%;"> 
 		<div class="category" style="margin-left:10%;">
-			<a onClick="goCategory('0');">[기타문의]</a>
+			<a onClick="goCategory(0);">[기타문의]</a>
 		</div>
 		
 		<div class="category" style="margin-left:10%;">
-			<a onClick="goCategory('1')">[회원관련]</a>
+			<a onClick="goCategory(1)">[회원관련]</a>
 		</div>
 		
 		<div class="category" style="margin-left:10%;">
-			<a onClick="goCategory('2')">[상담관련]</a>
+			<a onClick="goCategory(2)">[상담관련]</a>
 		</div>
 		
 		<div class="category" style="margin-left:10%;">
-			<a onClick="goCategory('3')">[업무관련]</a>
+			<a onClick="goCategory(3)">[업무관련]</a>
 		</div>	
 	</div>
 	<!-- ========================================== *** accordion FAQ 게시판 목록 *** ============================== -->
