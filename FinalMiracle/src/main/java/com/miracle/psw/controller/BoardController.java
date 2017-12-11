@@ -75,6 +75,7 @@ public class BoardController {
 			faqList = service.faqListWithNoSearch(map);
 		}
 		// ================================================ *** 페이지바 만들기 *** ====================
+		
 		if( (colname != null && search != null) &&
 			(!colname.trim().isEmpty() && !search.trim().isEmpty()) &&
 			(!colname.equals("null") && !search.equals("null")) ) {  // 검색어가 있는 경우
@@ -89,6 +90,7 @@ public class BoardController {
 		pagebar += "</ul>";
 		
 		req.setAttribute("pagebar", pagebar);
+		
 		req.setAttribute("faqList", faqList);
 		req.setAttribute("colname", colname);
 		req.setAttribute("search", search);
