@@ -11,12 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 public class MyUtil {
 
 	public static double myround(double data, int index) {
-
 		 // index  1 ==> data * 1 / 1.0
 		 // index  2 ==> data * 10 / 10.0
 		 // index  3 ==> data * 100 / 100.0
 		 // index  4 ==> data * 1000 / 1000.0
-		
 		int num = 1;
 				
 		for(int i=0; i<index-1; i++) {
@@ -25,11 +23,9 @@ public class MyUtil {
 		
 		if(index == 1) {
 			return Math.round(data);
-		}
-		else {
+		} else {
 			return Math.round(data*num)/(double)num;	
 		}
-		
 	}
 	
 	// ------ 현재시각 나타내기 ------- //
@@ -203,7 +199,7 @@ public class MyUtil {
 	}// end of String getPageBar(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String url)-----------------	   
 
 	
-	public static String getPageBarWithSearch(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String colname, String search, String period, String url) {
+	public static String getPageBarWithSearch(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String colname, String search, String category, String url) {
 		String pageBar = "";
 		int loop = 1;
 		int pageNo = ((currentShowPageNo - 1)/blockSize)*blockSize + 1; // 공식임!!!
@@ -215,7 +211,7 @@ public class MyUtil {
 		if (pageNo == 1) {
 			str_pageNo = "&nbsp;[Before "+blockSize+" Page]";
 		} else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" >"+"[Before "+blockSize+" Page]</a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&category="+category+"\" >"+"[Before "+blockSize+" Page]</a>&nbsp;"; 
 		}
 		
 		pageBar += str_pageNo;
@@ -225,7 +221,7 @@ public class MyUtil {
 			if (pageNo == currentShowPageNo) {
 				str_pageNo = "&nbsp;<span style=\"color:red; font-size:12pt; font-weight:bold; text-decoration:underline;\">"+pageNo+ "</span>&nbsp;";
 			} else {
-				str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" >"+pageNo+"</a>" + "&nbsp;";
+				str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&category="+category+"\" >"+pageNo+"</a>" + "&nbsp;";
 			}
 			pageBar += str_pageNo; 
 			pageNo++;
@@ -235,12 +231,15 @@ public class MyUtil {
 		if (pageNo > totalPage) {
 			str_pageNo = "&nbsp;[Next "+blockSize+" Page]";
 		} else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" >"+"[Next "+blockSize+" Page]</a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&category="+category+"\" >"+"[Next "+blockSize+" Page]</a>&nbsp;"; 
 		}
 		pageBar += str_pageNo;	
 		
 		return pageBar;
 	}// end of String getPageBarWithSearch(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String searchType, String searchString, String period, String url)--------------------	
+	
+	
+	
 	
 	
 	// **** 돌아갈 URL Page의 값을 알기 위해서 먼저 현재 URL 주소를 얻어오는 메소드 **** //
