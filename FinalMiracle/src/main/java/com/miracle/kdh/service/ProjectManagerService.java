@@ -102,7 +102,6 @@ public class ProjectManagerService {
 				pageDateList = dao.getPageDateMonth(); // 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기
 			}
 		}
-		System.out.println("pageDateList : "+pageDateList.size());
 		HashMap<String, Object> returnMap = new HashMap<String, Object>();
 		returnMap.put("result", result1*result2);
 		returnMap.put("fvo", fvo);
