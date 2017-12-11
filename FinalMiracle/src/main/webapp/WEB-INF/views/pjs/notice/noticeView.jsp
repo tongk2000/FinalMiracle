@@ -58,9 +58,11 @@
 					</tr>
 				</tbody>
 			</table>
-			<div style="float:left;" >
-				<button type="button" onClick="goEdit();">수정글쓰기</button>
-			</div>
+			<c:if test="${sessionScope.teamInfo.teamwon_status == 2}">
+				<div style="float:left;" >
+					<button type="button" onClick="goEdit();">수정글쓰기</button>
+				</div>
+			</c:if>
 			<br/>
 			<br/>
 			<div id="displayList" style="background-color:white; align:center;"> </div>
@@ -76,6 +78,8 @@
 	<!-- comment(ReplyVO), map(team_idx , userid) 받는다. -->
 	<script>
 		$(document).ready(function(){
+			alert("옴?");
+			alert("${user.status}");
 			getReply();
 			$("#goClick").click(function(){
 				var contents = $("#contents").val();
@@ -107,12 +111,12 @@
 			});
 			getReply();				
 		}
-		function goEdit() { teamNum , userid
+		function goEdit() {
 			var frm = document.edit;
-			frm.nidx.value=${nidx};
-			frm.userid.value=${user.userid};
-			frm.teamNum.value=${user.teamNum};
-			frm.action="<%=request.getContextPath()%>/";
+			frm.nidx.value="${nidx}";
+			frm.userid.value="${sessionScope.loginUser.userid}";
+			frm.teamNum.value="${user.team_idx}";
+			frm.action="<%=request.getContextPath()%>/noticeEditWrite.mr";
 			frm.method="get";
 			frm.submit();
 		}

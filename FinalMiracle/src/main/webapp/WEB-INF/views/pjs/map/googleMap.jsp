@@ -50,7 +50,7 @@
 		google.maps.event.addDomListener(window, 'load', initialize); // 구글사에서 그대로 따옴!!! ====== 구글맵 생성
 		function initialize(){ // 사용자가 커스텀마이즈 할 수 있다.									    ====== 구글맵 처음 시작할 때
 		    var mapOptions = { // 구글 맵 옵션 설정
-		        zoom : 10, // 기본 확대율(줌 크기조절) , 숫자가 클수록 줌 크기가 확대되는 것이다. 숫자가 작아질 수록 광대역을 볼 수 있다.
+		        zoom : 19, // 기본 확대율(줌 크기조절) , 숫자가 클수록 줌 크기가 확대되는 것이다. 숫자가 작아질 수록 광대역을 볼 수 있다.
 		        center : new google.maps.LatLng(37.5338151, 126.896978300000007), // 처음 지도의 중앙 위치 세팅!!
 		        //-------------------------------------------------------------------- 지도 옵션에 관련한 세부사항들
 		        disableDefaultUI : false,  // 기본 UI(지도창에 나오는 부수적인 아이콘들, 없으면 지도만 나온다.) 비활성화 여부
@@ -244,10 +244,10 @@
 	<button type="button" id="goSearch">검색</button>
 	
 	<div class="height">
-		<div id="displayList" style="background-color:black; z-index:1000">ㅇ</div>
+		<div id="displayList" style="background-color:black; z-index:1000"></div>
 	</div>
 	
-	<div id="googleMap"	style="width: 30%; height: 200px; margin: auto; margin:20% 30% 20% 35% ; "></div>
+	<div id="googleMap"	style="width: 60%; height: 200px; margin: auto; margin:20% 30% 20% 20% ; "></div>
 	<div class="modal fade" id="mapInfo" role="dialog"></div>
 	<form name="map">
 		<input type="hidden" name="choice">
