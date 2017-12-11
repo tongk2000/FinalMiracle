@@ -109,7 +109,7 @@
 </script>
 
 <form id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/voteList.mr" method="get" enctype="multipart/form-data">
-<div style="padding-left: 10%; border: solid 0px red; width: 100%;">
+<div style="padding-left: 10%; border: solid 0px red; width: 100%; height: 100%; overflow-y: auto;">
 	<h1>투표목록</h1>
 	
 	<div style="margin-top: 20px;">

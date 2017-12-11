@@ -187,4 +187,10 @@ public class TMService implements InterTMService {
 		return n;
 	}
 
+	@Override
+	public List<TeamVO> getTeamInfo(String fk_team_idx) {
+		List<TeamVO> tvo = dao.getTeamInfo(fk_team_idx);
+		return tvo;
+	}
+
 }

@@ -64,4 +64,6 @@ public interface InterTMService {
 
 	int tmDel(String fk_team_idx); //팀을 삭제해보자
 
+	List<TeamVO> getTeamInfo(String fk_team_idx); //footer에 들어갈 팀 정보를 가져오자
+
 }

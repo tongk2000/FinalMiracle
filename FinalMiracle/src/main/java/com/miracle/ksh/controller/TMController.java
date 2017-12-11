@@ -1,22 +1,29 @@
 package com.miracle.ksh.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartRequest;
 
 import com.miracle.kdh.service.ProjectManagerService;
 import com.miracle.ksh.model.TeamVO;
 import com.miracle.ksh.model.TeamwonVO;
+import com.miracle.ksh.model.VoteItemVO;
 import com.miracle.ksh.service.InterTMService;
 import com.miracle.ksh.util.MyUtil;
 import com.miracle.psw.model.MemberDetailVO;
@@ -25,6 +32,8 @@ import com.miracle.psw.service.InterMemberService;
 import com.miracle.psw.service.MemberService;
 import com.miracle.psw.util.FileManager;
 import com.miracle.psw.util.GoogleMail;
+
+
 
 @Controller
 public class TMController {
@@ -310,9 +319,10 @@ public class TMController {
 		sessionMap.put("teamwon_idx", teamwon_idx);
 		sessionMap.put("teamwon_status", teamwon_status);
 		
-		System.out.println("확인용 : " + fk_member_idx + " / " + fk_team_idx1 + " / " + fk_team_idx2 + " / " + teamwon_idx + " / " + teamwon_status);
+		//System.out.println("확인용 : " + fk_member_idx + " / " + fk_team_idx1 + " / " + fk_team_idx2 + " / " + teamwon_idx + " / " + teamwon_status);
 		
 		session.setAttribute("teamInfo", sessionMap);
+			
 		
 		String msg = "";
 		String loc = "doList.mr";
@@ -897,6 +907,88 @@ public class TMController {
 		req.setAttribute("team_idx", team_idx);
 		
 		return "ksh/msg.not";
+	}
+	
+	
+	@RequestMapping(value="/tmFooter.mr", method={RequestMethod.GET})
+	public String tmFooter(HttpServletRequest req, HttpSession session){
+		
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)session.getAttribute("teamInfo");
+		String fk_team_idx = teamInfo.get("team_idx");
+		
+		JSONArray jsonMap = new JSONArray();
+		
+		if(!fk_team_idx.trim().isEmpty()){
+			List<TeamVO> list = service.getTeamInfo(fk_team_idx);
+			
+			if(list != null){
+				for(TeamVO vo : list){
+					JSONObject jsonObj = new JSONObject();
+					jsonObj.put("idx", vo.getIdx());
+					jsonObj.put("fk_member_idx", vo.getFk_member_idx());
+					jsonObj.put("name", vo.getName());
+					jsonObj.put("tel1", vo.getTel1());
+					jsonObj.put("tel2", vo.getTel2());
+					jsonObj.put("tel3", vo.getTel3());
+					jsonObj.put("post1", vo.getPost1());
+					jsonObj.put("post2", vo.getPost2());
+					jsonObj.put("addr1", vo.getAddr1());
+					jsonObj.put("addr2", vo.getAddr2());
+					jsonObj.put("img", vo.getImg());
+					jsonObj.put("regdate", vo.getRegdate());
+					jsonObj.put("disdate", vo.getDisdate());
+					jsonObj.put("status", vo.getStatus());
+					
+					jsonMap.put(jsonObj);
+				}
+			}
+		}
+
+		String str_jsonMap = jsonMap.toString();
+
+		req.setAttribute("str_jsonMap", str_jsonMap);
+		
+		return "ksh/json/teamInfo.not";
+	}
+	
+	@RequestMapping(value="/tmImageUpload.mr", method={RequestMethod.GET})
+	public String tmImageUpload(HttpServletRequest request) throws IOException{
+		
+		/*		
+		String root = session.getServletContext().getRealPath("/"); 
+		String path = root + "resources"+File.separator+"files";
+		
+		// 이미지 업로드할 경로
+		String uploadPath = path;
+	    int size = 10 * 1024 * 1024;  // 업로드 사이즈 제한 10M 이하
+		
+		String fileName = ""; // 파일명
+		
+		try{
+	        // 파일업로드 및 업로드 후 파일명 가져옴
+			MultipartRequest multi = new MultipartRequest(req, uploadPath, size, "utf-8", new DefaultFileRenamePolicy());
+			@SuppressWarnings("rawtypes")
+			Enumeration files = (Enumeration) multi.getFileNames();
+			String file = (String)files.nextElement(); 
+			fileName = multi.getFilesystemName(file);
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+	    // 업로드된 경로와 파일명을 통해 이미지의 경로를 생성
+		uploadPath = "/files/" + fileName;
+		
+	    // 생성된 경로를 JSON 형식으로 보내주기 위한 설정
+		JSONObject jobj = new JSONObject();
+		jobj.put("url", uploadPath);
+		
+		response.setContentType("application/json"); // 데이터 타입을 json으로 설정하기 위한 세팅
+		System.out.print(jobj.toString());
+		*/
+		
+		return "ksh/json/imageUpload.not";
 	}
 	
 }
