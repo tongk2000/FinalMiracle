@@ -88,8 +88,8 @@
 	
 	<!-- 자유게시판 글쓰기 -->
 	<insert id="freeAdd" parameterType="com.miracle.psw.model.FreeBoardVO">
-		insert into tbl_free(idx, userid, name, subject, content, readCnt, commentCnt, groupno, fk_idx, depthno, regDate, status, infoStatus)
-		values(seq_free.nextval, #{userid}, #{name}, #{subject}, #{content}, default, default, (select max(groupno)+1 from tbl_free), default, default, default, default, default)  
+		insert into tbl_free(idx, userid, name, subject, content, readCnt, commentCnt, groupno, fk_idx, depthno, regDate, status, infoStatus, fk_teamwon_idx)
+		values(seq_free.nextval, #{userid}, #{name}, #{subject}, #{content}, default, default, (select max(groupno)+1 from tbl_free), default, default, default, default, default, #{fk_teamwon_idx})  
 	</insert>
 	
 	<!-- 자유게시판 글 1개 보여주기 (조건에 따른 글 조회수 1 증가 후) -->
@@ -110,38 +110,42 @@
 	<!-- 검색한 freeList 보여주기(페이징 처리 한 것) -->
 	<select id="freeListWithSearch" parameterType="HashMap" resultType="com.miracle.psw.model.FreeBoardVO">
 		select idx, userid, name, subject, content, readCnt, commentCnt
-	         , groupno, fk_idx, depthno
-	         , regDate, status, infoStatus
+		         , groupno, fk_idx, depthno
+		         , regDate, status, infoStatus, fk_teamwon_idx
 		from
 		( select rownum as rno, v.idx, v.userid, v.name, v.subject, v.content, v.readCnt, v.commentCnt
 		       , v.groupno, v.fk_idx, v.depthno
-		       , v.regDate, v.status, v.infoStatus
+		       , v.regDate, v.status, v.infoStatus, v.fk_teamwon_idx
 		  from
-		  ( select idx, userid, name, subject, content, readCnt, commentCnt, groupno, fk_idx, depthno
-		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
-		         , status, infoStatus
-		    from tbl_free
-		    where status = 1
+		  ( select F.idx, F.userid, F.name, F.subject, F.content, F.readCnt, F.commentCnt, F.groupno, F.fk_idx, F.depthno
+		         , to_char(F.regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+		         , F.status, F.infoStatus, F.fk_teamwon_idx
+		    from tbl_free F join tbl_teamwon T
+		    on F.fk_teamwon_idx = T.idx
+		    where F.status = 1
+		    and T.fk_team_idx = 2
 		    and ${colname} like '%'|| #{search} ||'%'
 		    order by idx desc 
 		  )V
 		)T
-		where T.rno >= #{startRno} and T.rno <![CDATA[<=]]> #{endRno}
+		where T.rno >= #{startRno} and T.rno <![CDATA[<=]]> #{endRno}		
 	</select>
 	<select id="freeListWithNoSearch" parameterType="HashMap" resultType="com.miracle.psw.model.FreeBoardVO">
 		select idx, userid, name, subject, content, readCnt, commentCnt
-	         , groupno, fk_idx, depthno
-	         , regDate, status, infoStatus
+		         , groupno, fk_idx, depthno
+		         , regDate, status, infoStatus, fk_teamwon_idx
 		from
 		( select rownum as rno, v.idx, v.userid, v.name, v.subject, v.content, v.readCnt, v.commentCnt
 		       , v.groupno, v.fk_idx, v.depthno
-		       , v.regDate, v.status, v.infoStatus
+		       , v.regDate, v.status, v.infoStatus, v.fk_teamwon_idx
 		  from
-		  ( select idx, userid, name, subject, content, readCnt, commentCnt, groupno, fk_idx, depthno
-		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
-		         , status, infoStatus
-		    from tbl_free
-		    where status = 1
+		  ( select F.idx, F.userid, F.name, F.subject, F.content, F.readCnt, F.commentCnt, F.groupno, F.fk_idx, F.depthno
+		         , to_char(F.regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+		         , F.status, F.infoStatus, F.fk_teamwon_idx
+		    from tbl_free F join tbl_teamwon T
+		    on F.fk_teamwon_idx = T.idx
+		    where F.status = 1
+		    and T.fk_team_idx = #{fk_team_idx}
 		    order by idx desc 
 		  )V
 		)T
@@ -151,14 +155,18 @@
 	<!-- 검색 유무에 따른 페이지바 만들기 -->
 	<select id="getFreeTotalCountWithSearch" parameterType="HashMap" resultType="int">
 		select count(*)
-		from tbl_free
-		where status = 1
+		from tbl_free F join tbl_teamwon T
+		on F.fk_teamwon_idx = T.idx
+		where F.status = 1
+		and T.fk_team_idx = #{fk_team_idx}
 		and ${colname} like '%'|| #{search} ||'%'
 	</select>
 	<select id="getFreeTotalCountWithNoSearch" parameterType="HashMap" resultType="int">
 		select count(*)
-		from tbl_free
-		where status = 1
+		from tbl_free F join tbl_teamwon T
+		on F.fk_teamwon_idx = T.idx
+		where F.status = 1
+		and T.fk_team_idx = #{fk_team_idx}
 	</select>
 	
 	

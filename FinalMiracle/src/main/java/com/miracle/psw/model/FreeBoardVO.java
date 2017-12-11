@@ -18,11 +18,13 @@ public class FreeBoardVO {
 	private int status;             // 글삭제여부   1:사용가능한글, 0:삭제된글 
 	private int infoStatus;     	// 일반글: 0   공지사항: 1
 	
+	private int fk_teamwon_idx;	    // 팀원번호 참조값
+	
 	
 	public FreeBoardVO() { }
 	
 	public FreeBoardVO(int idx, String userid, String name, String subject, String content, int readCnt, int commentCnt,
-			int groupno, int fk_idx, int depthno, String regDate, int status, int infoStatus) {
+			int groupno, int fk_idx, int depthno, String regDate, int status, int infoStatus, int fk_teamwon_idx) {
 
 		this.idx = idx;
 		this.userid = userid;
@@ -37,6 +39,15 @@ public class FreeBoardVO {
 		this.regDate = regDate;
 		this.status = status;
 		this.infoStatus = infoStatus;
+		this.fk_teamwon_idx = fk_teamwon_idx;
+	}
+
+	public int getFk_teamwon_idx() {
+		return fk_teamwon_idx;
+	}
+
+	public void setFk_teamwon_idx(int fk_teamwon_idx) {
+		this.fk_teamwon_idx = fk_teamwon_idx;
 	}
 
 	public int getIdx() {

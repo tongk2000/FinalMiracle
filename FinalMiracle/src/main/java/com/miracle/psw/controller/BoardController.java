@@ -85,10 +85,11 @@ public class BoardController {
 		totalPage = (int)Math.ceil((double)totalCount/sizePerPage);
 		
 		String pagebar = "<ul>";
-		pagebar += MyUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentShowPageNo, colname, search, null, "faqList.mr");
+		pagebar += MyUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentShowPageNo, colname, search, category, "faqList.mr");
 		pagebar += "</ul>";
 		
 		req.setAttribute("pagebar", pagebar);
+		
 		req.setAttribute("faqList", faqList);
 		req.setAttribute("colname", colname);
 		req.setAttribute("search", search);
@@ -117,15 +118,28 @@ public class BoardController {
 	public String freeList(HttpServletRequest req, HttpSession session) {
 		List<FreeBoardVO> freeList = service.freeList();
 		
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo =  (HashMap<String, String>)session.getAttribute("teamInfo");
+		
 		String gobackURL = MyUtil.getCurrentURL(req);
 		req.setAttribute("gobackURL", gobackURL);
 		
+		String fk_team_idx = teamInfo.get("team_idx");
+		String fk_teamwon_idx = teamInfo.get("teamwon_idx");
+		
+		System.out.println(fk_teamwon_idx);
+
 		String colname = req.getParameter("colname");
 		String search = req.getParameter("search");
 
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("colname", colname);
 		map.put("search", search);
+		
+		map.put("fk_team_idx", fk_team_idx);
+		map.put("fk_teamwon_idx", fk_teamwon_idx);
+		
+		System.out.println(fk_teamwon_idx);
 		
 		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 		
@@ -203,8 +217,7 @@ public class BoardController {
 			session.removeAttribute("readCntPermission"); // 글목록 본 후에 세션값 삭제.
 		} else {
 			freevo = service.getViewWithNoReadCnt(idx);
-		}
-		
+		}	
 		req.setAttribute("freevo", freevo);
 		req.setAttribute("gobackURL", gobackURL);
 		

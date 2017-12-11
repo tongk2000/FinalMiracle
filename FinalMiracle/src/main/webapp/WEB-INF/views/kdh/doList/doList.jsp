@@ -68,10 +68,12 @@
 		background-color:lightgray;
 	}
 	.completeLine {
-		background-color:green;
+		border:none !important;
+		background-color:skyblue !important;
 	}
 	.incompleteLine {
-		background-color:red;
+		border:none !important;
+		background-color:pink !important;
 	}
 	.addLine {
 		background-color:blue;
@@ -94,6 +96,15 @@
 <script type="text/javascript">
 	window.onload = function(){
 		document.getElementById("page").value = "${page}";
+		
+		$element = $(".element:first");
+		<c:forEach var="visible" items="${visibleArr}">
+			if("${visible}" == "false") {
+				$element.hide();
+			}
+			$element = $element.next();
+		</c:forEach>
+		
 		todayLine();
 	}
 	
@@ -179,9 +190,15 @@
 		    var subject = $(this).find(".subject").text();
 		    $(".rcmSubject").text("["+subject+"] 메뉴");
 		    		    
-		    if($(this).find(".modalFolder").hasClass("modalFolder")) {
+		    if($(this).find(".modalFolder").hasClass("modalFolder")) { // 폴더 우클릭이라면
 		    	$("#folderRcm").css({top:event.pageY+"px", left:event.pageX+"px"}).show();
-		    } else if($(this).find(".modalTask").hasClass("modalTask")) {
+		    } else if($(this).find(".modalTask").hasClass("modalTask")) { // 할일 우클릭이라면
+		    	var bool = $(this).find(".status").is(":checked");
+		    	if(bool) {
+		    		$("#statusRcm").text("미완료처리");
+		    	} else {
+		    		$("#statusRcm").text("완료처리");
+		    	}
 		    	$("#taskRcm").css({top:event.pageY+"px", left:event.pageX+"px"}).show();
 		    }
 		    return false;
@@ -263,21 +280,27 @@
 			
 			if(checked) {
 				$("#modalStatus").css({"color":"green"}).html("<label for='modalStatus"+idx+"'>완료</label>");
-				$("#status"+idx).prop("checked", true);
+				$("#status"+idx).prop("checked", true);			
+				
+				$("#"+idx).find(".dateColor").css({"background-color":"gray"});
+				
 				status = "0";
 				
-				$("#"+idx).addClass("completeLine"); // 깜빡이는 효과
+				$("#"+idx).find("*").addClass("completeLine"); // 깜빡이는 효과
 				setTimeout(function(){
-					$("#"+idx).removeClass("completeLine");
+					$("#"+idx).find("*").removeClass("completeLine");
 				},500);
 			} else {
 				$("#modalStatus").css({"color":"red"}).html("<label for='modalStatus"+idx+"'>미완료</label>");
 				$("#status"+idx).prop("checked", false);
+				
+				setDayColor(idx);
+				
 				status = "1";
 				
-				$("#"+idx).addClass("incompleteLine"); // 깜빡이는 효과
+				$("#"+idx).find("*").addClass("incompleteLine"); // 깜빡이는 효과
 				setTimeout(function(){
-					$("#"+idx).removeClass("incompleteLine");
+					$("#"+idx).find("*").removeClass("incompleteLine");
 				},500);
 			}
 			
@@ -303,17 +326,21 @@
 				$status.prop("checked", false);
 				status = "1";
 				
-				$("#"+idx).addClass("incompleteLine");
+				setDayColor(idx);
+				
+				$("#"+idx).find("*").addClass("incompleteLine");
 				setTimeout(function(){ // 깜빡이는 효과
-					$("#"+idx).removeClass("incompleteLine");
+					$("#"+idx).find("*").removeClass("incompleteLine");
 				},500);
 			} else {
 				$status.prop("checked", true);
 				status = "0";
 				
-				$("#"+idx).addClass("completeLine");
+				$("#"+idx).find(".dateColor").css({"background-color":"gray"});
+				
+				$("#"+idx).find("*").addClass("completeLine");
 				setTimeout(function(){ // 깜빡이는 효과
-					$("#"+idx).removeClass("completeLine");
+					$("#"+idx).find("*").removeClass("completeLine");
 				},500);
 			}
 			
@@ -374,6 +401,20 @@
 		}); // $(document).on("click", "#deleteRcm", function() ------------------------------------------------------------------------------------------
 		
 	}); // end of $(document).ready(function() --------------------------------------------------------------------------------------------------------
+	
+			
+	// 완료/미완료 처리시 기간에 대한 색상을 바꿔주는 함수 
+	function setDayColor(idx) {
+		var $dateColor = $("#"+idx).find(".dateColor");
+		var dayCnt = getThirdClass($dateColor);
+		if(dayCnt == -1) {
+			$dateColor.css({"background-color":"red"});
+		} else if (dayCnt == 0) {
+			$dateColor.css({"background-color":"lightgreen"});
+		} else if (dayCnt == 1) {
+			$dateColor.css({"background-color":"green"});
+		}
+	} // end of function setDayColor(idx) ---------------------------------------------------------------------------------------------------------------
 	
 	
 	// 선택한 요소를 삭제해주는 함수
@@ -543,8 +584,17 @@
 	
 	// 수정된 페이지 값을 이용해서 새롭게 페이징 처리하기
 	function changePageDate() {
+		var visibleArr = [];
+		var cnt = 0;
+		$(".element").each(function(){
+			var bool = $(this).is(":visible");
+			visibleArr[cnt] = bool;
+		    cnt++;
+		});
+		document.getElementById("visibleArr").value = visibleArr;
 		document.pageDateFrm.submit();
 	} // end of function changePageDate() -------------------------------------------------------------------------------------------------
+	
 	
 	// 오늘 날짜에는 가운데 선 그어주기
 	function todayLine() {
@@ -570,7 +620,8 @@
 				<th colspan="4">
 					<div style="margin-left:20px; border-left:10px solid lightgreen; height:10px; display:inline;"></div>진행전
 					<div style="margin-left:10px; border-left:10px solid green; height:10px; display:inline;"></div>진행중
-					<div style="margin-left:10px; border-left:10px solid red; height:10px; display:inline;"></div>기한만료
+					<div style="margin-left:10px; border-left:10px solid red; height:10px; display:inline;"></div>기한경과
+					<div style="margin-left:10px; border-left:10px solid gray; height:10px; display:inline;"></div>완료
 				</th>
 				<th></th>
 				<th></th>
@@ -587,6 +638,7 @@
 						<span class="pointer" onclick="afterDate()">▷</span>
 						<span class="pointer" onclick="afterTerm()">▶</span>
 						<input type="hidden" id="page" name="page" value="0"/>
+						<input type="hidden" id="visibleArr" name="visibleArr">
 					</form>
 				</th>
 			</tr>
@@ -598,7 +650,11 @@
 				<th></th>
 				<th></th>
 				<c:forEach var="pageDate" items="${map.pageDateList}">
-					<th class="pointer" ondblClick="callToday()">${pageDate.dayDP}</th> <!-- 날짜부분 더블클릭시 오늘날짜로 돌려주는 함수 호출 -->
+					<th class="pointer" ondblClick="callToday()" 
+						<c:if test="${pageDate.dotw == '토' || pageDate.dotw == '일'}">
+							style="background-color:#ffcccc;"
+						</c:if>
+					>${pageDate.dayDP}</th> 
 				</c:forEach>
 			</tr>
 		</thead>
@@ -614,7 +670,12 @@
 								<c:if test="${dvo.category == 1}"> <!-- 폴더라면 -->
 									<span class="modalFolder" id="modalIdx${dvo.idx}">
 										<c:if test="${dvo.fk_folder_idx != 0}"> <!-- 최상위 폴더가 아니라면 -->
-											▷
+											<c:if test="${dvo.downCnt > 0}"> <!-- 하위요소가 있다면 -->
+												▼
+											</c:if>
+											<c:if test="${dvo.downCnt == 0}"> <!-- 하위요소가 없다면 -->
+												▷
+											</c:if>
 										</c:if>
 										<span class="modalFolder subject" id="modalIdx${dvo.idx}">${dvo.subject}</span>
 									</span>
@@ -630,17 +691,26 @@
 								</c:if>
 							</span>
 						</td>
-						<c:if test="${dvo.dayCnt == 0}"> <!-- 시작일 전이라면 -->
-							<td style="background-color:lightgreen;">${dvo.startDate}</td>
-							<td style="background-color:lightgreen;">${dvo.lastDate}</td>
+						
+						<fmt:parseNumber var="day" value="${pageDate.day}" integerOnly="true"/>
+						
+						<c:if test="${dvo.status == 1}"> <!-- 미완료된 할일이라면 -->
+							<c:if test="${dvo.dayCnt == 0}"> <!-- 시작일 전이라면 -->
+								<td class="dateColor ${day} ${dvo.dayCnt}" style="background-color:lightgreen;">${dvo.startDate}</td>
+								<td class="dateColor ${day} ${dvo.dayCnt}" style="background-color:lightgreen;">${dvo.lastDate}</td>
+							</c:if>
+							<c:if test="${dvo.dayCnt == 1}"> <!-- 진행중이라면 -->
+								<td class="dateColor ${day} ${dvo.dayCnt}" style="background-color:green;">${dvo.startDate}</td>
+								<td class="dateColor ${day} ${dvo.dayCnt}" style="background-color:green;">${dvo.lastDate}</td>
+							</c:if>
+							<c:if test="${dvo.dayCnt == -1}"> <!-- 기한이 지났다면 -->
+								<td class="dateColor ${day} ${dvo.dayCnt}" style="background-color:red;">${dvo.startDate}</td>
+								<td class="dateColor ${day} ${dvo.dayCnt}" style="background-color:red;">${dvo.lastDate}</td>
+							</c:if>
 						</c:if>
-						<c:if test="${dvo.dayCnt == 1}"> <!-- 진행중이라면 -->
-							<td style="background-color:green;">${dvo.startDate}</td>
-							<td style="background-color:green;">${dvo.lastDate}</td>
-						</c:if>
-						<c:if test="${dvo.dayCnt == -1}"> <!-- 기한이 지났다면 -->
-							<td style="background-color:red;">${dvo.startDate}</td>
-							<td style="background-color:red;">${dvo.lastDate}</td>
+						<c:if test="${dvo.status == 0}"> <!-- 완료된 할일이라면 -->
+							<td class="dateColor ${day} ${dvo.dayCnt}" style="background-color:gray;">${dvo.startDate}</td>
+							<td class="dateColor ${day} ${dvo.dayCnt}" style="background-color:gray;">${dvo.lastDate}</td>
 						</c:if>
 						<td>${dvo.importance}</td>
 						
@@ -650,21 +720,30 @@
 						<c:forEach var="pageDate" items="${map.pageDateList}">
 							<fmt:parseNumber var="startDate" value="${dvo.startDate.replace('-','')}" integerOnly="true"/>
 							<fmt:parseNumber var="lastDate" value="${dvo.lastDate.replace('-','')}" integerOnly="true"/>
-							<fmt:parseNumber var="day" value="${pageDate.day}" integerOnly="true"/>
+							<fmt:parseNumber var="day" value="${pageDate.day}" integerOnly="true"/> <!-- 희안하게 위에껀 못쓰고 여기서 다시 해줘야함; -->
 							
-							<td class="pageDateLine ${day}" style="border-left:0.5px solid lightgray;" align="center">
+							<td class="pageDateLine ${day}" style="border-left:0.5px solid lightgray;
+								<c:if test="${pageDate.dotw == '토' || pageDate.dotw == '일'}">
+									background-color:#ffcccc;
+								</c:if>
+							" align="center">
 								
-								<c:if test="${startDate <= day and day <= lastDate}">
-									<c:if test="${dvo.dayCnt == 0}"> <!-- 시작일 전이라면 -->
-										<div class="${day}" style="height:19px; width:100%; background-color:lightgreen;"></div>
+								<c:if test="${startDate <= day and day <= lastDate}"> <!-- 시작일 이후, 마감일 이전 이라면 -->
+									<c:if test="${dvo.status == 1}"> <!-- 미완료된 할일이라면 -->
+										<c:if test="${dvo.dayCnt == 0}"> <!-- 시작일 전이라면 -->
+											<div class="dateColor ${day} ${dvo.dayCnt}" style="height:19px; width:100%; background-color:lightgreen;"></div>
+										</c:if>
+										<c:if test="${dvo.dayCnt == 1}"> <!-- 진행중이라면 -->
+											<div class="dateColor ${day} ${dvo.dayCnt}" style="height:19px; width:100%; background-color:green;"></div>
+										</c:if>
+										<c:if test="${dvo.dayCnt == -1}"> <!-- 기한이 지났다면 -->
+											<div class="dateColor ${day} ${dvo.dayCnt}" style="height:19px; width:100%; background-color:red;"></div>
+										</c:if>
 									</c:if>
-									<c:if test="${dvo.dayCnt == 1}"> <!-- 진행중이라면 -->
-										<div class="${day}" style="height:19px; width:100%; background-color:green;"></div>
+									<c:if test="${dvo.status == 0}"> <!-- 완료된 할일이라면 -->
+										<div class="dateColor ${day} ${dvo.dayCnt}" style="height:19px; width:100%; background-color:gray;"></div>
 									</c:if>
-									<c:if test="${dvo.dayCnt == -1}"> <!-- 기한이 지났다면 -->
-										<div class="${day}" style="height:19px; width:100%; background-color:red;"></div>
-									</c:if>
-								</c:if>								
+								</c:if>
 							</td>
 						</c:forEach>
 					</tr>

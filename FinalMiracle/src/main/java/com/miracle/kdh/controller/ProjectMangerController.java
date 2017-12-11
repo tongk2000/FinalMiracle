@@ -47,9 +47,7 @@ public class ProjectMangerController {
 			map.put("teamwon_idx", "3");
 			map.put("teamwon_status", "2");
 			ses.setAttribute("teamInfo", map);
-		}
-		
-		
+		}		
 		// 여기까지는 나중에 팀 세션 정보 추가되면 삭제해야함
 		
 		@SuppressWarnings("unchecked")
@@ -75,6 +73,10 @@ public class ProjectMangerController {
 		@SuppressWarnings("unchecked")
 		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo");
 		String team_idx = teamInfo.get("team_idx");
+		
+		String visible = (String)req.getParameter("visibleArr"); // 접고 편 상태를 받아와서
+		String[] visibleArr = visible.split(","); // ,를 기준으로 배열로 만들고
+		req.setAttribute("visibleArr", visibleArr); // 값 유지를 위해 넘겨준다.
 		
 		String term = req.getParameter("term"); // 페이징 기간을 가져옴
 		String page = (String)req.getParameter("page"); // 페이징 이동할 페이지를 가져옴
@@ -152,6 +154,8 @@ public class ProjectMangerController {
 	// 하위요소 추가하기
 	@RequestMapping(value="do_addDownElementEnd.mr", method={RequestMethod.POST})
 	public String addDownElementEnd(HttpServletRequest req, HttpSession ses, FolderVO fvo) {
+		System.out.println("글내용1:"+fvo.getSubject());
+		
 		String[] teamwonIdxArr = req.getParameterValues("teamwonIdx"); // 추가되는 요소에 지정된 담당 팀원목록을 받아옴
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("teamwonIdxArr", teamwonIdxArr);
