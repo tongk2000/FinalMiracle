@@ -223,11 +223,11 @@
 		
 		<!-- ===== #12. log4j 관련 jar 추가하기 ===== -->
 		<dependency>
-			<groupId>org.lazyluke</groupId>
-			<artifactId>log4jdbc-remix</artifactId>
-			<version>0.2.7</version>
+		      <groupId>org.lazyluke</groupId>
+		      <artifactId>log4jdbc-remix</artifactId>
+		      <version>0.2.7</version>
 		</dependency>
-	
+
 		<!-- ===== #11. 파일업로드 및 다운로드 관련 jar 추가하기 commons-fileupload ===== -->
 		<dependency>
 		    <groupId>commons-fileupload</groupId>

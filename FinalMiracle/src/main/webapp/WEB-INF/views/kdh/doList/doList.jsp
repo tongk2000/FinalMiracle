@@ -115,7 +115,7 @@
 		
 		// 폴더 모달창 띄우기(값만 가지고 함수로 이동하게됨)
 		$(".modalFolder").click(function(){
-		 	var frm = {"idx":$(this).attr("id").replace("modalIdx","")};
+			var frm = {"idx":$(this).parents(".element").attr("id")};
 		 	selectFolderInfo(frm);
 		 	return false; // 폴더 접고펴기가 실행되지 않도록 설정해둠
 		}); // end of $(".modalFolder").click(function() ------------------------------------------------------------------------
@@ -146,6 +146,7 @@
 			var idx = $this.attr("id");
 			var depth = parseInt(getThirdClass($this)); // 클릭한 요소의 깊이 구하기
 			var groupNo = getSecondClass($this);
+			var foldingFlag = false;
 			while(1==1) {
 				if($this.next().attr("id") == undefined) { // 다음 요소가 없을때 undefined 오류 막기 위함
 					break;
@@ -154,20 +155,33 @@
 				var depth2 = parseInt(getThirdClass($this2)); // 다음 요소의 깊이 구하기
 				
 				if(depth+1 == depth2) { // 클릭한 요소의 깊이보다 다음 요소의 깊이가 1 크다면 (클릭했을때 +1 깊이만 표시되도록 하기 위해서 구분함)
-					if($this2.is(":visible")) {
+					if($this2.is(":visible")) { // 깊이가 1 크면서 show 중이라면
 						$this2.hide();
-					} else {
+						foldingFlag = true;
+					} else {  // 깊이가 1 크면서 hide 중이라면
 						$this2.show();
+						var downCnt = $this2.find(".downCnt").val(); // show 되는 요소가 하위요소를 가지고 있는지 확인
+						if(downCnt > 0) { // 하위요소가 있다면
+							$this2.find(".foldingIcon").text("▶");
+						}
 					}
 				} else if (depth+1 < depth2) { // 클릭한 요소의 깊이보다 다음 요소의 깊이가 2 이상이라면
-					if($this2.is(":visible")) {
+					if($this2.is(":visible")) { // 깊이가 2 이상 크면서 show 중이라면(한마디로 2 이상 큰건 다 hide)
 						$this2.hide();
+						$(this).find(".foldingIcon").text("▶");
 					}
 				} else { // 클릭한것과 깊이가 같은 요소가 나오면 break
 					break;
 				}
 				$this = $this2; // 다음의 다음 요소를 찾기 위함
 			}
+			
+			if(foldingFlag) { // 하위 요소가 hide 되었다면.
+				$(this).find(".foldingIcon").text("▶");
+			} else { // 하위 요소가 show 되었다면.
+				$(this).find(".foldingIcon").text("▼");
+			}
+			
 		}); // end of $(".element").click(function() -----------------------------------------------------------------------------------------------
 		
 				
@@ -514,7 +528,6 @@
 		return thirdClass;
 	} // end of function getThirdClass($this) ------------------------------------------------------------------------------------------------------------------------
 	
-	
 	// 폴더 모달창 띄우기
 	function selectFolderInfo(frm) {
 		$.ajax({
@@ -666,19 +679,19 @@
 				<c:forEach var="dvo" items="${map.doList}">
 					<tr id="${dvo.idx}" class="element ${dvo.groupNo} ${dvo.depth}">
 						<td>
+							<input type="hidden" class="fk_folder_idx" value="${dvo.fk_folder_idx}" />
+							<input type="hidden" class="downCnt" value="${dvo.downCnt}" />
 							<span id="span${dvo.idx}" style="margin-left:${dvo.depth*20}px; cursor:pointer;">
 								<c:if test="${dvo.category == 1}"> <!-- 폴더라면 -->
-									<span class="modalFolder" id="modalIdx${dvo.idx}">
-										<c:if test="${dvo.fk_folder_idx != 0}"> <!-- 최상위 폴더가 아니라면 -->
-											<c:if test="${dvo.downCnt > 0}"> <!-- 하위요소가 있다면 -->
-												▼
-											</c:if>
-											<c:if test="${dvo.downCnt == 0}"> <!-- 하위요소가 없다면 -->
-												▷
-											</c:if>
+									<span class="foldingIcon">
+										<c:if test="${dvo.downCnt > 0}"> <!-- 하위요소가 있다면 -->
+											▼
 										</c:if>
-										<span class="modalFolder subject" id="modalIdx${dvo.idx}">${dvo.subject}</span>
+										<c:if test="${dvo.downCnt == 0}"> <!-- 하위요소가 없다면 -->
+											▷
+										</c:if>
 									</span>
+									<span class="modalFolder subject">${dvo.subject}</span>
 								</c:if>
 								<c:if test="${dvo.category == 2}"> <!-- 할일이라면 -->
 									<c:if test="${dvo.status == 0}"> <!-- 완료된 할일이라면 -->
@@ -692,25 +705,23 @@
 							</span>
 						</td>
 						
-						<fmt:parseNumber var="day" value="${pageDate.day}" integerOnly="true"/>
-						
 						<c:if test="${dvo.status == 1}"> <!-- 미완료된 할일이라면 -->
 							<c:if test="${dvo.dayCnt == 0}"> <!-- 시작일 전이라면 -->
-								<td class="dateColor ${day} ${dvo.dayCnt}" style="background-color:lightgreen;">${dvo.startDate}</td>
-								<td class="dateColor ${day} ${dvo.dayCnt}" style="background-color:lightgreen;">${dvo.lastDate}</td>
+								<td class="dateColor ${dvo.dayCnt}" style="background-color:lightgreen;">${dvo.startDate}</td>
+								<td class="dateColor ${dvo.dayCnt}" style="background-color:lightgreen;">${dvo.lastDate}</td>
 							</c:if>
 							<c:if test="${dvo.dayCnt == 1}"> <!-- 진행중이라면 -->
-								<td class="dateColor ${day} ${dvo.dayCnt}" style="background-color:green;">${dvo.startDate}</td>
-								<td class="dateColor ${day} ${dvo.dayCnt}" style="background-color:green;">${dvo.lastDate}</td>
+								<td class="dateColor ${dvo.dayCnt}" style="background-color:green;">${dvo.startDate}</td>
+								<td class="dateColor ${dvo.dayCnt}" style="background-color:green;">${dvo.lastDate}</td>
 							</c:if>
 							<c:if test="${dvo.dayCnt == -1}"> <!-- 기한이 지났다면 -->
-								<td class="dateColor ${day} ${dvo.dayCnt}" style="background-color:red;">${dvo.startDate}</td>
-								<td class="dateColor ${day} ${dvo.dayCnt}" style="background-color:red;">${dvo.lastDate}</td>
+								<td class="dateColor ${dvo.dayCnt}" style="background-color:red;">${dvo.startDate}</td>
+								<td class="dateColor ${dvo.dayCnt}" style="background-color:red;">${dvo.lastDate}</td>
 							</c:if>
 						</c:if>
 						<c:if test="${dvo.status == 0}"> <!-- 완료된 할일이라면 -->
-							<td class="dateColor ${day} ${dvo.dayCnt}" style="background-color:gray;">${dvo.startDate}</td>
-							<td class="dateColor ${day} ${dvo.dayCnt}" style="background-color:gray;">${dvo.lastDate}</td>
+							<td class="dateColor ${dvo.dayCnt}" style="background-color:gray;">${dvo.startDate}</td>
+							<td class="dateColor ${dvo.dayCnt}" style="background-color:gray;">${dvo.lastDate}</td>
 						</c:if>
 						<td>${dvo.importance}</td>
 						

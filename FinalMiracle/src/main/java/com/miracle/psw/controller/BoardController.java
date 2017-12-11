@@ -47,7 +47,7 @@ public class BoardController {
 		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 		
 		int totalCount = 0;
-		int sizePerPage = 5;
+		int sizePerPage = 7;
 		int	currentShowPageNo = 0;
 		int totalPage = 0;
 		
@@ -67,27 +67,41 @@ public class BoardController {
 		map.put("startRno", String.valueOf(startRno));
 		map.put("endRno", String.valueOf(endRno));
 		
-		if( (colname != null && search != null) &&
+		if( (colname != null && search != null && category != null) &&
 			(!colname.trim().isEmpty() && !search.trim().isEmpty()) &&
-			(!colname.equals("null") && !search.equals("null")) ) {  // 검색어가 있는 경우
+			(!colname.equals("null") && !search.equals("null")) &&
+			(!category.equals("null") && !category.trim().isEmpty())) {  // 검색어가 있는 경우
 			faqList = service.faqListWithSearch(map);
 		} else {  // 검색어가 없는경우
 			faqList = service.faqListWithNoSearch(map);
 		}
 		// ================================================ *** 페이지바 만들기 *** ====================
-		if( (colname != null && search != null) &&
+		if( (colname != null && search != null && category != null) &&
 			(!colname.trim().isEmpty() && !search.trim().isEmpty()) &&
-			(!colname.equals("null") && !search.equals("null")) ) {  // 검색어가 있는 경우
+			(!colname.equals("null") && !search.equals("null")) &&
+			(!category.equals("null") && !category.trim().isEmpty())) {  // 검색어가 있는 경우
 			totalCount = service.getTotalCountWithSearch(map);
 		} else {  // 검색어가 없는경우
 			totalCount = service.getTotalCountWithNoSearch(map);
 		}
 		totalPage = (int)Math.ceil((double)totalCount/sizePerPage);
 		
-		String pagebar = "<ul>";
-		pagebar += MyUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentShowPageNo, colname, search, category, "faqList.mr");
-		pagebar += "</ul>";
+		String pagebar = "";
 		
+		if( (colname != null && search != null && category != null) &&
+			(!colname.trim().isEmpty() && !search.trim().isEmpty()) &&
+			(!colname.equals("null") && !search.equals("null")) &&
+			(!category.equals("null") && !category.trim().isEmpty())) {
+			// ================================================ *** 검색이 있을 경우 *** ====================================
+			pagebar = "<ul>";
+			pagebar += MyUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentShowPageNo, colname, search, category, "faqList.mr");
+			pagebar += "</ul>";
+		} else {
+			// ================================================= *** 검색이 없을 경우 *** =================================
+			pagebar = "<ul>";
+			pagebar += MyUtil.getPageBar(sizePerPage, blockSize, totalPage, currentShowPageNo, "faqList.mr");
+			pagebar += "</ul>";
+		}
 		req.setAttribute("pagebar", pagebar);
 		
 		req.setAttribute("faqList", faqList);
@@ -126,8 +140,6 @@ public class BoardController {
 		
 		String fk_team_idx = teamInfo.get("team_idx");
 		String fk_teamwon_idx = teamInfo.get("teamwon_idx");
-		
-		System.out.println(fk_teamwon_idx);
 
 		String colname = req.getParameter("colname");
 		String search = req.getParameter("search");
@@ -138,8 +150,6 @@ public class BoardController {
 		
 		map.put("fk_team_idx", fk_team_idx);
 		map.put("fk_teamwon_idx", fk_teamwon_idx);
-		
-		System.out.println(fk_teamwon_idx);
 		
 		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 		
@@ -236,6 +246,43 @@ public class BoardController {
 		req.setAttribute("n", n);
 		
 		return "psw/board/freeAddEnd.not";
+	}
+	
+	// ======================================================== *** 자유게시판 글 수정하기 *** ========================================
+	@RequestMapping(value="/freeEdit.mr", method={RequestMethod.GET})
+	public String freeEdit(HttpServletRequest req, HttpServletResponse response, HttpSession session) {
+		String idx = req.getParameter("idx"); // 수정할 게시글 글번호 받아오기
+		
+		// 수정해야 할 글 전체내용 가져오기
+		FreeBoardVO freevo = service.getViewWithNoReadCnt(idx);  // 글 조회수(readCnt) 증가없이 글 불러오기
+		
+		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		
+		if(!loginUser.getUserid().equals(freevo.getUserid())) {
+			String msg = "다른 회원님의 글은 수정이 불가능합니다.";
+			String loc = "javascript.history.back();";
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			return "psw/msg.not";
+		} else {
+			req.setAttribute("freevo", freevo);
+			return "psw/board/freeEdit.all";
+		}
+	}
+	
+	@RequestMapping(value="/freeEditEnd.mr", method={RequestMethod.POST})
+	public String freeEditEnd(FreeBoardVO freevo, HttpServletRequest req) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("idx", String.valueOf(freevo.getIdx()));
+		map.put("subject", freevo.getSubject());
+		map.put("content", freevo.getContent());
+		
+		int result = service.freeEdit(map);
+		
+		req.setAttribute("result", result);
+		req.setAttribute("idx", freevo.getIdx());
+		
+		return "psw/board/freeEditEnd.not";
 	}
 	
 	

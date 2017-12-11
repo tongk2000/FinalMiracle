@@ -102,12 +102,12 @@ public class ProjectManagerService {
 				pageDateList = dao.getPageDateMonth(); // 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기
 			}
 		}
-		HashMap<String, Object> returnMap = new HashMap<String, Object>();
-		returnMap.put("result", result1*result2);
-		returnMap.put("fvo", fvo);
-		returnMap.put("pageDateList", pageDateList);
-				
-		return returnMap;
+		HashMap<String, Object> endMap = new HashMap<String, Object>();
+		endMap.put("result", result1*result2);
+		endMap.put("fvo", fvo);
+		endMap.put("pageDateList", pageDateList);
+		System.out.println("result1*result2 : "+result1*result2);
+		return endMap;
 	} // end of int addDownElementEnd(FolderVO fvo, HashMap<String, Object> map) -----------------------------------------------------
 
 	// 선택한 요소와 그 하위요소들 삭제하기

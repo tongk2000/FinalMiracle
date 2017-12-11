@@ -18,6 +18,8 @@ public interface InterBoardService {
 
 	int add(FaqBoardVO faqvo); // FAQ 게시판 글쓰기
 
+	
+	// =================================================== *** 자유게시판 *** ========================================
 	List<FreeBoardVO> freeList();
 
 	int freeAdd(FreeBoardVO freevo);  // 자유게시판 글쓰기
@@ -30,6 +32,8 @@ public interface InterBoardService {
 
 	int getFreeTotalCountWithSearch(HashMap<String, String> map);
 	int getFreeTotalCountWithNoSearch(HashMap<String, String> map);
+
+	int freeEdit(HashMap<String, Object> map);
 
  
 
