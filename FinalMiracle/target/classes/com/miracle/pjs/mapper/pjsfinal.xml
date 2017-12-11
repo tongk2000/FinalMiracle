@@ -25,15 +25,7 @@
 			    <if test='searchType!=null and searchString!=null and !"".equals(searchType) and !"".equals(searchString)'>
 					  and ${searchType} like '%'||#{searchString}||'%'
 				</if>
-				<!-- <if test='teamNum==null||"".equals(teamNum)'>
-					and t.idx in 
-					<foreach collection="tn" item="teamNum" open="(" close=")" separator=",">
-						 #{teamNum}
-					</foreach>
-				</if>
-				<if test='teamNum!=null||!"".equals(teamNum)'> -->
-					and t.idx = #{teamNum}
-				<!-- </if> -->	
+				and t.idx = #{teamNum}
 			    order by n.groupno desc, n.idx asc
 			  )v
 			)t
@@ -128,17 +120,32 @@
  	</resultMap>
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 팀장이 게시물 삭제할 경우 *** === -->
-	<update id="delNoticeIdx" parameterType="java.util.List">
-		delete from tbl_notice
+	<!-- <update id="delNoticeIdx" parameterType="HashMap">
+		update tbl_notice set status = 0
 		where groupno = (select groupno from tbl_notice where idx in 	
 		<foreach collection="list" item="nidx" index="index" open="(" close=")" separator=",">
         	#{nidx.value}
         </foreach>
-        ) and ref_idx >= (select ref_idx from tbl_notice where idx in
+        and ref_idx >= (select ref_idx from tbl_notice where idx in
         <foreach collection="list" item="nidx" index="index" open="(" close=")" separator=",">
         	#{nidx.value}
         </foreach>
         )
+	</update> -->
+	
+	<update id="delNoticeIdx" parameterType="java.util.HashMap">
+        <if test="idxArr != null">
+            update tbl_notice set status = 0
+        	where groupno = (select groupno from tbl_notice where idx in
+        	<foreach collection="idxArr" index="i" open="(" separator="," close=")" >
+        		${idxArr[i]}
+        	</foreach>
+        	) and ref_idx >= (select ref_idx from tbl_notice where idx in
+        	<foreach collection="idxArr" index="i" open="(" separator="," close=")" >
+        		${idxArr[i]}
+        	</foreach>
+        	)
+        </if>
 	</update>
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 리플 글 가져오기 *** === -->
@@ -320,6 +327,22 @@
 		where idx = #{nidx}
 	</update>
 <!-- ============================================================================================================================================================= -->	
+	<update id="delMindIdx" parameterType="java.util.HashMap">
+        <if test="idxArr != null">
+            update tbl_mind set status = 0
+        	where groupno = (select groupno from tbl_mind where idx in
+        	<foreach collection="idxArr" index="i" open="(" separator="," close=")" >
+        		${idxArr[i]}
+        	</foreach>
+        	) and ref_idx >= (select ref_idx from tbl_mind where idx in
+        	<foreach collection="idxArr" index="i" open="(" separator="," close=")" >
+        		${idxArr[i]}
+        	</foreach>
+        	)
+        </if>
+	</update>
+<!-- ============================================================================================================================================================= -->	
+	
 	
 	
 	
@@ -394,7 +417,94 @@
  	</resultMap>
 <!-- ============================================================================================================================================================= -->	
 	
-
+	
+	
+<!-- === *** 쪽지*** === -->
+<!-- ============================================================================================================================================================= -->	
+	<!-- === *** 보낸이의 쪽지 수를 반환 *** === -->
+	<select id="getSenderMemo" parameterType="HashMap" resultType="int">
+		select count(*)
+	    from tbl_memomemory y join tbl_member m on m.userid = Y.Sender
+	                          join tbl_teamwon w on W.Fk_Member_Idx = M.Idx
+	    where y.sender=#{userid} and w.fk_team_idx = #{teamNum}
+	</select>
+<!-- ============================================================================================================================================================= -->	
+	<!-- === *** 보낸 쪽지 리스트를 반환한다. *** === -->
+	<select id="getSenderMemoList" parameterType="HashMap" resultMap="senderList">
+		select *
+		from
+		(
+		  select rownum as rno, v.*
+		  from
+		   ( 
+		    select y.*, m.name, w.fk_team_idx as teamNum, m.img
+		    from tbl_memomemory y join tbl_member m on m.userid = Y.Sender
+		                                                join tbl_teamwon w on W.Fk_Member_Idx = M.Idx
+		    where y.sender=#{userid} and  w.fk_team_idx = #{teamNum} and  m.status = 1 and Y.Sstatus=1
+		    order by y.idx desc
+		    ) v
+		) t
+		where rno between #{sNum} and #{eNum}
+	</select>
+	<!--  RNO, IDX, SUBJECT, CONTENT, SENDER, SSTATUS, NAME, TEAMNUM, IMG, writedate -->
+	<resultMap id="senderList" type="HashMap">
+ 		<result property="idx" 				column="idx" 			javaType="String"></result>
+ 		<result property="subject" 			column="subject" 		javaType="String"></result>
+ 		<result property="content" 			column="content" 		javaType="String"></result>
+ 		<result property="sender" 			column="sender" 		javaType="String"></result>
+ 		<result property="sstatus" 			column="sstatus" 		javaType="String"></result>
+ 		<result property="name" 			column="name" 			javaType="String"></result>
+ 		<result property="teamnum" 			column="teamnum" 		javaType="String"></result>
+ 		<result property="img" 				column="img" 			javaType="String"></result>
+ 		<result property="writedate" 		column="writedate" 		javaType="String"></result>
+ 	</resultMap>
+<!-- ============================================================================================================================================================= -->	
+	<!-- === *** 보낸이의 쪽지 수를 반환 *** === -->
+	<select id="getReceiverMemo" parameterType="HashMap" resultType="int">
+       select count(*)
+	    from tbl_memoreceiver r join Tbl_Memomemory y on y.idx = r.fk_idx 
+                           		join  tbl_member m on m.userid = Y.Sender
+	                          	join tbl_teamwon w on W.Fk_Member_Idx = M.Idx
+	    where r.receiver=#{userid} and w.fk_team_idx = #{teamNum}
+	</select>
+<!-- ============================================================================================================================================================= -->	
+	<!-- === *** 보낸 쪽지 리스트를 반환한다. *** === -->
+	<select id="getReceiverMemoList" parameterType="HashMap" resultMap="receiverList">
+		select *
+		from
+		(
+			select rownum as rno, v.*
+			from
+			( 
+				select r.*, y.subject, y.content, y.sender, y.writedate, m.name, m.img
+				from tbl_memoreceiver r join tbl_memomemory y on r.fk_idx = y.idx
+				                        join tbl_member m on m.userid = Y.Sender
+				                        join tbl_teamwon w on W.Fk_Member_Idx = M.Idx
+				where r.receiver= #{userid} and  w.fk_team_idx = #{teamNum} and  m.status = 1 and r.rstatus = 1                                       
+				order by r.idx desc
+		   	) v
+		) t
+		where rno between #{sNum} and #{eNum}
+	</select>
+	<!--  idx, receiver, rreadcount, readdate, subject, content , sender, writedate, name, img -->
+	<resultMap id="receiverList" type="HashMap">
+ 		<result property="idx" 				column="idx" 			javaType="String"></result>
+ 		<result property="subject" 			column="subject" 		javaType="String"></result>
+ 		<result property="content" 			column="content" 		javaType="String"></result>
+ 		<result property="sender" 			column="sender" 		javaType="String"></result>
+ 		<result property="sstatus" 			column="sstatus" 		javaType="String"></result>
+ 		<result property="name" 			column="name" 			javaType="String"></result>
+ 		<result property="img" 				column="img" 			javaType="String"></result>
+ 		<result property="writedate" 		column="writedate" 		javaType="String"></result>
+ 		<result property="receiver" 		column="receiver" 		javaType="String"></result>
+ 		<result property="rreadcount" 		column="rreadcount" 	javaType="String"></result>
+ 	</resultMap>
+<!-- ============================================================================================================================================================= -->	
+	
+	
+	
+	
+	
 
 	<!-- === *** 로그인한 유저의 팀정보를 가져오는 메소드 *** === -->
 	<select id="getUserTeam" parameterType="HashMap" resultMap="userTeam">

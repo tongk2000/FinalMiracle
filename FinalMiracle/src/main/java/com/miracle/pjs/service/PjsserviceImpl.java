@@ -64,10 +64,22 @@ public class PjsserviceImpl implements PjsinterService {
 		HashMap<String, String> map = dao.getIdxTeam(view);
 		return map;
 	}/* ================================================================================================================================================== */
-	@Override
+	/*@Override
 	public int delNoticeIdx(List<String> list) {
 		// 공지사항 게시물을 지우는 메소드
 		int n = dao.delNoticeIdx(list);
+		return n;
+	}*//* ================================================================================================================================================== */
+	/*@Override
+	public int delNoticeIdx(HashMap<String,String> paramap) {
+		// 공지사항 게시물을 지우는 메소드
+		int n = dao.delNoticeIdx(paramap);
+		return n;
+	}*//* ================================================================================================================================================== */
+	@Override
+	public int delNoticeIdx(HashMap<String, String[]> paramap) {
+		// 공지사항 게시물을 지우는 메소드
+		int n = dao.delNoticeIdx(paramap);
 		return n;
 	}/* ================================================================================================================================================== */
 	@Override
@@ -203,6 +215,12 @@ public class PjsserviceImpl implements PjsinterService {
 		int n = dao.updateMindCheckNum(nidx);
 		return n;
 	}
+	@Override
+	public int delMindIdx(HashMap<String,String[]> paramap) {
+		// 마음의 소리 다중 행 삭제
+		int n = dao.delMindIdx(paramap);
+		return n;
+	}
 	
 //==========================================================================================================================================================//	
 
@@ -259,7 +277,31 @@ public class PjsserviceImpl implements PjsinterService {
 	
 // === *** 쪽지 *** === //
 //==========================================================================================================================================================//	
-
+	@Override
+	public int getSenderMemo(HashMap<String, String> map) {
+		// 쪽지 보낸 사람의 보낸 쪽지 수를 반환하는 메소드
+		int n = dao.getSenderMemo(map);
+		return n;
+	}
+	@Override
+	public List<HashMap<String, String>> getSenderMemoList(HashMap<String, String> map) {
+		// sender가 보낸 쪽지 리스트를 반환한다.
+		List<HashMap<String, String>> list = dao.getSenderMemoList(map);
+		return list;
+	}
+	@Override
+	public int getReceiverMemo(HashMap<String, String> map) {
+		// 쪽지를 받은 사람의 받은 쪽지 갯수를 리턴
+		int n = dao.getReceiverMemo(map);
+		return n;
+	}
+	@Override
+	public List<HashMap<String, String>> getReceiverMemoList(HashMap<String, String> map) {
+		// 받은 쪽지 리스트를 반환
+		List<HashMap<String, String>> list = dao.getReceiverMemoList(map);
+		return list;
+	}
+	
 //==========================================================================================================================================================//	
 
 	

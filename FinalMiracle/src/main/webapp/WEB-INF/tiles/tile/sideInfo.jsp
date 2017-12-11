@@ -28,6 +28,6 @@
       <li><a href="<%= request.getContextPath() %>/voteList.mr">투표</a></li>
       <li><a href="<%= request.getContextPath() %>/tmList.mr">팀원관리</a></li>
       <li><a href="<%= request.getContextPath() %>/memoList.mr">메모</a></li>
-      <li><a href="#">쪽지</a></li>
+      <li><a href="<%= request.getContextPath() %>/memoreceiver.mr">쪽지</a></li>
     </ul>
 </div>
