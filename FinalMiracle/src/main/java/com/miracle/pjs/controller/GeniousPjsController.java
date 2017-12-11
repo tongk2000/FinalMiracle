@@ -615,8 +615,17 @@ public class GeniousPjsController {
 		team.put("userid", ((MemberVO) ses.getAttribute("loginUser")).getUserid()); // 유저의 아이디를 가져온다.
 		team.put("teamidx", ((HashMap<String, String>)ses.getAttribute("teamInfo")).get("team_idx")); 
 		HashMap<String, String> userTeam = service.getUserTeam(team); // 유저와 유저의 팀 정보를 가져온다.  teamNum, m.userid, m.idx as memberNum, w.status, m.img
+		// List<HashMap<String, String>> mapteam 같은 팀 정보를 추출
+		// List<HashMap<String, String>> mapAll 모든 팀 정보를 추출
 		
 		req.setAttribute("userTeam", userTeam);
+		return "pjs/memo/memoWrite.all";
+	}/* ================================================================================================================================================== */
+	@RequestMapping(value="memoSenderView.mr", method={RequestMethod.GET})
+	public String memoSenderView(HttpServletRequest req, HttpSession ses) {
+		String idx = req.getParameter("idx");
+		HashMap<String,String> map =  service.getSenderIdx(idx);
+		req.setAttribute("map", map);
 		return "pjs/memo/memoWrite.all";
 	}/* ================================================================================================================================================== */
 

@@ -301,6 +301,12 @@ public class PjsserviceImpl implements PjsinterService {
 		List<HashMap<String, String>> list = dao.getReceiverMemoList(map);
 		return list;
 	}
+	@Override
+	public HashMap<String, String> getSenderIdx(String idx) {
+		// idx에 해당하는 sender테이블의 정보를 가져온다.
+		HashMap<String, String> map = dao.getSenderIdx(idx);
+		return map;
+	}
 	
 //==========================================================================================================================================================//	
 
