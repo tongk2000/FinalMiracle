@@ -8,11 +8,9 @@ public interface InterBoardDAO {
 	List<FaqBoardVO> faqList();
 
 	List<FaqBoardVO> faqListWithSearch(HashMap<String, String> map);
-
 	List<FaqBoardVO> faqListWithNoSearch(HashMap<String, String> map);
 
 	int getTotalCountWithSearch(HashMap<String, String> map);
-
 	int getTotalCountWithNoSearch(HashMap<String, String> map);
 
 	int add(FaqBoardVO faqvo);  // FAQ 게시판 글쓰기
@@ -24,6 +22,14 @@ public interface InterBoardDAO {
 	FreeBoardVO getView(String idx);  // 자유게시판 선택한 게시글 1개 보여주기
 
 	void setAddReadCnt(String idx);  // 다른 사용자가 글 조회시 readCnt 1 증가 시키기
+	
+	List<FreeBoardVO> freeListWithNoSearch(HashMap<String, String> map);
+	List<FreeBoardVO> freeListWithSearch(HashMap<String, String> map);
+
+	int getFreeTotalCountWithSearch(HashMap<String, String> map);
+	int getFreeTotalCountWithNoSearch(HashMap<String, String> map);
+
+	int freeEdit(HashMap<String, Object> map);  // 1개 글 수정하기.
 
 	
 	

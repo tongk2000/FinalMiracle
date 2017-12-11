@@ -85,9 +85,7 @@ public class ProjectManagerDAO {
 	
 	// 페이징 처리를 위해 1주간의 날짜를 동적으로 수정하기
 	public int updatePageDateWeek(String page) {
-		System.out.println("page:"+page);
 		int result = sql.update("do.updatePageDateWeek",page);
-		System.out.println("result:"+result);
 		return result;
 	} // end of public int updatePageDate(String page) ------------------------------------------------------------------------------------
 	
@@ -99,9 +97,7 @@ public class ProjectManagerDAO {
 	
 	// 페이징 처리를 위해 한달간의 날짜를 동적으로 수정하기
 	public int updatePageDateMonth(String page) {
-		System.out.println("page:"+page);
 		int result = sql.update("do.updatePageDateMonth",page);
-		System.out.println("result:"+result);
 		return result;
 	} // end of public int updatePageDate(String page) ------------------------------------------------------------------------------------
 	

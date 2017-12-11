@@ -64,10 +64,22 @@ public class PjsserviceImpl implements PjsinterService {
 		HashMap<String, String> map = dao.getIdxTeam(view);
 		return map;
 	}/* ================================================================================================================================================== */
-	@Override
-	public int delNoticeIdx(String idx) {
+	/*@Override
+	public int delNoticeIdx(List<String> list) {
 		// 공지사항 게시물을 지우는 메소드
-		int n = dao.delNoticeIdx(idx);
+		int n = dao.delNoticeIdx(list);
+		return n;
+	}*//* ================================================================================================================================================== */
+	/*@Override
+	public int delNoticeIdx(HashMap<String,String> paramap) {
+		// 공지사항 게시물을 지우는 메소드
+		int n = dao.delNoticeIdx(paramap);
+		return n;
+	}*//* ================================================================================================================================================== */
+	@Override
+	public int delNoticeIdx(HashMap<String, String[]> paramap) {
+		// 공지사항 게시물을 지우는 메소드
+		int n = dao.delNoticeIdx(paramap);
 		return n;
 	}/* ================================================================================================================================================== */
 	@Override
@@ -87,8 +99,25 @@ public class PjsserviceImpl implements PjsinterService {
 		// 공지사항 글의 조회수 늘리는 메소드
 		int n = dao.updateReadCount(nidx);
 		return n;
+	}/* ================================================================================================================================================== */
+	@Override
+	public int setNoticeWrite(HashMap<String, String> team) {
+		// 공지사항 글쓰기 완료 메소드
+		int n = dao.setNoticeWrite(team);
+		return n;
+	}/* ================================================================================================================================================== */
+	@Override
+	public int setNoticeEditWrite(HashMap<String, String> map) {
+		// 수정글쓰기 입력 메소드
+		int n = dao.setNoticeEditWrite(map);
+		return n;
+	}/* ================================================================================================================================================== */
+	@Override
+	public HashMap<String, String> getDepth(String parameter) {
+		// 수정글의 depth, groupno를 구해온다.
+		HashMap<String, String> depth = dao.getDepth(parameter);
+		return depth;
 	}
-	
 	
 	
 //==========================================================================================================================================================//	
@@ -108,12 +137,12 @@ public class PjsserviceImpl implements PjsinterService {
 		try{
 			sizePerPage = Integer.parseInt(str_sizePerPage);
 			if(sizePerPage==0) 
-				sizePerPage=5;
+				sizePerPage=10;
 			if(sizePerPage!=10&&sizePerPage!=5&&sizePerPage!=3)
-				sizePerPage=5;
+				sizePerPage=10;
 		}
 		catch(NumberFormatException e) {
-			sizePerPage = 5;
+			sizePerPage = 10;
 		}
 		if(str_currentPage==null || "".equals(str_currentPage)) {
 			currentPage = 1;
@@ -156,6 +185,43 @@ public class PjsserviceImpl implements PjsinterService {
 			searchString = "해당하는 검색정보가 없습니다.";
 		return searchString;
 	}
+	@Override
+	public HashMap<String, String> getMindIdxTeam(HashMap<String, String> view) {
+		// 마음의 소리 글보기
+		HashMap<String, String> map = dao.getMindIdxTeam(view);
+		return map;
+	}
+	@Override
+	public int setMindWrite(HashMap<String, String> team) {
+		// 마음의 소리 글쓰기
+		int n = dao.setMindWrite(team);
+		return n;
+	}
+	@Override
+	public HashMap<String, String> getMindDepth(String nidx) {
+		// depth와 groupno가져오는 메소드
+		HashMap<String, String> map = dao.getMindDepth(nidx);
+		return map;
+	}
+	@Override
+	public int updateMindReadCount(String idx) {
+		// 조회수 올려주는 메소드
+		int n = dao.updateMindReadCount(idx);
+		return n;
+	}
+	@Override
+	public int updateMindCheckNum(String nidx) {
+		// 대기, 확인, 답변 변경해주는 메소드
+		int n = dao.updateMindCheckNum(nidx);
+		return n;
+	}
+	@Override
+	public int delMindIdx(HashMap<String,String[]> paramap) {
+		// 마음의 소리 다중 행 삭제
+		int n = dao.delMindIdx(paramap);
+		return n;
+	}
+	
 //==========================================================================================================================================================//	
 
 	
@@ -211,7 +277,37 @@ public class PjsserviceImpl implements PjsinterService {
 	
 // === *** 쪽지 *** === //
 //==========================================================================================================================================================//	
-
+	@Override
+	public int getSenderMemo(HashMap<String, String> map) {
+		// 쪽지 보낸 사람의 보낸 쪽지 수를 반환하는 메소드
+		int n = dao.getSenderMemo(map);
+		return n;
+	}
+	@Override
+	public List<HashMap<String, String>> getSenderMemoList(HashMap<String, String> map) {
+		// sender가 보낸 쪽지 리스트를 반환한다.
+		List<HashMap<String, String>> list = dao.getSenderMemoList(map);
+		return list;
+	}
+	@Override
+	public int getReceiverMemo(HashMap<String, String> map) {
+		// 쪽지를 받은 사람의 받은 쪽지 갯수를 리턴
+		int n = dao.getReceiverMemo(map);
+		return n;
+	}
+	@Override
+	public List<HashMap<String, String>> getReceiverMemoList(HashMap<String, String> map) {
+		// 받은 쪽지 리스트를 반환
+		List<HashMap<String, String>> list = dao.getReceiverMemoList(map);
+		return list;
+	}
+	@Override
+	public HashMap<String, String> getSenderIdx(String idx) {
+		// idx에 해당하는 sender테이블의 정보를 가져온다.
+		HashMap<String, String> map = dao.getSenderIdx(idx);
+		return map;
+	}
+	
 //==========================================================================================================================================================//	
 
 	
@@ -222,7 +318,6 @@ public class PjsserviceImpl implements PjsinterService {
 		HashMap<String, String> userTeam = dao.getUserTeam(team);
 		return userTeam;
 	}
-	
 
 	
 }	

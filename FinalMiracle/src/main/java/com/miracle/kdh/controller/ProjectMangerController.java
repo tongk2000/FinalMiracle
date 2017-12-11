@@ -47,9 +47,7 @@ public class ProjectMangerController {
 			map.put("teamwon_idx", "3");
 			map.put("teamwon_status", "2");
 			ses.setAttribute("teamInfo", map);
-		}
-		
-		
+		}		
 		// 여기까지는 나중에 팀 세션 정보 추가되면 삭제해야함
 		
 		@SuppressWarnings("unchecked")
@@ -75,6 +73,10 @@ public class ProjectMangerController {
 		@SuppressWarnings("unchecked")
 		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo");
 		String team_idx = teamInfo.get("team_idx");
+		
+		String visible = (String)req.getParameter("visibleArr"); // 접고 편 상태를 받아와서
+		String[] visibleArr = visible.split(","); // ,를 기준으로 배열로 만들고
+		req.setAttribute("visibleArr", visibleArr); // 값 유지를 위해 넘겨준다.
 		
 		String term = req.getParameter("term"); // 페이징 기간을 가져옴
 		String page = (String)req.getParameter("page"); // 페이징 이동할 페이지를 가져옴
@@ -135,9 +137,14 @@ public class ProjectMangerController {
 	@RequestMapping(value="do_addDownElement.mr", method={RequestMethod.GET})
 	public String addDownElement(HttpServletRequest req) {
 		String upIdx = req.getParameter("upIdx");
+		req.setAttribute("upIdx",upIdx); // 상위폴더값 유지용
 		
 		HashMap<String, String> map = svc.getUpFolder(upIdx);
-		map.put("upIdx",upIdx);
+		
+		String term = req.getParameter("term"); // 페이징 기간을 가져옴
+		String page = (String)req.getParameter("page"); // 페이징 이동할 페이지를 가져옴
+		req.setAttribute("term", term);	// 페이징 값 유지용
+		req.setAttribute("page", page);	// 페이징 값 유지용
 		
 		req.setAttribute("map", map);
 		
@@ -146,7 +153,7 @@ public class ProjectMangerController {
 	
 	// 하위요소 추가하기
 	@RequestMapping(value="do_addDownElementEnd.mr", method={RequestMethod.POST})
-	public String addDownElementEnd(HttpServletRequest req, HttpSession ses, FolderVO fvo) {
+	public String addDownElementEnd(HttpServletRequest req, HttpSession ses, FolderVO fvo) {		
 		String[] teamwonIdxArr = req.getParameterValues("teamwonIdx"); // 추가되는 요소에 지정된 담당 팀원목록을 받아옴
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("teamwonIdxArr", teamwonIdxArr);
@@ -157,9 +164,12 @@ public class ProjectMangerController {
 		
 		map.put("teamwon_idx", Integer.parseInt(teamInfo.get("teamwon_idx")) ); // 폴더팀원목록에도 넣어줌(status 다르게 해주기 위함)
 		
-		HashMap<String, Object> returnMap = svc.addDownElementEnd(fvo, map); // 트랜잭션 결과와 새로 추가된 요소의 정보를 가져옴 
+		String term = req.getParameter("term"); // 페이징 기간을 가져옴
+		String page = (String)req.getParameter("page"); // 페이징 이동할 페이지를 가져옴
 		
-		req.setAttribute("returnMap", returnMap);
+		HashMap<String, Object> endMap = svc.addDownElementEnd(fvo, map, term, page); // 트랜잭션 결과와 새로 추가된 요소의 정보를 가져옴 
+		
+		req.setAttribute("endmap", endMap);
 		
 		return "kdh/doList/popup/addDownElementEnd.not";
 	} // end of String addDownElementEnd(HttpServletRequest req, FolderVO fvo) ----------------------------------------------
@@ -180,7 +190,6 @@ public class ProjectMangerController {
 		}
 		String str_json = jsonList.toString();
 		req.setAttribute("str_json", str_json);
-		System.out.println(str_json);
 		return "kdh/json.not";
 	} // end of public String getTeamwonList(HttpServletRequest req) --------------------------------------------------------------
 	

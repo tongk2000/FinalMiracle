@@ -15,7 +15,9 @@ public class BoardService implements InterBoardService {
 
 	@Autowired
 	private InterBoardDAO dao;
-
+	
+	//////////////////////////////////////////////////////////////////// FAQ 게시판 ////////////////////////////////////////////////
+	// ====================================================== *** FAQ 게시판 *** ===================================================
 	@Override
 	public List<FaqBoardVO> faqList() {
 		List<FaqBoardVO> list = dao.faqList();
@@ -50,7 +52,9 @@ public class BoardService implements InterBoardService {
 		int n = dao.add(faqvo);
 		return n;
 	}
-
+	
+	//////////////////////////////////////////////////////////////////////////////////// 자유게시판 //////////////////////////////////
+	// ====================================================== *** 자유게시판 *** =====================================================
 	@Override
 	public List<FreeBoardVO> freeList() {
 		List<FreeBoardVO> vo = dao.freeList();
@@ -65,14 +69,52 @@ public class BoardService implements InterBoardService {
 
 	@Override
 	public FreeBoardVO getView(String idx, String userid) {  // 자유게시판 클릭한 게시글 1개 보여주기
-		FreeBoardVO vo = dao.getView(idx);
+		FreeBoardVO vo = dao.getView(idx);  // 자유게시판 글 보여주기 
 		
 		if(userid != null && !vo.getUserid().equals(userid)) {
-			dao.setAddReadCnt(idx);
+			dao.setAddReadCnt(idx); // 자유게시판 글(readCnt) 조회수 1 증가시키기
 			vo = dao.getView(idx);
 		}
 		return vo;
 	}
+
+	@Override
+	public FreeBoardVO getViewWithNoReadCnt(String idx) {  // 자유게시판 글 조회수(readCnt) 증가 없이 보여주기
+		FreeBoardVO vo = dao.getView(idx);
+		return vo;
+	}
+
+	@Override
+	public List<FreeBoardVO> freeListWithNoSearch(HashMap<String, String> map) {
+		List<FreeBoardVO> vo = dao.freeListWithNoSearch(map);
+		return vo;
+	}
+	@Override
+	public List<FreeBoardVO> freeListWithSearch(HashMap<String, String> map) {
+		List<FreeBoardVO> vo = dao.freeListWithSearch(map);
+		return vo;
+	}
+
+	
+	@Override
+	public int getFreeTotalCountWithSearch(HashMap<String, String> map) {
+		int cnt = dao.getFreeTotalCountWithSearch(map);
+		return cnt;
+	}
+	@Override
+	public int getFreeTotalCountWithNoSearch(HashMap<String, String> map) {
+		int cnt = dao.getFreeTotalCountWithNoSearch(map);
+		return cnt;
+	}
+
+	@Override
+	public int freeEdit(HashMap<String, Object> map) {  // 1개 글 수정하기
+		int n = dao.freeEdit(map);
+		return n;
+	}
+	
+	
+	
 
 	
 	

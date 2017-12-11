@@ -35,7 +35,6 @@ public class ProjectManagerService {
 			int result = dao.updatePageDateMonth(page); // 페이징 처리를 위해 1주간의 날짜를 동적으로 수정하기
 			if(result > 0) {
 				List<HashMap<String, String>> pageDateList = dao.getPageDateMonth(); // 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기
-				System.out.println(pageDateList.size());
 				map.put("pageDateList", pageDateList);
 			}
 		}
@@ -86,18 +85,29 @@ public class ProjectManagerService {
 
 	// 하위요소 추가하기(+추가된 요소에 소속된 담당들도 folder_teamwon 테이블에 추가)
 	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
-	public HashMap<String, Object> addDownElementEnd(FolderVO fvo, HashMap<String, Object> map) {
+	public HashMap<String, Object> addDownElementEnd(FolderVO fvo, HashMap<String, Object> map, String term, String page) {
 		int result1 = dao.addDownElement(fvo); // 하위 폴더 추가하기
 		int result2 = dao.addDoTeamwon(map); // 폴더나 할일 추가할때 담당 팀원 추가하기(가장 최근에 올라온 folderIdx를 구해서 입력주는 방식임)
 		fvo = dao.getAddedElement(); // 방금 추가한 요소를 가져오기
-		List<HashMap<String, String>> pageDateList = dao.getPageDateWeek(); // 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기 TODO 한달방식 추가해줘야함
 		
-		HashMap<String, Object> returnMap = new HashMap<String, Object>();
-		returnMap.put("result", result1*result2);
-		returnMap.put("fvo", fvo);
-		returnMap.put("pageDateList", pageDateList);
-		
-		return returnMap;
+		List<HashMap<String, String>> pageDateList = null;
+		if(term.equals("7")) {
+			int result = dao.updatePageDateWeek(page); // 페이징 처리를 위해 1주간의 날짜를 동적으로 수정하기
+			if(result > 0) {
+				pageDateList = dao.getPageDateWeek(); // 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기
+			}
+		} else if(term.equals("30")) {
+			int result = dao.updatePageDateMonth(page); // 페이징 처리를 위해 1주간의 날짜를 동적으로 수정하기
+			if(result > 0) {
+				pageDateList = dao.getPageDateMonth(); // 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기
+			}
+		}
+		HashMap<String, Object> endMap = new HashMap<String, Object>();
+		endMap.put("result", result1*result2);
+		endMap.put("fvo", fvo);
+		endMap.put("pageDateList", pageDateList);
+		System.out.println("result1*result2 : "+result1*result2);
+		return endMap;
 	} // end of int addDownElementEnd(FolderVO fvo, HashMap<String, Object> map) -----------------------------------------------------
 
 	// 선택한 요소와 그 하위요소들 삭제하기

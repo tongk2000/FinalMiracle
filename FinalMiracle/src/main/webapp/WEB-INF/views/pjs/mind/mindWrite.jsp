@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="UTF-8"%>
+<%
+request.setCharacterEncoding("UTF-8");
+%>    
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 request.setCharacterEncoding("UTF-8");
@@ -28,7 +31,7 @@ request.setCharacterEncoding("UTF-8");
 			<table style="border: 1px solid red; width: 80%;">
 				<thead>
 					<tr>
-						<th colspan="2">공지글</th>
+						<th colspan="2">마음의 소리</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -56,17 +59,27 @@ request.setCharacterEncoding("UTF-8");
 		<input type="hidden" name="teamNum">
 		<input type="hidden" name="subject">
 		<input type="hidden" name="content">
+		<input type="hidden" name="nidx">
+		<input type="hidden" name="chkid">
 	</form>
 	<script>
 		function writeEnd() {
 			var frm = document.end;
 			var subject = $("#subject").val();
 			var content = $("#content").val();
-			frm.userid.value = "${user.userid}";
+			var nidx = "${nidx}";
+			frm.nidx.value = nidx;
+			if(nidx == null || nidx=="") { // 일반글쓰기
+				frm.userid.value = "${user.userid}";
+			}
+			if(nidx!=null && nidx!=""){ // 답변글쓰기
+				frm.userid.value = "${sessionScope.loginUser.userid}";
+				frm.chkid.value = "${chkid}";
+			}
 			frm.teamNum.value = "${user.teamNum}";
 			frm.subject.value = subject;
 			frm.content.value = content;
-			frm.action="<%=request.getContextPath()%>/noticeWriteEnd.mr";
+			frm.action="<%=request.getContextPath()%>/mindWriteEnd.mr";
 			frm.method="post";
 			frm.submit();
 		}

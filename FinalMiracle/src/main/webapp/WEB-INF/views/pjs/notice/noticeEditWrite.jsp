@@ -1,14 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 request.setCharacterEncoding("UTF-8");
-%>
+%>    
 <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/resources/jqueryuicss/jquery-ui.css" />
 <link href="<%=request.getContextPath() %>/resources/summernote/summernote.css" rel="stylesheet">
 <script type="text/javascript" src="<%= request.getContextPath() %>/resources/jqueryuijs/jquery-ui.js"></script>
 <script src="<%=request.getContextPath() %>/resources/summernote/summernote.js"></script>
 <script src="<%=request.getContextPath() %>/resources/summernote/lang/summernote-ko-KR.js"></script>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE>
 <html>
 <head>
@@ -17,18 +17,18 @@ request.setCharacterEncoding("UTF-8");
 <style>
 	img {
 		width:25px;
-		height:25px;
+		heigth:25px;
 	}
 </style>
 </head>
 <body>
-<c:set var="user" value="${map}" />  <!-- teamNum , userid , teamNum , memberNum, status -->
+<c:set var="user" value="${map}" />  <!-- nidx, userid, teamNum --> 
 	<div style="border: 1px solid green; width:100%;">
 		<div style="border: 1px solid yellow;">
 			<table style="border: 1px solid red; width: 80%;">
 				<thead>
 					<tr>
-						<th colspan="2">공지글</th>
+						<th colspan="2">수정공지글</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -56,17 +56,19 @@ request.setCharacterEncoding("UTF-8");
 		<input type="hidden" name="teamNum">
 		<input type="hidden" name="subject">
 		<input type="hidden" name="content">
+		<input type="hidden" name="nidx">
 	</form>
 	<script>
 		function writeEnd() {
 			var frm = document.end;
 			var subject = $("#subject").val();
 			var content = $("#content").val();
+			frm.nidx.value=${nidx};
 			frm.userid.value = "${user.userid}";
 			frm.teamNum.value = "${user.teamNum}";
 			frm.subject.value = subject;
 			frm.content.value = content;
-			frm.action="<%=request.getContextPath()%>/noticeWriteEnd.mr";
+			frm.action="<%=request.getContextPath()%>/noticeEditWriteEnd.mr";
 			frm.method="post";
 			frm.submit();
 		}

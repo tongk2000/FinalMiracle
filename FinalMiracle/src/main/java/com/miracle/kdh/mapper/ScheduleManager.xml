@@ -5,7 +5,7 @@
 
 <!-- ==== #8. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->              
 <mapper namespace="do">
-	<!-- 모든 폴더, 할일 리스트를 가져오는 메소드 -->
+	<!-- 모든 요소를 가져오는 메소드 -->
 	<select id="getAllDoList" resultType="com.miracle.kdh.model.FolderVO">
 		select idx, fk_teamwon_idx, subject, content
 		     , to_char(startdate, 'yyyy-mm-dd') as startdate
@@ -14,11 +14,33 @@
 		     , case when trunc(startdate) <![CDATA[<]]> sysdate and sysdate <![CDATA[<]]> trunc(lastdate)+1 then 1
 		            when trunc(lastdate)+1 <![CDATA[<]]> sysdate then -1
 		            else 0 end as dayCnt
-		from tbl_folder
+		     , (select count(*) from tbl_folder
+		       where status in (1, 0) and idx != F.idx
+		       start with idx = F.idx
+		       connect by prior idx = fk_folder_idx) as downCnt
+		from tbl_folder F
 		where status in (0, 1) and fk_teamwon_idx in (select idx from tbl_teamwon where fk_team_idx = #{team_idx})
 		start with fk_folder_idx = 0
 		connect by prior idx = fk_folder_idx
 		order siblings by category asc
+	</select>
+	
+	
+	<!-- 방금 추가한 요소를 가져오기 -->
+	<select id="getAddedElement" resultType="com.miracle.kdh.model.FolderVO">
+		select idx, fk_teamwon_idx, subject, content
+		     , to_char(startdate, 'yyyy-mm-dd') as startdate
+		     , to_char(lastdate, 'yyyy-mm-dd') as lastdate
+		     , fk_folder_idx, groupno, depth, category, status, importance
+		     , case when trunc(startdate) &lt; sysdate and sysdate &lt; trunc(lastdate)+1 then 1
+		            when trunc(lastdate)+1 &lt; sysdate then -1
+		            else 0 end as dayCnt
+		     , (select count(*) from tbl_folder
+		       where status in (1, 0) and idx != F.idx
+		       start with idx = F.idx
+		       connect by prior idx = fk_folder_idx) as downCnt
+		from tbl_folder F
+		where idx = (select max(idx) from tbl_folder)
 	</select>
 	
 	
@@ -123,20 +145,6 @@
 	</insert>
 	
 	
-	<!-- 방금 추가한 요소를 가져오기 -->
-	<select id="getAddedElement" resultType="com.miracle.kdh.model.FolderVO">
-		select idx, fk_teamwon_idx, subject, content
-		     , to_char(startdate, 'yyyy-mm-dd') as startdate
-		     , to_char(lastdate, 'yyyy-mm-dd') as lastdate
-		     , fk_folder_idx, groupno, depth, category, status, importance
-		     , case when trunc(startdate) &lt; sysdate and sysdate &lt; trunc(lastdate)+1 then 1
-		            when trunc(lastdate)+1 &lt; sysdate then -1
-		            else 0 end as dayCnt
-		from tbl_folder
-		where idx = (select max(idx) from tbl_folder)
-	</select>
-	
-	
 	<!-- 선택한 요소와 그 하위요소들 삭제하기 -->
 	<update id="delElement">
 		update tbl_folder set status = -1
@@ -189,15 +197,17 @@
 	<update id="updatePageDateWeek">
 		update tbl_doPaging_week set day = to_char(sysdate + modification + #{page}, 'yyyymmdd')
 	                               , dayDP = to_char(sysdate + modification + #{page}, 'mm/dd(dy)')
+	                               , dotw = to_char(sysdate + modification + #{page}, 'dy')
     </update>
     
     <!-- 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기 -->
     <resultMap type="HashMap" id="getPageDateWeek">
     	<result property="day" column="day" javaType="String" />
     	<result property="dayDP" column="dayDP" javaType="String" />
+    	<result property="dotw" column="dotw" javaType="String" />
     </resultMap>
     <select id="getPageDateWeek" resultMap="getPageDateWeek">
-		select day, dayDP
+		select day, dayDP, dotw
 		from tbl_doPaging_week
 	</select>
 	
@@ -205,16 +215,27 @@
 	<update id="updatePageDateMonth">
 		update tbl_doPaging_month set day = to_char(sysdate + modification + #{page}, 'yyyymmdd')
 	                                , dayDP = to_char(sysdate + modification + #{page}, 'dd')
+	                                , dotw = to_char(sysdate + modification + #{page}, 'dy')
     </update>
     
     <!-- 페이징 처리를 위해 수정된 한달간의 날짜를 받아오기 -->
     <resultMap type="HashMap" id="getPageDateMonth">
     	<result property="day" column="day" javaType="String" />
     	<result property="dayDP" column="dayDP" javaType="String" />
+    	<result property="dotw" column="dotw" javaType="String" />
     </resultMap>
     <select id="getPageDateMonth" resultMap="getPageDateMonth">
-		select day, dayDP
+		select day, dayDP, dotw
 		from tbl_doPaging_month
+	</select>
+	
+	
+	<select id="getDownCnt">
+		select count(*) as downCnt
+		from tbl_folder
+		where status in (1, 0) and idx != #{fk_folder_idx}
+		start with idx = #{fk_folder_idx}
+		connect by prior idx = fk_folder_idx;
 	</select>
 </mapper>
 

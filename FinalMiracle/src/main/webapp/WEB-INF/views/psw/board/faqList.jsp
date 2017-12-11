@@ -2,16 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/resources/jqueryuicss/jquery-ui.css" />
-<link href="<%=request.getContextPath() %>/resources/summernote/summernote.css" rel="stylesheet">
-
-<script type="text/javascript" src="<%= request.getContextPath() %>/resources/jqueryuijs/jquery-ui.js"></script>
-<script src="<%=request.getContextPath() %>/resources/summernote/summernote.js"></script>
-<script src="<%=request.getContextPath() %>/resources/summernote/lang/summernote-ko-KR.js"></script>
 
 <style type="text/css">
-	table, th, td {border: solid gray 1px;}
-	#table {border-collapse: collapse; width: 750px;}
 	
 	.subjectstyle {font-weight: bold;
     	           color: darkgray;
@@ -31,11 +23,6 @@
 	max-height: null;}
 	
 	<%-- accordion css --%>
-	* {
-	  margin: 0;
-	  padding: 0;
-	}
-	
 	dt, dd {
 	  padding: 10px;
 	}
@@ -53,28 +40,22 @@
 	  vertical-align: middle;
 	  margin-right: 10px;
 	}
-	
+	 
 	dt.on span {
 	  background-color: red;
 	}
-	
+ 	
 	dd {
 	  background-color: tan;
 	  margin-bottom: 5px;
 	  display: none;
-	}
+	} 
+
 </style>
 
  
 <script type="text/javascript">
 	$(document).ready(function(){
-		$('.summernote').summernote({
-		      height: 300,          // 기본 높이값
-		      minHeight: null,      // 최소 높이값(null은 제한 없음)
-		      maxHeight: null,      // 최대 높이값(null은 제한 없음)
-		      focus: true,          // 페이지가 열릴때 포커스를 지정함
-		      lang: 'ko-KR'         // 한국어 지정(기본값은 en-US)
-	    });
 		
 		// ================================= *** FAQ게시판 제목에 마우스 가져갈 경우 / 다른곳으로 이동한 경우 *** =========
 		$(".subject").bind("mouseover", function(event){
@@ -147,23 +128,23 @@
 
 
 <h1 style="margin-left: 20%;">자주 묻는 질문</h1>
-<div style="padding-left: 10%; border: 1px solid red;">
+<div style="margin-left: 10%; border: 1px solid red; width: 90%;">
 	<!-- ========================================= *** Category 분류 항목 *** ================================= -->
 	<div style="width: 90%;"> 
 		<div class="category" style="margin-left:10%;">
-			<a onClick="goCategory('0');">[기타문의]</a>
+			<a onClick="goCategory(0);">[기타문의]</a>
 		</div>
 		
 		<div class="category" style="margin-left:10%;">
-			<a onClick="goCategory('1')">[회원관련]</a>
+			<a onClick="goCategory(1)">[회원관련]</a>
 		</div>
 		
 		<div class="category" style="margin-left:10%;">
-			<a onClick="goCategory('2')">[상담관련]</a>
+			<a onClick="goCategory(2)">[상담관련]</a>
 		</div>
 		
 		<div class="category" style="margin-left:10%;">
-			<a onClick="goCategory('3')">[업무관련]</a>
+			<a onClick="goCategory(3)">[업무관련]</a>
 		</div>	
 	</div>
 	<!-- ========================================== *** accordion FAQ 게시판 목록 *** ============================== -->
@@ -196,11 +177,11 @@
 		</form>
 	</div>
 	<br/>
-	<!-- ======================================================== *** 페이지바 만들기 *** ========================================== -->
+	<!-- ======================================================== *** 페이지바 만들기 *** ========================================== --> 	
 	<div>
 		${pagebar}
 	</div>
-	
+
 	<div style="margin-top: 20px; margin-bottom: 20px;">
 		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/faqList.mr'">전체 글목록</button>&nbsp;
 		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/faqAdd.mr'">글쓰기</button>

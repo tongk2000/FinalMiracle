@@ -18,8 +18,8 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/resources/jqueryuijs/jquery-ui.js"></script>
 
 <script>
-	var result = parseInt("${returnMap.result}");
-	
+	var result = parseInt("${endMap.result}");
+	alert(result);
 	if(result == 0) {
 		alert("입력에 실패하였습니다.\n관리자에게 문의하세요.");
 		location.href="javascript:history.back();"
@@ -27,69 +27,76 @@
 	if(result > 0) {
 		alert("입력에 성공하였습니다.");
 		var html = "";
-		html += '<tr id="${returnMap.fvo.idx}" class="folder ${returnMap.fvo.groupNo} ${returnMap.fvo.depth}">'
+		html += '<tr id="${endMap.fvo.idx}" class="element ${endMap.fvo.groupNo} ${endMap.fvo.depth}">'
 		html += '	<td>'
-		html += '		<span id="span${returnMap.fvo.idx}" style="margin-left:${returnMap.fvo.depth*20}px; cursor:pointer;">'
-							<c:if test="${returnMap.fvo.category == 1}"> <!-- 폴더라면 -->
-		html += '				<span class="modalFolder" id="modalIdx${returnMap.fvo.idx}">'
-									<c:if test="${returnMap.fvo.fk_folder_idx != 0}"> <!-- 최상위 폴더가 아니라면 -->
-		html += '						└'
-									</c:if>
-		html += '					<span class="modalFolder subject" id="modalIdx${returnMap.fvo.idx}">${returnMap.fvo.subject}</span>'
+		html += '		<input type="hidden" id="fk_folder_idx" name="fk_folder_idx" value="${endMap.fvo.fk_folder_idx}" />'
+		html += '		<input type="hidden" id="fk_folder_idx" name="fk_folder_idx" value="${endMap.fvo.downCnt}" />'
+		html += '		<span id="span${endMap.fvo.idx}" style="margin-left:${endMap.fvo.depth*20}px; cursor:pointer;">'
+							<c:if test="${endMap.fvo.category == 1}"> <!-- 폴더라면 -->
+		html += '				<span class="modalFolder">'
+		html += '					▷'
 		html += '				</span>'
+		html += '				<span class="modalFolder subject">${endMap.fvo.subject}</span>'
 							</c:if>
-							<c:if test="${returnMap.fvo.category == 2}"> <!-- 할일이라면 -->
-								<c:if test="${returnMap.fvo.status == 0}"> <!-- 완료된 할일이라면 -->
-		html += '					└<input type="checkbox" id="status${returnMap.fvo.idx}" class="status" checked/>'
-								</c:if>
-								<c:if test="${returnMap.fvo.status == 1}"> <!-- 미완료된 할일이라면 -->
-		html += '					└<input type="checkbox" id="status${returnMap.fvo.idx}" class="status"/>'
-								</c:if>
-		html += '				<span class="modalTask subject" id="subject${returnMap.fvo.idx}">${returnMap.fvo.subject}</span>'
+							<c:if test="${endMap.fvo.category == 2}"> <!-- 할일이라면 -->
+		html += '				└<input type="checkbox" id="status${endMap.fvo.idx}" class="status"/>'
+		html += '				<span class="modalTask subject" id="subject${endMap.fvo.idx}">${endMap.fvo.subject}</span>'
 							</c:if>
 		html += '		</span>'
 		html += '	</td>'
-					<c:if test="${returnMap.fvo.dayCnt == 0}"> <!-- 시작일 전이라면 -->
-		html += '		<td style="background-color:lightgreen;">${returnMap.fvo.startDate}</td>'
-		html += '		<td style="background-color:lightgreen;">${returnMap.fvo.lastDate}</td>'
+					
+					<c:if test="${endMap.fvo.dayCnt == 0}"> <!-- 시작일 전이라면 -->
+		html += '		<td class="dateColor ${endMap.fvo.dayCnt}" style="background-color:lightgreen;">${endMap.fvo.startDate}</td>'
+		html += '		<td class="dateColor ${endMap.fvo.dayCnt}" style="background-color:lightgreen;">${endMap.fvo.lastDate}</td>'
 					</c:if>
-					<c:if test="${returnMap.fvo.dayCnt == 1}"> <!-- 진행중이라면 -->
-		html += '		<td style="background-color:green;">${returnMap.fvo.startDate}</td>'
-		html += '		<td style="background-color:green;">${returnMap.fvo.lastDate}</td>'
+					<c:if test="${endMap.fvo.dayCnt == 1}"> <!-- 진행중이라면 -->
+		html += '		<td class="dateColor ${endMap.fvo.dayCnt}" style="background-color:green;">${endMap.fvo.startDate}</td>'
+		html += '		<td class="dateColor ${endMap.fvo.dayCnt}" style="background-color:green;">${endMap.fvo.lastDate}</td>'
 					</c:if>
-					<c:if test="${returnMap.fvo.dayCnt == -1}"> <!-- 기한이 지났다면 -->
-		html += '		<td style="background-color:red;">${returnMap.fvo.startDate}</td>'
-		html += '		<td style="background-color:red;">${returnMap.fvo.lastDate}</td>'
+					<c:if test="${endMap.fvo.dayCnt == -1}"> <!-- 기한이 지났다면 -->
+		html += '		<td class="dateColor ${endMap.fvo.dayCnt}" style="background-color:red;">${endMap.fvo.startDate}</td>'
+		html += '		<td class="dateColor ${endMap.fvo.dayCnt}" style="background-color:red;">${endMap.fvo.lastDate}</td>'
 					</c:if>
-		html += '	<td>${returnMap.fvo.importance}</td>'
+		html += '	<td>${endMap.fvo.importance}</td>'
+					
 		html += '	<td></td>'
 		html += '	<td></td>'
-					<c:forEach var="pageDate" items="${returnMap.pageDateList}">
-						<fmt:parseNumber var="startDate" value="${returnMap.fvo.startDate.replace('-','')}" integerOnly="true"/>
-						<fmt:parseNumber var="lastDate" value="${returnMap.fvo.lastDate.replace('-','')}" integerOnly="true"/>
-						<fmt:parseNumber var="day" value="${pageDate.day}" integerOnly="true"/>
+					
+					<c:forEach var="pageDate" items="${map.pageDateList}">
+						<fmt:parseNumber var="startDate" value="${endMap.fvo.startDate.replace('-','')}" integerOnly="true"/>
+						<fmt:parseNumber var="lastDate" value="${endMap.fvo.lastDate.replace('-','')}" integerOnly="true"/>
+						<fmt:parseNumber var="day" value="${endMap.pageDate.day}" integerOnly="true"/> <!-- 희안하게 위에껀 못쓰고 여기서 다시 해줘야함; -->
 						
-						<c:if test="${startDate <= day and day <= lastDate}">
-							<c:if test="${returnMap.fvo.dayCnt == 0}"> <!-- 시작일 전이라면 -->
-		html += '				<td style="background-color:lightgreen; border-top:none; border-bottom:none;"></td>'
+		html += '		<td class="pageDateLine ${day}" style="border-left:0.5px solid lightgray;'
+							<c:if test="${endMap.pageDate.dotw == '토' || endMap.pageDate.dotw == '일'}">
+		html += '				background-color:#ffcccc;'
 							</c:if>
-							<c:if test="${returnMap.fvo.dayCnt == 1}"> <!-- 진행중이라면 -->
-		html += '				<td style="background-color:green; border-top:none; border-bottom:none;"></td>'
+		html += '		" align="center">'
+							
+							<c:if test="${startDate <= day and day <= lastDate}"> <!-- 시작일 이후, 마감일 이전 이라면 -->
+								<c:if test="${endMap.fvo.dayCnt == 0}"> <!-- 시작일 전이라면 -->
+		html += '					<div class="dateColor ${day} ${endMap.fvo.dayCnt}" style="height:19px; width:100%; background-color:lightgreen;"></div>'
+								</c:if>
+								<c:if test="${endMap.fvo.dayCnt == 1}"> <!-- 진행중이라면 -->
+		html += '					<div class="dateColor ${day} ${endMap.fvo.dayCnt}" style="height:19px; width:100%; background-color:green;"></div>'
+								</c:if>
+								<c:if test="${endMap.fvo.dayCnt == -1}"> <!-- 기한이 지났다면 -->
+		html += '					<div class="dateColor ${day} ${endMap.fvo.dayCnt}" style="height:19px; width:100%; background-color:red;"></div>'
+								</c:if>
 							</c:if>
-							<c:if test="${returnMap.fvo.dayCnt == -1}"> <!-- 기한이 지났다면 -->
-		html += '				<td style="background-color:red; border-top:none; border-bottom:none;"></td>'
-							</c:if>
-						</c:if>
-						<c:if test="${startDate > day or day > lastDate}">
-		html += '			<td style="border-top:none; border-bottom:none;"></td>'
-						</c:if>
+		html += '		</td>'
 					</c:forEach>
 		html += '</tr>'
 		
 		
 		var $opener = $(".selectedLine", opener.document); // 추가요소의 부모요소 선택자를 잡음
-		var category = "${returnMap.fvo.category}"; // 추가요소의 분류(1:폴더, 2:할일)을 저장함
-		var depth = parseInt("${returnMap.fvo.depth}"); // 추가요소의 깊이를 저장함
+		var category = "${endMap.fvo.category}"; // 추가요소의 분류(1:폴더, 2:할일)을 저장함
+		var depth = parseInt("${endMap.fvo.depth}"); // 추가요소의 깊이를 저장함
+		
+		var $downCnt = $opener.find(".downCnt");
+		var downCntVal = parseInt($downCnt.val());
+		$downCnt.val(downCntVal + 1);
+		$opener.find(".foldingIcon").text("▼");
 		
 		if(category == '1') { // 추가요소가 폴더라면
 			$opener.after(html); // 다음칸에 넣음
@@ -112,7 +119,8 @@
 			$this.after(html);
 		}
 		
-		window.opener.addLine("${returnMap.fvo.idx}"); // 살짝 깜빡여 주도록~
+		window.opener.todayLine();
+		window.opener.addLine("${endMap.fvo.idx}"); // 살짝 깜빡여 주도록~
 		window.close();
 	}
 </script>

@@ -25,17 +25,29 @@
     }
 </script>
 
-<div style="padding-left: 10%; border: solid 0px red;">
+<div style="margin-left: 10%; border: solid 1px red; width: 90%;">
 	<h1>글내용보기</h1>
 	
-	<table id="table">
+	<table id="table" style="width: 90%;">
 		<tr>
 			<th>글번호</th>
-			<td>${freevo.idx}</td>
+			<td>
+				${freevo.idx}
+				<input type="hidden" name="idx" value="${freevo.idx}" />
+			</td>
+			
 		</tr>
 		<tr>
 			<th>아이디</th>
-			<td>${freevo.userid}</td>
+			<td>
+				${freevo.userid}
+			</td>
+		</tr>
+		<tr>
+			<th>성명</th>
+			<td>
+				${freevo.name}
+			</td>
 		</tr>
 		<tr>
            	<th>제목</th>
@@ -52,15 +64,14 @@
 		<tr>
 			<th>등록일자</th>
 			<td>${freevo.regDate}</td>
-		</tr>		
-		
+		</tr>
 	</table>
 	
 	<br/>
 	
-	<button type="button" onClick="javascript:location.href='${gobackURL}'">목록보기</button>
-	<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/edit.action?seq=${boardvo.seq}'">수정</button>
-	<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/del.action?seq=${boardvo.seq}'">삭제</button>
+	<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/freeList.mr'">목록보기</button>
+	<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/freeEdit.mr?idx=${freevo.idx}'">수정</button>
+	<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/freeDel.mr?idx=${freevo.idx}'">삭제</button>
 		
 	<br/><br/>
 	

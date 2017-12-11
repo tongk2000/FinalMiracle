@@ -74,6 +74,37 @@ public class BoardDAO implements InterBoardDAO {
 		sqlsession.update("board_psw.setAddReadCnt", idx);	
 	}
 
+	// ============== *** 검색 유무에 따른 자유게시판 목록 보여주기 *** =======================
+	@Override
+	public List<FreeBoardVO> freeListWithNoSearch(HashMap<String, String> map) {
+		List<FreeBoardVO> vo = sqlsession.selectList("board_psw.freeListWithNoSearch", map);
+		return vo;
+	}
+	@Override
+	public List<FreeBoardVO> freeListWithSearch(HashMap<String, String> map) {
+		List<FreeBoardVO> vo = sqlsession.selectList("board_psw.freeListWithSearch", map);
+		return vo;
+	}
+
+	@Override
+	public int getFreeTotalCountWithSearch(HashMap<String, String> map) {
+		int cnt = sqlsession.selectOne("board_psw.getFreeTotalCountWithSearch", map);
+		return cnt;
+	}
+	@Override
+	public int getFreeTotalCountWithNoSearch(HashMap<String, String> map) {
+		int cnt = sqlsession.selectOne("board_psw.getFreeTotalCountWithNoSearch", map);
+		return cnt;
+	}
+
+	@Override
+	public int freeEdit(HashMap<String, Object> map) {
+		int n = sqlsession.update("board_psw.freeEdit", map);
+		return n;
+	}
+	
+	
+
 	
 	
 	
