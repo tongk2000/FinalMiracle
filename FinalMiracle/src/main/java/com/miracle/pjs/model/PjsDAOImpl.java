@@ -54,9 +54,9 @@ public class PjsDAOImpl implements PjsinterDAO {
 		return map;
 	}/* ================================================================================================================================================== */
 	@Override
-	public int delNoticeIdx(String idx) {
+	public int delNoticeIdx(List<String> list) {
 		// 공지사항 게시물을 지우는 메소드
-		int n = sqlsession.update("pjsfinal.delNoticeIdx", idx);
+		int n = sqlsession.update("pjsfinal.delNoticeIdx", list);
 		return n;
 	}/* ================================================================================================================================================== */
 	@Override
@@ -74,12 +74,34 @@ public class PjsDAOImpl implements PjsinterDAO {
 	@Override
 	public int updateReadCount(String nidx) {
 		// 공지사항 글의 조회수를 늘리는 메소드
-		System.out.println("================여기오니?=================="+nidx);
 		int n = sqlsession.update("pjsfinal.updateReadCount", nidx);
-		System.out.println("==============조회수 늘어났나오?=============="+n);
 		return n;
+	}/* ================================================================================================================================================== */
+	@Override
+	public int setNoticeWrite(HashMap<String, String> team) {
+		// 글쓰기 완료 메소드
+		int n = sqlsession.insert("pjsfinal.setNoticeWrite",team);
+		return n;
+	}/* ================================================================================================================================================== */
+	@Override
+	public int setNoticeEditWrite(HashMap<String, String> map) {
+		// 수정글쓰기 입력 메소드
+		for(int i=0; i<map.size(); i++) {
+			System.out.println(map.get("userid"));
+			System.out.println(map.get("nidx"));
+			System.out.println(map.get("teamNum"));
+			System.out.println(map.get("subject"));
+			System.out.println(map.get("content"));
+		}
+		int n = sqlsession.insert("pjsfinal.setNoticeEditWrite",map);
+		return n;
+	}/* ================================================================================================================================================== */
+	@Override
+	public HashMap<String, String> getDepth(String parameter) {
+		// 수정글쓰기의 depth를 가져온다.
+		HashMap<String, String> depth = sqlsession.selectOne("pjsfinal.getDepth", parameter);
+		return depth;
 	}
-	
 	
 	
 	
@@ -105,6 +127,42 @@ public class PjsDAOImpl implements PjsinterDAO {
 		List<String> list = sqlsession.selectList("pjsfinal.getMindJSONList",map);
 		return list;
 	}
+	@Override
+	public HashMap<String, String> getMindIdxTeam(HashMap<String, String> view) {
+		// 마음의 소리 글보기
+		HashMap<String, String> map = sqlsession.selectOne("pjsfinal.getMindIdxTeam", view);
+		return map;
+	}
+	@Override
+	public int setMindWrite(HashMap<String, String> team) {
+		// 마음의 소리 글쓰기
+		System.out.println("==========map============="+team.get("nidx"));
+		System.out.println("==========map============="+team.get("userid"));
+		System.out.println("==========map============="+team.get("subject"));
+		System.out.println("==========map============="+team.get("content"));
+		int n = sqlsession.insert("pjsfinal.setMindWrite", team);
+		return n;
+	}
+	@Override
+	public HashMap<String, String> getMindDepth(String nidx) {
+		// depth와 groupno 가져온다.
+		HashMap<String, String> map = sqlsession.selectOne("pjsfinal.getMindDepth",nidx);
+		return map;
+	}
+	@Override
+	public int updateMindReadCount(String idx) {
+		// 조회수 올려주는 메소드
+		System.out.println("===============idx==========================="+idx);
+		int n = sqlsession.update("pjsfinal.updateMindReadCount", idx);
+		return n;
+	}
+	@Override
+	public int updateMindCheckNum(String nidx) {
+		// 대기, 확인, 답변완료 변경 메소드
+		int n = sqlsession.update("pjsfinal.updateMindCheckNum", nidx);
+		return n;
+	}
+	
 	
 
 //==========================================================================================================================================================//	
@@ -153,7 +211,6 @@ public class PjsDAOImpl implements PjsinterDAO {
 		HashMap<String, String> userTeam = sqlsession.selectOne("pjsfinal.getUserTeam", map);
 		return userTeam;
 	}
-	
 	
 
 }

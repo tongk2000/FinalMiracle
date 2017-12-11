@@ -560,7 +560,7 @@
 		<thead>
 			<tr>
 				<th colspan="4">
-					<span id="allClose">전체접기</span>  ||  <span id="allOpen">전체펴기</span>
+					<span id="allClose" style="margin-left:20px;">전체접기</span>  ||  <span id="allOpen">전체펴기</span>
 				</th>
 				<th></th>
 				<th></th>

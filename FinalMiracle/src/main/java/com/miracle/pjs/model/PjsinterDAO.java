@@ -19,13 +19,19 @@ public interface PjsinterDAO {
 	
 	HashMap<String, String> getIdxTeam(HashMap<String, String> view); // 공지사항 게시판의 해당 행의 내용을 보여주는 메소드
 
-	int delNoticeIdx(String idx); // 공지사항 게시물을 지우는 메소드
+	int delNoticeIdx(List<String> list); // 공지사항 게시물을 지우는 메소드
 	
 	List<ReplyVO> getComment(String idx); // 공지사항 게시물의 리플을 얻는 메소드 
 	
 	int setComment(HashMap<String, String> map); // 공지사항 게시글에 리플달기
 	
 	int updateReadCount(String idx); // 공지사항 게시글의 조회수 늘리는 메소드
+	
+	int setNoticeWrite(HashMap<String, String> team); // 글쓰기 완료 메소드
+	
+	int setNoticeEditWrite(HashMap<String, String> map); // 수정글쓰기 메소드
+	
+	HashMap<String, String> getDepth(String parameter); // 수정글쓰기의 depth, groupno를 구해온다.
 	
 	
 //==========================================================================================================================================================//	
@@ -37,7 +43,18 @@ public interface PjsinterDAO {
 	int getMindCount(HashMap<String, String> map); // 마음의 소리 게시판에 검색된 행의 수를 반환한다.
 
 	List<String> getMindJSONList(HashMap<String, String> map); // 마음의 소리 게시판 JSON 처리
+	
+	HashMap<String, String> getMindIdxTeam(HashMap<String, String> view); // 마음의 소리 글보기
+	
+	int setMindWrite(HashMap<String, String> team);// 마음의 소리 글 쓰기
+	
+	HashMap<String, String> getMindDepth(String nidx); // depth, groupno가져온다.
+	
+	int updateMindReadCount(String idx); // 조회수 올려주는 메소드
+	
+	int updateMindCheckNum(String nidx); // 대기, 확인, 답변완료 상태변경 메소드
 
+	
 	
 //==========================================================================================================================================================//	
 	
@@ -58,9 +75,6 @@ public interface PjsinterDAO {
 	
 	// 로그인한 유저의 팀정보를 가져오는 메소드
 	HashMap<String, String> getUserTeam(HashMap<String, String> team);
-
-
-
 
 
 }

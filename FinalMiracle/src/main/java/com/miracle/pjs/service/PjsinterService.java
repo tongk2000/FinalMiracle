@@ -21,20 +21,36 @@ public interface PjsinterService {
 	
 	HashMap<String, String> getIdxTeam(HashMap<String, String> view); // 공지사항의 해당 행을 선택하면 그 글의 정보를 보여주는 메소드
 	
-	int delNoticeIdx(String idx); // 공지사항 게시판을 지우는 메소드
+	int delNoticeIdx(List<String> list); // 공지사항 게시판을 지우는 메소드
 	
 	List<ReplyVO> getComment(String idx); // 게시글의 코멘트를 달기위한 메소드
 	
 	int setComment(HashMap<String, String> map); // 공지사항 게시물에 댓글달기
 	
 	int updateReadCount(String idx); // 공지사항 글의 조회수를 늘리는 메소드 
-
+	
+	int setNoticeWrite(HashMap<String, String> team); // 글쓰기 완료 메소드
+	
+	int setNoticeEditWrite(HashMap<String, String> map); // 수정글쓰기 입력 메소드
+	
+	HashMap<String, String> getDepth(String parameter); // 수정글의 depth, groupno 구해오는 메소드
+	
 //==========================================================================================================================================================//	
 	
 	// === *** 마음의 소리 게시판 *** === //
 	List<HashMap<String, String>> getMindList(HashMap<String, String> map, String str_sizePerPage, String str_currentPage); // 마음의 소리 게시판의 검색된 모든 리스트를 가져오는 메소드
 	
 	String getMindJSONList(HashMap<String, String> map); // 마음의 소리 JSON처리
+	
+	HashMap<String, String> getMindIdxTeam(HashMap<String, String> view); // 마음의 소리 글보기
+	
+	int setMindWrite(HashMap<String, String> team); // 마음의 소리 글 쓰기
+	
+	HashMap<String, String> getMindDepth(String nidx); // 수정글의 depth, groupno 구해오는 메소드
+	
+	int updateMindReadCount(String idx); // 조회수 올리는 메소드
+	
+	int updateMindCheckNum(String nidx); // 대기, 확인, 답변 변경해주는 메소드
 	
 //==========================================================================================================================================================//	
 	
@@ -52,10 +68,8 @@ public interface PjsinterService {
 //==========================================================================================================================================================//	
 
 	
-	// 로그인한 유저의 팀정보를 가져오기 위한 메소드
+	// 로그인한 유저의 팀정보를 가져오기 위
+
 	HashMap<String, String> getUserTeam(HashMap<String, String> team);
 
-
-
-	
 }
