@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class PjsDAOImpl implements PjsinterDAO {
-	
+//	
 	@Autowired
 	private SqlSessionTemplate sqlsession;
 
@@ -265,11 +265,69 @@ public class PjsDAOImpl implements PjsinterDAO {
 		return list;
 	}
 	@Override
-	public HashMap<String, String> getSenderIdx(String idx) {
+	public HashMap<String, String> getSenderIdx(HashMap<String, String> info) {
 		// idx에 해당하는 정보를 반환한다.
-		HashMap<String, String> map = sqlsession.selectOne("pjsfinal.getSenderIdx",idx);
+		HashMap<String, String> map = sqlsession.selectOne("pjsfinal.getSenderIdx",info);
 		return map;
 	}
+	@Override
+	public HashMap<String, String> getReceiverIdx(HashMap<String, String> info) {
+		// idx에 Receiver 해당하는 정보를 반환한다.
+		HashMap<String, String> map = sqlsession.selectOne("pjsfinal.getReceiverIdx", info);
+		return map;
+	}
+	@Override
+	public List<String> getReceiverNames(HashMap<String, String> map) {
+		// 쪽지 받은 사람의 리스트를 불러온다.
+		List<String> nameArr = sqlsession.selectList("pjsfinal.getReceiverNames", map);
+		
+		return nameArr;
+	}
+	@Override
+	public int delSenderMemo(HashMap<String,String[]> idx) {
+		// 해당 idx의 보낸 쪽지를 삭제한다.
+		int n = sqlsession.update("pjsfinal.delSenderMemo", idx);
+		return n;
+	}
+	@Override
+	public int delReceiverMemo(HashMap<String, String[]> idx) {
+		// 해당 idx의 받은 쪽지를 삭제한다.
+		int n = sqlsession.update("pjsfinal.delReceiverMemo", idx);
+		return n;
+	}
+	@Override
+	public int updateRreadCount(String idx, String userid) {
+		// 쪽지를 받은 사람이 읽었는지 않 읽었는지 update
+		int n = sqlsession.update("pjsfinal.updateRreadCount", idx);
+		return n;
+	}
+	@Override
+	public List<HashMap<String, String>> getTeam(String teamNum) {
+		// 메모쓰기 시 전체 팀 이름을 가져온다.
+		List<HashMap<String, String>> list = sqlsession.selectList("pjsfinal.getTeam", teamNum);
+		return list;
+	}
+	/*@Override
+	public List<HashMap<String, String>> getAllMember() {
+		// 메모쓰기 시 전체 멤버 이름을 가져온다.
+		List<HashMap<String, String>> list = sqlsession.selectList("pjsfinal.getAllMember");
+		return list;
+	}*/
+	/*@Override
+	public String getCheckNum(HashMap<String, String> map) {
+		// 몇명이 읽었는지 반환
+		int check = sqlsession.selectOne("pjsfinal.getCheckNum", map);
+		String list = String.valueOf(check);
+		return list;
+	}*/
+	@Override
+	public String getMessage(String userid) {
+		// 메세지 알람
+		String n = sqlsession.selectOne("pjsfinal.getMessage", userid);
+		return n;
+	}
+	
+	
 	
 //==========================================================================================================================================================//	
 	
@@ -280,6 +338,8 @@ public class PjsDAOImpl implements PjsinterDAO {
 		return userTeam;
 	}
 	
+
+
 	
 	
 

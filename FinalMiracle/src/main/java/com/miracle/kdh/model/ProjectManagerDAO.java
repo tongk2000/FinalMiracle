@@ -19,20 +19,20 @@ public class ProjectManagerDAO {
 	} // end of List<FolderVO> getAllDoList() ------------------------------------------ 
 	
 	// 선택한 폴더의 정보를 가져오는 메소드
-	public FolderVO getFolderInfo(String idx) {
+	public FolderVO getFolderInfo(int idx) {
 		FolderVO fvo = sql.selectOne("do.getFolderInfo",idx);
 		return fvo;
 	} // end of FolderVO getFolderInfo(String idx) ------------------------------------------ 
 	
 	// 선택한 폴더에 소속된 팀원 리스트를 가져오는 메소드
-	public List<Folder_TeamwonVO> getFolder_teamwonInfo(String idx) {
+	public List<Folder_TeamwonVO> getFolder_teamwonInfo(int idx) {
 		List<Folder_TeamwonVO> folder_teamwonList  = sql.selectList("do.getFolder_teamwonInfo",idx);
 		return folder_teamwonList;
 	} // end of List<Folder_TeamwonVO> getFolder_teamwonInfo(String idx) ------------------------------------------ 
 	
 	// 선택한 폴더에 작성된 댓글 리스트를 가져오는 메소드
-	public List<Folder_CommentVO> getFolder_commentInfo(String idx) {
-		List<Folder_CommentVO> folder_commentList = sql.selectList("do.getFolder_commentInfo",idx);
+	public List<Folder_CommentVO> getFolder_commentInfo(PageVO pvo) {
+		List<Folder_CommentVO> folder_commentList = sql.selectList("do.getFolder_commentInfo", pvo);
 		return folder_commentList;
 	} // end of List<Folder_CommentVO> getFolder_commentInfo(String idx) ------------------------------------------ 
 
@@ -106,6 +106,24 @@ public class ProjectManagerDAO {
 		List<HashMap<String, String>> pageDateList = sql.selectList("do.getPageDateMonth");
 		return pageDateList;
 	} // end of HashMap<String, String> getPageDate(String page) --------------------------------------------------------------------
+	
+	// 삭제 등 하위요소의 값이 변할때 상위요소의 하위요소 갯수를 다시 받아오기
+	public int getDownCnt(String fk_folder_idx) {
+		int downCnt = sql.selectOne("do.getDownCnt", fk_folder_idx);
+		return downCnt;
+	} // end of int getDownCnt(String fk_folder_idx) --------------------------------------------------------------------
+
+	// 요소에 댓글 추가하기
+	public int addComment(Folder_CommentVO fcvo) {
+		int result = sql.insert("do.addComment",fcvo);
+		return result;
+	} // end of public int addComment(Folder_CommentVO fcvo) ------------------------------------------------------------------------
+	
+	// 페이징 처리를 위해 해당 요소의 전체 댓글수를 가져오기
+	public int getTotalCommentCnt(int idx) {
+		int totalCommentCnt = sql.selectOne("do.getTotalCommentCnt", idx);
+		return totalCommentCnt;
+	} // end of int getTotalCommentCnt(int idx) -----------------------------------------------------------------------------------------
 }
 
 

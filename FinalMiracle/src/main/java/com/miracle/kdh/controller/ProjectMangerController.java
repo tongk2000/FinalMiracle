@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.miracle.kdh.model.FolderVO;
+import com.miracle.kdh.model.Folder_CommentVO;
+import com.miracle.kdh.model.PageVO;
 import com.miracle.kdh.service.ProjectManagerService;
 import com.miracle.psw.model.MemberVO;
 import com.miracle.psw.service.MemberService;
@@ -84,6 +86,14 @@ public class ProjectMangerController {
 		req.setAttribute("page", page);	// 페이징 값 유지용
 		
 		HashMap<String, Object> map = svc.getAllDoList(team_idx, page, term); // 할일리스트와 페이징처리를 위한 날짜를 받아옴
+		
+		@SuppressWarnings("unchecked")
+		List<FolderVO> doList = (List<FolderVO>)map.get("doList");
+		for(int i=0; i < doList.size(); i++) { // show/hide 값 유지를 위해 visibleArr 값을 doList에 합쳐줌
+			doList.get(i).setVisible(visibleArr[i]);
+		}
+		map.remove("doList"); // 기존 doList 를 지우고
+		map.put("doList", doList); // visibleArr 과 합쳐진 doList 를 새로 등록함
 		req.setAttribute("map", map);
 		
 		return "kdh/doList/doList.all";
@@ -92,22 +102,32 @@ public class ProjectMangerController {
 	// 선택한 폴더의 모든 정보를 가져오기
 	@RequestMapping(value="do_getSelectFolderInfo.mr", method={RequestMethod.GET})
 	public String do_getSelectFolderInfo(HttpServletRequest req) {
-		String idx = req.getParameter("idx");
-		HashMap<String, Object> map = svc.do_getSelectFolderInfo(idx);
-		req.setAttribute("fvo", map.get("fvo"));
-		req.setAttribute("folder_teamwonList", map.get("folder_teamwonList"));
-		req.setAttribute("folder_commentList", map.get("folder_commentList"));
+		int idx = Integer.parseInt(req.getParameter("idx"));
+		PageVO pvo = new PageVO(); 
+		pvo.setShowIdx(idx);
+		pvo.setSelectPage(1);
+		pvo.setSizePerPage(5);
+		pvo.setBlockSize(10);		
+		pvo.setFunction("goCommentPage");
+		
+		HashMap<String, Object> map = svc.do_getSelectFolderInfo(pvo);
+		req.setAttribute("map", map);
 		return "kdh/doList/modal/modalFolder.not";
 	} // end of String do_getSelectFolderInfo(HttpServletRequest req) -----------------------------------------------
 	
 	// 선택한 할일의 모든 정보를 가져오기
 	@RequestMapping(value="do_getSelectTaskInfo.mr", method={RequestMethod.GET})
 	public String do_getSelectTaskInfo(HttpServletRequest req) {
-		String idx = req.getParameter("idx");
-		HashMap<String, Object> map = svc.do_getSelectFolderInfo(idx);
-		req.setAttribute("fvo", map.get("fvo"));
-		req.setAttribute("folder_teamwonList", map.get("folder_teamwonList"));
-		req.setAttribute("folder_commentList", map.get("folder_commentList"));
+		int idx = Integer.parseInt(req.getParameter("idx"));
+		PageVO pvo = new PageVO();
+		pvo.setShowIdx(idx);
+		pvo.setSelectPage(1);
+		pvo.setSizePerPage(5);
+		pvo.setBlockSize(10);
+		pvo.setFunction("goCommentPage");
+		
+		HashMap<String, Object> map = svc.do_getSelectFolderInfo(pvo);
+		req.setAttribute("map", map);
 		return "kdh/doList/modal/modalTask.not";
 	} // end of String do_getSelectFolderInfo(HttpServletRequest req) -----------------------------------------------
 	
@@ -169,7 +189,7 @@ public class ProjectMangerController {
 		
 		HashMap<String, Object> endMap = svc.addDownElementEnd(fvo, map, term, page); // 트랜잭션 결과와 새로 추가된 요소의 정보를 가져옴 
 		
-		req.setAttribute("endmap", endMap);
+		req.setAttribute("endMap", endMap);
 		
 		return "kdh/doList/popup/addDownElementEnd.not";
 	} // end of String addDownElementEnd(HttpServletRequest req, FolderVO fvo) ----------------------------------------------
@@ -191,20 +211,47 @@ public class ProjectMangerController {
 		String str_json = jsonList.toString();
 		req.setAttribute("str_json", str_json);
 		return "kdh/json.not";
-	} // end of public String getTeamwonList(HttpServletRequest req) --------------------------------------------------------------
+	} // end of String getTeamwonList(HttpServletRequest req) --------------------------------------------------------------
 	
 	// 선택한 요소와 그 하위요소들 삭제하기
 	@RequestMapping(value="do_delElement.mr", method={RequestMethod.GET})
 	public String delElement(HttpServletRequest req) {
 		String idx = req.getParameter("idx");
-		int result = svc.delElement(idx);
+		String fk_folder_idx = req.getParameter("fk_folder_idx");
 		
-		String str_json = "{\"result\":\""+result+"\"}"; // JSON 형태로 넘길때는 반드시 {"키값":"밸류값"} 이어야함. 따옴표 주의
+		HashMap<String, Integer> map = svc.delElement(idx, fk_folder_idx);
+		String str_json = "{\"result\":\""+map.get("result")+"\", \"downCnt\":\""+map.get("downCnt")+"\"}"; // JSON 형태로 넘길때는 반드시 {"키값":"밸류값"} 이어야함. 따옴표 주의
 		req.setAttribute("str_json", str_json);
+		
 		return "kdh/json.not";
-	} // end of public String delElement(HttpServletRequest req) --------------------------------------------------------------
+	} // end of String delElement(HttpServletRequest req) --------------------------------------------------------------
+	
+	// 요소에 댓글 추가하고 새로운 댓글 리스트 받아오기
+	@RequestMapping(value="do_addComment.mr", method={RequestMethod.POST})
+	public String addComment(HttpServletRequest req, HttpSession ses, Folder_CommentVO fcvo, PageVO pvo) {
+		// 세션에 있는 팀원번호 받아오기 시작
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo");
+		String fk_teamwon_idx = teamInfo.get("teamwon_idx");
+		fcvo.setFk_teamwon_idx(Integer.parseInt(fk_teamwon_idx));
+		// 세션에 있는 팀원번호 받아오기 끝
+				
+		HashMap<String, Object> map = svc.addComment(fcvo, pvo);
+		
+		req.setAttribute("map", map);
+		return "kdh/doList/modal/commentListXML.xml";
+	} // end of String addComment(HttpServletRequest req, HttpSession ses, Folder_CommentVO fcvo) -----------------------------------------------------
+	
+	// 특정 페이지의 댓글 리스트 가져오기
+	@RequestMapping(value="do_goCommentPage", method={RequestMethod.GET})
+	public String goCommentPage(HttpServletRequest req, PageVO pvo) {
+		HashMap<String, Object> map = svc.getFolder_commentInfo(pvo);
+		req.setAttribute("map", map);
+		return "kdh/doList/modal/modalCommentPage.not";
+	} // end of String goCommentPage(HttpServletRequest req, PageVO pvo) ----------------------------------------------------------------------------------
+	
 }
-
+	 
 
 
 

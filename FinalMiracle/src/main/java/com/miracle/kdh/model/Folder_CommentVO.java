@@ -70,11 +70,11 @@ public class Folder_CommentVO {
 		this.status = status;
 	}
 
-	public String getwriteDate() {
+	public String getWriteDate() {
 		return writeDate;
 	}
 
-	public void setwriteDate(String writeDate) {
+	public void setWriteDate(String writeDate) {
 		this.writeDate = writeDate;
 	}
 

@@ -81,7 +81,23 @@ public interface PjsinterService {
 
 	List<HashMap<String, String>> getReceiverMemoList(HashMap<String, String> map); // 받은 쪽지 리스트를 반환
 
-	HashMap<String, String> getSenderIdx(String idx); // idx에 해당하는 sender의 테이블내용을 가져온다.
+	HashMap<String, String> getSenderIdx(HashMap<String, String> info); // idx에 해당하는 sender의 테이블내용을 가져온다.
+	
+	HashMap<String, String> getReceiverIdx(HashMap<String, String> info); // idx에 해당하는 receiver의 테이블내용을 가져온다.
+	
+	List<String> getReceiverNames(HashMap<String, String> map); // 메모받은 사람의 리스트를 불러온다. 
+	
+	int delSenderMemo(HashMap<String,String[]> idx); // 해당 idx의 보낸쪽지를 삭제한다.
+	
+	int delReceiverMemo(HashMap<String, String[]> idx); // 해당 idx의 받은 쪽지를 삭제한다.
+
+	int updateRreadCount(String idx, String userid); // 쪽지를 받은 사람이 읽었는지 않 읽었는지 update
+
+	List<HashMap<String, String>> getTeam(String teamNum); // 메모쓰기 시 모든 팀 이름을 가져온다.
+
+	//List<HashMap<String, String>> getAllMember(); // 모든 멤버이름을 가져온다.
+
+	//String getCheckNum(HashMap<String, String> map); // 몇명이 읽었는지 반환
 	
 //==========================================================================================================================================================//	
 
@@ -94,6 +110,12 @@ public interface PjsinterService {
 
 	
 
+	
+
+	
+	
+
+	
 	
 
 	

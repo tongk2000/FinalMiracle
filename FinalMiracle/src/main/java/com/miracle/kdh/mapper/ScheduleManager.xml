@@ -44,7 +44,7 @@
 	</select>
 	
 	
-	<!-- 선택한 폴더의 정보를 가져오는 메소드 -->
+	<!-- 선택한 폴더의 정보를 가져오기 -->
 	<select id="getFolderInfo" resultType="com.miracle.kdh.model.FolderVO">
 		select idx, fk_teamwon_idx, subject, content
 		     , to_char(startdate, 'yyyy-mm-dd') as startdate
@@ -59,7 +59,7 @@
 	</select>
 	
 	
-	<!-- 선택한 폴더에 소속된 팀원 리스트를 가져오는 메소드 -->
+	<!-- 선택한 폴더에 소속된 팀원 리스트를 가져오기 -->
 	<select id="getFolder_teamwonInfo" resultType="com.miracle.kdh.model.Folder_TeamwonVO">
 		select idx, fk_folder_idx, fk_teamwon_idx, acceptability, status
 		     , (select userid from view_teamwonWithUserid where idx = fk_teamwon_idx) as userid
@@ -70,13 +70,28 @@
 	</select>
 	
 	
-	<!-- 선택한 폴더에 작성된 댓글 리스트를 가져오는 메소드 -->
-	<select id="getFolder_commentInfo" resultType="com.miracle.kdh.model.Folder_CommentVO">
-		select idx, fk_folder_idx, fk_teamwon_idx, content, status, to_char(writeDate, 'yyyy-mm-dd') as writeDate
-		     , (select userid from view_teamwonWithUserid where idx = fk_teamwon_idx) as userid
+	<!-- 선택한 폴더에 작성된 댓글 리스트를 가져오기(혹은 특정 페이지로 이동) -->
+	<select id="getFolder_commentInfo" parameterType="com.miracle.kdh.model.PageVO" resultType="com.miracle.kdh.model.Folder_CommentVO">
+		select T.*
+		from (
+		  select rownum as rno, V.*
+		  from (
+		    select idx, fk_folder_idx, fk_teamwon_idx, content, status, to_char(writeDate, 'yyyy-mm-dd') as writeDate
+		         , (select userid from view_teamwonWithUserid where idx = FC.fk_teamwon_idx) as userid
+		    from tbl_folder_comment FC
+		    where fk_folder_idx = #{showIdx} and status = 1
+		    order by 1 desc
+		  )V
+		)T
+		where rno between #{pnum1} and #{pnum2}
+	</select>
+	
+	
+	<!-- 페이징 처리를 위해 해당 요소의 전체 댓글수를 가져오기 -->
+	<select id="getTotalCommentCnt" resultType="int">
+		select count(*)
 		from tbl_folder_comment
-		where idx = #{idx} and status = 1
-		order by 1
+		where fk_folder_idx = #{idx} and status = 1
 	</select>
 	
 	
@@ -229,14 +244,19 @@
 		from tbl_doPaging_month
 	</select>
 	
-	
-	<select id="getDownCnt">
+	<!-- 삭제 등 하위요소의 값이 변할때 상위요소의 하위요소 갯수를 다시 받아오기 -->
+	<select id="getDownCnt" resultType="int">
 		select count(*) as downCnt
 		from tbl_folder
 		where status in (1, 0) and idx != #{fk_folder_idx}
 		start with idx = #{fk_folder_idx}
-		connect by prior idx = fk_folder_idx;
+		connect by prior idx = fk_folder_idx
 	</select>
+	
+	<insert id="addComment" parameterType="com.miracle.kdh.model.Folder_CommentVO">
+		insert into tbl_folder_comment
+		values(seq_folder_comment.nextval, #{fk_folder_idx}, #{fk_teamwon_idx}, #{content}, default, default)
+	</insert>
 </mapper>
 
 

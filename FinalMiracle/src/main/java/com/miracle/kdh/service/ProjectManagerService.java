@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.miracle.kdh.model.FolderVO;
 import com.miracle.kdh.model.Folder_CommentVO;
 import com.miracle.kdh.model.Folder_TeamwonVO;
+import com.miracle.kdh.model.PageVO;
 import com.miracle.kdh.model.ProjectManagerDAO;
 
 @Service
@@ -42,20 +43,24 @@ public class ProjectManagerService {
 	} // end of List<FolderVO> getAllDoList() ------------------------------------------
 	
 	// 선택한 폴더의 모든 정보를 가져오기
-	public HashMap<String, Object> do_getSelectFolderInfo(String idx) {
+	public HashMap<String, Object> do_getSelectFolderInfo(PageVO pvo) {
 		// 선택한 폴더의 정보를 가져옴
-		FolderVO fvo = dao.getFolderInfo(idx);
+		FolderVO fvo = dao.getFolderInfo(pvo.getShowIdx());
 		
 		// 선택한 폴더에 소속된 팀원 리스트를 가져옴
-		List<Folder_TeamwonVO> folder_teamwonList = dao.getFolder_teamwonInfo(idx);
+		List<Folder_TeamwonVO> folder_teamwonList = dao.getFolder_teamwonInfo(pvo.getShowIdx());
 		
 		// 선택한 폴더에 작성된 댓글 리스트를 가져옴
-		List<Folder_CommentVO> folder_commentList = dao.getFolder_commentInfo(idx);
+		List<Folder_CommentVO> folder_commentList = dao.getFolder_commentInfo(pvo);
+		
+		// 페이지바 가져오기
+		pvo = getCommentPagingBar(pvo);
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();  
 		map.put("fvo", fvo);
 		map.put("folder_teamwonList", folder_teamwonList);
 		map.put("folder_commentList", folder_commentList);
+		map.put("pvo", pvo);
 		
 		return map;
 	} // end of HashMap<String, Object> getSelectFolderInfo(String idx) ------------------------------------------ 
@@ -106,18 +111,83 @@ public class ProjectManagerService {
 		endMap.put("result", result1*result2);
 		endMap.put("fvo", fvo);
 		endMap.put("pageDateList", pageDateList);
-		System.out.println("result1*result2 : "+result1*result2);
+		
 		return endMap;
 	} // end of int addDownElementEnd(FolderVO fvo, HashMap<String, Object> map) -----------------------------------------------------
 
 	// 선택한 요소와 그 하위요소들 삭제하기
-	public int delElement(String idx) {
+	public HashMap<String, Integer> delElement(String idx, String fk_folder_idx) {
 		int result = dao.delElement(idx);
-		return result;
+		int downCnt = dao.getDownCnt(fk_folder_idx);
+		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		map.put("result", result);
+		map.put("downCnt", downCnt);
+		return map;
 	} // end of int delElement(String idx) ----------------------------------------------------------------------------------------
+
+	// 요소에 댓글 추가하고 새로운 댓글 리스트 받아오기
+	public HashMap<String, Object> addComment(Folder_CommentVO fcvo, PageVO pvo) {
+		int result = dao.addComment(fcvo);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		if(result > 0) {
+			List<Folder_CommentVO> folder_commentList = dao.getFolder_commentInfo(pvo);
+			System.out.println(folder_commentList.size());
+			map.put("folder_commentList", folder_commentList);
+			pvo = getCommentPagingBar(pvo);
+			map.put("pvo", pvo);
+		}
+		return map;
+	} // end of List<Folder_CommentVO> addComment(Folder_CommentVO fcvo, String teamwon_idx) --------------------------------------------------------
+	
+	// 특정 페이지의 댓글 리스트 가져오기
+	public HashMap<String, Object> getFolder_commentInfo(PageVO pvo) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		List<Folder_CommentVO> folder_commentList = dao.getFolder_commentInfo(pvo);
+		pvo = getCommentPagingBar(pvo);
+		
+		map.put("folder_commentList", folder_commentList);
+		map.put("pvo", pvo);
+		return map;
+	} // end of List<Folder_CommentVO> getFolder_commentInfo(PageVO pvo) -----------------------------------------------------------------------------------
+	
+	// 페이징 처리하기
+	public PageVO getCommentPagingBar(PageVO pvo) {
+		int idx = pvo.getShowIdx();
+		int selectPage = pvo.getSelectPage();
+		int sizePerPage = pvo.getSizePerPage();
+		int blockSize = pvo.getBlockSize();
+		String function = pvo.getFunction();
+		
+		int totalCommentCnt = dao.getTotalCommentCnt(idx);
+		int totalPageCnt = (int)Math.ceil((double)totalCommentCnt/sizePerPage);
+		
+		int pageNo = ( ((selectPage-1)/blockSize)*blockSize )+1;
+		
+		String pageBar = "";
+		if(pageNo != 1) {
+			pageBar += "<span style='color:blue; font-size:12pt; cursor:pointer;' onclick='"+function+"(\""+(pageNo-10)+"\")'>[이전10페이지]</span>";
+		} else {
+			pageBar += "<span>[...]</span>";
+		}
+		for(int i = 0; i < blockSize && pageNo <= totalPageCnt; i++) {
+			if(pageNo == selectPage) {
+				pageBar += "<span style='color:red; font-size:12pt; cursor:pointer;'>"+pageNo+"</span>";
+			} else {
+				pageBar += "<span style='color:blue; font-size:12pt; cursor:pointer;' onclick='"+function+"(\""+pageNo+"\")'>"+pageNo+"</span>";
+			}
+			pageNo++;
+		}
+		if(pageNo <= totalPageCnt) {
+			pageBar += "<span style='color:blue; font-size:12pt; cursor:pointer;' onclick='"+function+"(\""+pageNo+"\")'>[다음10페이지]</span>";
+		} else {
+			pageBar += "<span>[...]</span>";
+		}
+		pvo.setPageBar(pageBar);
+		return pvo;
+	} // end of String getCommentPagingBar(PageVO pvo) -----------------------------------------------------------------------------------------------------
+	
 }
-
-
 
 
 
