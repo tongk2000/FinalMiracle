@@ -20,7 +20,17 @@ public class FreeBoardVO {
 	
 	private int fk_teamwon_idx;	    // 팀원번호 참조값
 	
+	private String img;
 	
+	
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
+	}
+
 	public FreeBoardVO() { }
 	
 	public FreeBoardVO(int idx, String userid, String name, String subject, String content, int readCnt, int commentCnt,

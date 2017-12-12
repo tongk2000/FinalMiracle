@@ -1,17 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <script>
 
 	$(document).ready(function(){
 		teamCall();
 		googleMapCall();
 	});
-
+ 
 	function launchGoogleMap(){
 		window.open("googleMap.mr", "subwinpop", "left=300px, top=300px, width=600px, height=500px");
-	}
-	
+	} 
+
 	function teamCall(){
 		return $.ajax({
 			url: "tmFooter.mr",
@@ -53,8 +53,24 @@
 	}
 </script>
 
-<br/><br/>
-<div align="center" style="float:left; width:400px; height:150px; margin-left:400px;"><a class="btn btn-primary" onclick="launchGoogleMap()">구글 맵으로 보기</a></div>
-<div align="left" style="display:inline-block; width:500px; height:150px; margin-left:50px;" id="tm"></div>
-<br/><br/>
-<br/><br/>
+<div class="modal-body" id="launchMapBody" style="width:50%; height:10%; border:1px solid blue;">
+	<!-- <div id="googleMap"	style="width: 40%; height: 70%; margin: auto; margin:20% 10% 20% 20% ; "></div> -->
+	
+</div>
+
+
+<div style="float:left; border:1px solid red; width:50px; height:50px;">
+	<div style="border: 3px solid blue;"> 
+		<iframe src="<%=request.getContextPath()%>/googleMapbasic.mr" style="border:1px solid pink;"></iframe>
+	</div>
+	
+	<div style="border: 3px solid green;">
+		<div style="float:left; width:500px; height:400px; margin-left:400px; border:1px solid red"><a class="btn btn-primary" onclick="launchGoogleMap()">구글 맵으로 보기</a></div>
+	</div>
+	
+</div>
+	
+<div style="float:left; border:1px solid pink; width:50px; height:50px;"> 
+	<div align="left" style="float:left; width:50%; height:100%; margin-left:50px; border:1px solid black;" id="tm"></div>
+</div>
+

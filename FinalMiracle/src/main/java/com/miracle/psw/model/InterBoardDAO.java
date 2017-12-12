@@ -15,6 +15,7 @@ public interface InterBoardDAO {
 
 	int add(FaqBoardVO faqvo);  // FAQ 게시판 글쓰기
 
+	// ======================================================= *** 자유게시판 *** =======================
 	List<FreeBoardVO> freeList();
 
 	int freeAdd(FreeBoardVO freevo);  // 자유게시판 글쓰기
@@ -30,6 +31,15 @@ public interface InterBoardDAO {
 	int getFreeTotalCountWithNoSearch(HashMap<String, String> map);
 
 	int freeEdit(HashMap<String, Object> map);  // 1개 글 수정하기.
+
+	// ===================== *** 자유게시판 댓글 쓰기 Transaction *** ========================================
+	int addComment(FreeCommentVO commentvo);  // tbl_freeComment 테이블에 1개 행 insert
+	int updateCommentCnt(int parentIdx);  // tbl_free 테이블의 commentCnt 컬럼의 값을 1 증가
+
+	List<FreeCommentVO> freeListComment(String idx);  // 댓글 목록 보여주기
+
+	MemberVO showUserInfo(HashMap<String, Object> map);
+	MemberDetailVO showUserDetailInfo(HashMap<String, Object> map);
 
 	
 	
