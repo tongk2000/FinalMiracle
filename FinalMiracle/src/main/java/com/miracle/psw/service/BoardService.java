@@ -5,9 +5,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.miracle.psw.model.FaqBoardVO;
 import com.miracle.psw.model.FreeBoardVO;
+import com.miracle.psw.model.FreeCommentVO;
 import com.miracle.psw.model.InterBoardDAO;
 
 @Service
@@ -29,7 +33,6 @@ public class BoardService implements InterBoardService {
 		List<FaqBoardVO> vo = dao.faqListWithSearch(map);
 		return vo;
 	}
-
 	@Override
 	public List<FaqBoardVO> faqListWithNoSearch(HashMap<String, String> map) {
 		List<FaqBoardVO> vo = dao.faqListWithNoSearch(map);
@@ -67,8 +70,9 @@ public class BoardService implements InterBoardService {
 		return n;
 	}
 
+	// ======================= *** 자유게시판 선택한 1개 글 내용 보여주기 (조회수 증가 후 보여주기 / 조회수 증가 없이 보여주기) *** =============
 	@Override
-	public FreeBoardVO getView(String idx, String userid) {  // 자유게시판 클릭한 게시글 1개 보여주기
+	public FreeBoardVO getView(String idx, String userid) {  // 자유게시판 클릭한 게시글 1개 보여주기(조회수 증가 후)
 		FreeBoardVO vo = dao.getView(idx);  // 자유게시판 글 보여주기 
 		
 		if(userid != null && !vo.getUserid().equals(userid)) {
@@ -77,13 +81,13 @@ public class BoardService implements InterBoardService {
 		}
 		return vo;
 	}
-
 	@Override
 	public FreeBoardVO getViewWithNoReadCnt(String idx) {  // 자유게시판 글 조회수(readCnt) 증가 없이 보여주기
 		FreeBoardVO vo = dao.getView(idx);
 		return vo;
 	}
 
+	// ===================== *** 자유게시판 검색 유/무에 따른 목록 보여주기 *** ==================================================
 	@Override
 	public List<FreeBoardVO> freeListWithNoSearch(HashMap<String, String> map) {
 		List<FreeBoardVO> vo = dao.freeListWithNoSearch(map);
@@ -95,7 +99,7 @@ public class BoardService implements InterBoardService {
 		return vo;
 	}
 
-	
+	// ============================= *** 자유게시판 검색 유/무에 따른 총 페이지 값 알아오기 *** =====================================
 	@Override
 	public int getFreeTotalCountWithSearch(HashMap<String, String> map) {
 		int cnt = dao.getFreeTotalCountWithSearch(map);
@@ -107,10 +111,34 @@ public class BoardService implements InterBoardService {
 		return cnt;
 	}
 
+	// ============================= *** 자유게시판 글 수정하기 *** ========================================================
 	@Override
 	public int freeEdit(HashMap<String, Object> map) {  // 1개 글 수정하기
 		int n = dao.freeEdit(map);
 		return n;
+	}
+
+	/* ========================================= *** 자유게시판 댓글쓰기 (Transaction) *** =====================
+	   1. tbl_freeComment 테이블에 insert 된 다음에
+	   2. tbl_freeComment 테이블에 commentCnt 컬럼의 값이 1증가(update) 하도록 요청한다.
+	 */
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int addComment(FreeCommentVO commentvo) throws Throwable {  // 1개 글 조회된 페이지에서 해당 게시글에 댓글 달기
+		int result = 0;
+		int n = 0;
+		n = dao.addComment(commentvo);
+		
+		if(n==1) {
+			result = dao.updateCommentCnt(commentvo.getParentIdx());
+		}
+		return result;
+	}
+
+	@Override
+	public List<FreeCommentVO> freeListComment(String idx) {
+		List<FreeCommentVO> list = dao.freeListComment(idx);
+		return list;
 	}
 	
 	

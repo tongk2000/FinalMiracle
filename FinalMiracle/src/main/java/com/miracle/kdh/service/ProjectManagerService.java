@@ -106,15 +106,29 @@ public class ProjectManagerService {
 		endMap.put("result", result1*result2);
 		endMap.put("fvo", fvo);
 		endMap.put("pageDateList", pageDateList);
-		System.out.println("result1*result2 : "+result1*result2);
+		
 		return endMap;
 	} // end of int addDownElementEnd(FolderVO fvo, HashMap<String, Object> map) -----------------------------------------------------
 
 	// 선택한 요소와 그 하위요소들 삭제하기
-	public int delElement(String idx) {
+	public HashMap<String, Integer> delElement(String idx, String fk_folder_idx) {
 		int result = dao.delElement(idx);
-		return result;
+		int downCnt = dao.getDownCnt(fk_folder_idx);
+		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		map.put("result", result);
+		map.put("downCnt", downCnt);
+		return map;
 	} // end of int delElement(String idx) ----------------------------------------------------------------------------------------
+
+	// 요소에 댓글 추가하고 새로운 댓글 리스트 받아오기
+	public List<Folder_CommentVO> addComment(Folder_CommentVO fcvo) {
+		int result = dao.addComment(fcvo);
+		List<Folder_CommentVO> folder_commentList = null;
+		if(result > 0) {
+			folder_commentList = dao.getFolder_commentInfo( String.valueOf(fcvo.getFk_folder_idx()) );
+		}
+		return folder_commentList;
+	} // end of List<Folder_CommentVO> addComment(Folder_CommentVO fcvo, String teamwon_idx) --------------------------------------------------------
 }
 
 
