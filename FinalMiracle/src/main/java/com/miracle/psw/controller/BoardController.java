@@ -7,15 +7,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.miracle.psw.model.FaqBoardVO;
 import com.miracle.psw.model.FreeBoardVO;
 import com.miracle.psw.model.FreeCommentVO;
+import com.miracle.psw.model.MemberDetailVO;
 import com.miracle.psw.model.MemberVO;
 import com.miracle.psw.service.InterBoardService;
 import com.miracle.psw.util.MyUtil;
@@ -205,7 +208,37 @@ public class BoardController {
 		
 		return "psw/board/freeList.all";
 	}
-
+	
+	// ================================================== *** 자유게시판 목록에서 userid또는 성명 클릭시 유저정보 보여주기 *** ===============
+	@RequestMapping(value="/freeUserInfo.mr", method={RequestMethod.GET})
+	@ResponseBody
+	public HashMap<String, Object> freeUserInfo(HttpServletRequest req, MemberVO mvo, MemberDetailVO mdvo){
+		String userInfo = req.getParameter("userInfo");
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("userInfo", userInfo);
+		
+		mvo = service.showUserInfo(map);
+		mdvo = service.showUserDetailInfo(map);
+		
+		HashMap<String, Object> map2 = new HashMap<String, Object>();
+		map2.put("infoUserid", mvo.getUserid());
+		map2.put("infoName", mvo.getName());
+		map2.put("infoImg", mvo.getImg());
+		
+		map2.put("infoBirth1", mdvo.getBirth1());
+		map2.put("infoBirth2", mdvo.getBirth2());
+		map2.put("infoBirth3", mdvo.getBirth3());
+		map2.put("infoAddr1", mdvo.getAddr1());
+		map2.put("infoAddr2", mdvo.getAddr2());
+		map2.put("infoEmail", mdvo.getEmail());
+		map2.put("infoHp1", mdvo.getHp1());
+		map2.put("infoHp2", mdvo.getHp2());
+		map2.put("infoHp3", mdvo.getHp3());
+		map2.put("infoProfile", mdvo.getProfile());
+		
+		return map2;
+	}
 	
 	
 	// ===================================================== *** 자유게시판 글 1개 보여주기 *** =====================================

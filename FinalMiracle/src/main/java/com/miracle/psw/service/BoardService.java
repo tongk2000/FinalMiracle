@@ -3,6 +3,7 @@ package com.miracle.psw.service;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -13,6 +14,8 @@ import com.miracle.psw.model.FaqBoardVO;
 import com.miracle.psw.model.FreeBoardVO;
 import com.miracle.psw.model.FreeCommentVO;
 import com.miracle.psw.model.InterBoardDAO;
+import com.miracle.psw.model.MemberDetailVO;
+import com.miracle.psw.model.MemberVO;
 
 @Service
 public class BoardService implements InterBoardService {
@@ -118,7 +121,7 @@ public class BoardService implements InterBoardService {
 		return n;
 	}
 
-	/* ========================================= *** 자유게시판 댓글쓰기 (Transaction) *** =====================
+	/* ========================================= *** 자유게시판 선택한 조회글에서 댓글쓰기 (Transaction) *** =====================
 	   1. tbl_freeComment 테이블에 insert 된 다음에
 	   2. tbl_freeComment 테이블에 commentCnt 컬럼의 값이 1증가(update) 하도록 요청한다.
 	 */
@@ -135,11 +138,27 @@ public class BoardService implements InterBoardService {
 		return result;
 	}
 
+	// =========================================== *** 자유게시판 선택한 조회글에서 댓글 목록 보여주기 *** ============================
 	@Override
-	public List<FreeCommentVO> freeListComment(String idx) {
+	public List<FreeCommentVO> freeListComment(String idx) {  // 자유게시판 댓글 목록 불러오기  
 		List<FreeCommentVO> list = dao.freeListComment(idx);
 		return list;
 	}
+
+	// =========================================== *** 자유게시판 목록에서 선택한 사용자 정보 보여주기 *** ======================
+	@Override
+	public MemberVO showUserInfo(HashMap<String, Object> map) {
+		MemberVO vo = dao.showUserInfo(map);
+		return vo;
+	}
+	@Override
+	public MemberDetailVO showUserDetailInfo(HashMap<String, Object> map) {
+		MemberDetailVO vo = dao.showUserDetailInfo(map);
+		return vo;
+	}
+
+	
+	
 	
 	
 	

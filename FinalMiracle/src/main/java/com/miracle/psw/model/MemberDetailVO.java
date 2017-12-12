@@ -19,7 +19,16 @@ public class MemberDetailVO {
 	private String regdate;  	// 회원가입일
 	private int status;   	 	// 회원상태(0:탈퇴, 1:정상)
 	
+	private String userid;	
 	
+	public String getUserid() {
+		return userid;
+	}
+
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
+
 	public MemberDetailVO() { }
 	
 	public MemberDetailVO(int idx, int fk_member_idx, String birth1, String birth2, String birth3, String hp1,

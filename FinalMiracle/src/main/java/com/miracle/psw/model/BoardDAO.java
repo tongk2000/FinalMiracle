@@ -120,6 +120,17 @@ public class BoardDAO implements InterBoardDAO {
 		List<FreeCommentVO> list = sqlsession.selectList("board_psw.freeListComment", idx);
 		return list;
 	}
+	// ====================== *** 자유게시판 목록에서 선택한 유저정보 보여주기 *** ============================
+	@Override
+	public MemberVO showUserInfo(HashMap<String, Object> map) {
+		MemberVO vo = sqlsession.selectOne("board_psw.showUserInfo", map);
+		return vo;
+	}
+	@Override
+	public MemberDetailVO showUserDetailInfo(HashMap<String, Object> map) {
+		MemberDetailVO vo = sqlsession.selectOne("board_psw.showUserDetailInfo", map);
+		return vo;
+	}
 	
 	
 
