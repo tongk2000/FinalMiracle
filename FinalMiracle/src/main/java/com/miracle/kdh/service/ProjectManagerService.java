@@ -106,14 +106,18 @@ public class ProjectManagerService {
 		endMap.put("result", result1*result2);
 		endMap.put("fvo", fvo);
 		endMap.put("pageDateList", pageDateList);
-		System.out.println("result1*result2 : "+result1*result2);
+		
 		return endMap;
 	} // end of int addDownElementEnd(FolderVO fvo, HashMap<String, Object> map) -----------------------------------------------------
 
 	// 선택한 요소와 그 하위요소들 삭제하기
-	public int delElement(String idx) {
+	public HashMap<String, Integer> delElement(String idx, String fk_folder_idx) {
 		int result = dao.delElement(idx);
-		return result;
+		int downCnt = dao.getDownCnt(fk_folder_idx);
+		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		map.put("result", result);
+		map.put("downCnt", downCnt);
+		return map;
 	} // end of int delElement(String idx) ----------------------------------------------------------------------------------------
 }
 

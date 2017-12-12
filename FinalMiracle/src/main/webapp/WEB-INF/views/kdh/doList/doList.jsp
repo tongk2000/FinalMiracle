@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <style>
 	th, td:not(.pageDateLine){
@@ -83,30 +84,33 @@
 	}
 	
 	.line-in-middle {
-	  background: linear-gradient(to right, 
-	                              transparent 0%, 
-	                              transparent calc(50% - 0.81px), 
-	                              blue calc(50% - 0.8px), 
-	                              blue calc(50% + 0.8px), 
-	                              transparent calc(50% + 0.81px), 
+	  background: linear-gradient(to right,
+	                              transparent 0%,
+	                              transparent calc(50% - 0.81px),
+	                              blue calc(50% - 0.8px),
+	                              blue calc(50% + 0.8px),
+	                              transparent calc(50% + 0.81px),
 	                              transparent 100%);
 	}
 </style>
 
 <script type="text/javascript">
 	window.onload = function(){
-		document.getElementById("page").value = "${page}";
-		
+		// show, hide 값 유지하기 시작 ---------------------------
 		$element = $(".element:first");
-		<c:forEach var="visible" items="${visibleArr}">
-			if("${visible}" == "false") {
-				$element.hide();
+		<c:forEach var="dvo" items="${map.doList}">
+			if("${dvo.visible}" == "false") { // hide 였던 요소라면
+				$element.hide(); // 해당 요소를 hide 하고
+				var fk_idx = $element.find(".fk_folder_idx").val(); // 해당 요소가 어떤 상위요소를 참조했는지 확인해서
+				$("#"+fk_idx).find(".foldingIcon").text("▶"); // 그 상위요소의 아이콘을 바꿔준다.
 			}
 			$element = $element.next();
 		</c:forEach>
+		// show, hide 값 유지하기 끝 -----------------------------
 		
-		todayLine();
-	}
+		document.getElementById("page").value = "${page}"; // 페이징 값 유지하기
+		todayLine(); // 오늘 날짜에는 가운데 선 그어주는 함수
+	} // end of window.onload = function() ----------------------------------------------------------------------------
 	
 	$(document).ready(function(){
 		var changeFlag = false; // 모달창에서 변경된 값이 있는지 체크하는 변수
@@ -146,7 +150,7 @@
 			var idx = $this.attr("id");
 			var depth = parseInt(getThirdClass($this)); // 클릭한 요소의 깊이 구하기
 			var groupNo = getSecondClass($this);
-			var foldingFlag = false;
+			var foldingFlag = 0;
 			while(1==1) {
 				if($this.next().attr("id") == undefined) { // 다음 요소가 없을때 undefined 오류 막기 위함
 					break;
@@ -157,13 +161,14 @@
 				if(depth+1 == depth2) { // 클릭한 요소의 깊이보다 다음 요소의 깊이가 1 크다면 (클릭했을때 +1 깊이만 표시되도록 하기 위해서 구분함)
 					if($this2.is(":visible")) { // 깊이가 1 크면서 show 중이라면
 						$this2.hide();
-						foldingFlag = true;
+						foldingFlag = 1;
 					} else {  // 깊이가 1 크면서 hide 중이라면
 						$this2.show();
 						var downCnt = $this2.find(".downCnt").val(); // show 되는 요소가 하위요소를 가지고 있는지 확인
 						if(downCnt > 0) { // 하위요소가 있다면
 							$this2.find(".foldingIcon").text("▶");
 						}
+						foldingFlag = 2;
 					}
 				} else if (depth+1 < depth2) { // 클릭한 요소의 깊이보다 다음 요소의 깊이가 2 이상이라면
 					if($this2.is(":visible")) { // 깊이가 2 이상 크면서 show 중이라면(한마디로 2 이상 큰건 다 hide)
@@ -176,9 +181,9 @@
 				$this = $this2; // 다음의 다음 요소를 찾기 위함
 			}
 			
-			if(foldingFlag) { // 하위 요소가 hide 되었다면.
+			if(foldingFlag == 1) { // 하위 요소가 hide 되었다면.
 				$(this).find(".foldingIcon").text("▶");
-			} else { // 하위 요소가 show 되었다면.
+			} else if(foldingFlag == 2) { // 하위 요소가 show 되었다면.
 				$(this).find(".foldingIcon").text("▼");
 			}
 			
@@ -234,6 +239,7 @@
 				
 		// 모달창에서 정보를 선택했을때 수정할 수 있는 input 띄워주기
 		$(document).on("click", ".showInfo", function(){
+			$(this).parent().addClass("selectedLine");
 			$(this).hide();
 			var $hiddenEdit = $(this).parent().find(".hiddenEdit");
 			$hiddenEdit.show();
@@ -248,6 +254,7 @@
 				
 		// 모달창에서 정보 수정 input 박스를 벗어나면 show 폼으로 변경하기
 		$(document).on("blur", ".hiddenEditInput", function(){
+			$(this).parent().removeClass("selectedLine");
 			$(this).parent(".hiddenEdit").hide();
 			$(this).parent().parent().find(".showInfo").show();
 		}); // end of $(document).on("blur", ".hiddenEditInput", function() -------------------------------------------------------------------------
@@ -397,43 +404,34 @@
 		}); // end of $(".modalClose").click(function() ------------------------------------------------------------------------------------------------------
 		
 		
-		// 테이블 라인 선택시 백그라운드칼라로 옅은 회색 주기 
-		$("tr:has(td)").hover(function(){ // $("tr:has(td)") : tr 태그 중에서 td 태그인것만 선택함. th는 제외함
+		// 테이블 라인 선택시 백그라운드칼라로 옅은 회색 주기 (새로 추가한 요소도 잡기 위해 어쩔 수 없이 document 로 처리함..)
+		$(document).on("mouseover", "tr:has(td)", function(){ // $("tr:has(td)") : tr 태그 중에서 td 태그인것만 선택함. th는 제외함
 			$(this).addClass("selectLine");
-		}, function(){
+		}); // end of $(document).on("mouseover", "tr:has(td)", function() ------------------------------------------------------------------
+		$(document).on("mouseout", "tr:has(td)", function(){
 			$(this).removeClass("selectLine");
-		}); // end of $("tr").hover(function() --------------------------------------------------------------------------------------------
+		}); // end of $(document).on("mouseout", "tr:has(td)", function() ------------------------------------------------------------------
 		
 		
 		// 우클릭 메뉴에서 삭제 누르면 사용자한테 물어본 후 해당 행 삭제하는 함수 호출하기
 		$(document).on("click", "#deleteRcm", function(){
 			var idx = $(".selectedLine").attr("id");
+			var fk_folder_idx = $("#newFk_idx"+idx).val();
+			if(fk_folder_idx == undefined) {
+				fk_folder_idx = $(".selectedLine").find(".fk_folder_idx").val(); 
+			}
 			var bool = confirm("해당 요소를 정말로 삭제하시겠습니까?\n(포함된 하위 요소 또한 모두 삭제됩니다.)");
 			if(bool) {
-				delElement(idx);
+				delElement(idx, fk_folder_idx);
 			}
 		}); // $(document).on("click", "#deleteRcm", function() ------------------------------------------------------------------------------------------
 		
-	}); // end of $(document).ready(function() --------------------------------------------------------------------------------------------------------
-	
+	}); // end of $(document).ready(function() ---------------------------------------------------------------------------------------------------------
 			
-	// 완료/미완료 처리시 기간에 대한 색상을 바꿔주는 함수 
-	function setDayColor(idx) {
-		var $dateColor = $("#"+idx).find(".dateColor");
-		var dayCnt = getThirdClass($dateColor);
-		if(dayCnt == -1) {
-			$dateColor.css({"background-color":"red"});
-		} else if (dayCnt == 0) {
-			$dateColor.css({"background-color":"lightgreen"});
-		} else if (dayCnt == 1) {
-			$dateColor.css({"background-color":"green"});
-		}
-	} // end of function setDayColor(idx) ---------------------------------------------------------------------------------------------------------------
-	
 	
 	// 선택한 요소를 삭제해주는 함수
-	function delElement(idx) {
-		var frm = {"idx":idx};		
+	function delElement(idx, fk_folder_idx) {
+		var frm = {"idx":idx, "fk_folder_idx":fk_folder_idx};
 		$.ajax({
 			url:"do_delElement.mr",
 			data:frm,
@@ -445,7 +443,7 @@
 					var groupNo = getSecondClass($this);
 					
 					$("#"+idx).addClass("delElement");
-					while(1==1) {
+					while(1==1) { // 선택한 요소와 그 하위요소를 모두 삭제하기 위해 반복문 돌림
 						if($this.next().attr("id") == undefined) { // 다음 요소가 없을때 undefined 오류 막기 위함
 							break;
 						}
@@ -467,6 +465,11 @@
 					},2500);
 					$("#folderRcm").hide();
 					$("#taskRcm").hide();
+					
+					$("#"+fk_folder_idx).find(".fk_folder_idx").val(data.downCnt); // 상위요소의 하위요소숫자를 갱신하고
+					if(data.downCnt == 0) { // 하위요소가 0개라면
+						$("#"+fk_folder_idx).find(".foldingIcon").text("▷"); // 아이콘을 변경해줌
+					}
 				} else {
 					alert("알 수 없는 오류로 삭제할 수 없습니다.\n관리자에게 문의하세요.");
 				}
@@ -616,6 +619,20 @@
 		var now = ${now};
 		$("."+now).addClass("line-in-middle"); // 클래스가 오늘 날짜인건 전부 가운데 줄 그어주는 css 추가
 	} // end of function todayLine() --------------------------------------------------------------------------------------------------------------
+	
+	
+	// 완료/미완료 처리시 기간에 대한 색상을 바꿔주는 함수 
+	function setDayColor(idx) {
+		var $dateColor = $("#"+idx).find(".dateColor");
+		var dayCnt = getThirdClass($dateColor);
+		if(dayCnt == -1) {
+			$dateColor.css({"background-color":"red"});
+		} else if (dayCnt == 0) {
+			$dateColor.css({"background-color":"lightgreen"});
+		} else if (dayCnt == 1) {
+			$dateColor.css({"background-color":"green"});
+		}
+	} // end of function setDayColor(idx) ---------------------------------------------------------------------------------------------------------------
 </script>
 
 <div class="container" style="width:100%; float:left">
@@ -663,11 +680,14 @@
 				<th></th>
 				<th></th>
 				<c:forEach var="pageDate" items="${map.pageDateList}">
-					<th class="pointer" ondblClick="callToday()" 
+					<th class="pointer" ondblClick="callToday()" style="
 						<c:if test="${pageDate.dotw == '토' || pageDate.dotw == '일'}">
-							style="background-color:#ffcccc;"
+							background-color:#ffcccc;
 						</c:if>
-					>${pageDate.dayDP}</th> 
+						<c:if test="${fn:substring(pageDate.day, 6, 8) == '01'}">
+							border-left:2px solid #ff66ff;
+						</c:if>
+					">${pageDate.dayDP}</th> 
 				</c:forEach>
 			</tr>
 		</thead>
@@ -681,9 +701,9 @@
 						<td>
 							<input type="hidden" class="fk_folder_idx" value="${dvo.fk_folder_idx}" />
 							<input type="hidden" class="downCnt" value="${dvo.downCnt}" />
-							<span id="span${dvo.idx}" style="margin-left:${dvo.depth*20}px; cursor:pointer;">
+							<span id="span${dvo.idx}" style="margin-left:${dvo.depth*20}px;">
 								<c:if test="${dvo.category == 1}"> <!-- 폴더라면 -->
-									<span class="foldingIcon">
+									<span class="foldingIcon" style="cursor:default;">
 										<c:if test="${dvo.downCnt > 0}"> <!-- 하위요소가 있다면 -->
 											▼
 										</c:if>
@@ -691,7 +711,7 @@
 											▷
 										</c:if>
 									</span>
-									<span class="modalFolder subject">${dvo.subject}</span>
+									<span class="modalFolder subject pointer">${dvo.subject}</span>
 								</c:if>
 								<c:if test="${dvo.category == 2}"> <!-- 할일이라면 -->
 									<c:if test="${dvo.status == 0}"> <!-- 완료된 할일이라면 -->
@@ -700,7 +720,7 @@
 									<c:if test="${dvo.status == 1}"> <!-- 미완료된 할일이라면 -->
 										└<input type="checkbox" id="status${dvo.idx}" class="status"/>
 									</c:if>
-									<span class="modalTask subject" id="subject${dvo.idx}">${dvo.subject}</span>
+									<span class="modalTask subject pointer" id="subject${dvo.idx}">${dvo.subject}</span>
 								</c:if>
 							</span>
 						</td>
@@ -733,9 +753,12 @@
 							<fmt:parseNumber var="lastDate" value="${dvo.lastDate.replace('-','')}" integerOnly="true"/>
 							<fmt:parseNumber var="day" value="${pageDate.day}" integerOnly="true"/> <!-- 희안하게 위에껀 못쓰고 여기서 다시 해줘야함; -->
 							
-							<td class="pageDateLine ${day}" style="border-left:0.5px solid lightgray;
+							<td class="pageDateLine ${day}" style="border-right:0.5px solid lightgray;
 								<c:if test="${pageDate.dotw == '토' || pageDate.dotw == '일'}">
 									background-color:#ffcccc;
+								</c:if>
+								<c:if test="${fn:substring(pageDate.day, 6, 8) == '01'}">
+									border-left:2px solid #ff66ff;
 								</c:if>
 							" align="center">
 								

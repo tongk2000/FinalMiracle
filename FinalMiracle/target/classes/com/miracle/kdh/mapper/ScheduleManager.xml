@@ -229,13 +229,13 @@
 		from tbl_doPaging_month
 	</select>
 	
-	
-	<select id="getDownCnt">
+	<!-- 삭제 등 하위요소의 값이 변할때 상위요소의 하위요소 갯수를 다시 받아오기 -->
+	<select id="getDownCnt" resultType="int">
 		select count(*) as downCnt
 		from tbl_folder
 		where status in (1, 0) and idx != #{fk_folder_idx}
 		start with idx = #{fk_folder_idx}
-		connect by prior idx = fk_folder_idx;
+		connect by prior idx = fk_folder_idx
 	</select>
 </mapper>
 

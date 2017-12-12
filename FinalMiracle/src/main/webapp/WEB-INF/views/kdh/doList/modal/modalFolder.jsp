@@ -83,14 +83,21 @@
 						</tr>
 					</tbody>
 				</table>
-			</div>
-			<div>
+				<br/>
+				<div>
+					<span>댓글 작성</span><br/>
+					<input type="text" readonly name="userid" size="10" value="${sessionScope.loginUser.userid}"/>
+					<input type="text" name="content" size="40" placeholder="내용을 입력해주세요."/>
+					<input type="button" value="작성" onclick="addComment()" />
+				</div>
+				<br/>
 				<table>
 					<thead>
 						<tr>
 							<th>작성자</th>
 							<th>댓글내용</th>
 							<th>작성일자</th>
+							<th>삭제</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -103,6 +110,11 @@
 									<td>${fcvo.userid}</td>
 									<td>${fcvo.content}</td>
 									<td>${fcvo.writeDate}</td>
+									<td>
+										<c:if test="${sessionScope.loginUser.userid == fcvo.userid}">
+											x
+										</c:if>
+									</td>
 								</tr>
 							</c:forEach>
 						</c:if>
