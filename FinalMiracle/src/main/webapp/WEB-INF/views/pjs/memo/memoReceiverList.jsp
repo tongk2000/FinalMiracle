@@ -23,10 +23,59 @@
 	th, td {
 		border:1px solid black;
 		padding:5px;
+		text-align:center;
 	}
+	.selectLine {
+    	background-color:gray;
+    }
+    .grayColor {
+    	background-color:gray;
+    }
 </style>
 <script>
-
+	function goView(idx, teamNum){
+		var frm = document.view;
+		frm.idx.value = idx;
+		frm.teamNum.value = teamNum;
+		frm.action = "memoReceiverView.mr";
+		frm.method = "get";
+		frm.submit();
+	}
+	$(document).ready(function(){
+		$("tr:has(td)").click(function(){ // tr중에서 td를 가지고 있는 tr
+			var bool = $(this).hasClass("selectLine"); // 한번 더 클릭하면 클래스 삭제
+			if(bool) {
+				$(this).removeClass("selectLine");
+			}
+			else {
+				$(this).addClass("selectLine");
+			}
+		});
+		$("#del").click(function(){
+			var cnt=0;
+			var idx = new Array();
+			$(".selectLine").each(function(){
+				idx[cnt] = $(this).find("input").val();
+				cnt++;
+			});
+			alert(idx);
+			<%-- location.href="<%=request.getContextPath()%>/memoreceiverDel.mr?idx="+idx; --%>
+			var frm = document.del;
+			frm.idx.value=idx;
+			frm.action="memoreceiverDel.mr";
+			frm.method="post";
+			frm.submit();
+		});
+		$("#write").click(function(){
+			window.location.href="<%=request.getContextPath()%>/memoWrite.mr";
+		});
+		$(".line").hover(function(){ 
+			$(this).addClass("grayColor");
+		},function(){
+			$(this).removeClass("grayColor");
+		});
+	});
+	
 </script>
 <meta charset="UTF-8">
 <title>쪽지</title>
@@ -46,10 +95,11 @@
 					<thead>
 						<tr style="background-color:black; color:white;">
 							<th>번호</th>
-							<th>보낸이</th>
+							<th>보낸사람</th>
 							<th>제목</th>
-							<th>내용</th>
+							<th>받은사람</th>
 							<th>상태</th>
+							<th>읽은 시간</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -58,16 +108,22 @@
 						</c:if>
 						<c:if test="${not empty list}">
 							<c:forEach var="receiver" items="${list}" varStatus="status">
-								<tr>
+								<tr class="line">
 									<td>${status.count}<input type="hidden" value="${receiver.idx}"/></td>
-									<td>${receiver.name}</td>
-									<td>${receiver.subject}</td>
-									<td>${receiver.content}</td>
-									<c:if test="${receiver.readdate==null}">
+									<td><img src="<%=request.getContextPath()%>/resources/images/${receiver.img}"> ${receiver.sender}</td>
+									<td onClick="goView('${receiver.idx}', '${userTeam.teamNum}');">${receiver.subject}</td>
+									<td>${receiver.receiver}</td>
+									<c:if test="${receiver.rreadcount == 0}">
 										<td>안읽음</td>
 									</c:if>
-									<c:if test="${receiver.readdate!=null}">
-										<td>읽음 ${receiver.readdate}</td>
+									<c:if test="${receiver.rreadcount > 0}">
+										<td>읽음 </td>
+									</c:if>
+									<c:if test="${receiver.readdate == null}">
+										<td>1</td>
+									</c:if>
+									<c:if test="${receiver.readdate != null}">
+										<td>${receiver.readdate}</td>
 									</c:if>
 								</tr>
 							</c:forEach>
@@ -75,10 +131,21 @@
 					</tbody>
 				</table>
 			</div>
+			<div style="border:1px solid black; padding-left:190px;">
+				<button type="button" id="write">글쓰기</button>
+				<button type="button" id="del">삭제</button>
+			</div>
 		</div>
 		<div style="border:1px solid gray" align="center">
 			${pagebar}
 		</div>
 	</div>
+	<form name="view">
+		<input type="hidden" name="idx">
+		<input type="hidden" name="teamNum">
+	</form>
+	<form name="del">
+		<input type="hidden" name="idx">
+	</form>
 </body>
 </html>

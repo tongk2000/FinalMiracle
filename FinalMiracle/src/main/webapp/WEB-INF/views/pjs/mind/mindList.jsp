@@ -43,6 +43,9 @@ request.setCharacterEncoding("UTF-8");
 		background-color:black;
 		color:white;
 	}
+	.grayColor {
+    	background-color:gray;
+    }
 </style>
 <script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 <title>Mind 게시판 입니다!</title>
@@ -79,7 +82,7 @@ request.setCharacterEncoding("UTF-8");
 					</c:if>
 					<c:if test="${not empty list}">
 						<c:forEach var="md" items="${list}" varStatus="status">
-							<tr> <!-- d_idx, fk_userid subject regday readcount img, depth, status, t_idx, groupno, tstatus -->
+							<tr class="line"> <!-- d_idx, fk_userid subject regday readcount img, depth, status, t_idx, groupno, tstatus -->
 								<td width="5%">${status.count}<input type="hidden" value="${md.d_idx}"/></td>	<!-- 번호 -->
 								<c:if test="${md.tstatus == 2 || sessionScope.loginUser.userid == md.fk_userid}">
 									<td width="15%">
@@ -209,6 +212,11 @@ request.setCharacterEncoding("UTF-8");
 					}
 				}); // end of $.ajax()------------------------
 			}); // end of keyup(function(){})-----------------
+			$(".line").hover(function(){ 
+				$(this).addClass("grayColor");
+			},function(){
+				$(this).removeClass("grayColor");
+			});
 		});
 		function keep() {
 			<c:if test="${searchType!=null&&searchType!=''}">

@@ -89,7 +89,25 @@ public interface PjsinterDAO {
 
 	List<HashMap<String, String>> getReceiverMemoList(HashMap<String, String> map); // 받은 쪽지의 리스트를 반환한다.
 	
-	HashMap<String, String> getSenderIdx(String idx); // idx에 해당하는 정보를 가져온다.
+	HashMap<String, String> getSenderIdx(HashMap<String, String> info); // idx에 해당하는 정보를 가져온다.
+
+	HashMap<String, String> getReceiverIdx(HashMap<String, String> info); // idx에 receiver의 해당하는 정보를 가져온다.
+	
+	List<String> getReceiverNames(HashMap<String, String> map); // 쪽지 받은 사람의 이름 리스트를 받아온다.
+	
+	int delSenderMemo(HashMap<String,String[]> idx); // 해당 idx의 보낸쪽지를 삭제한다.
+	
+	int delReceiverMemo(HashMap<String, String[]> idx); // 해당 idx의 받은 쪽지를 삭제한다.
+	
+	int updateRreadCount(String idx, String userid); // 쪽지를 받은 사람이 읽었는지 않 읽었는지 update
+	
+	List<HashMap<String, String>> getTeam(String teamNum); // 메모쓰기 시 팀멤버 이름을 가져온다.
+
+	//List<HashMap<String, String>> getAllMember(); // 메모쓰기 시 전체 멤버이름을 가져온다.
+
+	//String getCheckNum(HashMap<String, String> map); // 몇명이 읽었는지 반환
+	
+	String getMessage(String userid);// 메세지 알람
 
 //==========================================================================================================================================================//	
 
@@ -101,6 +119,15 @@ public interface PjsinterDAO {
 	
 	// 로그인한 유저의 팀정보를 가져오는 메소드
 	HashMap<String, String> getUserTeam(HashMap<String, String> team);
+
+	
+
+	
+	
+
+	
+
+	
 
 
 
