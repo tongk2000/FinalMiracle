@@ -38,6 +38,9 @@ public interface InterBoardDAO {
 
 	List<FreeCommentVO> freeListComment(String idx);  // 댓글 목록 보여주기
 
+	MemberVO showUserInfo(HashMap<String, Object> map);
+	MemberDetailVO showUserDetailInfo(HashMap<String, Object> map);
+
 	
 	
 

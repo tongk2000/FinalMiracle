@@ -195,6 +195,23 @@
 		order by idx desc
 	</select>
 	
+	<!-- 자유게시판 목록에서 선택한 유저정보 보여주기 -->
+	<select id="showUserInfo" parameterType="HashMap" resultType="com.miracle.psw.model.MemberVO">
+		select idx, userid, name, img
+		from tbl_member
+		where userid = #{userInfo}
+	</select>
+	<select id="showUserDetailInfo" parameterType="HashMap" resultType="com.miracle.psw.model.MemberDetailVO">
+		select D.hp1, D.hp2, D.hp3
+			  ,D.birth1, D.birth2, D.birth3
+			  ,D.email
+	          ,D.addr1, D.addr2
+	          ,D.profile
+		from tbl_member M join tbl_member_detail D
+		on M.idx = D.fk_member_idx
+		where M.userid = #{userInfo}
+	</select>
+	
 </mapper>
 
 

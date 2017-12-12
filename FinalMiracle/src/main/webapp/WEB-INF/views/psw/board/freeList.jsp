@@ -8,10 +8,10 @@
 <meta charset="UTF-8">
 <title>자유게시판</title>
 
-<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/resources/jqueryuicss/jquery-ui.css" />
+
 <link href="<%=request.getContextPath() %>/resources/summernote/summernote.css" rel="stylesheet">
 
-<script type="text/javascript" src="<%= request.getContextPath() %>/resources/jqueryuijs/jquery-ui.js"></script>
+
 <script src="<%=request.getContextPath() %>/resources/summernote/summernote.js"></script>
 <script src="<%=request.getContextPath() %>/resources/summernote/lang/summernote-ko-KR.js"></script>
 
@@ -31,12 +31,18 @@
 	}
 	
 	.subjectStyle {
-		color: dimgray;
+		color: darkgray;
 		font-weight: bold;
 		font-size: 12pt;
 		cursor: pointer;
 	}
-
+	.infoStyle {
+		color: #034F84;
+		font-weight: bold;
+		font-size: 12pt;
+		cursor: pointer;
+	}
+	
 </style>
 
 <script type="text/javascript">
@@ -58,16 +64,56 @@
 			var $target = $(event.target);
 			$target.removeClass("subjectStyle");
 		});
+		
+		$(".infoDetail").bind("mouseover", function(event){
+			var $target = $(event.target);
+			$target.addClass("infoStyle");
+		});
+		$(".infoDetail").bind("mouseout", function(event){
+			var $target = $(event.target);
+			$target.removeClass("infoStyle");
+		});
+
 		searchKeep();
 	});  // end of $(document).ready() ---------------------------------
 	
 	function searchKeep(){
 		<c:if test="${(colname != 'null' && not empty colname) && (search != 'null' && not empty search)}">
 			$("#colname").val("${colname}");
-			$("#search").vla("${search}");
+			$("#search").val("${search}");
 		</c:if>
 	}
 	
+	// ==================================== *** userid 또는 name 을 클릭했을 경우 사용자정보를 포함한 모달창 띄우기 *** ===================
+	function showUserInfo(userid) {
+		var form_data = { "userInfo" : userid };
+		$.ajax({
+			url: "freeUserInfo.mr",
+			type: "GET",
+			data: form_data,  // url 요청페이지로 보내는 ajax 요청 데이터
+			dataType: "JSON", // ajax 요청에 의해 url 요청페이지로 부터 리턴받는 데이터타입. xml, json, html, text 가 있음.
+			success: function(data) {				
+				var html = "";
+				
+				var imgPath = data.infoImg;
+				html += "<img src='<%= request.getContextPath() %>/resources/images/" + imgPath + "' style='width: 100px; height: 100px;' />" + "<br/>"
+					 +  "<span style='font-weight: bold;'>ID : </span>"+ data.infoUserid + "<br/>"
+					 +  "<span style='font-weight: bold;'>성명 : </span>"+ data.infoName + "<br/><br/>"
+					 +  "<span style='font-weight: bold;'>핸드폰 : </span>" +data.infoHp1 + "-" +data.infoHp2+"-"+data.infoHp3 +"<br/>"
+					 +  "<span style='font-weight: bold;'>생년월일 : </span>" +data.infoBirth1 + " / " + data.infoBirth2 + " / " + data.infoBirth3 + "<br/>"
+					 +  "<span style='font-weight: bold;'>주소 : </span>" + data.infoAddr1 + " " + data.infoAddr2 + "<br/>"
+					 +  "<span style='font-weight: bold;'>이메일 : </span>" + data.infoEmail + "<br/>";
+				
+				$(".modal-body").html(html);
+				$("#myModal").modal();
+			}, // end of success: function()----------
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		}); // end of $.ajax()------------------------
+	}
+	
+	// ======================================== *** 글번호와 URL을 받아서 1개 글 정보 보여주기 *** ===========================
 	function goView(idx, gobackURL){
 		var frm = document.idxFrm;
 		frm.idx.value = idx;
@@ -127,8 +173,12 @@
 					<c:forEach var="freevo" items="${freeList}" varStatus="status">
 						<tr>
 							<td>${freevo.idx}</td>
-							<td>${freevo.userid}</td>
-							<td>${freevo.name}</td>
+							<td>
+								<span class="infoDetail" onClick="showUserInfo('${freevo.userid}')">${freevo.userid}</span>
+							</td>
+							<td>
+								<span class="infoDetail" onClick="showUserInfo('${freevo.userid}')">${freevo.name}</span>
+							</td>
 							
 							<!-- 자유게시판 목록에서 제목 클릭시 수행 할 작업 -->
 							<td>
@@ -169,8 +219,32 @@
 	
 	
 
+
 </body>
 </html>
+
+
+<!-- 모달 창 -->
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+	<div class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">회원 상세 정보</h4>
+			</div>
+			<div class="modal-body">
+			<p></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+
+	</div>
+</div>
 
 
 
