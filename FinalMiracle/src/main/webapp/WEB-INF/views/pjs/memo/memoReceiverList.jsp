@@ -35,7 +35,7 @@
 	<div style="border:1px solid red; padding:5px;]" class="container">
 		<div style="border:1px solid green; padding:5px;" align="center">
 			<div style="border:1px solid purple;">
-				<a href="<%=request.getContextPath()%>/memoreceiver.mr"><span style="color:red;">쪽지 쓰기</span></a>
+				<a href="<%=request.getContextPath()%>/memoWrite.mr"><span style="color:red;">쪽지 쓰기</span></a>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<a href="<%=request.getContextPath()%>/memomemory.mr"><span style="color:red;">보낸 쪽지</span></a>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -60,7 +60,7 @@
 							<c:forEach var="receiver" items="${list}" varStatus="status">
 								<tr>
 									<td>${status.count}<input type="hidden" value="${receiver.idx}"/></td>
-									<td><img src="<%=request.getContextPath()%>/resources/images/${receiver.img}"> ${receiver.name}</td>
+									<td>${receiver.name}</td>
 									<td>${receiver.subject}</td>
 									<td>${receiver.content}</td>
 									<c:if test="${receiver.readdate==null}">

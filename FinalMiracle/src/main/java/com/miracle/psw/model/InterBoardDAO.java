@@ -29,6 +29,8 @@ public interface InterBoardDAO {
 	int getFreeTotalCountWithSearch(HashMap<String, String> map);
 	int getFreeTotalCountWithNoSearch(HashMap<String, String> map);
 
+	int freeEdit(HashMap<String, Object> map);  // 1개 글 수정하기.
+
 	
 	
 

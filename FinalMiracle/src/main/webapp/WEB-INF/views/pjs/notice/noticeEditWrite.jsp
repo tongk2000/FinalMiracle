@@ -3,6 +3,11 @@
 <%
 request.setCharacterEncoding("UTF-8");
 %>    
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/resources/jqueryuicss/jquery-ui.css" />
+<link href="<%=request.getContextPath() %>/resources/summernote/summernote.css" rel="stylesheet">
+<script type="text/javascript" src="<%= request.getContextPath() %>/resources/jqueryuijs/jquery-ui.js"></script>
+<script src="<%=request.getContextPath() %>/resources/summernote/summernote.js"></script>
+<script src="<%=request.getContextPath() %>/resources/summernote/lang/summernote-ko-KR.js"></script>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE>
 <html>
@@ -39,7 +44,7 @@ request.setCharacterEncoding("UTF-8");
 					</tr>
 					<tr style="min-height: 200px;">
 						<td>내용 :</td>
-						<td height="200px"><input id="content" name="content" style="min-height:250px; min-width:400px;"/></td>
+						<td height="200px"><textarea name="content" id="content" class="summernote"></textarea></td>
 					</tr>
 				</tbody>
 			</table>
@@ -67,6 +72,16 @@ request.setCharacterEncoding("UTF-8");
 			frm.method="post";
 			frm.submit();
 		}
+		$(document).ready(function(){
+			
+			$('.summernote').summernote({
+		      height: 300,          // 기본 높이값
+		      minHeight: null,      // 최소 높이값(null은 제한 없음)
+		      maxHeight: null,      // 최대 높이값(null은 제한 없음)
+		      focus: true,          // 페이지가 열릴때 포커스를 지정함
+		      lang: 'ko-KR'         // 한국어 지정(기본값은 en-US)
+		    });
+		});
 	</script>
 </body>
 </html>

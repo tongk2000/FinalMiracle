@@ -81,6 +81,8 @@ public interface PjsinterService {
 
 	List<HashMap<String, String>> getReceiverMemoList(HashMap<String, String> map); // 받은 쪽지 리스트를 반환
 
+	HashMap<String, String> getSenderIdx(String idx); // idx에 해당하는 sender의 테이블내용을 가져온다.
+	
 //==========================================================================================================================================================//	
 
 	
@@ -89,6 +91,8 @@ public interface PjsinterService {
 	// 로그인한 유저의 팀정보를 가져오기 위
 
 	HashMap<String, String> getUserTeam(HashMap<String, String> team);
+
+	
 
 	
 

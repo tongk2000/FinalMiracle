@@ -91,7 +91,7 @@
 
 
 <form id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/tmAddress.mr" method="get" enctype="multipart/form-data">
-<div style="padding-left: 10%; border: solid 0px red; width: 100%;">
+<div style="padding-left: 10%; border: solid 0px red; width: 100%; overflow-y: auto;">
 	<h1>주소록</h1>
 	
 	<div style="margin-top: 20px;">
@@ -138,7 +138,7 @@
 					<td>${tmAddr.IDX}</td>
 					<td>${tmAddr.USERID}</td>
 					<td>${tmAddr.NAME}</td>
-					<td>${tmAddr.BIRTH1}/${tmAddr.BIRTH2}/${tmAddr.BIRTH3}</td>
+					<td>${tmAddr.BIRTH1}년 ${tmAddr.BIRTH2}월 ${tmAddr.BIRTH3}일</td>
 					<td>${tmAddr.HP1}-${tmAddr.HP2}-${tmAddr.HP3}</td>
 					<td>${tmAddr.EMAIL}</td>
 					<td>${tmAddr.POST1}-${tmAddr.POST2}</td>

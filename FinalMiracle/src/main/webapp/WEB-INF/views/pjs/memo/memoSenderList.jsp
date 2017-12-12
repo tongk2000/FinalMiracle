@@ -26,7 +26,15 @@ request.setCharacterEncoding("UTF-8");
 	}
 </style>
 <script>
-
+	window.onload = function() {
+		function goView(idx){
+			var frm = document.view;
+			frm.idx = idx;
+			frm.action = "memoSenderView.mr";
+			frm.method = "get";
+			frm.submit();
+		}
+	}
 </script>
 <meta charset="UTF-8">
 <title>쪽지</title>
@@ -35,7 +43,7 @@ request.setCharacterEncoding("UTF-8");
 	<div style="border:1px solid red; padding:5px;]" class="container">
 		<div style="border:1px solid green; padding:5px;" align="center">
 			<div style="border:1px solid purple;">
-			<a href="<%=request.getContextPath()%>/memoreceiver.mr"><span style="color:red;">쪽지 쓰기</span></a>
+				<a href="<%=request.getContextPath()%>/memoWrite.mr"><span style="color:red;">쪽지 쓰기</span></a>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<a href="<%=request.getContextPath()%>/memomemory.mr"><span style="color:red;">보낸 쪽지</span></a>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -62,7 +70,7 @@ request.setCharacterEncoding("UTF-8");
 								<tr>
 									<td>${status.count}<input type="hidden" value="${sender.idx}"/></td>
 									<td><img src="<%=request.getContextPath()%>/resources/images/${sender.img}"> ${sender.name}</td>
-									<td>${sender.subject}</td>
+									<td onClick="goView('${sender.idx}')">${sender.subject}</td>
 									<td>${sender.content}</td>
 									<td>${sender.writedate}</td>
 								</tr>
@@ -76,5 +84,8 @@ request.setCharacterEncoding("UTF-8");
 			${pagebar}
 		</div>
 	</div>
+	<form name="view">
+		<input type="hidden" name="idx">
+	</form>
 </body>
 </html>
