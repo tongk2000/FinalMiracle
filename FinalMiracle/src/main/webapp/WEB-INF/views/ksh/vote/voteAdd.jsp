@@ -21,10 +21,8 @@
 		
 		html += "<br/>";
 		html += "<input type='text' name='items' class='form-control' style='width: 300px;' />";
-		/* html += "<button type='button' onClick='goImageFile();'>이미지추가</button> <div id='addattach'></div>"; */
 		html += "<br/>";
 		html += "<input type='text' name='items' class='form-control' style='width: 300px;' />";
-		/* html += "<button type='button' onClick='goImageFile();'>이미지추가</button> <div id='addattach'></div>"; */
 		
 		$("#divbeginitems").append(html);
 		
@@ -33,7 +31,14 @@
 	      minHeight: null,      // 최소 높이값(null은 제한 없음)
 	      maxHeight: null,      // 최대 높이값(null은 제한 없음)
 	      focus: true,          // 페이지가 열릴때 포커스를 지정함
-	      lang: 'ko-KR'         // 한국어 지정(기본값은 en-US)
+	      lang: 'ko-KR',         // 한국어 지정(기본값은 en-US)
+	      callbacks: { // 콜백을 사용
+              // 이미지를 업로드할 경우 이벤트를 발생
+			    onImageUpload: function(files, editor, welEditable) {
+				    sendFile(files[0], this);
+				}
+			}
+
 	    });
 		
 		
@@ -101,15 +106,23 @@
 		
 	}
 	
-	function goImageFile(){
-		
-		var html = "";
-		
-		html += "<input type='file' name='attach' class='btn btn-default' />";
-		
-		$("#addattach").append(html);
-		
-	}
+	function sendFile(file, editor) {
+        // 파일 전송을 위한 폼생성
+ 		data = new FormData();
+ 	    data.append("uploadFile", file);
+ 	    $.ajax({ // ajax를 통해 파일 업로드 처리
+ 	        data : data,
+ 	        type : "POST",
+ 	        url : "tmImageUpload.mr",
+ 	        cache : false,
+ 	        contentType : false,
+ 	        processData : false,
+ 	        success : function(data) { // 처리가 성공할 경우
+                // 에디터에 이미지 출력
+ 	        	$(editor).summernote('editor.insertImage', data.url);
+ 	        }
+ 	    });
+ 	}
 	
 </script>
 

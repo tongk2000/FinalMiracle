@@ -508,7 +508,7 @@
 
 	<!-- === *** 로그인한 유저의 팀정보를 가져오는 메소드 *** === -->
 	<select id="getUserTeam" parameterType="HashMap" resultMap="userTeam">
-		select t.idx as teamNum, m.userid, m.idx as memberNum, w.status, m.img
+		select t.idx as teamNum, m.userid, m.idx as memberNum, w.status, m.img, m.name
 		from tbl_member m join tbl_teamwon w on m.idx = w.fk_member_idx
 		                  join tbl_team t on w.fk_team_idx = t.idx
 		where m.userid = #{userid} and t.idx = #{teamidx}
@@ -519,6 +519,7 @@
  		<result property="memberNum" 		column="memberNum" 		javaType="String"></result>
  		<result property="status" 			column="status" 		javaType="String"></result>
  		<result property="img" 				column="img" 			javaType="String"></result>
+ 		<result property="name" 			column="name" 			javaType="String"></result>
  	</resultMap>
 
 

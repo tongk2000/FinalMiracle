@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.miracle.kdh.model.FolderVO;
+import com.miracle.kdh.model.Folder_CommentVO;
+import com.miracle.kdh.model.ProjectManagerDAO;
 import com.miracle.kdh.service.ProjectManagerService;
 import com.miracle.psw.model.MemberVO;
 import com.miracle.psw.service.MemberService;
@@ -84,6 +86,14 @@ public class ProjectMangerController {
 		req.setAttribute("page", page);	// 페이징 값 유지용
 		
 		HashMap<String, Object> map = svc.getAllDoList(team_idx, page, term); // 할일리스트와 페이징처리를 위한 날짜를 받아옴
+		
+		@SuppressWarnings("unchecked")
+		List<FolderVO> doList = (List<FolderVO>)map.get("doList");
+		for(int i=0; i < doList.size(); i++) { // show/hide 값 유지를 위해 visibleArr 값을 doList에 합쳐줌
+			doList.get(i).setVisible(visibleArr[i]);
+		}
+		map.remove("doList"); // 기존 doList 를 지우고
+		map.put("doList", doList); // visibleArr 과 합쳐진 doList 를 새로 등록함
 		req.setAttribute("map", map);
 		
 		return "kdh/doList/doList.all";
@@ -169,7 +179,7 @@ public class ProjectMangerController {
 		
 		HashMap<String, Object> endMap = svc.addDownElementEnd(fvo, map, term, page); // 트랜잭션 결과와 새로 추가된 요소의 정보를 가져옴 
 		
-		req.setAttribute("endmap", endMap);
+		req.setAttribute("endMap", endMap);
 		
 		return "kdh/doList/popup/addDownElementEnd.not";
 	} // end of String addDownElementEnd(HttpServletRequest req, FolderVO fvo) ----------------------------------------------
@@ -197,14 +207,45 @@ public class ProjectMangerController {
 	@RequestMapping(value="do_delElement.mr", method={RequestMethod.GET})
 	public String delElement(HttpServletRequest req) {
 		String idx = req.getParameter("idx");
-		int result = svc.delElement(idx);
+		String fk_folder_idx = req.getParameter("fk_folder_idx");
 		
-		String str_json = "{\"result\":\""+result+"\"}"; // JSON 형태로 넘길때는 반드시 {"키값":"밸류값"} 이어야함. 따옴표 주의
+		HashMap<String, Integer> map = svc.delElement(idx, fk_folder_idx);
+		
+		String str_json = "{\"result\":\""+map.get("result")+"\", \"downCnt\":\""+map.get("downCnt")+"\"}"; // JSON 형태로 넘길때는 반드시 {"키값":"밸류값"} 이어야함. 따옴표 주의
 		req.setAttribute("str_json", str_json);
+		
 		return "kdh/json.not";
 	} // end of public String delElement(HttpServletRequest req) --------------------------------------------------------------
+	
+	// 요소에 댓글 추가하고 새로운 댓글 리스트 받아오기
+	@RequestMapping(value="do_addComment.mr", method={RequestMethod.GET})
+	public String addComment(HttpServletRequest req, HttpSession ses, Folder_CommentVO fcvo) {
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo");
+		String fk_teamwon_idx = teamInfo.get("teamwon_idx");
+		fcvo.setFk_teamwon_idx(Integer.parseInt(fk_teamwon_idx));
+		
+		List<Folder_CommentVO> folder_commentList = svc.addComment(fcvo);
+		
+		req.setAttribute("folder_commentList", folder_commentList);
+		return "kdh/doList/modal/commentListXML.not";
+		
+		/*JSONArray jsonList = new JSONArray(); 
+		for(Folder_CommentVO fcvo2 : folder_commentList) {
+			JSONObject jobj = new JSONObject();
+			jobj.put("userid", fcvo2.getUserid());
+			jobj.put("content", fcvo2.getContent());
+			jobj.put("writeDate", fcvo2.getWriteDate());
+			jsonList.put(jobj);
+		}
+		String str_json = jsonList.toString();
+		req.setAttribute("str_json", str_json);
+		
+		return "kdh/json.not";*/
+	} // end of public String addComment(HttpServletRequest req, HttpSession ses, Folder_CommentVO fcvo) -----------------------------------------------------
+	
 }
-
+	 
 
 
 

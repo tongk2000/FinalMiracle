@@ -264,6 +264,12 @@ public class PjsDAOImpl implements PjsinterDAO {
 		List<HashMap<String, String>> list = sqlsession.selectList("pjsfinal.getReceiverMemoList",map);
 		return list;
 	}
+	@Override
+	public HashMap<String, String> getSenderIdx(String idx) {
+		// idx에 해당하는 정보를 반환한다.
+		HashMap<String, String> map = sqlsession.selectOne("pjsfinal.getSenderIdx",idx);
+		return map;
+	}
 	
 //==========================================================================================================================================================//	
 	

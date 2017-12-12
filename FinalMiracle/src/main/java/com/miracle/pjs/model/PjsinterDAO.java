@@ -88,6 +88,8 @@ public interface PjsinterDAO {
 	int getReceiverMemo(HashMap<String, String> map); // 쪽지를 받은 사람의 받은 쪽지 갯수를 리턴한다.
 
 	List<HashMap<String, String>> getReceiverMemoList(HashMap<String, String> map); // 받은 쪽지의 리스트를 반환한다.
+	
+	HashMap<String, String> getSenderIdx(String idx); // idx에 해당하는 정보를 가져온다.
 
 //==========================================================================================================================================================//	
 
@@ -99,8 +101,6 @@ public interface PjsinterDAO {
 	
 	// 로그인한 유저의 팀정보를 가져오는 메소드
 	HashMap<String, String> getUserTeam(HashMap<String, String> team);
-
-	
 
 
 

@@ -90,8 +90,9 @@
 </script>
 
 <form id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/tmList.mr" method="get" enctype="multipart/form-data">
-<div style="padding-left: 10%; border: solid 0px red; width: 100%;">
+<div style="padding-left: 10%; border: solid 0px red; width: 100%; overflow-y: auto;">
 	<h1>팀원목록</h1>
+	<%-- <img src="<%= request.getContextPath() %>/resources/files/20171208183923121001009307995.jpg" style="width:200px; heigth:200px;"> --%>
 	
 	<div style="margin-top: 20px;">
 		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmList.mr'">팀원 리스트</button>&nbsp;
@@ -137,7 +138,7 @@
 					<td>${tmvo.IDX}</td>
 					<td>${tmvo.USERID}</td>
 					<td>${tmvo.NAME}</td>
-					<td><%-- <img src="<%= request.getContextPath() %>/resources/images/${tmvo.IMG}"> --%>${tmvo.IMG}</td>
+					<td><img src="<%= request.getContextPath() %>/resources/images/${tmvo.IMG}" style="width:50px; heigth:50px;"></td>
 					<td>${tmvo.REGDATE}</td>
 					<td>
 						<c:if test="${tmvo.STATUS.equals('1')}">	

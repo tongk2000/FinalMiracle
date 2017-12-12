@@ -24,11 +24,12 @@ public class FolderVO {
 	private int dayCnt; // 기한 지났는지 확인용
 	private int importanceAvg; // 하위 폴더의 중요도 평균 내기용
 	private int downCnt; // 하위 요소의 갯수 받아오기용
+	private String visible; // show/hide 값 유지용
 	
 	public FolderVO(){}
 	public FolderVO(int idx, int fk_teamwon_idx, String subject, String content, String startDate, String lastDate,
 			int fk_folder_idx, int groupNo, int depth, int category, int status, int importance, int dayCnt,
-			int importanceAvg, int downCnt) {
+			int importanceAvg, int downCnt, String visible) {
 		super();
 		this.idx = idx;
 		this.fk_teamwon_idx = fk_teamwon_idx;
@@ -45,7 +46,9 @@ public class FolderVO {
 		this.dayCnt = dayCnt;
 		this.importanceAvg = importanceAvg;
 		this.downCnt = downCnt;
+		this.visible = visible;
 	}
+
 	public int getIdx() {
 		return idx;
 	}
@@ -136,4 +139,11 @@ public class FolderVO {
 	public void setDownCnt(int downCnt) {
 		this.downCnt = downCnt;
 	}
+	public String getVisible() {
+		return visible;
+	}
+	public void setVisible(String visible) {
+		this.visible = visible;
+	}
+	
 }
