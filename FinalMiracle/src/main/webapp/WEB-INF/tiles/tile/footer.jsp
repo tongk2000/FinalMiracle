@@ -55,13 +55,13 @@
 	}
 </script>
 
-<<<<<<< HEAD
+
 <br/><br/>
 <div align="center" style="float:left; width:400px; height:150px; margin-left:400px;"><a class="btn btn-primary" onclick="launchGoogleMap()">크게 보기</a><br/></div>
 <div align="left" style="display:inline-block; width:500px; height:150px; margin-left:50px;" id="tm"></div>
 <br/><br/>
 <br/><br/>
-=======
+
 <div class="modal-body" id="launchMapBody" style="width:50%; height:10%; border:1px solid blue;">
 	<!-- <div id="googleMap"	style="width: 40%; height: 70%; margin: auto; margin:20% 10% 20% 20% ; "></div> -->
 	
@@ -82,5 +82,3 @@
 <div style="float:left; border:1px solid pink; width:50px; height:50px;"> 
 	<div align="left" style="float:left; width:50%; height:100%; margin-left:50px; border:1px solid black;" id="tm"></div>
 </div>
-
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle
