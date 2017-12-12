@@ -119,6 +119,16 @@ public class ProjectManagerService {
 		map.put("downCnt", downCnt);
 		return map;
 	} // end of int delElement(String idx) ----------------------------------------------------------------------------------------
+
+	// 요소에 댓글 추가하고 새로운 댓글 리스트 받아오기
+	public List<Folder_CommentVO> addComment(Folder_CommentVO fcvo) {
+		int result = dao.addComment(fcvo);
+		List<Folder_CommentVO> folder_commentList = null;
+		if(result > 0) {
+			folder_commentList = dao.getFolder_commentInfo( String.valueOf(fcvo.getFk_folder_idx()) );
+		}
+		return folder_commentList;
+	} // end of List<Folder_CommentVO> addComment(Folder_CommentVO fcvo, String teamwon_idx) --------------------------------------------------------
 }
 
 

@@ -538,8 +538,8 @@
 			data:frm,
 			dataType:"html",
 			success:function(data){
-				$("#folderInfo").html(data);
-				$("#folderInfo").modal();
+				$("#modalElementInfo").html(data);
+				$("#modalElementInfo").modal();
 			}, error:function(request, status, error){
 	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 			}
@@ -554,8 +554,8 @@
 			data:frm,
 			dataType:"html",
 			success:function(data){
-				$("#taskInfo").html(data);
-				$("#taskInfo").modal();
+				$("#modalElementInfo").html(data);
+				$("#modalElementInfo").modal();
 			}, error:function(request, status, error){
 	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 			}
@@ -633,6 +633,35 @@
 			$dateColor.css({"background-color":"green"});
 		}
 	} // end of function setDayColor(idx) ---------------------------------------------------------------------------------------------------------------
+	
+	
+	// 요소에 댓글 추가하고 새로운 댓글 리스트 받아오기(xml)
+	function addComment() {
+		var frm = $("form[name=addCommentFrm]").serialize();
+		$.ajax({
+			url:"do_addComment.mr",
+			type:"post",
+			data:frm,
+			dataType:"xml",
+			success:function(data){
+				alert("댓글 입력에 성공했습니다.");
+				/* var commentArr = $(data).find(":root").find("comment");
+				var html = "";
+				commentArr.each(function(){
+					html += "<tr>";
+					html += "	<td>"+$(this).find("userid").text()+"<td>";
+					html += "	<td>"+$(this).find("content").text()+"<td>";
+					html += "	<td>"+$(this).find("writeDay").text()+"<td>";
+					html += "	<td>x<td>";
+					html += "</tr>";
+				});
+				modalCommentList.html(html); */
+			}, error:function(request, status, error){
+				/* alert(request.status + " 에러!!\n관리자에게 문의하세요."); */
+				alert("code: " + request.status + "\n"+"message: " + request.responseText + "\n" + "error: " + error);
+			}
+		});		
+	} // end of function addComment() ----------------------------------------------------------------------------------------------------------------------
 </script>
 
 <div class="container" style="width:100%; float:left">
@@ -787,8 +816,7 @@
 	</table>
 </div>
 
-<div class="modal fade" id="folderInfo" role="dialog"></div>
-<div class="modal fade" id="taskInfo" role="dialog"></div>
+<div class="modal fade" id="modalElementInfo" role="dialog"></div>
 
 <div id="folderRcm" style="padding:0px;">
 	<table>

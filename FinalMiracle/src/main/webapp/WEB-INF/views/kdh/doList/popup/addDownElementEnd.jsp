@@ -31,70 +31,70 @@
 		// doList.jsp 와 변수값이 조금 다름.
 		// map -> endMap, dvo -> fvo
 		// 그리고 doList 는 리스트를 받아서 처리하지만 여기선 pageDateList 만 리스트고 나머진 vo임.
-		html += '<tr id="${endMap.fvo.idx}" class="element ${endMap.fvo.groupNo} ${endMap.fvo.depth}">'
-		html += '	<td>'
-		html += '		<input type="hidden" id="newFk_idx${endMap.fvo.idx}" value="${endMap.fvo.fk_folder_idx}" />'
+		html += '<tr id="${endMap.fvo.idx}" class="element ${endMap.fvo.groupNo} ${endMap.fvo.depth}">';
+		html += '	<td>';
+		html += '		<input type="hidden" id="newFk_idx${endMap.fvo.idx}" value="${endMap.fvo.fk_folder_idx}" />';
 											// append 라 find() 로 못찾아서 임시적인 아이디를 부여함
-		html += '		<input type="hidden" id="newDownCnt${endMap.fvo.idx}" value="${endMap.fvo.downCnt}" />'
-		html += '		<span id="span${endMap.fvo.idx}" style="margin-left:${endMap.fvo.depth*20}px; cursor:pointer;">'
+		html += '		<input type="hidden" id="newDownCnt${endMap.fvo.idx}" value="${endMap.fvo.downCnt}" />';
+		html += '		<span id="span${endMap.fvo.idx}" style="margin-left:${endMap.fvo.depth*20}px; cursor:pointer;">';
 							<c:if test="${endMap.fvo.category == 1}"> <!-- 폴더라면 -->
-		html += '				<span class="modalFolder">'
-		html += '					▷'
-		html += '				</span>'
-		html += '				<span class="modalFolder subject pointer">${endMap.fvo.subject}</span>'
+		html += '				<span class="modalFolder">';
+		html += '					▷';
+		html += '				</span>';
+		html += '				<span class="modalFolder subject pointer">${endMap.fvo.subject}</span>';
 							</c:if>
 							<c:if test="${endMap.fvo.category == 2}"> <!-- 할일이라면 -->
-		html += '				└<input type="checkbox" id="status${endMap.fvo.idx}" class="status"/>'
-		html += '				<span class="modalTask subject pointer" id="subject${endMap.fvo.idx}">${endMap.fvo.subject}</span>'
+		html += '				└<input type="checkbox" id="status${endMap.fvo.idx}" class="status"/>';
+		html += '				<span class="modalTask subject pointer" id="subject${endMap.fvo.idx}">${endMap.fvo.subject}</span>';
 							</c:if>
-		html += '		</span>'
-		html += '	</td>'
+		html += '		</span>';
+		html += '	</td>';
 					
 					<c:if test="${endMap.fvo.dayCnt == 0}"> <!-- 시작일 전이라면 -->
-		html += '		<td class="dateColor ${endMap.fvo.dayCnt}" style="background-color:lightgreen;">${endMap.fvo.startDate}</td>'
-		html += '		<td class="dateColor ${endMap.fvo.dayCnt}" style="background-color:lightgreen;">${endMap.fvo.lastDate}</td>'
+		html += '		<td class="dateColor ${endMap.fvo.dayCnt}" style="background-color:lightgreen;">${endMap.fvo.startDate}</td>';
+		html += '		<td class="dateColor ${endMap.fvo.dayCnt}" style="background-color:lightgreen;">${endMap.fvo.lastDate}</td>';
 					</c:if>
 					<c:if test="${endMap.fvo.dayCnt == 1}"> <!-- 진행중이라면 -->
-		html += '		<td class="dateColor ${endMap.fvo.dayCnt}" style="background-color:green;">${endMap.fvo.startDate}</td>'
-		html += '		<td class="dateColor ${endMap.fvo.dayCnt}" style="background-color:green;">${endMap.fvo.lastDate}</td>'
+		html += '		<td class="dateColor ${endMap.fvo.dayCnt}" style="background-color:green;">${endMap.fvo.startDate}</td>';
+		html += '		<td class="dateColor ${endMap.fvo.dayCnt}" style="background-color:green;">${endMap.fvo.lastDate}</td>';
 					</c:if>
 					<c:if test="${endMap.fvo.dayCnt == -1}"> <!-- 기한이 지났다면 -->
-		html += '		<td class="dateColor ${endMap.fvo.dayCnt}" style="background-color:red;">${endMap.fvo.startDate}</td>'
-		html += '		<td class="dateColor ${endMap.fvo.dayCnt}" style="background-color:red;">${endMap.fvo.lastDate}</td>'
+		html += '		<td class="dateColor ${endMap.fvo.dayCnt}" style="background-color:red;">${endMap.fvo.startDate}</td>';
+		html += '		<td class="dateColor ${endMap.fvo.dayCnt}" style="background-color:red;">${endMap.fvo.lastDate}</td>';
 					</c:if>
-		html += '	<td>${endMap.fvo.importance}</td>'
+		html += '	<td>${endMap.fvo.importance}</td>';
 					
-		html += '	<td></td>'
-		html += '	<td></td>'
+		html += '	<td></td>';
+		html += '	<td></td>';
 					
 					<c:forEach var="pageDate" items="${endMap.pageDateList}">
 						<fmt:parseNumber var="startDate" value="${endMap.fvo.startDate.replace('-','')}" integerOnly="true"/>
 						<fmt:parseNumber var="lastDate" value="${endMap.fvo.lastDate.replace('-','')}" integerOnly="true"/>
 						<fmt:parseNumber var="day" value="${pageDate.day}" integerOnly="true"/> <!-- 희안하게 위에껀 못쓰고 여기서 다시 해줘야함; -->
 						
-		html += '		<td class="pageDateLine ${day}" style="border-left:0.5px solid lightgray;'
+		html += '		<td class="pageDateLine ${day}" style="border-left:0.5px solid lightgray;';
 							<c:if test="${pageDate.dotw == '토' || pageDate.dotw == '일'}">
-		html += '				background-color:#ffcccc;'
+		html += '				background-color:#ffcccc;';
 							</c:if>
 							<c:if test="${fn:substring(pageDate.day, 6, 8) == '01'}">
-		html += '				border-left:2px solid #ff66ff;'
+		html += '				border-left:2px solid #ff66ff;';
 							</c:if>
-		html += '		" align="center">'
+		html += '		" align="center">';
 							
 							<c:if test="${startDate <= day and day <= lastDate}"> <!-- 시작일 이후, 마감일 이전 이라면 -->
 								<c:if test="${endMap.fvo.dayCnt == 0}"> <!-- 시작일 전이라면 -->
-		html += '					<div class="dateColor ${day} ${endMap.fvo.dayCnt}" style="height:19px; width:100%; background-color:lightgreen;"></div>'
+		html += '					<div class="dateColor ${day} ${endMap.fvo.dayCnt}" style="height:19px; width:100%; background-color:lightgreen;"></div>';
 								</c:if>
 								<c:if test="${endMap.fvo.dayCnt == 1}"> <!-- 진행중이라면 -->
-		html += '					<div class="dateColor ${day} ${endMap.fvo.dayCnt}" style="height:19px; width:100%; background-color:green;"></div>'
+		html += '					<div class="dateColor ${day} ${endMap.fvo.dayCnt}" style="height:19px; width:100%; background-color:green;"></div>';
 								</c:if>
 								<c:if test="${endMap.fvo.dayCnt == -1}"> <!-- 기한이 지났다면 -->
-		html += '					<div class="dateColor ${day} ${endMap.fvo.dayCnt}" style="height:19px; width:100%; background-color:red;"></div>'
+		html += '					<div class="dateColor ${day} ${endMap.fvo.dayCnt}" style="height:19px; width:100%; background-color:red;"></div>';
 								</c:if>
 							</c:if>
-		html += '		</td>'
+		html += '		</td>';
 					</c:forEach>
-		html += '</tr>'
+		html += '</tr>';
 		
 		
 		var $opener = $(".selectedLine", opener.document); // 추가요소의 상위요소 선택자를 잡음

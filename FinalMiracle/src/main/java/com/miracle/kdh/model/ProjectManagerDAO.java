@@ -112,6 +112,12 @@ public class ProjectManagerDAO {
 		int downCnt = sql.selectOne("do.getDownCnt", fk_folder_idx);
 		return downCnt;
 	} // end of int getDownCnt(String fk_folder_idx) --------------------------------------------------------------------
+
+	// 요소에 댓글 추가하기
+	public int addComment(Folder_CommentVO fcvo) {
+		int result = sql.insert("do.addComment",fcvo);
+		return result;
+	} // end of public int addComment(Folder_CommentVO fcvo) ------------------------------------------------------------------------
 }
 
 

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.miracle.kdh.model.FolderVO;
+import com.miracle.kdh.model.Folder_CommentVO;
+import com.miracle.kdh.model.ProjectManagerDAO;
 import com.miracle.kdh.service.ProjectManagerService;
 import com.miracle.psw.model.MemberVO;
 import com.miracle.psw.service.MemberService;
@@ -214,8 +216,36 @@ public class ProjectMangerController {
 		
 		return "kdh/json.not";
 	} // end of public String delElement(HttpServletRequest req) --------------------------------------------------------------
+	
+	// 요소에 댓글 추가하고 새로운 댓글 리스트 받아오기
+	@RequestMapping(value="do_addComment.mr", method={RequestMethod.GET})
+	public String addComment(HttpServletRequest req, HttpSession ses, Folder_CommentVO fcvo) {
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo");
+		String fk_teamwon_idx = teamInfo.get("teamwon_idx");
+		fcvo.setFk_teamwon_idx(Integer.parseInt(fk_teamwon_idx));
+		
+		List<Folder_CommentVO> folder_commentList = svc.addComment(fcvo);
+		
+		req.setAttribute("folder_commentList", folder_commentList);
+		return "kdh/doList/modal/commentListXML.not";
+		
+		/*JSONArray jsonList = new JSONArray(); 
+		for(Folder_CommentVO fcvo2 : folder_commentList) {
+			JSONObject jobj = new JSONObject();
+			jobj.put("userid", fcvo2.getUserid());
+			jobj.put("content", fcvo2.getContent());
+			jobj.put("writeDate", fcvo2.getWriteDate());
+			jsonList.put(jobj);
+		}
+		String str_json = jsonList.toString();
+		req.setAttribute("str_json", str_json);
+		
+		return "kdh/json.not";*/
+	} // end of public String addComment(HttpServletRequest req, HttpSession ses, Folder_CommentVO fcvo) -----------------------------------------------------
+	
 }
-
+	 
 
 
 
