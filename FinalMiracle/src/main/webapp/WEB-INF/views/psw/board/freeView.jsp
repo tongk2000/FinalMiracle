@@ -24,6 +24,10 @@
     	var addWriteFrm = document.addWriteFrm;
     	addWriteFrm.submit();
     }
+    
+    function test(idx) {
+    	$("#comment"+idx).after("<tr><td colspan='5'>되냐</td></tr>");
+    }
 </script>
 
 <div style="margin-left: 10%; margin-top: 30px; padding: 10px; border: solid 1px red; width: 80%;">
@@ -111,7 +115,7 @@
 		<c:if test="${not empty freeCommentList}">
 			<table id="comment" style="width: 70%; margin-left: 5%; padding: 10px;">
 				<c:forEach var="commentvo" items="${freeCommentList}" >
-					<tr>
+					<tr id="comment${commentvo.idx}">
 						<td style="border: 1px dashed #D8AE47; border-left: none; border-right: none; width: 5%; background-color: lightblue">
 							<img src="<%= request.getContextPath() %>/resources/images/${commentvo.img}" style="width: 35px; height: 30px;" align="middle">
 						</td>
@@ -125,14 +129,14 @@
 						<td style="border: 1px dashed #D8AE47; border-left: none; border-right: none; width: 20%; padding-left: 10px;">
 							${commentvo.regDate}
 						</td>
+						<td>
+							<input type="button" value="대댓글달기" onclick="test(${commentvo.idx})"/>
+						</td>
 					</tr>
 				</c:forEach>
 			</table>
 		</c:if>
 	</div>
-	
-	
-	
 </div>
 
 

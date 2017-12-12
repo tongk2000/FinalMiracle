@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
-<script>
+<%-- <script>
 
 	$(document).ready(function(){
 		teamCall();
@@ -33,7 +33,7 @@
 				$("#tm").empty();
 				
 				var html = "";
-				<%-- <img src="<%= request.getContextPath() %>/resources/files/20171208183923121001009307995.jpg" style="width:200px; heigth:200px;"> --%>
+				<img src="<%= request.getContextPath() %>/resources/files/20171208183923121001009307995.jpg" style="width:200px; heigth:200px;">
 				html += "<img src='<%= request.getContextPath() %>/resources/files/"+img+"' height='150px;' width='150px;'><br/>";
 				html += "이름 : " + name + "<br/>";
 				html += "전화번호 : " + tel1 + "-" + tel2 + "-" + tel3 + "<br/>";
@@ -73,4 +73,4 @@
 <div style="float:left; border:1px solid pink; width:50px; height:50px;"> 
 	<div align="left" style="float:left; width:50%; height:100%; margin-left:50px; border:1px solid black;" id="tm"></div>
 </div>
-
+ --%>
