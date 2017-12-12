@@ -13,7 +13,7 @@
 	} 
 
 	function teamCall(){
-		return $.ajax({
+		$.ajax({
 			url: "tmFooter.mr",
 			type: "GET",
 			dataType: "JSON",
@@ -28,6 +28,7 @@
 				var addr2 = data[0].addr2;
 				var regdate = data[0].regdate;
 				var img = data[0].img
+				var leader = data[0].leader
 				
 				
 				$("#tm").empty();
@@ -35,7 +36,8 @@
 				var html = "";
 				<img src="<%= request.getContextPath() %>/resources/files/20171208183923121001009307995.jpg" style="width:200px; heigth:200px;">
 				html += "<img src='<%= request.getContextPath() %>/resources/files/"+img+"' height='150px;' width='150px;'><br/>";
-				html += "이름 : " + name + "<br/>";
+				html += "팀 이름 : " + name + "<br/>";
+				html += "설립자 : " + leader + "<br/>";
 				html += "전화번호 : " + tel1 + "-" + tel2 + "-" + tel3 + "<br/>";
 				html += "우편번호 : " + post1 + "-" + post2 + "<br/>";
 				html += "주소 : " + addr1 + " " + addr2 + "<br/>";
@@ -52,6 +54,13 @@
 		
 	}
 </script>
+
+
+<br/><br/>
+<div align="center" style="float:left; width:400px; height:150px; margin-left:400px;"><a class="btn btn-primary" onclick="launchGoogleMap()">크게 보기</a><br/></div>
+<div align="left" style="display:inline-block; width:500px; height:150px; margin-left:50px;" id="tm"></div>
+<br/><br/>
+<br/><br/>
 
 <div class="modal-body" id="launchMapBody" style="width:50%; height:10%; border:1px solid blue;">
 	<!-- <div id="googleMap"	style="width: 40%; height: 70%; margin: auto; margin:20% 10% 20% 20% ; "></div> -->
@@ -73,4 +82,7 @@
 <div style="float:left; border:1px solid pink; width:50px; height:50px;"> 
 	<div align="left" style="float:left; width:50%; height:100%; margin-left:50px; border:1px solid black;" id="tm"></div>
 </div>
+<<<<<<< HEAD
  --%>
+=======
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
