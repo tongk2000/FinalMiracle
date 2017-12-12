@@ -187,4 +187,10 @@ public class TMDAO implements InterTMDAO {
 		return tvo;
 	}
 
+	@Override
+	public String getTeamLeaderName(String fk_team_idx) {
+		String name = sqlsession.selectOne("kshTM.getTeamLeaderName", fk_team_idx);
+		return name;
+	}
+
 }

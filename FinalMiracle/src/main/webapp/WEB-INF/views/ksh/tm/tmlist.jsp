@@ -90,7 +90,7 @@
 </script>
 
 <form id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/tmList.mr" method="get" enctype="multipart/form-data">
-<div style="padding-left: 10%; border: solid 0px red; width: 100%; overflow-y: auto;">
+<div style="padding-left: 1%; padding-right: 1%; border: solid 0px red; width: 100%; height: 840px; overflow-y: auto;">
 	<h1>팀원목록</h1>
 	<%-- <img src="<%= request.getContextPath() %>/resources/files/20171208183923121001009307995.jpg" style="width:200px; heigth:200px;"> --%>
 	
@@ -126,7 +126,7 @@
 				<th style="width: 10%;">팀원아이디</th>
 				<th style="width: 10%;">팀원이름</th>
 				<th style="width: 45%;">팀원사진</th>
-				<th style="width: 15%;">팀가입일</th>
+				<th style="width: 15%;">팀가입날짜</th>
 				<th style="width: 10%;">팀원분류</th>
 			</tr>
 		</thead>
@@ -138,7 +138,7 @@
 					<td>${tmvo.IDX}</td>
 					<td>${tmvo.USERID}</td>
 					<td>${tmvo.NAME}</td>
-					<td><img src="<%= request.getContextPath() %>/resources/images/${tmvo.IMG}" style="width:50px; heigth:50px;"></td>
+					<td><img src="<%= request.getContextPath() %>/resources/files/${tmvo.IMG}" style="width:50px; heigth:50px;"></td>
 					<td>${tmvo.REGDATE}</td>
 					<td>
 						<c:if test="${tmvo.STATUS.equals('1')}">	

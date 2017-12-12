@@ -193,4 +193,10 @@ public class TMService implements InterTMService {
 		return tvo;
 	}
 
+	@Override
+	public String getTeamLeaderName(String fk_team_idx) {
+		String name = dao.getTeamLeaderName(fk_team_idx);
+		return name;
+	}
+
 }
