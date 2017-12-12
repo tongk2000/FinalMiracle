@@ -459,7 +459,7 @@
  		<result property="writedate" 		column="writedate" 		javaType="String"></result>
  	</resultMap>
 <!-- ============================================================================================================================================================= -->	
-	<!-- === *** 보낸이의 쪽지 수를 반환 *** === -->
+	<!-- === *** 받은이의 쪽지 수를 반환 *** === -->
 	<select id="getReceiverMemo" parameterType="HashMap" resultType="int">
        select count(*)
 	    from tbl_memoreceiver r join Tbl_Memomemory y on y.idx = r.fk_idx 
@@ -468,7 +468,7 @@
 	    where r.receiver=#{userid} and w.fk_team_idx = #{teamNum}
 	</select>
 <!-- ============================================================================================================================================================= -->	
-	<!-- === *** 보낸 쪽지 리스트를 반환한다. *** === -->
+	<!-- === *** 받은 쪽지 리스트를 반환한다. *** === -->
 	<select id="getReceiverMemoList" parameterType="HashMap" resultMap="receiverList">
 		select *
 		from
@@ -478,7 +478,7 @@
 			( 
 				select r.*, y.subject, y.content, y.sender, y.writedate, m.name, m.img
 				from tbl_memoreceiver r join tbl_memomemory y on r.fk_idx = y.idx
-				                        join tbl_member m on m.userid = Y.Sender
+				                        join tbl_member m on m.userid = y.sender
 				                        join tbl_teamwon w on W.Fk_Member_Idx = M.Idx
 				where r.receiver= #{userid} and  w.fk_team_idx = #{teamNum} and  m.status = 1 and r.rstatus = 1                                       
 				order by r.idx desc
@@ -495,11 +495,122 @@
  		<result property="sstatus" 			column="sstatus" 		javaType="String"></result>
  		<result property="name" 			column="name" 			javaType="String"></result>
  		<result property="img" 				column="img" 			javaType="String"></result>
- 		<result property="writedate" 		column="writedate" 		javaType="String"></result>
+ 		<result property="readdate" 		column="readdate" 		javaType="String"></result>
  		<result property="receiver" 		column="receiver" 		javaType="String"></result>
  		<result property="rreadcount" 		column="rreadcount" 	javaType="String"></result>
  	</resultMap>
 <!-- ============================================================================================================================================================= -->	
+	<!-- === *** 보낸 쪽지의 뷰를 보여준다. *** === -->
+	<select id="getSenderIdx" parameterType="HashMap" resultMap="senderIdx">
+		 	select y.IDX, y.SUBJECT, y.CONTENT, y.SENDER, y.SSTATUS, m.IMG, w.status
+		  	from tbl_memomemory y join tbl_member m on m.userid = y.sender
+							  join tbl_teamwon w on w.fk_member_idx = m.idx
+      		where y.idx = #{idx} and w.fk_team_idx = #{teamNum} and y.sstatus = 1 and m.status = 1
+	</select>
+	<!--  IDX, SUBJECT, CONTENT, SENDER, SSTATUS, WRITEDATE, IDX_1, USERID, PWD, NAME, IMG, STATUS, IDX_2, FK_TEAM_IDX, FK_MEMBER_IDX, STATUS_1, REGDATE, DISDATE -->
+	<resultMap id="senderIdx" type="HashMap">
+ 		<result property="idx" 				column="idx" 			javaType="String"></result>
+ 		<result property="subject" 			column="subject" 		javaType="String"></result>
+ 		<result property="content" 			column="content" 		javaType="String"></result>
+ 		<result property="sender" 			column="sender" 		javaType="String"></result>
+ 		<result property="sstatus" 			column="sstatus" 		javaType="String"></result>
+ 		<result property="img" 				column="img" 			javaType="String"></result>
+ 		<result property="status" 			column="status" 		javaType="String"></result>
+ 	</resultMap>
+<!-- ============================================================================================================================================================= -->	
+	<!-- === *** 받은 쪽지의 뷰를 보여준다. *** === -->
+	<select id="getReceiverIdx" parameterType="HashMap" resultMap="receiverIdx">
+		 	select r.idx, y.sender, r.rstatus, r.rreadcount, y.subject, y.content, y.sstatus, m.img, w.status, r.receiver
+		  	from tbl_memoreceiver r join tbl_memomemory y on r.fk_idx = y.idx
+                                    join tbl_member m on m.userid = y.sender
+                                    join tbl_teamwon w on w.fk_member_idx = m.idx
+        	where r.idx = #{idx} and w.fk_team_idx = #{teamNum} 
+	</select>
+	<!--  r.idx, y.sender, r.rstatus, r.rreadcount, y.subject, y.content, y.sstatus, m.img  -->
+	<resultMap id="receiverIdx" type="HashMap">
+ 		<result property="idx" 				column="idx" 			javaType="String"></result>
+ 		<result property="subject" 			column="subject" 		javaType="String"></result>
+ 		<result property="content" 			column="content" 		javaType="String"></result>
+ 		<result property="sender" 			column="sender" 		javaType="String"></result>
+ 		<result property="sstatus" 			column="sstatus" 		javaType="String"></result>
+ 		<result property="img" 				column="img" 			javaType="String"></result>
+ 		<result property="rstatus" 			column="rstatus" 		javaType="String"></result>
+ 		<result property="rreadcount" 		column="rreadcount" 	javaType="String"></result>
+ 		<result property="status" 			column="status" 		javaType="String"></result>
+ 		<result property="receiver" 		column="receiver" 		javaType="String"></result>
+ 	</resultMap>
+<!-- ============================================================================================================================================================= -->	
+	<!-- === *** 보낸 쪽지의 이름 리스트를 반환한다. *** === -->
+	<select id="getReceiverNames" parameterType="HashMap" resultType="String">
+		select m.name
+	    from tbl_memomemory y join tbl_memoreceiver r on r.fk_idx = y.idx
+                                                   join tbl_member m on m.userid = r.receiver
+	                                                join tbl_teamwon w on W.Fk_Member_Idx = M.Idx
+	    where y.sender=#{userid} and  w.fk_team_idx = #{teamNum} and  m.status = 1 and Y.Sstatus=1 and y.idx=#{idx}
+	    order by y.idx desc
+	</select>
+<!-- ============================================================================================================================================================= -->	
+	<!-- === *** 해당 idx의 보낸 쪽지를 삭제한다. *** === -->
+	<update id="delSenderMemo" parameterType="HashMap">
+		<if test="idxArr != null">
+            update tbl_memomeomory set sstatus = 0
+        	where idx in
+        	<foreach collection="idxArr" index="i" open="(" separator="," close=")" >
+        		${idxArr[i]}
+        	</foreach>
+        </if>
+	</update>
+<!-- ============================================================================================================================================================= -->	
+	<!-- === *** 해당 idx의 받은 쪽지를 삭제한다. *** === -->
+	<update id="delReceiverMemo" parameterType="HashMap">
+		<if test="idxArr != null">
+            update tbl_memoreceiver set rstatus = 0
+        	where idx in
+        	<foreach collection="idxArr" index="i" open="(" separator="," close=")" >
+        		${idxArr[i]}
+        	</foreach>
+        </if>
+	</update>
+<!-- ============================================================================================================================================================= -->	
+	<!-- === *** 쪽지를 받은 사람이 읽었는지 않 읽었는지 update *** === -->
+	<update id="updateRreadCount" parameterType="String">
+		update tbl_memoreceiver set RreadCount = 1,
+									readdate = sysdate
+		where idx = #{idx}
+	</update>
+<!-- ============================================================================================================================================================= -->	
+	<!-- === ***  *** === -->
+	<select id="getTeam" parameterType="String" resultMap="getTeam">
+		select m.name, fk_team_idx as teamNum 
+        from tbl_member m join tbl_teamwon w on m.idx=w.fk_member_idx
+        where w.fk_team_idx = #{teamNum}
+	</select>
+	<resultMap id="getTeam" type="HashMap">
+ 		<result property="name" 				column="name" 			javaType="String"></result>
+ 		<result property="teamNum" 				column="teamNum" 		javaType="String"></result>
+ 	</resultMap>	
+<!-- ============================================================================================================================================================= -->	
+	<!-- === ***  *** === -->
+	<!-- <select id="getAllMember" resultMap="getAllMember">
+		select m.name, fk_team_idx as teamNum  
+        from tbl_member m join tbl_teamwon w on m.idx=w.fk_member_idx
+	</select>
+	<resultMap id="getAllMember" type="HashMap">
+ 		<result property="name" 				column="name" 			javaType="String"></result>
+ 		<result property="teamNum" 				column="teamNum" 		javaType="String"></result>
+ 	</resultMap> -->	
+<!-- ============================================================================================================================================================= -->	
+	<!-- === *** 쪽지를 받은 사람이 읽었는지 않 읽었는지 update *** === -->
+	<select id="getMessage" parameterType="String">
+		select count(*)
+        from tbl_memoreceiver
+        where rreadCount = 0 and receiver = #{userid}
+	</select>
+<!-- ============================================================================================================================================================= -->	
+	
+	
+	
+	
 	
 	
 	

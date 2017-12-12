@@ -36,7 +36,18 @@
 	      focus: true,          // 페이지가 열릴때 포커스를 지정함
 	      lang: 'ko-KR'         // 한국어 지정(기본값은 en-US)
 	    });
+		
+		$("#back").blur(function(){
+			window.location.reload();
+		});
 	});	
+	function goDel(sidx, sender) {
+		var frm = document.del;
+		frm.idx.value=sidx;
+		frm.action="memosenderDel.mr";
+		frm.method="post";
+		frm.submit();
+	}
 </script>
 <meta charset="UTF-8">
 <title>쪽지쓰기</title>
@@ -54,28 +65,32 @@
 				</div>
 				<table>
 					<tbody>
-						<tr> <!--  teamNum, m.userid, m.idx as memberNum, w.status, m.img -->
-							<c:if test="${userTeam.status == 2}">
-								<th>유저 :  </th><td><img src="<%= request.getContextPath() %>/resources/images/${userTeam.img}"> ${userTeam.name} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${userTeam.teamNum}팀  팀장]</td> 
-							</c:if>
-							<c:if test="${userTeam.status == 1}">
-								<th>유저 :  </th><td><img src="<%= request.getContextPath() %>/resources/images/${userTeam.img}"> ${userTeam.name} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${userTeam.teamNum}팀   팀원]</td> 
-							</c:if>
+						<c:set var="sender" value="${map}"></c:set>
+						<tr> <!-- IDX, SUBJECT, CONTENT, SENDER, SSTATUS, img, w.status -->
+						<c:if test="${sender.status == 2}">
+							<th>유저 :  </th><td><img src="<%= request.getContextPath() %>/resources/images/${sender.img}"> ${sender.sender} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${teamNum}팀  팀장]</td> 
+						</c:if>
+						<c:if test="${sender.status == 1}">
+							<th>유저 :  </th><td><img src="<%= request.getContextPath() %>/resources/images/${sender.img}"> ${sender.sender} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${teamNum}팀   팀원]</td> 
+						</c:if>
 						</tr>
 						<tr>
-							<th>제목 :  </th><td><input type="text" name="subject" id="subject"/></td>
+							<th>제목 :  </th><td><input type="text" name="subject" id="subject" readonly value="${sender.subject}"/></td>
 						</tr>
 						<tr>
-							<th>내용 :  </th><td><textarea name="content" id="content" class="summernote"></textarea></td>
+							<th>내용 :  </th><td><textarea name="content" id="content" class="summernote" readonly>${sender.content}</textarea></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 			<div style="border:1px solid gray; float:right">
-				<button type="reset" onClick="javascript:window.location.reload();">뒤로가기</button>
-				<button type="button" onClick="goDel();">삭제</button>
+				<button type="reset" onClick="javascript:history.back();" id="back">뒤로가기</button>
+				<button type="button" onClick="goDel('${sender.idx}');">삭제</button>
 			</div>
 		</div>
 	</div>
+	<form name="del">
+		<input type="hidden" name="idx">
+	</form>
 </body>
 </html>

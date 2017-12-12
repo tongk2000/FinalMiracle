@@ -302,11 +302,60 @@ public class PjsserviceImpl implements PjsinterService {
 		return list;
 	}
 	@Override
-	public HashMap<String, String> getSenderIdx(String idx) {
+	public HashMap<String, String> getSenderIdx(HashMap<String, String> info) {
 		// idx에 해당하는 sender테이블의 정보를 가져온다.
-		HashMap<String, String> map = dao.getSenderIdx(idx);
+		HashMap<String, String> map = dao.getSenderIdx(info);
 		return map;
 	}
+	@Override
+	public HashMap<String, String> getReceiverIdx(HashMap<String, String> info) {
+		// idx에 해당하는 Receiver테이블의 정보를 가져온다.
+		HashMap<String, String> map = dao.getReceiverIdx(info);
+		return map;
+	}
+	@Override
+	public List<String> getReceiverNames(HashMap<String, String> map) {
+		// 메모 받은 사람의 리스트를 받아온다.
+		List<String> nameArr = dao.getReceiverNames(map);
+		return nameArr;
+	}
+	@Override
+	public int delSenderMemo(HashMap<String,String[]> idx) {
+		// 해당 idx 보낸쪽지를 삭제한다.
+		int n = dao.delSenderMemo(idx);
+		return n;
+	}
+	@Override
+	public int delReceiverMemo(HashMap<String, String[]> idx) {
+		// 해당 idx의 받은 쪽지를 삭제한다.
+		int n = dao.delReceiverMemo(idx);
+		return n;
+	}
+	@Override
+	public int updateRreadCount(String idx, String userid) {
+		// 쪽지를 받은 사람이 읽었는지 않 읽었는지 update
+		int n = dao.updateRreadCount(idx, userid);
+		return n;
+	}
+	@Override
+	public List<HashMap<String, String>> getTeam(String teamNum) {
+		// 쪽지를 쓸 팀이름을 가져온다.
+		List<HashMap<String, String>> list = dao.getTeam(teamNum);
+		return list;
+	}
+	/*@Override
+	public List<HashMap<String, String>> getAllMember() {
+		// 쪽지를 쓸 모든 멤버이름을 가져온다.
+		List<HashMap<String, String>> list = dao.getAllMember();
+		return list;
+	}*/
+	/*@Override
+	public String getCheckNum(HashMap<String, String> map) {
+		// 몇명이 읽었는지 반환
+		String list = dao.getCheckNum(map);
+		return list;
+	}*/
+	
 	
 //==========================================================================================================================================================//	
 
@@ -318,6 +367,10 @@ public class PjsserviceImpl implements PjsinterService {
 		HashMap<String, String> userTeam = dao.getUserTeam(team);
 		return userTeam;
 	}
+	
+	
+	
+	
 
 	
 }	

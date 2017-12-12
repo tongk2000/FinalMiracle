@@ -11,6 +11,13 @@
 	function launchGoogleMap(){
 		window.open("googleMap.mr", "subwinpop", "left=300px, top=300px, width=600px, height=500px");
 	}
+<<<<<<< HEAD
+</script>
+
+<div style=""></div>
+
+<a class="btn btn-primary" onclick="launchGoogleMap()">Launch googleMap</a>
+=======
 	
 	function teamCall(){
 		return $.ajax({
@@ -58,3 +65,4 @@
 <div align="left" style="display:inline-block; width:500px; height:150px; margin-left:50px;" id="tm"></div>
 <br/><br/>
 <br/><br/>
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git

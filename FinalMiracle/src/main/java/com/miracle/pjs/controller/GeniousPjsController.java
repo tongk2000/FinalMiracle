@@ -1,5 +1,6 @@
 package com.miracle.pjs.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -565,9 +566,31 @@ public class GeniousPjsController {
 		map.put("eNum", eNum);
 		int totalCount = service.getSenderMemo(map); 
 		int totalPage=(int)Math.ceil((double)totalCount / sizePerPage);
-		List<HashMap<String, String>> list = service.getSenderMemoList(map);// 리스트 가저요기
+		List<HashMap<String, String>> list = service.getSenderMemoList(map);// 보낸 쪽지 리스트 가저요기
+		List<String> nArr = new ArrayList<String>();  
+		String name="";
+		for(int i=0; i<list.size(); i++) {
+			HashMap<String, String> count = new HashMap<String, String>();
+			count.put("idx", list.get(i).get("idx")); 
+			count.put("userid", list.get(i).get("sender"));
+			count.put("teamNum", list.get(i).get("teamnum"));
+			List<String> nameArr = service.getReceiverNames(count);// 받은 사람 리스트 받기
+			// String check = service.getCheckNum(map); // 읽었는지 여부를 반환한다.(웹소켓으로 적용)
+			for(int j=0; j<nameArr.size(); j++) {
+				if(j==nameArr.size()-1) {
+					name += nameArr.get(j);
+				} else {
+					name += nameArr.get(j)+",";
+				}
+			}
+			list.get(i).put("names", name);
+			count.remove("idx");
+			count.remove("userid");
+			count.remove("teamNum");
+		}
 		String pagebar = MyUtil.getPageBar(sizePerPage, blockSize, totalPage, currentPage, "memomemory.mr");
 		
+		req.setAttribute("nArr", nArr); // 이름 배열
 		req.setAttribute("list", list); // IDX, SUBJECT, CONTENT, SENDER, SSTATUS, NAME, TEAMNUM, IMG, writedate
 		req.setAttribute("pagebar", pagebar);
 		req.setAttribute("userTeam", userTeam); // teamNum, m.userid, m.idx as memberNum, w.status, m.img  필요없다고 판단 시 빼자!
@@ -576,6 +599,8 @@ public class GeniousPjsController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="memoreceiver.mr", method={RequestMethod.GET})
 	public String memosender(HttpServletRequest req, HttpSession ses) {
+		// readCount를 주기위한 방안
+		ses.setAttribute("readCount", "1");
 		HashMap<String, String> team = new HashMap<String, String>();  // 유저아이디와 팀번호가 유일한 유저를 불러온다.
 		team.put("userid", ((MemberVO) ses.getAttribute("loginUser")).getUserid()); // 유저의 아이디를 가져온다.
 		team.put("teamidx", ((HashMap<String, String>)ses.getAttribute("teamInfo")).get("team_idx")); 
@@ -615,21 +640,83 @@ public class GeniousPjsController {
 		team.put("userid", ((MemberVO) ses.getAttribute("loginUser")).getUserid()); // 유저의 아이디를 가져온다.
 		team.put("teamidx", ((HashMap<String, String>)ses.getAttribute("teamInfo")).get("team_idx")); 
 		HashMap<String, String> userTeam = service.getUserTeam(team); // 유저와 유저의 팀 정보를 가져온다.  teamNum, m.userid, m.idx as memberNum, w.status, m.img
-		// List<HashMap<String, String>> mapteam 같은 팀 정보를 추출
-		// List<HashMap<String, String>> mapAll 모든 팀 정보를 추출
 		
+		List<HashMap<String, String>> mapteam = service.getTeam(((HashMap<String, String>)ses.getAttribute("teamInfo")).get("team_idx"));//같은 팀 정보를 추출
+		
+		//List<HashMap<String, String>> mapAll = service.getAllMember();//모든 팀 정보를 추출
+		req.setAttribute("mapteam", mapteam); // name, teamNum
+		//req.setAttribute("mapAll", mapAll);
 		req.setAttribute("userTeam", userTeam);
 		return "pjs/memo/memoWrite.all";
 	}/* ================================================================================================================================================== */
 	@RequestMapping(value="memoSenderView.mr", method={RequestMethod.GET})
 	public String memoSenderView(HttpServletRequest req, HttpSession ses) {
-		String idx = req.getParameter("idx");
-		HashMap<String,String> map =  service.getSenderIdx(idx);
-		req.setAttribute("map", map);
-		return "pjs/memo/memoWrite.all";
+		HashMap<String, String> info = new HashMap<String, String>();
+		info.put("idx", req.getParameter("idx"));
+		info.put("teamNum", req.getParameter("teamNum"));
+		HashMap<String,String> map =  service.getSenderIdx(info);
+		req.setAttribute("map", map); // IDX, SUBJECT, CONTENT, SENDER, SSTATUS, img, 팀원인지 팀장인지status
+		req.setAttribute("teamNum", info.get("teamNum"));
+		return "pjs/memo/memoSenderView.all";
+	}/* ================================================================================================================================================== */
+	@RequestMapping(value="memoReceiverView.mr", method={RequestMethod.GET})
+	public String memoReceiverView(HttpServletRequest req, HttpSession ses) {
+		HashMap<String, String> info = new HashMap<String, String>();
+		info.put("idx", req.getParameter("idx"));
+		info.put("teamNum", req.getParameter("teamNum"));
+		HashMap<String,String> map =  service.getReceiverIdx(info); // r.idx, y.sender, r.rstatus, r.rreadcount, y.subject, y.content, y.sstatus, m.img , r.receiver
+		if("1".equals(ses.getAttribute("readCount")) && !(map.get("sender").equals(((MemberVO)ses.getAttribute("loginUser")).getUserid())) && map.get("receiver").equals(((MemberVO)ses.getAttribute("loginUser")).getUserid()) ) {
+			int n = service.updateRreadCount(req.getParameter("idx"), ((MemberVO)ses.getAttribute("loginUser")).getUserid());
+			System.out.println("================================n========================="+n);
+		}
+		
+		req.setAttribute("map", map); // IDX, SUBJECT, CONTENT, SENDER, SSTATUS, img, 팀원인지 팀장인지status
+		req.setAttribute("teamNum", info.get("teamNum"));
+		return "pjs/memo/memoReceiverView.all";
+	}/* ================================================================================================================================================== */
+	@RequestMapping(value="memosenderDel.mr", method={RequestMethod.POST})  /// **************************해야 한다.
+	public String memosenderDel(HttpServletRequest req) {
+		String str_idx = req.getParameter("idx");
+		String[] idxArr = str_idx.split(",");
+		HashMap<String,String[]> idx = new HashMap<String,String[]>();
+		idx.put("idxArr", idxArr);
+		int n = service.delSenderMemo(idx);
+		
+		String loc="location.href='memomemory.mr;'";
+		if(n > 0) {
+			String msg = "삭제 성공!";
+			req.setAttribute("msg", msg);
+		}
+		else {
+			String msg = "삭제 실패";
+			req.setAttribute("msg", msg);
+		}
+		req.setAttribute("loc", loc);
+		return "pjs/error.not";
+	} /* ================================================================================================================================================== */
+	@RequestMapping(value="memoreceiverDel.mr", method={RequestMethod.POST}) /// **************************해야 한다.
+	public String memoreceiverDel(HttpServletRequest req) {
+		String str_idx = req.getParameter("idx");
+		System.out.println("====================여기오니??=====================");
+		String[] idxArr = str_idx.split(",");
+		HashMap<String,String[]> idx = new HashMap<String,String[]>();
+		idx.put("idxArr", idxArr);
+		int n = service.delReceiverMemo(idx);
+		
+		String loc="location.href='memoreceiver.mr;'";
+		if(n > 0) {
+			String msg = "삭제 성공!";
+			req.setAttribute("msg", msg);
+		}
+		else {
+			String msg = "삭제 실패";
+			req.setAttribute("msg", msg);
+		}
+		req.setAttribute("loc", loc);
+		return "pjs/error.not";
 	}/* ================================================================================================================================================== */
 
-
+	
 /*=======================================================================================================================================================*/	
 
 	
