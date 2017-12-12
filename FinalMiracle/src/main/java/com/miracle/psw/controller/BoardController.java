@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.miracle.psw.model.FaqBoardVO;
 import com.miracle.psw.model.FreeBoardVO;
+import com.miracle.psw.model.FreeCommentVO;
 import com.miracle.psw.model.MemberVO;
 import com.miracle.psw.service.InterBoardService;
 import com.miracle.psw.util.MyUtil;
@@ -135,7 +136,7 @@ public class BoardController {
 		@SuppressWarnings("unchecked")
 		HashMap<String, String> teamInfo =  (HashMap<String, String>)session.getAttribute("teamInfo");
 		
-		String gobackURL = MyUtil.getCurrentURL(req);
+		String gobackURL = req.getParameter("gobackURL");
 		req.setAttribute("gobackURL", gobackURL);
 		
 		String fk_team_idx = teamInfo.get("team_idx");
@@ -154,7 +155,7 @@ public class BoardController {
 		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 		
 		int totalCount = 0;
-		int sizePerPage = 10;
+		int sizePerPage = 15;
 		int	currentShowPageNo = 0;
 		int totalPage = 0;
 		
@@ -211,11 +212,10 @@ public class BoardController {
 	@RequestMapping(value="/freeView.mr", method={RequestMethod.GET})
 	public String freeView(HttpServletRequest req, HttpSession session, FreeBoardVO freevo){
 		String idx = req.getParameter("idx");
-		String gobackURL = req.getParameter("gobackURL");
-		
+		String gobackURL = MyUtil.getCurrentURL(req);
 		freevo = null;
 		
-		// ================================== *** F5 클릭시 글 조회수 증가 안하게 하기 위해 조건문 걸기 *** ==========================================
+		// ======================== *** F5 클릭시 글 조회수 증가 안하게 하기 위해 조건문 걸기 *** ===========================
 		if(session.getAttribute("readCntPermission") != null && "yes".equals(session.getAttribute("readCntPermission")) ) {
 			MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
 			String userid = null;
@@ -230,6 +230,10 @@ public class BoardController {
 		}	
 		req.setAttribute("freevo", freevo);
 		req.setAttribute("gobackURL", gobackURL);
+		
+		// ============= *** 댓글 목록 보여주기 *** ======================
+		List<FreeCommentVO> freeCommentList = service.freeListComment(idx);
+		req.setAttribute("freeCommentList", freeCommentList);
 		
 		return "psw/board/freeView.all";
 	}
@@ -260,7 +264,7 @@ public class BoardController {
 		
 		if(!loginUser.getUserid().equals(freevo.getUserid())) {
 			String msg = "다른 회원님의 글은 수정이 불가능합니다.";
-			String loc = "javascript.history.back();";
+			String loc = "javascript:history.back();";
 			req.setAttribute("msg", msg);
 			req.setAttribute("loc", loc);
 			return "psw/msg.not";
@@ -283,6 +287,25 @@ public class BoardController {
 		req.setAttribute("idx", freevo.getIdx());
 		
 		return "psw/board/freeEditEnd.not";
+	}
+	
+	// ======================================================================= *** 자유게시판 댓글 쓰기 *** ==============================
+	@RequestMapping(value="/freeComment.mr", method={RequestMethod.GET})
+	public String freeComment(HttpServletRequest req, HttpServletResponse response, FreeCommentVO commentvo) throws Throwable {
+		String gobackURL = MyUtil.getCurrentURL(req);
+		
+		int result = service.addComment(commentvo);
+		
+		if(result > 0) {
+			req.setAttribute("msg", "댓글 쓰기 성공");
+		} else {
+			req.setAttribute("msg", "댓글 쓰기가 실패");
+		}
+		String idx = String.valueOf(commentvo.getParentIdx());
+		req.setAttribute("idx", idx);
+		req.setAttribute("gobackURL", gobackURL);
+		
+		return "psw/board/freeComment.not";
 	}
 	
 	

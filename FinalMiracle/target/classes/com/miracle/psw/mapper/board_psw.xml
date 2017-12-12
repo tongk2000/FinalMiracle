@@ -94,12 +94,13 @@
 	
 	<!-- 자유게시판 글 1개 보여주기 (조건에 따른 글 조회수 1 증가 후) -->
 	<select id="getView" parameterType="String" resultType="com.miracle.psw.model.FreeBoardVO">
-		select idx, userid, name, subject, content, readCnt, commentCnt
-		 	 , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
-		 	 , status, infoStatus
-		from tbl_free
-		where status = 1
-		and idx = #{idx}
+		select F.idx, F.userid, F.name, F.subject, F.content, F.readCnt, F.commentCnt
+	         , to_char(F.regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+	         , F.status, F.infoStatus, M.img
+		from tbl_free F join tbl_member M
+		on F.userid = M.userid
+		where F.status = 1
+		and F.idx = #{idx}
 	</select>
 	<update id="setAddReadCnt" parameterType="String">
 		update tbl_free set readCnt = readCnt + 1
@@ -174,6 +175,25 @@
 		update tbl_free set subject = #{subject}, content = #{content}
 		where idx = #{idx}
 	</update>
+	
+	<!-- 자유게시판 1개 게시글에 댓글 작성하기(Transaction) -->
+	<insert id="addComment" parameterType="com.miracle.psw.model.FreeCommentVO">
+		insert into tbl_freeComment(idx, userid, content, regDate, parentIdx, status)
+		values(seq_freeComment.nextval, #{userid}, #{content}, default, #{parentIdx}, default)
+	</insert>
+	<update id="updateCommentCnt" parameterType="int">
+		update tbl_free set commentCnt = commentCnt + 1
+		where idx = #{parentIdx}
+	</update>
+	
+	<!-- 자유게시판 1개 게시글에 작성된 댓글 목록 보여주기 -->
+	<select id="freeListComment" parameterType="String" resultType="com.miracle.psw.model.FreeCommentVO">
+		select C.idx, C.userid, C.content, C.regDate, C.parentIdx, C.status, M.name, M.img
+		from tbl_freeComment C join tbl_member M
+		on C.userid = M.userid
+		where parentIdx = #{idx}
+		order by idx desc
+	</select>
 	
 </mapper>
 

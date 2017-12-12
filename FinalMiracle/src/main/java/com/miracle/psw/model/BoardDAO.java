@@ -24,7 +24,6 @@ public class BoardDAO implements InterBoardDAO {
 		List<FaqBoardVO> vo = sqlsession.selectList("board_psw.faqListWithSearch", map);
 		return vo;
 	}
-
 	@Override
 	public List<FaqBoardVO> faqListWithNoSearch(HashMap<String, String> map) {
 		List<FaqBoardVO> vo = sqlsession.selectList("board_psw.faqListWithNoSearch", map);
@@ -36,7 +35,6 @@ public class BoardDAO implements InterBoardDAO {
 		int cnt = sqlsession.selectOne("board_psw.getTotalCountWithSearch", map);
 		return cnt;
 	}
-
 	@Override
 	public int getTotalCountWithNoSearch(HashMap<String, String> map) {
 		int cnt = sqlsession.selectOne("board_psw.getTotalCountWithNoSearch", map);
@@ -74,7 +72,7 @@ public class BoardDAO implements InterBoardDAO {
 		sqlsession.update("board_psw.setAddReadCnt", idx);	
 	}
 
-	// ============== *** 검색 유무에 따른 자유게시판 목록 보여주기 *** =======================
+	// ===================================== *** 검색 유무에 따른 자유게시판 목록 보여주기 *** =========================================
 	@Override
 	public List<FreeBoardVO> freeListWithNoSearch(HashMap<String, String> map) {
 		List<FreeBoardVO> vo = sqlsession.selectList("board_psw.freeListWithNoSearch", map);
@@ -86,6 +84,7 @@ public class BoardDAO implements InterBoardDAO {
 		return vo;
 	}
 
+	// ===================================== *** 자유게시판 검색 유/무에 따른 총 페이지 값 알아오기 *** ====================================
 	@Override
 	public int getFreeTotalCountWithSearch(HashMap<String, String> map) {
 		int cnt = sqlsession.selectOne("board_psw.getFreeTotalCountWithSearch", map);
@@ -97,10 +96,29 @@ public class BoardDAO implements InterBoardDAO {
 		return cnt;
 	}
 
+	// ========================================= *** 자유게시판 해당 게시글 수정하기(본인만 가능) *** ====================================
 	@Override
 	public int freeEdit(HashMap<String, Object> map) {
 		int n = sqlsession.update("board_psw.freeEdit", map);
 		return n;
+	}
+
+	// ========================================= *** 자유게시판 댓글 쓰기 (Transaction) *** ========================================
+	@Override
+	public int addComment(FreeCommentVO commentvo) {  // tbl_freeComment에 1개 행 삽입 (insert)
+		int n = sqlsession.insert("board_psw.addComment", commentvo);
+		return n;
+	}
+	@Override
+	public int updateCommentCnt(int parentIdx) {  // tbl_free 테이블의 commentCnt 컬럼의 값을 1 증가(update)
+		int n = sqlsession.update("board_psw.updateCommentCnt", parentIdx);
+		return n;
+	}
+
+	@Override
+	public List<FreeCommentVO> freeListComment(String idx) {  // 댓글 목록 보여주기
+		List<FreeCommentVO> list = sqlsession.selectList("board_psw.freeListComment", idx);
+		return list;
 	}
 	
 	

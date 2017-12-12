@@ -95,7 +95,7 @@
 </head>
 
 <body>
-	<div style="border: 1px solid pink; margin-left: 10%; width: 90%;">
+	<div style="border: 1px solid pink; padding: 10px; margin-left: 10%; width: 90%;">
 		<h1>자유게시판</h1>
 		<!-- 글 검색용 폼 생성 -->
 		<div>
@@ -112,7 +112,7 @@
 		</div>
 		<br/>
 		<div style="width: 100%;">
-			<table id="freeboard" style="width: 90%;">
+			<table id="freeboard" style="width: 80%;">
 				<thead>
 					<tr>
 						<th>글번호</th>
@@ -124,14 +124,25 @@
 					</tr>
 				</thead>
 				<tbody>
-					<c:forEach var="free" items="${freeList}" varStatus="status">
+					<c:forEach var="freevo" items="${freeList}" varStatus="status">
 						<tr>
-							<td>${free.idx}</td>
-							<td>${free.userid}</td>
-							<td>${free.name}</td>
-							<td class="subject" onClick="goView('${free.idx}','${gobackURL}')">${free.subject}</td>
-							<td>${free.readCnt}</td>
-							<td>${free.regDate}</td>
+							<td>${freevo.idx}</td>
+							<td>${freevo.userid}</td>
+							<td>${freevo.name}</td>
+							
+							<!-- 자유게시판 목록에서 제목 클릭시 수행 할 작업 -->
+							<td>
+								<c:if test="${freevo.commentCnt > 0}">
+									<span class="subject" onClick="goView('${freevo.idx}','${gobackURL}')">${freevo.subject}</span>
+									<span style="color: red; font-weight: bold; font-style: italic; font-size: smaller; vertical-align: super;">[${freevo.commentCnt}]</span>
+								</c:if>
+								<c:if test="${freevo.commentCnt == 0}">
+									<span class="subject" onClick="goView('${freevo.idx}','${gobackURL}')">${freevo.subject}</span>
+								</c:if>
+							</td>
+							
+							<td>${freevo.readCnt}</td>
+							<td>${freevo.regDate}</td>
 						<tr>
 					</c:forEach>
 				</tbody>
