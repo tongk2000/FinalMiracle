@@ -26,7 +26,7 @@
     }
     
     function test(idx) {
-    	$("#comment"+idx).after("<tr><td colspan='5'>되냐</td></tr>");
+    	$("#comment"+idx).after("<tr><td colspan='5'><input type='text'/></td></tr>");
     }
 </script>
 
