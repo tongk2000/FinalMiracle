@@ -227,12 +227,18 @@
 		// 폴더 전체 닫기
 		$("#allClose").click(function(){
 			$(".element").hide();
-			$(".0").show();
+			$(".0").show().find(".foldingIcon").text("▶");
 		}); // end of $("#allClose").click(function() -------------------------------------------------------------------------------------
 		
 				
 		// 폴더 전체 펴기
 		$("#allOpen").click(function(){ 
+			$(".element").each(function(){
+				var downCnt = $(this).find(".downCnt").val();
+				if(downCnt > 0) { // 하위요소가 있다면
+					$(this).find(".foldingIcon").text("▼");
+				}
+			});
 			$(".element").show();
 		}); // end of $("#allOpen").click(function() ---------------------------------------------------------------------------------------------
 		
@@ -300,7 +306,7 @@
 			var status = "";
 			
 			if(checked) {
-				$("#modalStatus").css({"color":"green"}).html("<label for='modalStatus"+idx+"'>완료</label>");
+				$("#modalStatus").css({"color":"green"}).html("<label style='cursor:pointer;' for='modalStatus"+idx+"'>완료</label>");
 				$("#status"+idx).prop("checked", true);			
 				
 				$("#"+idx).find(".dateColor").css({"background-color":"gray"});
@@ -312,7 +318,7 @@
 					$("#"+idx).find("*").removeClass("completeLine");
 				},500);
 			} else {
-				$("#modalStatus").css({"color":"red"}).html("<label for='modalStatus"+idx+"'>미완료</label>");
+				$("#modalStatus").css({"color":"red"}).html("<label style='cursor:pointer;' for='modalStatus"+idx+"'>미완료</label>");
 				$("#status"+idx).prop("checked", false);
 				
 				setDayColor(idx);
@@ -728,94 +734,7 @@
 			<c:if test="${empty map.doList}"> <!-- 프로젝트 리스트가 비었다면 -->
 				<td colspan="4">등록된 프로젝트가 없습니다.</td>
 			</c:if>
-			<c:if test="${not empty map.doList}"> <!-- 프로젝트 리스트가 있다면 -->
-				<c:forEach var="dvo" items="${map.doList}">
-					<tr id="${dvo.idx}" class="element ${dvo.groupNo} ${dvo.depth}">
-						<td>
-							<input type="hidden" class="fk_folder_idx" value="${dvo.fk_folder_idx}" />
-							<input type="hidden" class="downCnt" value="${dvo.downCnt}" />
-							<span id="span${dvo.idx}" style="margin-left:${dvo.depth*20}px;">
-								<c:if test="${dvo.category == 1}"> <!-- 폴더라면 -->
-									<span class="foldingIcon" style="cursor:default;">
-										<c:if test="${dvo.downCnt > 0}"> <!-- 하위요소가 있다면 -->
-											▼
-										</c:if>
-										<c:if test="${dvo.downCnt == 0}"> <!-- 하위요소가 없다면 -->
-											▷
-										</c:if>
-									</span>
-									<span class="modalFolder subject pointer" id="subject${dvo.idx}">${dvo.subject}</span>
-								</c:if>
-								<c:if test="${dvo.category == 2}"> <!-- 할일이라면 -->
-									<c:if test="${dvo.status == 0}"> <!-- 완료된 할일이라면 -->
-										└<input type="checkbox" id="status${dvo.idx}" class="status" checked/>
-									</c:if>
-									<c:if test="${dvo.status == 1}"> <!-- 미완료된 할일이라면 -->
-										└<input type="checkbox" id="status${dvo.idx}" class="status"/>
-									</c:if>
-									<span class="modalTask subject pointer" id="subject${dvo.idx}">${dvo.subject}</span>
-								</c:if>
-							</span>
-						</td>
-						
-						<c:if test="${dvo.status == 1}"> <!-- 미완료된 할일이라면 -->
-							<c:if test="${dvo.dayCnt == 0}"> <!-- 시작일 전이라면 -->
-								<td class="dateColor ${dvo.dayCnt}" style="background-color:lightgreen;">${dvo.startDate}</td>
-								<td class="dateColor ${dvo.dayCnt}" style="background-color:lightgreen;">${dvo.lastDate}</td>
-							</c:if>
-							<c:if test="${dvo.dayCnt == 1}"> <!-- 진행중이라면 -->
-								<td class="dateColor ${dvo.dayCnt}" style="background-color:green;">${dvo.startDate}</td>
-								<td class="dateColor ${dvo.dayCnt}" style="background-color:green;">${dvo.lastDate}</td>
-							</c:if>
-							<c:if test="${dvo.dayCnt == -1}"> <!-- 기한이 지났다면 -->
-								<td class="dateColor ${dvo.dayCnt}" style="background-color:red;">${dvo.startDate}</td>
-								<td class="dateColor ${dvo.dayCnt}" style="background-color:red;">${dvo.lastDate}</td>
-							</c:if>
-						</c:if>
-						<c:if test="${dvo.status == 0}"> <!-- 완료된 할일이라면 -->
-							<td class="dateColor ${dvo.dayCnt}" style="background-color:gray;">${dvo.startDate}</td>
-							<td class="dateColor ${dvo.dayCnt}" style="background-color:gray;">${dvo.lastDate}</td>
-						</c:if>
-						<td>${dvo.importance}</td>
-						
-						<td></td>
-						<td></td>
-						
-						<c:forEach var="pageDate" items="${map.pageDateList}">
-							<fmt:parseNumber var="startDate" value="${dvo.startDate.replace('-','')}" integerOnly="true"/>
-							<fmt:parseNumber var="lastDate" value="${dvo.lastDate.replace('-','')}" integerOnly="true"/>
-							<fmt:parseNumber var="day" value="${pageDate.day}" integerOnly="true"/> <!-- 희안하게 위에껀 못쓰고 여기서 다시 해줘야함; -->
-							
-							<td class="pageDateLine ${day}" style="border-right:0.5px solid lightgray;
-								<c:if test="${pageDate.dotw == '토' || pageDate.dotw == '일'}">
-									background-color:#ffcccc;
-								</c:if>
-								<c:if test="${fn:substring(pageDate.day, 6, 8) == '01'}">
-									border-left:2px solid #ff66ff;
-								</c:if>
-							" align="center">
-								
-								<c:if test="${startDate <= day and day <= lastDate}"> <!-- 시작일 이후, 마감일 이전 이라면 -->
-									<c:if test="${dvo.status == 1}"> <!-- 미완료된 할일이라면 -->
-										<c:if test="${dvo.dayCnt == 0}"> <!-- 시작일 전이라면 -->
-											<div class="dateColor ${day} ${dvo.dayCnt}" style="height:19px; width:100%; background-color:lightgreen;"></div>
-										</c:if>
-										<c:if test="${dvo.dayCnt == 1}"> <!-- 진행중이라면 -->
-											<div class="dateColor ${day} ${dvo.dayCnt}" style="height:19px; width:100%; background-color:green;"></div>
-										</c:if>
-										<c:if test="${dvo.dayCnt == -1}"> <!-- 기한이 지났다면 -->
-											<div class="dateColor ${day} ${dvo.dayCnt}" style="height:19px; width:100%; background-color:red;"></div>
-										</c:if>
-									</c:if>
-									<c:if test="${dvo.status == 0}"> <!-- 완료된 할일이라면 -->
-										<div class="dateColor ${day} ${dvo.dayCnt}" style="height:19px; width:100%; background-color:gray;"></div>
-									</c:if>
-								</c:if>
-							</td>
-						</c:forEach>
-					</tr>
-				</c:forEach>
-			</c:if>
+			<jsp:include page="doListLine.jsp"/>
 		</tbody>
 	</table>
 </div>

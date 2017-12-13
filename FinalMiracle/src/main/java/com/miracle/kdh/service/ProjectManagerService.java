@@ -151,7 +151,7 @@ public class ProjectManagerService {
 		return map;
 	} // end of List<Folder_CommentVO> getFolder_commentInfo(PageVO pvo) -----------------------------------------------------------------------------------
 	
-	// 페이징 처리하기
+	// 페이징 처리하기(PageVO 를 받아서 setPageBar 후에 해당 PagaVO 를 반환하는 방식)
 	public PageVO getCommentPagingBar(PageVO pvo) {
 		int idx = pvo.getShowIdx();
 		int selectPage = pvo.getSelectPage();
@@ -166,22 +166,22 @@ public class ProjectManagerService {
 		
 		String pageBar = "";
 		if(pageNo != 1) {
-			pageBar += "<span style='color:blue; font-size:12pt; cursor:pointer;' onclick='"+function+"(\""+(pageNo-10)+"\")'>[이전10페이지]</span>";
+			pageBar += "<span style='color:blue; font-size:10pt; cursor:pointer;' onclick='"+function+"(\""+(pageNo-10)+"\")'>[이전10페이지]&#160;</span>";
 		} else {
-			pageBar += "<span>[...]</span>";
+			pageBar += "<span>[...]&#160;</span>";
 		}
 		for(int i = 0; i < blockSize && pageNo <= totalPageCnt; i++) {
 			if(pageNo == selectPage) {
-				pageBar += "<span style='color:red; font-size:12pt; cursor:pointer;'>"+pageNo+"</span>";
+				pageBar += "<span style='color:red; font-size:10pt; cursor:pointer;'>"+pageNo+"&#160;</span>";
 			} else {
-				pageBar += "<span style='color:blue; font-size:12pt; cursor:pointer;' onclick='"+function+"(\""+pageNo+"\")'>"+pageNo+"</span>";
+				pageBar += "<span style='color:blue; font-size:10pt; cursor:pointer;' onclick='"+function+"(\""+pageNo+"\")'>"+pageNo+"&#160;</span>";
 			}
 			pageNo++;
 		}
 		if(pageNo <= totalPageCnt) {
-			pageBar += "<span style='color:blue; font-size:12pt; cursor:pointer;' onclick='"+function+"(\""+pageNo+"\")'>[다음10페이지]</span>";
+			pageBar += "<span style='color:blue; font-size:10pt; cursor:pointer;' onclick='"+function+"(\""+pageNo+"\")'>&#160;[다음10페이지]</span>";
 		} else {
-			pageBar += "<span>[...]</span>";
+			pageBar += "<span>&#160;[...]</span>";
 		}
 		pvo.setPageBar(pageBar);
 		return pvo;
