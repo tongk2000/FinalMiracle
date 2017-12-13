@@ -29,6 +29,7 @@ request.setCharacterEncoding("UTF-8");
     }
     .grayColor {
     	background-color:gray;
+    	cursor: pointer;
     }
 </style>
 <script>

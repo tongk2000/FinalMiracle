@@ -30,6 +30,7 @@
     }
     .grayColor {
     	background-color:gray;
+    	cursor: pointer;
     }
 </style>
 <script>

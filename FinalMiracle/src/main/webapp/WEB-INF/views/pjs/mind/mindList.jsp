@@ -45,6 +45,7 @@ request.setCharacterEncoding("UTF-8");
 	}
 	.grayColor {
     	background-color:gray;
+    	cursor: pointer;
     }
 </style>
 <script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>

@@ -326,6 +326,12 @@ public class PjsDAOImpl implements PjsinterDAO {
 		String n = sqlsession.selectOne("pjsfinal.getMessage", userid);
 		return n;
 	}
+	@Override
+	public int checkReadCount(String parameter) {
+		// readcount가 0인지 1인지
+		int readcount = sqlsession.selectOne("pjsfinal.checkReadCount", parameter);
+		return readcount;
+	}
 	
 	
 	

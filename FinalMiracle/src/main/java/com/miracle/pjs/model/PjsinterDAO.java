@@ -108,6 +108,8 @@ public interface PjsinterDAO {
 	//String getCheckNum(HashMap<String, String> map); // 몇명이 읽었는지 반환
 	
 	String getMessage(String userid);// 메세지 알람
+	
+	int checkReadCount(String parameter); //readcount가 0인지 1인지
 
 //==========================================================================================================================================================//	
 
@@ -119,6 +121,8 @@ public interface PjsinterDAO {
 	
 	// 로그인한 유저의 팀정보를 가져오는 메소드
 	HashMap<String, String> getUserTeam(HashMap<String, String> team);
+
+	
 
 	
 

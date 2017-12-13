@@ -39,6 +39,7 @@ request.setCharacterEncoding("UTF-8");
     	           cursor: pointer; }
     .grayColor {
     	background-color:gray;
+    	cursor: pointer;
     }
     .selectLine {
     	background-color:gray;

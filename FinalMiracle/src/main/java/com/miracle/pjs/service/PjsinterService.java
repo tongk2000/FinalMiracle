@@ -99,6 +99,8 @@ public interface PjsinterService {
 
 	//String getCheckNum(HashMap<String, String> map); // 몇명이 읽었는지 반환
 	
+	int checkReadCount(String parameter); //readcount가 1인지 0인지 알아오자 몰라서 편법씀
+	
 //==========================================================================================================================================================//	
 
 	
@@ -107,6 +109,8 @@ public interface PjsinterService {
 	// 로그인한 유저의 팀정보를 가져오기 위
 
 	HashMap<String, String> getUserTeam(HashMap<String, String> team);
+
+	
 
 	
 
