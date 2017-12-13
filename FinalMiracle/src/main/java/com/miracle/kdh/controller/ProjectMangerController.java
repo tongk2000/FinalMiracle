@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.miracle.kdh.model.FolderVO;
 import com.miracle.kdh.model.Folder_CommentVO;
-import com.miracle.kdh.model.ProjectManagerDAO;
+import com.miracle.kdh.model.PageVO;
 import com.miracle.kdh.service.ProjectManagerService;
 import com.miracle.psw.model.MemberVO;
 import com.miracle.psw.service.MemberService;
@@ -102,22 +102,32 @@ public class ProjectMangerController {
 	// 선택한 폴더의 모든 정보를 가져오기
 	@RequestMapping(value="do_getSelectFolderInfo.mr", method={RequestMethod.GET})
 	public String do_getSelectFolderInfo(HttpServletRequest req) {
-		String idx = req.getParameter("idx");
-		HashMap<String, Object> map = svc.do_getSelectFolderInfo(idx);
-		req.setAttribute("fvo", map.get("fvo"));
-		req.setAttribute("folder_teamwonList", map.get("folder_teamwonList"));
-		req.setAttribute("folder_commentList", map.get("folder_commentList"));
+		int idx = Integer.parseInt(req.getParameter("idx"));
+		PageVO pvo = new PageVO(); 
+		pvo.setShowIdx(idx);
+		pvo.setSelectPage(1);
+		pvo.setSizePerPage(5);
+		pvo.setBlockSize(10);		
+		pvo.setFunction("goCommentPage");
+		
+		HashMap<String, Object> map = svc.do_getSelectFolderInfo(pvo);
+		req.setAttribute("map", map);
 		return "kdh/doList/modal/modalFolder.not";
 	} // end of String do_getSelectFolderInfo(HttpServletRequest req) -----------------------------------------------
 	
 	// 선택한 할일의 모든 정보를 가져오기
 	@RequestMapping(value="do_getSelectTaskInfo.mr", method={RequestMethod.GET})
 	public String do_getSelectTaskInfo(HttpServletRequest req) {
-		String idx = req.getParameter("idx");
-		HashMap<String, Object> map = svc.do_getSelectFolderInfo(idx);
-		req.setAttribute("fvo", map.get("fvo"));
-		req.setAttribute("folder_teamwonList", map.get("folder_teamwonList"));
-		req.setAttribute("folder_commentList", map.get("folder_commentList"));
+		int idx = Integer.parseInt(req.getParameter("idx"));
+		PageVO pvo = new PageVO();
+		pvo.setShowIdx(idx);
+		pvo.setSelectPage(1);
+		pvo.setSizePerPage(5);
+		pvo.setBlockSize(10);
+		pvo.setFunction("goCommentPage");
+		
+		HashMap<String, Object> map = svc.do_getSelectFolderInfo(pvo);
+		req.setAttribute("map", map);
 		return "kdh/doList/modal/modalTask.not";
 	} // end of String do_getSelectFolderInfo(HttpServletRequest req) -----------------------------------------------
 	
@@ -201,7 +211,7 @@ public class ProjectMangerController {
 		String str_json = jsonList.toString();
 		req.setAttribute("str_json", str_json);
 		return "kdh/json.not";
-	} // end of public String getTeamwonList(HttpServletRequest req) --------------------------------------------------------------
+	} // end of String getTeamwonList(HttpServletRequest req) --------------------------------------------------------------
 	
 	// 선택한 요소와 그 하위요소들 삭제하기
 	@RequestMapping(value="do_delElement.mr", method={RequestMethod.GET})
@@ -210,39 +220,35 @@ public class ProjectMangerController {
 		String fk_folder_idx = req.getParameter("fk_folder_idx");
 		
 		HashMap<String, Integer> map = svc.delElement(idx, fk_folder_idx);
-		
 		String str_json = "{\"result\":\""+map.get("result")+"\", \"downCnt\":\""+map.get("downCnt")+"\"}"; // JSON 형태로 넘길때는 반드시 {"키값":"밸류값"} 이어야함. 따옴표 주의
 		req.setAttribute("str_json", str_json);
 		
 		return "kdh/json.not";
-	} // end of public String delElement(HttpServletRequest req) --------------------------------------------------------------
+	} // end of String delElement(HttpServletRequest req) --------------------------------------------------------------
 	
 	// 요소에 댓글 추가하고 새로운 댓글 리스트 받아오기
-	@RequestMapping(value="do_addComment.mr", method={RequestMethod.GET})
-	public String addComment(HttpServletRequest req, HttpSession ses, Folder_CommentVO fcvo) {
+	@RequestMapping(value="do_addComment.mr", method={RequestMethod.POST})
+	public String addComment(HttpServletRequest req, HttpSession ses, Folder_CommentVO fcvo, PageVO pvo) {
+		// 세션에 있는 팀원번호 받아오기 시작
 		@SuppressWarnings("unchecked")
 		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo");
 		String fk_teamwon_idx = teamInfo.get("teamwon_idx");
 		fcvo.setFk_teamwon_idx(Integer.parseInt(fk_teamwon_idx));
+		// 세션에 있는 팀원번호 받아오기 끝
+				
+		HashMap<String, Object> map = svc.addComment(fcvo, pvo);
 		
-		List<Folder_CommentVO> folder_commentList = svc.addComment(fcvo);
-		
-		req.setAttribute("folder_commentList", folder_commentList);
-		return "kdh/doList/modal/commentListXML.not";
-		
-		/*JSONArray jsonList = new JSONArray(); 
-		for(Folder_CommentVO fcvo2 : folder_commentList) {
-			JSONObject jobj = new JSONObject();
-			jobj.put("userid", fcvo2.getUserid());
-			jobj.put("content", fcvo2.getContent());
-			jobj.put("writeDate", fcvo2.getWriteDate());
-			jsonList.put(jobj);
-		}
-		String str_json = jsonList.toString();
-		req.setAttribute("str_json", str_json);
-		
-		return "kdh/json.not";*/
-	} // end of public String addComment(HttpServletRequest req, HttpSession ses, Folder_CommentVO fcvo) -----------------------------------------------------
+		req.setAttribute("map", map);
+		return "kdh/doList/modal/commentListXML.xml";
+	} // end of String addComment(HttpServletRequest req, HttpSession ses, Folder_CommentVO fcvo) -----------------------------------------------------
+	
+	// 특정 페이지의 댓글 리스트 가져오기
+	@RequestMapping(value="do_goCommentPage", method={RequestMethod.GET})
+	public String goCommentPage(HttpServletRequest req, PageVO pvo) {
+		HashMap<String, Object> map = svc.getFolder_commentInfo(pvo);
+		req.setAttribute("map", map);
+		return "kdh/doList/modal/modalCommentPage.not";
+	} // end of String goCommentPage(HttpServletRequest req, PageVO pvo) ----------------------------------------------------------------------------------
 	
 }
 	 

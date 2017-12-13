@@ -482,6 +482,14 @@ public class GeniousPjsController {
 	
 /*=======================================================================================================================================================*/	
 	// ==== *** 구글맵 *** ==== //
+	@RequestMapping(value="googleMapbasic.mr", method={RequestMethod.GET})
+	public String googleMapbasic(HttpServletRequest req, HttpSession session) {
+		
+		List<MapVO> list = service.getMap(); // 전체 리스트를 반환한다.
+		req.setAttribute("list", list);
+		
+		return "pjs/map/googleMapbasic.not";
+	}/* ================================================================================================================================================= */
 	@RequestMapping(value="googleMap.mr", method={RequestMethod.GET})
 	public String googleMap(HttpServletRequest req, HttpSession session) {
 		String choice = req.getParameter("choice");
@@ -500,9 +508,11 @@ public class GeniousPjsController {
 			req.setAttribute("list", list);
 			req.setAttribute("choice", choice);
 			req.setAttribute("searchString", searchString);
+			
 		}
 		return "pjs/map/googleMap.not";
-	}/* =======================================================================================================1=========================================== */
+	}/* ================================================================================================================================================= */
+
 	@RequestMapping(value="googleMapJSON.mr", method={RequestMethod.GET})
 	public String googleMapJSON(HttpServletRequest req) {
 		HashMap<String, String> map = new HashMap<String, String>();

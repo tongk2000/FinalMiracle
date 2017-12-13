@@ -32,13 +32,14 @@
 	      maxHeight: null,      // 최대 높이값(null은 제한 없음)
 	      focus: true,          // 페이지가 열릴때 포커스를 지정함
 	      lang: 'ko-KR',         // 한국어 지정(기본값은 en-US)
+/* 	      
 	      callbacks: { // 콜백을 사용
               // 이미지를 업로드할 경우 이벤트를 발생
 			    onImageUpload: function(files, editor, welEditable) {
 				    sendFile(files[0], this);
 				}
 			}
-
+ */
 	    });
 		
 		
@@ -105,7 +106,7 @@
 		
 		
 	}
-	
+/* 	
 	function sendFile(file, editor) {
         // 파일 전송을 위한 폼생성
  		data = new FormData();
@@ -119,10 +120,11 @@
  	        processData : false,
  	        success : function(data) { // 처리가 성공할 경우
                 // 에디터에 이미지 출력
- 	        	$(editor).summernote('editor.insertImage', data.url);
+ 	        	$(editor).summernote('editor.insertImage', data.path);
  	        }
  	    });
- 	}
+ 	} 
+*/
 	
 </script>
 

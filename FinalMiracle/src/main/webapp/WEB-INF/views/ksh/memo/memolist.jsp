@@ -113,8 +113,8 @@
 </script>
 
 
-<form id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/memoList.mr" method="get" enctype="multipart/form-data" overflow-y: scroll;>
-<div style="padding-left: 10%; border: solid 0px red; width: 100%; overflow-y: auto;">
+<form id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/memoList.mr" method="get" enctype="multipart/form-data">
+<div style="padding-left: 1%; padding-right: 1%; border: solid 0px red; width: 100%; height: 840px; overflow-y: auto;">
 	<h1>메모목록</h1>
 	
 	<div style="margin-top: 20px;">

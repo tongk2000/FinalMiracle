@@ -118,27 +118,27 @@
 		$("#taskRcm").hide();
 		
 		// 폴더 모달창 띄우기(값만 가지고 함수로 이동하게됨)
-		$(".modalFolder").click(function(){
+		$(document).on("click", ".modalFolder", function(){
 			var frm = {"idx":$(this).parents(".element").attr("id")};
 		 	selectFolderInfo(frm);
 		 	return false; // 폴더 접고펴기가 실행되지 않도록 설정해둠
 		}); // end of $(".modalFolder").click(function() ------------------------------------------------------------------------
 		
 		// 할일 모달창 띄우기(값만 가지고 함수로 이동하게됨)
-		$(".modalTask").click(function(){
+		$(document).on("click", ".modalTask", function(){
 		 	var frm = {"idx":$(this).attr("id").replace("subject","")};
 		 	selectTaskInfo(frm);
 		 	return false;
 		}); // end of $(".modalFolder").click(function() ------------------------------------------------------------------------
 		
 		// 폴더 모달창 띄우기(우클릭 메뉴)
-		$("#modalFolderRcm").click(function(){
+		$(document).on("click", "#modalFolderRcm", function(){
 			var frm = {"idx":$(".selectedLine").attr("id").replace("subject","")};
 			selectFolderInfo(frm);
 		});
 		
 		// 할일 모달창 띄우기(우클릭 메뉴)
-		$("#modalTaskRcm").click(function(){
+		$(document).on("click", "#modalTaskRcm", function(){
 			var frm = {"idx":$(".selectedLine").attr("id").replace("subject","")};
 			selectTaskInfo(frm);
 		});
@@ -261,7 +261,7 @@
 		
 				
 		// 모달창에서 정보 수정을 하면 그 값을 바로 show 폼에 적용시키기
-		$(document).on("keyup", ".hiddenEditInput", function(){
+		$(document).on("keyup", ".hiddenEditInput", function(event){
 			changeFlag = true;
 			$(this).parent().parent().find(".showInfo").html($(this).val());
 			if(event.keyCode == 13) {
@@ -277,7 +277,7 @@
 				url:"do_goModalEdit.mr",
 				type:"post",
 				data:frm,
-				dataType:"JSON",
+				dataType:"json",
 				success:function(data){
 					if(data.result == 1) {
 						alert("정보수정이 성공했습니다.");
@@ -398,7 +398,7 @@
 		
 				
 		// 모달창에서 x 나 취소를 누르면 esc 누른 효과를 주기(위의 이벤트핸들러로 이동함)
-		$(document).on("click", ".modalClose", function(){			
+		$(document).on("click", ".modalClose", function(){
 			event.keyCode = 27;
 			$(document).trigger("keydown"); // trigger : 해당 이벤트로 전달
 		}); // end of $(".modalClose").click(function() ------------------------------------------------------------------------------------------------------
@@ -645,21 +645,25 @@
 			dataType:"xml",
 			success:function(data){
 				alert("댓글 입력에 성공했습니다.");
-				/* var commentArr = $(data).find(":root").find("comment");
+				var commentArr = $(data).find(":root").find("comment");
 				var html = "";
 				commentArr.each(function(){
 					html += "<tr>";
-					html += "	<td>"+$(this).find("userid").text()+"<td>";
-					html += "	<td>"+$(this).find("content").text()+"<td>";
-					html += "	<td>"+$(this).find("writeDay").text()+"<td>";
+					html += "	<td>"+$(this).find("userid").text()+"</td>";
+					html += "	<td>"+$(this).find("content").text()+"</td>";
+					html += "	<td>"+$(this).find("writeDate").text()+"</td>";
 					html += "	<td>x<td>";
 					html += "</tr>";
 				});
-				modalCommentList.html(html); */
-			}, error:function(request, status, error){
-				/* alert(request.status + " 에러!!\n관리자에게 문의하세요."); */
-				alert("code: " + request.status + "\n"+"message: " + request.responseText + "\n" + "error: " + error);
-			}
+				$("#modalCommentList").html(html);
+				
+				var pageBar = $(data).find(":root").find("pageBar").html();
+				$("#pageBar").html(pageBar);
+				
+			}, error: function (xhr, ajaxOptions, thrownError) {
+		        console.log(xhr.status);
+		        console.log(thrownError);
+		    }
 		});		
 	} // end of function addComment() ----------------------------------------------------------------------------------------------------------------------
 </script>
@@ -740,7 +744,7 @@
 											▷
 										</c:if>
 									</span>
-									<span class="modalFolder subject pointer">${dvo.subject}</span>
+									<span class="modalFolder subject pointer" id="subject${dvo.idx}">${dvo.subject}</span>
 								</c:if>
 								<c:if test="${dvo.category == 2}"> <!-- 할일이라면 -->
 									<c:if test="${dvo.status == 0}"> <!-- 완료된 할일이라면 -->

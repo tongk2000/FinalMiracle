@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.MultipartRequest;
@@ -922,9 +923,10 @@ public class TMController {
 		if(!fk_team_idx.trim().isEmpty()){
 			List<TeamVO> list = service.getTeamInfo(fk_team_idx);
 			
+			JSONObject jsonObj = new JSONObject();
+			
 			if(list != null){
 				for(TeamVO vo : list){
-					JSONObject jsonObj = new JSONObject();
 					jsonObj.put("idx", vo.getIdx());
 					jsonObj.put("fk_member_idx", vo.getFk_member_idx());
 					jsonObj.put("name", vo.getName());
@@ -939,10 +941,13 @@ public class TMController {
 					jsonObj.put("regdate", vo.getRegdate());
 					jsonObj.put("disdate", vo.getDisdate());
 					jsonObj.put("status", vo.getStatus());
-					
-					jsonMap.put(jsonObj);
 				}
 			}
+			
+			String name = service.getTeamLeaderName(fk_team_idx);
+			jsonObj.put("leader", name);
+			
+			jsonMap.put(jsonObj);
 		}
 
 		String str_jsonMap = jsonMap.toString();
@@ -952,43 +957,41 @@ public class TMController {
 		return "ksh/json/teamInfo.not";
 	}
 	
-	@RequestMapping(value="/tmImageUpload.mr", method={RequestMethod.GET})
-	public String tmImageUpload(HttpServletRequest request) throws IOException{
+	/*
+	@RequestMapping(value="/tmImageUpload.mr", method={RequestMethod.POST})
+	@ResponseBody
+	public HashMap<String, String> tmImageUpload(MultipartHttpServletRequest req, HttpSession session){
 		
-		/*		
+		List<MultipartFile> uploadfile = req.getFiles("uploadFile");
+		
 		String root = session.getServletContext().getRealPath("/"); 
 		String path = root + "resources"+File.separator+"files";
 		
-		// 이미지 업로드할 경로
-		String uploadPath = path;
-	    int size = 10 * 1024 * 1024;  // 업로드 사이즈 제한 10M 이하
+		String newFileName = "";
 		
-		String fileName = ""; // 파일명
+		byte[] bytes = null;
 		
-		try{
-	        // 파일업로드 및 업로드 후 파일명 가져옴
-			MultipartRequest multi = new MultipartRequest(req, uploadPath, size, "utf-8", new DefaultFileRenamePolicy());
-			@SuppressWarnings("rawtypes")
-			Enumeration files = (Enumeration) multi.getFileNames();
-			String file = (String)files.nextElement(); 
-			fileName = multi.getFilesystemName(file);
+		long size = 0;
+		
+		try {
+			bytes = uploadfile.get(0).getBytes();
 			
-		}catch(Exception e){
-			e.printStackTrace();
+			newFileName = fileManager.doFileUpload(bytes, uploadfile.get(0).getOriginalFilename(), path);
+			
+			size = uploadfile.get(0).getSize();
+		} catch (Exception e) {
+			
 		}
 		
-	    // 업로드된 경로와 파일명을 통해 이미지의 경로를 생성
-		uploadPath = "/files/" + fileName;
+		path += "/"+newFileName;
 		
-	    // 생성된 경로를 JSON 형식으로 보내주기 위한 설정
-		JSONObject jobj = new JSONObject();
-		jobj.put("url", uploadPath);
+		HashMap<String, String> returnmap = new HashMap<String, String>();
+		returnmap.put("newFileName", newFileName);
+		returnmap.put("size", String.valueOf(size));
+		returnmap.put("path", path);
 		
-		response.setContentType("application/json"); // 데이터 타입을 json으로 설정하기 위한 세팅
-		System.out.print(jobj.toString());
-		*/
-		
-		return "ksh/json/imageUpload.not";
+		return returnmap;
 	}
+	*/
 	
 }
