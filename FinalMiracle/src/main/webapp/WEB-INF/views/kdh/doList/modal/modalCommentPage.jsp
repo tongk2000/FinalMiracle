@@ -23,6 +23,9 @@
 			}
 		});
 	}
+	function commentDelete(idx) {
+		alert(idx);
+	}
 </script>
 
 <form name="addCommentFrm">
@@ -32,11 +35,11 @@
 	<input type="button" value="작성" onclick="addComment()" />
 	<input type="hidden" name="fk_folder_idx" value="${map.pvo.showIdx}" /> <!-- 폴더번호 저장용 -->
 	
-	<input type="text" name="showIdx" value="${map.pvo.showIdx}" /> <!-- 페이징처리값을 vo로 쉽게 받기 위해서 저장해둠 -->
-	<input type="text" name="selectPage" id="selectPage" value="${map.pvo.selectPage}" /> <!-- 현재페이지 -->
-	<input type="text" name="sizePerPage" value="${map.pvo.sizePerPage}" /> <!-- 사이즈 저장용 -->
-	<input type="text" name="blockSize" value="${map.pvo.blockSize}" /> <!-- 블록사이즈 저장용 -->
-	<input type="text" name="function" value="${map.pvo.function}" /> <!-- 함수 이름 저장용 -->
+	<input type="hidden" name="showIdx" value="${map.pvo.showIdx}" /> <!-- 페이징처리값을 vo로 쉽게 받기 위해서 글번호를 저장해둠 -->
+	<input type="hidden" name="selectPage" id="selectPage" value="${map.pvo.selectPage}" /> <!-- 현재페이지 저장용 -->
+	<input type="hidden" name="sizePerPage" value="${map.pvo.sizePerPage}" /> <!-- 사이즈 저장용 -->
+	<input type="hidden" name="blockSize" value="${map.pvo.blockSize}" /> <!-- 블록사이즈 저장용 -->
+	<input type="hidden" name="function" value="${map.pvo.function}" /> <!-- 함수 이름 저장용 -->
 </form>
 <br/>
 <table>
@@ -50,7 +53,7 @@
 	</thead>
 	<tbody id="modalCommentList">
 		<c:if test="${empty map.folder_commentList}">
-			<td colspan="3">등록된 댓글이 없습니다.</td>
+			<td colspan="4">등록된 댓글이 없습니다.</td>
 		</c:if>
 		<c:if test="${not empty map.folder_commentList}">
 			<c:forEach var="fcvo" items="${map.folder_commentList}" varStatus="status">
@@ -58,9 +61,9 @@
 					<td>${fcvo.userid}</td>
 					<td>${fcvo.content}</td>
 					<td>${fcvo.writeDate}</td>
-					<td>
+					<td align="center">
 						<c:if test="${sessionScope.loginUser.userid == fcvo.userid}">
-							x
+							<span style="cursor:pointer;" onclick="commentDelete(${fcvo.idx})">x</span>
 						</c:if>
 					</td>
 				</tr>
