@@ -271,6 +271,14 @@ public class BoardController {
 		return "psw/board/freeView.all";
 	}
 	
+	// ===================================================== *** 자유게시판 이전글 , 다음글 보여주기 *** ===============================
+	@RequestMapping(value="/freeBeforeNextView.mr")
+	public String freeBeforeNextView(HttpServletRequest req, HttpSession session){
+		String idx = req.getParameter("idx");
+		
+		return "psw/board/freeView.all";
+	}
+	
 	// ===================================================== *** 자유게시판 글 쓰기 *** ============================================
 	@RequestMapping(value="/freeAdd.mr", method={RequestMethod.GET})
 	public String freeAdd() {  // 글쓰기 폼페이지 띄우기
