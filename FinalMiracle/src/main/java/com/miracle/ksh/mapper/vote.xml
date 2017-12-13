@@ -463,12 +463,15 @@
  		<result property="FK_TEAMWON_IDX" 			column="fk_teamwon_idx" 			javaType="String" />
  		<result property="CONTENT" 			column="content" 			javaType="String" />
  		<result property="STATUS" 	column="status" 	javaType="String" />
+ 		<result property="COMMDATE" 	column="commdate" 	javaType="String" />
  		<result property="MEMIDX" 	column="memidx" 	javaType="String" />
  		<result property="NAME" 	column="name" 	javaType="String" />
  		<result property="USERID" 	column="userid" 	javaType="String" />
+ 		<result property="IMG" 	column="img" 	javaType="String" />
 	</resultMap>
 	<select id="VoteCommList" parameterType="HashMap" resultMap="VoteCommMap">
-		select A.idx as commidx, A.fk_vote_idx, B.fk_team_idx, A.fk_teamwon_idx, A.content, A.status, C.idx as memidx, C.name, C.userid
+		select A.idx as commidx, A.fk_vote_idx, B.fk_team_idx, A.fk_teamwon_idx, A.content, A.status, 
+			  A.commdate, C.idx as memidx, C.name, C.userid, C.img
 		from tbl_voteComm A join tbl_teamwon B
 		on A.fk_teamwon_idx = B.idx join tbl_member C
 		on B.fk_member_idx = C.idx
@@ -488,7 +491,7 @@
 	
 	<insert id="addComment" parameterType="HashMap">
 		insert into tbl_voteComm
-		values(seq_vote_comm.nextval, #{voteidx}, #{fk_teamwon_idx}, #{comment}, default)
+		values(seq_vote_comm.nextval, #{voteidx}, #{fk_teamwon_idx}, #{comment}, default, to_char(sysdate, 'yyyy-mm-dd hh24:mi:ss'))
 	</insert>
 	
 

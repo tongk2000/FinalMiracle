@@ -23,7 +23,7 @@ public class MemoController {
 	@Autowired
 	private InterMemoService service;
 	
-	
+	//메모 리스트를 뽑아오자
 	@RequestMapping(value="/memoList.mr", method={RequestMethod.GET})
 	public String memoList(HttpServletRequest req, HttpSession session){
 		
@@ -31,13 +31,13 @@ public class MemoController {
 		
 		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
 		
-		String fk_member_idx = String.valueOf(loginUser.getIdx());
-		String folder = req.getParameter("folder");
-		String colname = req.getParameter("colname");
-		String search = req.getParameter("search");
+		String fk_member_idx = String.valueOf(loginUser.getIdx()); //회원 idx
+		String folder = req.getParameter("folder"); //메모분류
+		String colname = req.getParameter("colname"); //검색분류
+		String search = req.getParameter("search"); //검색내용
 		String gobackURL = MyUtil.getCurrentURL(req);
 		
-		List<String> folderlist = service.getfolderList(fk_member_idx);
+		List<String> folderlist = service.getfolderList(fk_member_idx); //분류 리스트를 뽑아오자
 		
 		HashMap<String, String> memoMap = new HashMap<String, String>();
 		memoMap.put("fk_member_idx", fk_member_idx);
@@ -46,7 +46,7 @@ public class MemoController {
 		
 		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 		String str_sizePerPage = req.getParameter("sizePerPage");
-		String period = req.getParameter("period");
+		String period = req.getParameter("period"); //기간별 설정
 		
 		int totalCount = 0; //총 게시물 건수	
 		int sizePerPage = 0; //한 페이지 당 보여줄 게시물 수
@@ -77,7 +77,7 @@ public class MemoController {
 		}
 		
 		if(folder == null){
-			folder = "전체";
+			folder = "전체"; //분류의 기본값을 전체로 줘보자
 		}
 		
 		//System.out.println("확인 : " + folder);
@@ -132,6 +132,7 @@ public class MemoController {
 	}
 	
 	
+	//메모 작성하는 페이지를 띄워보자
 	@RequestMapping(value="/memoAdd.mr", method={RequestMethod.GET})
 	public String memoAdd(HttpServletRequest req, HttpSession session){
 
@@ -139,23 +140,24 @@ public class MemoController {
 		
 		String fk_member_idx = String.valueOf(loginUser.getIdx());
 		
-		List<String> folderlist = service.getfolderList(fk_member_idx);
+		List<String> folderlist = service.getfolderList(fk_member_idx); //회원만의 폴더리스트들을 뽑아오자
 
 		req.setAttribute("folderlist", folderlist);
 		
 		return "ksh/memo/memoadd.all";
 	}
 	
+	//메모를 작성해보자
 	@RequestMapping(value="/memoAddEnd.mr", method={RequestMethod.POST})
 	public String memoAddEnd(HttpServletRequest req, HttpSession session){
 		
 		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
 		
-		String fk_member_idx = String.valueOf(loginUser.getIdx());
-		String subject = req.getParameter("subject");
-		String content = req.getParameter("content");
-		String folder = req.getParameter("folder");
-		String newfolder = req.getParameter("newfolder");
+		String fk_member_idx = String.valueOf(loginUser.getIdx()); //회원 idx
+		String subject = req.getParameter("subject"); //제목
+		String content = req.getParameter("content"); //내용
+		String folder = req.getParameter("folder"); //분류
+		String newfolder = req.getParameter("newfolder"); //새 분류
 		
 		String gobackURL = req.getParameter("gobackURL");		
 		
@@ -174,7 +176,7 @@ public class MemoController {
 		return "ksh/memo/memoaddEnd.all";
 	}
 	
-	
+	//메모를 수정하는 페이지를 띄워보자
 	@RequestMapping(value="/memoEdit.mr", method={RequestMethod.GET})
 	public String memoEdit(HttpServletRequest req, HttpSession session){
 		
@@ -182,13 +184,13 @@ public class MemoController {
 		
 		String fk_member_idx = String.valueOf(loginUser.getIdx());
 		
-		String idx = req.getParameter("idx");
+		String idx = req.getParameter("idx"); //수정하려는 메모 idx
 		String gobackURL = req.getParameter("gobackURL");
 		
-		System.out.println("확인용 : " + idx);
+		//System.out.println("확인용 : " + idx);
 		
-		List<MemoVO> memovo = service.getMemoVO(idx);
-		List<String> folderlist = service.getfolderList(fk_member_idx);
+		List<MemoVO> memovo = service.getMemoVO(idx); //수정하려는 메모의 내용들을 받아오자
+		List<String> folderlist = service.getfolderList(fk_member_idx); //회원의 메모 분류들을 받아오자
 
 		req.setAttribute("memovo", memovo);
 		req.setAttribute("folderlist", folderlist);
@@ -197,14 +199,14 @@ public class MemoController {
 		return "ksh/memo/memoedit.all";
 	}
 	
-	
+	//메모를 수정해보자
 	@RequestMapping(value="/memoEditEnd.mr", method={RequestMethod.POST})
 	public String memoEditEnd(HttpServletRequest req){
 		
-		String idx = req.getParameter("idx");
-		String subject = req.getParameter("subject");
-		String content = req.getParameter("content");
-		String folder = req.getParameter("folder");
+		String idx = req.getParameter("idx"); //메모 idx
+		String subject = req.getParameter("subject"); //제목
+		String content = req.getParameter("content"); //내용
+		String folder = req.getParameter("folder"); //분류
 		
 		String gobackURL = req.getParameter("gobackURL");
 		
@@ -214,7 +216,7 @@ public class MemoController {
 		memoMap.put("content", content);
 		memoMap.put("folder", folder);
 		
-		int n = service.MemoEdit(memoMap);
+		int n = service.MemoEdit(memoMap); //메모를 수정해보자
 		
 		req.setAttribute("n", n);
 		req.setAttribute("gobackURL", gobackURL);
@@ -222,14 +224,14 @@ public class MemoController {
 		return "ksh/memo/memoeditEnd.all";
 	}
 	
-	
+	//메모를 휴지통으로 보내보자
 	@RequestMapping(value="/memoGarbage.mr", method={RequestMethod.GET})
 	public String memoGarbage(HttpServletRequest req){
 		
-		String idx = req.getParameter("idx");
+		String idx = req.getParameter("idx"); //메모 idx
 		String gobackURL = req.getParameter("gobackURL");
 		
-		int n = service.MemoGarbage(idx);
+		int n = service.MemoGarbage(idx); //메모를 휴지통으로 보내보자
 		
 		
 		if(n > 0){
@@ -253,13 +255,14 @@ public class MemoController {
 		
 	}
 	
+	//메모를 삭제해보자
 	@RequestMapping(value="/memoRestore.mr", method={RequestMethod.GET})
 	public String memoRestore(HttpServletRequest req){
 		
 		String idx = req.getParameter("idx");
 		String gobackURL = req.getParameter("gobackURL");
 		
-		int n = service.MemoRestore(idx);
+		int n = service.MemoRestore(idx); //메모를 삭제해보자
 		
 		
 		if(n > 0){
