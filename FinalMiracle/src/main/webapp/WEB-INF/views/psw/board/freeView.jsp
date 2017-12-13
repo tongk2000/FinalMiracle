@@ -26,26 +26,28 @@
     }
 </script>
 
-<div style="margin-left: 10%; margin-top: 30px; padding: 10px; border: solid 1px red; width: 80%;">
+<div style="margin-left: 10%; margin-top: 30px; padding: 10px; border: solid 0px red; width: 80%;">
 	
 	<table id="table" style="width: 70%; border: 1px solid dimgray; border-left: none; border-right: none;">
 		<tr class="title above">
-			<td colspan="2" style="padding-left: 20px;">자유게시판입니다.</td>
+			<td colspan="2" style="padding-left: 20px; font-weight: bold;">자유게시판입니다.</td>
 		</tr>
 		<tr class="title">
 		<td colspan="2" style="padding-left: 10px;">
 			미풍양속을 해치지 않는 범위 내에서 자유롭게 작성해주세요.<br/>
-			단, 팀원간 마찰은 <a href="<%= request.getContextPath() %>/mindList.mr">마음의 소리 게시판</a>을, <br/>
-			&nbsp;&nbsp;&nbsp;&nbsp;1:1 대화를 원하시는 회원님은 <a href="<%= request.getContextPath() %>/mindList.mr">쪽지</a> 또는 
+			단, 팀원간 마찰은 <a href="<%= request.getContextPath() %>/mindList.mr">마음의 소리 게시판</a>을,
+			       팀내 공지사항은 <a href="<%= request.getContextPath() %>/noticeList.mr">공지사항</a> 게시판을,
+			<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:1 대화를 원하시는 회원님은 <a href="<%= request.getContextPath() %>/mindList.mr">쪽지</a> 또는 
 			<a href="<%= request.getContextPath() %>/chatting.mr">채팅</a> 기능을 이용해주시기 바랍니다.
 		</td>
 		</tr>
 		<!-- ====================== *** 공백용 *** ================================ -->
 		<tr style="border: 1px solid lightgray; border-top: none; border-left: none; border-right: none;">
-			<td colspan="2"> 
-			<br/><br/>
-			<span style="font-weight: bold;">글번호 : </span>${freevo.idx}
-			<br/><br/>
+			<td colspan="2" style="padding-left: 20px;"> 
+				<br/><br/>
+				<span style="font-weight: bold;">글번호 : </span>${freevo.idx}
+				<br/><br/>
 			</td>
 		</tr>
 		
@@ -74,13 +76,13 @@
 			<td>${freevo.regDate}</td>
 		</tr>
 	</table>
-	
 	<br/>
-	
-	<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/freeList.mr'">목록보기</button>
-	<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/freeEdit.mr?idx=${freevo.idx}'">수정</button>
-	<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/freeDel.mr?idx=${freevo.idx}'">삭제</button>
-		
+	<!-- ============================================================ *** 자유게시판 목록보기 , 게시글 수정 / 삭제 *** =================================== -->
+	<div>
+		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/freeList.mr'">목록보기</button>
+		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/freeEdit.mr?idx=${freevo.idx}'">수정</button>
+		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/freeDel.mr?idx=${freevo.idx}'">삭제</button>
+	</div>	
 	<br/><br/>
 	
 	<!-- === #83. 댓글쓰기 폼 추가 === -->
