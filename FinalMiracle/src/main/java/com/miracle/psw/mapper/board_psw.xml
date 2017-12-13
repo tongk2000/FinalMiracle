@@ -39,10 +39,10 @@
 		  from
 		  ( select idx, category, subject, content, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
 		    from tbl_faq
-		    where status = 1
+		    where status = 1  
 		    <if test="category != null">
-		    and category = #{category}
-		    </if>
+		 	and category = #{category}
+		 	</if> 
 		    order by idx desc 
 		  )V
 		)T
@@ -54,7 +54,7 @@
 		select count(*)
 		from tbl_faq
 		where status = 1
-		and subject like '%'|| #{search} ||'%'
+		and ${colname} like '%'|| #{search} ||'%'
 		<if test="category != null">
 		and category = #{category}
 		</if>
@@ -88,18 +88,19 @@
 	
 	<!-- 자유게시판 글쓰기 -->
 	<insert id="freeAdd" parameterType="com.miracle.psw.model.FreeBoardVO">
-		insert into tbl_free(idx, userid, name, subject, content, readCnt, commentCnt, groupno, fk_idx, depthno, regDate, status, infoStatus)
-		values(seq_free.nextval, #{userid}, #{name}, #{subject}, #{content}, default, default, (select max(groupno)+1 from tbl_free), default, default, default, default, default)  
+		insert into tbl_free(idx, userid, name, subject, content, readCnt, commentCnt, groupno, fk_idx, depthno, regDate, status, infoStatus, fk_teamwon_idx)
+		values(seq_free.nextval, #{userid}, #{name}, #{subject}, #{content}, default, default, (select max(groupno)+1 from tbl_free), default, default, default, default, default, #{fk_teamwon_idx})  
 	</insert>
 	
 	<!-- 자유게시판 글 1개 보여주기 (조건에 따른 글 조회수 1 증가 후) -->
 	<select id="getView" parameterType="String" resultType="com.miracle.psw.model.FreeBoardVO">
-		select idx, userid, name, subject, content, readCnt, commentCnt
-		 	 , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
-		 	 , status, infoStatus
-		from tbl_free
-		where status = 1
-		and idx = #{idx}
+		select F.idx, F.userid, F.name, F.subject, F.content, F.readCnt, F.commentCnt
+	         , to_char(F.regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+	         , F.status, F.infoStatus, M.img
+		from tbl_free F join tbl_member M
+		on F.userid = M.userid
+		where F.status = 1
+		and F.idx = #{idx}
 	</select>
 	<update id="setAddReadCnt" parameterType="String">
 		update tbl_free set readCnt = readCnt + 1
@@ -110,38 +111,42 @@
 	<!-- 검색한 freeList 보여주기(페이징 처리 한 것) -->
 	<select id="freeListWithSearch" parameterType="HashMap" resultType="com.miracle.psw.model.FreeBoardVO">
 		select idx, userid, name, subject, content, readCnt, commentCnt
-	         , groupno, fk_idx, depthno
-	         , regDate, status, infoStatus
+		         , groupno, fk_idx, depthno
+		         , regDate, status, infoStatus, fk_teamwon_idx
 		from
 		( select rownum as rno, v.idx, v.userid, v.name, v.subject, v.content, v.readCnt, v.commentCnt
 		       , v.groupno, v.fk_idx, v.depthno
-		       , v.regDate, v.status, v.infoStatus
+		       , v.regDate, v.status, v.infoStatus, v.fk_teamwon_idx
 		  from
-		  ( select idx, userid, name, subject, content, readCnt, commentCnt, groupno, fk_idx, depthno
-		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
-		         , status, infoStatus
-		    from tbl_free
-		    where status = 1
+		  ( select F.idx, F.userid, F.name, F.subject, F.content, F.readCnt, F.commentCnt, F.groupno, F.fk_idx, F.depthno
+		         , to_char(F.regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+		         , F.status, F.infoStatus, F.fk_teamwon_idx
+		    from tbl_free F join tbl_teamwon T
+		    on F.fk_teamwon_idx = T.idx
+		    where F.status = 1
+		    and T.fk_team_idx = 2
 		    and ${colname} like '%'|| #{search} ||'%'
 		    order by idx desc 
 		  )V
 		)T
-		where T.rno >= #{startRno} and T.rno <![CDATA[<=]]> #{endRno}
+		where T.rno >= #{startRno} and T.rno <![CDATA[<=]]> #{endRno}		
 	</select>
 	<select id="freeListWithNoSearch" parameterType="HashMap" resultType="com.miracle.psw.model.FreeBoardVO">
 		select idx, userid, name, subject, content, readCnt, commentCnt
-	         , groupno, fk_idx, depthno
-	         , regDate, status, infoStatus
+		         , groupno, fk_idx, depthno
+		         , regDate, status, infoStatus, fk_teamwon_idx
 		from
 		( select rownum as rno, v.idx, v.userid, v.name, v.subject, v.content, v.readCnt, v.commentCnt
 		       , v.groupno, v.fk_idx, v.depthno
-		       , v.regDate, v.status, v.infoStatus
+		       , v.regDate, v.status, v.infoStatus, v.fk_teamwon_idx
 		  from
-		  ( select idx, userid, name, subject, content, readCnt, commentCnt, groupno, fk_idx, depthno
-		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
-		         , status, infoStatus
-		    from tbl_free
-		    where status = 1
+		  ( select F.idx, F.userid, F.name, F.subject, F.content, F.readCnt, F.commentCnt, F.groupno, F.fk_idx, F.depthno
+		         , to_char(F.regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+		         , F.status, F.infoStatus, F.fk_teamwon_idx
+		    from tbl_free F join tbl_teamwon T
+		    on F.fk_teamwon_idx = T.idx
+		    where F.status = 1
+		    and T.fk_team_idx = #{fk_team_idx}
 		    order by idx desc 
 		  )V
 		)T
@@ -151,16 +156,61 @@
 	<!-- 검색 유무에 따른 페이지바 만들기 -->
 	<select id="getFreeTotalCountWithSearch" parameterType="HashMap" resultType="int">
 		select count(*)
-		from tbl_free
-		where status = 1
+		from tbl_free F join tbl_teamwon T
+		on F.fk_teamwon_idx = T.idx
+		where F.status = 1
+		and T.fk_team_idx = #{fk_team_idx}
 		and ${colname} like '%'|| #{search} ||'%'
 	</select>
 	<select id="getFreeTotalCountWithNoSearch" parameterType="HashMap" resultType="int">
 		select count(*)
-		from tbl_free
-		where status = 1
+		from tbl_free F join tbl_teamwon T
+		on F.fk_teamwon_idx = T.idx
+		where F.status = 1
+		and T.fk_team_idx = #{fk_team_idx}
 	</select>
 	
+	<!-- 자유게시판 글 1개 수정하기 -->
+	<update id="freeEdit" parameterType="HashMap">
+		update tbl_free set subject = #{subject}, content = #{content}
+		where idx = #{idx}
+	</update>
+	
+	<!-- 자유게시판 1개 게시글에 댓글 작성하기(Transaction) -->
+	<insert id="addComment" parameterType="com.miracle.psw.model.FreeCommentVO">
+		insert into tbl_freeComment(idx, userid, content, regDate, parentIdx, status)
+		values(seq_freeComment.nextval, #{userid}, #{content}, default, #{parentIdx}, default)
+	</insert>
+	<update id="updateCommentCnt" parameterType="int">
+		update tbl_free set commentCnt = commentCnt + 1
+		where idx = #{parentIdx}
+	</update>
+	
+	<!-- 자유게시판 1개 게시글에 작성된 댓글 목록 보여주기 -->
+	<select id="freeListComment" parameterType="String" resultType="com.miracle.psw.model.FreeCommentVO">
+		select C.idx, C.userid, C.content, C.regDate, C.parentIdx, C.status, M.name, M.img
+		from tbl_freeComment C join tbl_member M
+		on C.userid = M.userid
+		where parentIdx = #{idx}
+		order by idx desc
+	</select>
+	
+	<!-- 자유게시판 목록에서 선택한 유저정보 보여주기 -->
+	<select id="showUserInfo" parameterType="HashMap" resultType="com.miracle.psw.model.MemberVO">
+		select idx, userid, name, img
+		from tbl_member
+		where userid = #{userInfo}
+	</select>
+	<select id="showUserDetailInfo" parameterType="HashMap" resultType="com.miracle.psw.model.MemberDetailVO">
+		select D.hp1, D.hp2, D.hp3
+			  ,D.birth1, D.birth2, D.birth3
+			  ,D.email
+	          ,D.addr1, D.addr2
+	          ,D.profile
+		from tbl_member M join tbl_member_detail D
+		on M.idx = D.fk_member_idx
+		where M.userid = #{userInfo}
+	</select>
 	
 </mapper>
 

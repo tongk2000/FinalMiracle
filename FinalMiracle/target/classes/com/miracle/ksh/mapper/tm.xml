@@ -335,5 +335,19 @@
 		update tbl_team set disdate = sysdate, status = 0
 		where idx = #{fk_team_idx}
 	</update>
+	
+	
+	<select id="getTeamInfo" parameterType="String" resultType="com.miracle.ksh.model.TeamVO">
+		select idx, fk_member_idx, name, tel1, tel2, tel3, post1, post2, addr1, addr2, img, regdate, disdate, status
+		from tbl_team
+		where idx = #{fk_team_idx}
+	</select>
+	
+	<select id="getTeamLeaderName" parameterType="String" resultType="String">
+		select A.name
+		from tbl_member A join tbl_team B
+		on A.idx = B.fk_member_idx
+		where B.idx = #{fk_team_idx}
+	</select>
 
 </mapper>

@@ -99,20 +99,21 @@
 	                        type: 'category',
 	                        allowDecimals: false,
 	                        title: {
-	                            text: "표"
+	                            text: "문항 목록"
 	                        }
 	                    },
 	                    yAxis: {
 	                        title: {
-	                            text: "표 수"
+	                            text: "득표 수"
 	                        }
 	                    },
 	                    series: [{
-		                    name: '표 수',
+		                    name: '득표 수',
 	                        data: processed_json
 	                    }]
 	                });
                 });
+                /* $("#chartModal").modal(); */
 			}, error: function(request, status, error){
 				alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
 			}
@@ -151,7 +152,7 @@
 </script>
 
 <form id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/voteEndList.mr" method="get" enctype="multipart/form-data">
-<div style="padding-left: 10%; border: solid 0px red; width: 100%;">
+<div style="padding-left: 1%; padding-right: 1%; border: solid 0px red; width: 100%; height: 840px; overflow-y: auto;">
 	<h1>투표목록</h1>
 	
 	<div style="margin-top: 20px;">
@@ -219,7 +220,8 @@
 						<c:forEach var="votecommvo" items="${voteCommList}" varStatus="status">
 							<c:set value="${votecommvo.FK_VOTE_IDX}" var="votecommidx" />
 							<c:if test="${voteidx eq votecommidx}">
-								${votecommvo.NAME}(${votecommvo.USERID}) : ${votecommvo.CONTENT}
+								<img src="<%= request.getContextPath() %>/resources/images/${votecommvo.IMG}" width="30px" height="30px">
+								${votecommvo.NAME}(${votecommvo.COMMDATE})<br/>${votecommvo.CONTENT}
 								<c:if test="${votecommvo.MEMIDX eq sessionScope.loginUser.idx}">
 									<%-- <button type="button" onClick="goCommAdd('${votevo.IDX}', '${votecommvo.IDX}');">수정</button>&nbsp; --%>
 									<button type="button" onClick="goCommDel('${votecommvo.COMMIDX}');">삭제</button>

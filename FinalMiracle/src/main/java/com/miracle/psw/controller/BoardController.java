@@ -7,14 +7,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.miracle.psw.model.FaqBoardVO;
 import com.miracle.psw.model.FreeBoardVO;
+import com.miracle.psw.model.FreeCommentVO;
+import com.miracle.psw.model.MemberDetailVO;
 import com.miracle.psw.model.MemberVO;
 import com.miracle.psw.service.InterBoardService;
 import com.miracle.psw.util.MyUtil;
@@ -47,7 +51,7 @@ public class BoardController {
 		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 		
 		int totalCount = 0;
-		int sizePerPage = 5;
+		int sizePerPage = 7;
 		int	currentShowPageNo = 0;
 		int totalPage = 0;
 		
@@ -67,28 +71,43 @@ public class BoardController {
 		map.put("startRno", String.valueOf(startRno));
 		map.put("endRno", String.valueOf(endRno));
 		
-		if( (colname != null && search != null) &&
+		if( (colname != null && search != null && category != null) &&
 			(!colname.trim().isEmpty() && !search.trim().isEmpty()) &&
-			(!colname.equals("null") && !search.equals("null")) ) {  // 검색어가 있는 경우
+			(!colname.equals("null") && !search.equals("null")) &&
+			(!category.equals("null") && !category.trim().isEmpty())) {  // 검색어가 있는 경우
 			faqList = service.faqListWithSearch(map);
 		} else {  // 검색어가 없는경우
 			faqList = service.faqListWithNoSearch(map);
 		}
 		// ================================================ *** 페이지바 만들기 *** ====================
-		if( (colname != null && search != null) &&
+		if( (colname != null && search != null && category != null) &&
 			(!colname.trim().isEmpty() && !search.trim().isEmpty()) &&
-			(!colname.equals("null") && !search.equals("null")) ) {  // 검색어가 있는 경우
+			(!colname.equals("null") && !search.equals("null")) &&
+			(!category.equals("null") && !category.trim().isEmpty())) {  // 검색어가 있는 경우
 			totalCount = service.getTotalCountWithSearch(map);
 		} else {  // 검색어가 없는경우
 			totalCount = service.getTotalCountWithNoSearch(map);
 		}
 		totalPage = (int)Math.ceil((double)totalCount/sizePerPage);
 		
-		String pagebar = "<ul>";
-		pagebar += MyUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentShowPageNo, colname, search, null, "faqList.mr");
-		pagebar += "</ul>";
+		String pagebar = "";
 		
+		if( (colname != null && search != null && category != null) &&
+			(!colname.trim().isEmpty() && !search.trim().isEmpty()) &&
+			(!colname.equals("null") && !search.equals("null")) &&
+			(!category.equals("null") && !category.trim().isEmpty())) {
+			// ================================================ *** 검색이 있을 경우 *** ====================================
+			pagebar = "<ul>";
+			pagebar += MyUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentShowPageNo, colname, search, category, "faqList.mr");
+			pagebar += "</ul>";
+		} else {
+			// ================================================= *** 검색이 없을 경우 *** =================================
+			pagebar = "<ul>";
+			pagebar += MyUtil.getPageBar(sizePerPage, blockSize, totalPage, currentShowPageNo, "faqList.mr");
+			pagebar += "</ul>";
+		}
 		req.setAttribute("pagebar", pagebar);
+		
 		req.setAttribute("faqList", faqList);
 		req.setAttribute("colname", colname);
 		req.setAttribute("search", search);
@@ -117,9 +136,15 @@ public class BoardController {
 	public String freeList(HttpServletRequest req, HttpSession session) {
 		List<FreeBoardVO> freeList = service.freeList();
 		
-		String gobackURL = MyUtil.getCurrentURL(req);
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo =  (HashMap<String, String>)session.getAttribute("teamInfo");
+		
+		String gobackURL = req.getParameter("gobackURL");
 		req.setAttribute("gobackURL", gobackURL);
 		
+		String fk_team_idx = teamInfo.get("team_idx");
+		String fk_teamwon_idx = teamInfo.get("teamwon_idx");
+
 		String colname = req.getParameter("colname");
 		String search = req.getParameter("search");
 
@@ -127,10 +152,13 @@ public class BoardController {
 		map.put("colname", colname);
 		map.put("search", search);
 		
+		map.put("fk_team_idx", fk_team_idx);
+		map.put("fk_teamwon_idx", fk_teamwon_idx);
+		
 		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 		
 		int totalCount = 0;
-		int sizePerPage = 10;
+		int sizePerPage = 15;
 		int	currentShowPageNo = 0;
 		int totalPage = 0;
 		
@@ -180,18 +208,47 @@ public class BoardController {
 		
 		return "psw/board/freeList.all";
 	}
-
+	
+	// ================================================== *** 자유게시판 목록에서 userid또는 성명 클릭시 유저정보 보여주기 *** ===============
+	@RequestMapping(value="/freeUserInfo.mr", method={RequestMethod.GET})
+	@ResponseBody
+	public HashMap<String, Object> freeUserInfo(HttpServletRequest req, MemberVO mvo, MemberDetailVO mdvo){
+		String userInfo = req.getParameter("userInfo");
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("userInfo", userInfo);
+		
+		mvo = service.showUserInfo(map);
+		mdvo = service.showUserDetailInfo(map);
+		
+		HashMap<String, Object> map2 = new HashMap<String, Object>();
+		map2.put("infoUserid", mvo.getUserid());
+		map2.put("infoName", mvo.getName());
+		map2.put("infoImg", mvo.getImg());
+		
+		map2.put("infoBirth1", mdvo.getBirth1());
+		map2.put("infoBirth2", mdvo.getBirth2());
+		map2.put("infoBirth3", mdvo.getBirth3());
+		map2.put("infoAddr1", mdvo.getAddr1());
+		map2.put("infoAddr2", mdvo.getAddr2());
+		map2.put("infoEmail", mdvo.getEmail());
+		map2.put("infoHp1", mdvo.getHp1());
+		map2.put("infoHp2", mdvo.getHp2());
+		map2.put("infoHp3", mdvo.getHp3());
+		map2.put("infoProfile", mdvo.getProfile());
+		
+		return map2;
+	}
 	
 	
 	// ===================================================== *** 자유게시판 글 1개 보여주기 *** =====================================
 	@RequestMapping(value="/freeView.mr", method={RequestMethod.GET})
 	public String freeView(HttpServletRequest req, HttpSession session, FreeBoardVO freevo){
 		String idx = req.getParameter("idx");
-		String gobackURL = req.getParameter("gobackURL");
-		
+		String gobackURL = MyUtil.getCurrentURL(req);
 		freevo = null;
 		
-		// ================================== *** F5 클릭시 글 조회수 증가 안하게 하기 위해 조건문 걸기 *** ==========================================
+		// ==================================== *** F5 클릭시 글 조회수 증가 안하게 하기 위해 조건문 걸기 *** ===========================
 		if(session.getAttribute("readCntPermission") != null && "yes".equals(session.getAttribute("readCntPermission")) ) {
 			MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
 			String userid = null;
@@ -203,10 +260,21 @@ public class BoardController {
 			session.removeAttribute("readCntPermission"); // 글목록 본 후에 세션값 삭제.
 		} else {
 			freevo = service.getViewWithNoReadCnt(idx);
-		}
-		
+		}	
 		req.setAttribute("freevo", freevo);
 		req.setAttribute("gobackURL", gobackURL);
+		
+		// ==================================== *** 댓글 목록 보여주기 *** ======================
+		List<FreeCommentVO> freeCommentList = service.freeListComment(idx);
+		req.setAttribute("freeCommentList", freeCommentList);
+		
+		return "psw/board/freeView.all";
+	}
+	
+	// ===================================================== *** 자유게시판 이전글 , 다음글 보여주기 *** ===============================
+	@RequestMapping(value="/freeBeforeNextView.mr")
+	public String freeBeforeNextView(HttpServletRequest req, HttpSession session){
+		String idx = req.getParameter("idx");
 		
 		return "psw/board/freeView.all";
 	}
@@ -223,6 +291,62 @@ public class BoardController {
 		req.setAttribute("n", n);
 		
 		return "psw/board/freeAddEnd.not";
+	}
+	
+	// ======================================================== *** 자유게시판 글 수정하기 *** ========================================
+	@RequestMapping(value="/freeEdit.mr", method={RequestMethod.GET})
+	public String freeEdit(HttpServletRequest req, HttpServletResponse response, HttpSession session) {
+		String idx = req.getParameter("idx"); // 수정할 게시글 글번호 받아오기
+		
+		// 수정해야 할 글 전체내용 가져오기
+		FreeBoardVO freevo = service.getViewWithNoReadCnt(idx);  // 글 조회수(readCnt) 증가없이 글 불러오기
+		
+		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		
+		if(!loginUser.getUserid().equals(freevo.getUserid())) {
+			String msg = "다른 회원님의 글은 수정이 불가능합니다.";
+			String loc = "javascript:history.back();";
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			return "psw/msg.not";
+		} else {
+			req.setAttribute("freevo", freevo);
+			return "psw/board/freeEdit.all";
+		}
+	}
+	
+	@RequestMapping(value="/freeEditEnd.mr", method={RequestMethod.POST})
+	public String freeEditEnd(FreeBoardVO freevo, HttpServletRequest req) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("idx", String.valueOf(freevo.getIdx()));
+		map.put("subject", freevo.getSubject());
+		map.put("content", freevo.getContent());
+		
+		int result = service.freeEdit(map);
+		
+		req.setAttribute("result", result);
+		req.setAttribute("idx", freevo.getIdx());
+		
+		return "psw/board/freeEditEnd.not";
+	}
+	
+	// ======================================================================= *** 자유게시판 댓글 쓰기 *** ==============================
+	@RequestMapping(value="/freeComment.mr", method={RequestMethod.GET})
+	public String freeComment(HttpServletRequest req, HttpServletResponse response, FreeCommentVO commentvo) throws Throwable {
+		String gobackURL = MyUtil.getCurrentURL(req);
+		
+		int result = service.addComment(commentvo);
+		
+		if(result > 0) {
+			req.setAttribute("msg", "댓글 쓰기 성공");
+		} else {
+			req.setAttribute("msg", "댓글 쓰기가 실패");
+		}
+		String idx = String.valueOf(commentvo.getParentIdx());
+		req.setAttribute("idx", idx);
+		req.setAttribute("gobackURL", gobackURL);
+		
+		return "psw/board/freeComment.not";
 	}
 	
 	

@@ -10,22 +10,21 @@
 	
 	<!-- ==== #5. myBatis(JDBC)설정 연결문자열 설정하기 ==== -->
 	<bean id="dataSourceSpied" class="org.apache.commons.dbcp.BasicDataSource">
-		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@orcl.cebzznetsnzo.ap-northeast-2.rds.amazonaws.com:1521:orcl" />
-		<property name="username" value="miraclecoder" />
+	    <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+	    <property name="url" value="jdbc:oracle:thin:@orcl.cebzznetsnzo.ap-northeast-2.rds.amazonaws.com:1521:orcl" />
+	    <property name="username" value="miraclecoder" />
 		<property name="password" value="qwer1234" />
 	</bean>
-	
-	<bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">  
-		<constructor-arg ref="dataSourceSpied" />
-		<property name="logFormatter">
-			<bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">    
-				<property name="loggingType" value="MULTI_LINE" />
-				<property name="sqlPrefix" value="SQL        :   " />
-			</bean>
-		</property>
-	</bean> 
-	
+	<bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource"> 
+	    <constructor-arg ref="dataSourceSpied" />
+	    <property name="logFormatter">
+	        <bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">   
+	             <property name="loggingType" value="MULTI_LINE" />
+	             <property name="sqlPrefix" value="SQL        :   " />
+	        </bean>
+	    </property>
+	</bean>
+
 	<!-- ==== #5. myBatis(JDBC)설정 mapper 파일 위치 지정하기  ==== -->
 	<!-- mapper 파일이란 sql 문을 가지고 있는 xml 파일을 말한다. -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">

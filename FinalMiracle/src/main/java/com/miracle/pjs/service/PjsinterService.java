@@ -21,7 +21,9 @@ public interface PjsinterService {
 	
 	HashMap<String, String> getIdxTeam(HashMap<String, String> view); // 공지사항의 해당 행을 선택하면 그 글의 정보를 보여주는 메소드
 	
-	int delNoticeIdx(String idx); // 공지사항 게시판을 지우는 메소드
+	// int delNoticeIdx(List<String> list); // 공지사항 게시판을 지우는 메소드
+	// int delNoticeIdx(HashMap<String,String> paramap); // 공지사항 게시판을 지우는 메소드
+	int delNoticeIdx(HashMap<String, String[]> paramap); // 공지사항 게시판을 지우는 메소드
 	
 	List<ReplyVO> getComment(String idx); // 게시글의 코멘트를 달기위한 메소드
 	
@@ -30,13 +32,29 @@ public interface PjsinterService {
 	int updateReadCount(String idx); // 공지사항 글의 조회수를 늘리는 메소드 
 	
 	int setNoticeWrite(HashMap<String, String> team); // 글쓰기 완료 메소드
-
+	
+	int setNoticeEditWrite(HashMap<String, String> map); // 수정글쓰기 입력 메소드
+	
+	HashMap<String, String> getDepth(String parameter); // 수정글의 depth, groupno 구해오는 메소드
+	
 //==========================================================================================================================================================//	
 	
 	// === *** 마음의 소리 게시판 *** === //
 	List<HashMap<String, String>> getMindList(HashMap<String, String> map, String str_sizePerPage, String str_currentPage); // 마음의 소리 게시판의 검색된 모든 리스트를 가져오는 메소드
 	
 	String getMindJSONList(HashMap<String, String> map); // 마음의 소리 JSON처리
+	
+	HashMap<String, String> getMindIdxTeam(HashMap<String, String> view); // 마음의 소리 글보기
+	
+	int setMindWrite(HashMap<String, String> team); // 마음의 소리 글 쓰기
+	
+	HashMap<String, String> getMindDepth(String nidx); // 수정글의 depth, groupno 구해오는 메소드
+	
+	int updateMindReadCount(String idx); // 조회수 올리는 메소드
+	
+	int updateMindCheckNum(String nidx); // 대기, 확인, 답변 변경해주는 메소드
+	
+	int delMindIdx(HashMap<String,String[]> paramap); // 마음의 소리 다중 삭제
 	
 //==========================================================================================================================================================//	
 	
@@ -52,14 +70,58 @@ public interface PjsinterService {
 	List<HashMap<String, String>> getMapTeam(String map_idx); // 구글맵에서 팀 정보 마커 클릭 시 사용
 
 //==========================================================================================================================================================//	
+	
+	// === *** 쪽지 *** === //
+	
+	int getSenderMemo(HashMap<String, String> map); // 쪽지 보낸 사람의 총 보낸 편지 수를 반환
+
+	List<HashMap<String, String>> getSenderMemoList(HashMap<String, String> map); // sender의 보낸 쪽지 리스트를 반환한다.
+	
+	int getReceiverMemo(HashMap<String, String> map); // 쪽지 받은 사람의 총 받은 쪽지 갯수를 반환
+
+	List<HashMap<String, String>> getReceiverMemoList(HashMap<String, String> map); // 받은 쪽지 리스트를 반환
+
+	HashMap<String, String> getSenderIdx(HashMap<String, String> info); // idx에 해당하는 sender의 테이블내용을 가져온다.
+	
+	HashMap<String, String> getReceiverIdx(HashMap<String, String> info); // idx에 해당하는 receiver의 테이블내용을 가져온다.
+	
+	List<String> getReceiverNames(HashMap<String, String> map); // 메모받은 사람의 리스트를 불러온다. 
+	
+	int delSenderMemo(HashMap<String,String[]> idx); // 해당 idx의 보낸쪽지를 삭제한다.
+	
+	int delReceiverMemo(HashMap<String, String[]> idx); // 해당 idx의 받은 쪽지를 삭제한다.
+
+	int updateRreadCount(String idx, String userid); // 쪽지를 받은 사람이 읽었는지 않 읽었는지 update
+
+	List<HashMap<String, String>> getTeam(String teamNum); // 메모쓰기 시 모든 팀 이름을 가져온다.
+
+	//List<HashMap<String, String>> getAllMember(); // 모든 멤버이름을 가져온다.
+
+	//String getCheckNum(HashMap<String, String> map); // 몇명이 읽었는지 반환
+	
+	int checkReadCount(String parameter); //readcount가 1인지 0인지 알아오자 몰라서 편법씀
+	
+//==========================================================================================================================================================//	
 
 	
-	// 로그인한 유저의 팀정보를 가져오기 위한 메소드
+	
+	
+	// 로그인한 유저의 팀정보를 가져오기 위
+
 	HashMap<String, String> getUserTeam(HashMap<String, String> team);
 
 	
 
+	
 
+	
 
+	
+	
+
+	
+	
+
+	
 	
 }

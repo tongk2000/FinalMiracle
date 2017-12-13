@@ -1,22 +1,30 @@
 package com.miracle.ksh.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartRequest;
 
 import com.miracle.kdh.service.ProjectManagerService;
 import com.miracle.ksh.model.TeamVO;
 import com.miracle.ksh.model.TeamwonVO;
+import com.miracle.ksh.model.VoteItemVO;
 import com.miracle.ksh.service.InterTMService;
 import com.miracle.ksh.util.MyUtil;
 import com.miracle.psw.model.MemberDetailVO;
@@ -25,6 +33,8 @@ import com.miracle.psw.service.InterMemberService;
 import com.miracle.psw.service.MemberService;
 import com.miracle.psw.util.FileManager;
 import com.miracle.psw.util.GoogleMail;
+
+
 
 @Controller
 public class TMController {
@@ -310,9 +320,10 @@ public class TMController {
 		sessionMap.put("teamwon_idx", teamwon_idx);
 		sessionMap.put("teamwon_status", teamwon_status);
 		
-		System.out.println("확인용 : " + fk_member_idx + " / " + fk_team_idx1 + " / " + fk_team_idx2 + " / " + teamwon_idx + " / " + teamwon_status);
+		//System.out.println("확인용 : " + fk_member_idx + " / " + fk_team_idx1 + " / " + fk_team_idx2 + " / " + teamwon_idx + " / " + teamwon_status);
 		
 		session.setAttribute("teamInfo", sessionMap);
+			
 		
 		String msg = "";
 		String loc = "doList.mr";
@@ -898,5 +909,89 @@ public class TMController {
 		
 		return "ksh/msg.not";
 	}
+	
+	
+	@RequestMapping(value="/tmFooter.mr", method={RequestMethod.GET})
+	public String tmFooter(HttpServletRequest req, HttpSession session){
+		
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)session.getAttribute("teamInfo");
+		String fk_team_idx = teamInfo.get("team_idx");
+		
+		JSONArray jsonMap = new JSONArray();
+		
+		if(!fk_team_idx.trim().isEmpty()){
+			List<TeamVO> list = service.getTeamInfo(fk_team_idx);
+			
+			JSONObject jsonObj = new JSONObject();
+			
+			if(list != null){
+				for(TeamVO vo : list){
+					jsonObj.put("idx", vo.getIdx());
+					jsonObj.put("fk_member_idx", vo.getFk_member_idx());
+					jsonObj.put("name", vo.getName());
+					jsonObj.put("tel1", vo.getTel1());
+					jsonObj.put("tel2", vo.getTel2());
+					jsonObj.put("tel3", vo.getTel3());
+					jsonObj.put("post1", vo.getPost1());
+					jsonObj.put("post2", vo.getPost2());
+					jsonObj.put("addr1", vo.getAddr1());
+					jsonObj.put("addr2", vo.getAddr2());
+					jsonObj.put("img", vo.getImg());
+					jsonObj.put("regdate", vo.getRegdate());
+					jsonObj.put("disdate", vo.getDisdate());
+					jsonObj.put("status", vo.getStatus());
+				}
+			}
+			
+			String name = service.getTeamLeaderName(fk_team_idx);
+			jsonObj.put("leader", name);
+			
+			jsonMap.put(jsonObj);
+		}
+
+		String str_jsonMap = jsonMap.toString();
+
+		req.setAttribute("str_jsonMap", str_jsonMap);
+		
+		return "ksh/json/teamInfo.not";
+	}
+	
+	/*
+	@RequestMapping(value="/tmImageUpload.mr", method={RequestMethod.POST})
+	@ResponseBody
+	public HashMap<String, String> tmImageUpload(MultipartHttpServletRequest req, HttpSession session){
+		
+		List<MultipartFile> uploadfile = req.getFiles("uploadFile");
+		
+		String root = session.getServletContext().getRealPath("/"); 
+		String path = root + "resources"+File.separator+"files";
+		
+		String newFileName = "";
+		
+		byte[] bytes = null;
+		
+		long size = 0;
+		
+		try {
+			bytes = uploadfile.get(0).getBytes();
+			
+			newFileName = fileManager.doFileUpload(bytes, uploadfile.get(0).getOriginalFilename(), path);
+			
+			size = uploadfile.get(0).getSize();
+		} catch (Exception e) {
+			
+		}
+		
+		path += "/"+newFileName;
+		
+		HashMap<String, String> returnmap = new HashMap<String, String>();
+		returnmap.put("newFileName", newFileName);
+		returnmap.put("size", String.valueOf(size));
+		returnmap.put("path", path);
+		
+		return returnmap;
+	}
+	*/
 	
 }

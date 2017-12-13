@@ -60,7 +60,7 @@
 						
 						$("#addTeamwon").append(html);
 						
-						$("#btn_add").text("추가▶");
+						$("#btn_add").text("추가▼");
 						var left = $("#btn_add").offset().left;
 						var top = $("#btn_add").offset().top;
 						top = top + ($("#btn_add").height());
