@@ -484,7 +484,6 @@ public class GeniousPjsController {
 	// ==== *** 구글맵 *** ==== //
 	@RequestMapping(value="googleMapbasic.mr", method={RequestMethod.GET})
 	public String googleMapbasic(HttpServletRequest req, HttpSession session) {
-		
 		List<MapVO> list = service.getMap(); // 전체 리스트를 반환한다.
 		req.setAttribute("list", list);
 		
@@ -508,7 +507,6 @@ public class GeniousPjsController {
 			req.setAttribute("list", list);
 			req.setAttribute("choice", choice);
 			req.setAttribute("searchString", searchString);
-			
 		}
 		return "pjs/map/googleMap.not";
 	}/* ================================================================================================================================================= */

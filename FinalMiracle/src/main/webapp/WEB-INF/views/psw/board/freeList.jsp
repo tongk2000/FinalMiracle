@@ -100,8 +100,8 @@
 					 +  "<span style='font-weight: bold;'>ID : </span>"+ data.infoUserid + "<br/>"
 					 +  "<span style='font-weight: bold;'>성명 : </span>"+ data.infoName + "<br/><br/>"
 					 +  "<span style='font-weight: bold;'>핸드폰 : </span>" +data.infoHp1 + "-" +data.infoHp2+"-"+data.infoHp3 +"<br/>"
-					 +  "<span style='font-weight: bold;'>생년월일 : </span>" +data.infoBirth1 + " / " + data.infoBirth2 + " / " + data.infoBirth3 + "<br/>"
-					 +  "<span style='font-weight: bold;'>주소 : </span>" + data.infoAddr1 + " " + data.infoAddr2 + "<br/>"
+					 +  "<span style='font-weight: bold;'>생년월일 : </span>" +data.infoBirth1 + " / " + data.infoBirth2 + " / " + data.infoBirth3 + "<br/><br/>"
+					 +  "<span style='font-weight: bold;'>주소 : </span>" + data.infoAddr1 + " " + data.infoAddr2 + "<br/><br/>"
 					 +  "<span style='font-weight: bold;'>이메일 : </span>" + data.infoEmail + "<br/>";
 				
 				$(".modal-body").html(html);
@@ -143,20 +143,21 @@
 <body>
 	<div style="border: 1px solid pink; padding: 10px; margin-left: 10%; width: 90%;">
 		<h1>자유게시판</h1>
-		<!-- 글 검색용 폼 생성 -->
+		<!-- ===================================== *** 글 검색용 폼 생성 *** ================================================== -->
 		<div>
 			<form name="searchFrm" action="<%= request.getContextPath() %>/freeList.mr" method="get">
-				<select name="colname" id="colname">
+				<select name="colname" id="colname" style="height: 26px; vertical-align: middle;">
 					<option value="subject">제목</option>
 					<option value="content">내용</option>
 					<option value="userid">아이디</option>
 					<option value="name">성명</option>
 				</select>
-				<input type="text" name="search" id="search" size="40px" />
-				<button type="button" onClick="goSearch();">검색</button>
+				<input type="text" name="search" id="search" size="30" style="height: 26px; vertical-align: middle;" />
+				<button type="button" onClick="goSearch();" style="vertical-align: middle;">검색</button>
 			</form>
 		</div>
 		<br/>
+		<!-- ==================================== *** 자유게시판 목록 *** ============================================ -->
 		<div style="width: 100%;">
 			<table id="freeboard" style="width: 80%;">
 				<thead>
@@ -200,7 +201,7 @@
 		</div>
 		<br/>
 		<div>
-			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/freeList.mr'">글목록</button>
+			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/freeList.mr'">전체 글목록</button>&nbsp;
 			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/freeAdd.mr'">글쓰기</button>
 		</div>
 		<br/>

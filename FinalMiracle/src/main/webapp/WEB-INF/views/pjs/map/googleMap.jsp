@@ -10,7 +10,9 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/BootStrapStudy/js/bootstrap.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/resources/jqueryuijs/jquery-ui.js"></script>
-
+<!DOCTYPE>
+<html>
+<head>
 <style>
 	#div_name {
 		width: 70%;
@@ -43,6 +45,7 @@
 	div.height {
 		height:1px;
 	}
+	body {overflow-Y:hidden;}
 </style>
 
 <script type="text/javascript">
@@ -230,8 +233,8 @@
 		$("#launchMapModal").modal();
 	}
 </script>
-
-
+</head>
+<body>
 <div class="modal-body" id="launchMapBody">
 	<select id="choice" name="choice" style="font-size:12pt;">
 		<option value="0" selected> 전체</option>
@@ -255,10 +258,8 @@
 	</form>
 </div>
 
-
-
-
-
+</body>
+</html>
 
 
 

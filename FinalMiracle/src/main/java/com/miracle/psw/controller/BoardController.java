@@ -248,7 +248,7 @@ public class BoardController {
 		String gobackURL = MyUtil.getCurrentURL(req);
 		freevo = null;
 		
-		// ======================== *** F5 클릭시 글 조회수 증가 안하게 하기 위해 조건문 걸기 *** ===========================
+		// ==================================== *** F5 클릭시 글 조회수 증가 안하게 하기 위해 조건문 걸기 *** ===========================
 		if(session.getAttribute("readCntPermission") != null && "yes".equals(session.getAttribute("readCntPermission")) ) {
 			MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
 			String userid = null;
@@ -264,7 +264,7 @@ public class BoardController {
 		req.setAttribute("freevo", freevo);
 		req.setAttribute("gobackURL", gobackURL);
 		
-		// ============= *** 댓글 목록 보여주기 *** ======================
+		// ==================================== *** 댓글 목록 보여주기 *** ======================
 		List<FreeCommentVO> freeCommentList = service.freeListComment(idx);
 		req.setAttribute("freeCommentList", freeCommentList);
 		
