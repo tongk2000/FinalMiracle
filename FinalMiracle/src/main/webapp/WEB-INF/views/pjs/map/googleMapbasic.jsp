@@ -10,7 +10,9 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/BootStrapStudy/js/bootstrap.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/resources/jqueryuijs/jquery-ui.js"></script>
-
+<!DOCTYPE>
+<html>
+<head>
 <style>
 	#div_name {
 		width: 70%;
@@ -129,13 +131,13 @@
 		}// end of function markerListener(map, marker)-----------
 	});
 </script>
+</head>
+<body>
 
-
-<div class="modal-body" id="launchMapBody" >
 	<div id="googleMap"	style="width: 80%; height: 80%; margin: auto; margin:20% 10% 20% 20% ; "></div>
-</div>
 
-
+</body>
+</html>
 
 
 

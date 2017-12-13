@@ -2,6 +2,7 @@ package com.miracle.ksh.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -368,6 +372,7 @@ public class VoteController {
 	
 	
 	//투표 작성 페이지에서 다 작성하면 실행해보자
+	@Transactional(propagation=Propagation.REQUIRED, isolation= Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
 	@RequestMapping(value="/voteAddEnd.mr", method={RequestMethod.POST})
 	public String voteAddEnd(HttpServletRequest req){
 		
@@ -391,16 +396,22 @@ public class VoteController {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd"); //날짜의 포맷 설정
 		Date startday = null;
 		Date endday = null;
+		Date today = null;
+		
+		Calendar c1 = Calendar.getInstance();
+		String todate = format.format(c1.getTime());
 		
 		try {
 			startday = format.parse(startdate); //투표시작일을 Date 형식으로 바꿔보자
 			endday = format.parse(enddate); //투표종료일을 Date 형식으로 바꿔보자
+			today = format.parse(todate);
 		} catch (ParseException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
-		int compare = startday.compareTo(endday); //투표시작일과 투표종료일의 간격을 알아보자
+		int compare1 = startday.compareTo(endday); //투표시작일과 투표종료일의 간격을 알아보자
+		int compare2 = today.compareTo(endday); //현재 날짜와 투표종료일 사이의 간격을 알아보자
 		
 		
 		boolean itemFlag = false; //항목이 2개 이상 썼는지 판별하는 플래그
@@ -418,8 +429,16 @@ public class VoteController {
 		    }
         }
 			
-		if(compare > 0){ //간격이 있다면 
+		if(compare1 > 0){ //간격이 있다면 
 			String msg = "종료일이 시작일보다 날짜가 앞섭니다.";
+			String loc = "javascript:history.back()";
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		} else if(compare2 > 0){
+			String msg = "종료일이 현재일보다 날짜가 앞섭니다.";
 			String loc = "javascript:history.back()";
 			
 			req.setAttribute("msg", msg);
@@ -668,16 +687,22 @@ public class VoteController {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd"); //날짜 형식 지정
 		Date startday = null;
 		Date endday = null;
+		Date today = null;
+		
+		Calendar c1 = Calendar.getInstance();
+		String todate = format.format(c1.getTime());
 		
 		try {
 			startday = format.parse(startdate); //투표시작일을 넣어보자
 			endday = format.parse(enddate); //투표종료일을 넣어보자
+			today = format.parse(todate);
 		} catch (ParseException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
-		int compare = startday.compareTo(endday); //투표시작일과 투표종료일 사이의 간격을 알아보자
+		int compare1 = startday.compareTo(endday); //투표시작일과 투표종료일 사이의 간격을 알아보자
+		int compare2 = today.compareTo(endday); //현재 날짜와 투표종료일 사이의 간격을 알아보자
 		
 		
 		boolean itemFlag = false; //항목이 2개 이상 썼는지 판별하는 플래그
@@ -699,8 +724,16 @@ public class VoteController {
 		    }
         }
 
-		if(compare > 0){
+		if(compare1 > 0){
 			String msg = "종료일이 시작일보다 날짜가 앞섭니다.";
+			String loc = "javascript:history.back()";
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		} else if(compare2 > 0){
+			String msg = "종료일이 현재일보다 날짜가 앞섭니다.";
 			String loc = "javascript:history.back()";
 			
 			req.setAttribute("msg", msg);
