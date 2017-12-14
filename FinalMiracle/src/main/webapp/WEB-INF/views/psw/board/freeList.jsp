@@ -19,7 +19,7 @@
 	.modal.modal-center {
 	  text-align: center;
 	}
-	@media screen and (min-width: 768px) { 
+	@media screen and (min-width: 400px) { 
 	  .modal.modal-center:before {
 	    display: inline-block;
 	    vertical-align: middle;
