@@ -21,7 +21,7 @@
 	#content {
 		height:100%;
 	}
-	img {
+	.imgs {
 		height: 40px;
 		width: 40px;
 	}
@@ -66,10 +66,10 @@
 					<c:set var="receiver" value="${map}"></c:set>
 						<tr> <!-- IDX, SUBJECT, CONTENT, SENDER, SSTATUS, name, img, w.status -->
 							<c:if test="${receiver.status == 2}">
-								<th>유저 :  </th><td><img src="<%= request.getContextPath() %>/resources/images/${receiver.img}"> ${receiver.name} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${teamNum}팀  팀장]</td> 
+								<th>유저 :  </th><td><img src="<%= request.getContextPath() %>/resources/images/${receiver.img}" class="imgs"> ${receiver.name} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${teamNum}팀  팀장]</td> 
 							</c:if>
 							<c:if test="${receiver.status == 1}">
-								<th>유저 :  </th><td><img src="<%= request.getContextPath() %>/resources/images/${receiver.img}"> ${receiver.name} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${teamNum}팀   팀원]</td> 
+								<th>유저 :  </th><td><img src="<%= request.getContextPath() %>/resources/images/${receiver.img}" class="imgs"> ${receiver.name} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${teamNum}팀   팀원]</td> 
 							</c:if>
 						</tr>
 						<tr>

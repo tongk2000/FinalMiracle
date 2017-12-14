@@ -54,9 +54,9 @@
 
 <div style="width: 100%; height: 400px;">
 	<div style="/* border:4px dotted skyblue; */ width:50%; float: left;">
-			<!-- 회사정보 -->
-			<div class="footer" id="tm" align="center" style="width:100%; float: left;">
-			</div>
+		<!-- 회사정보 -->
+		<div class="footer" id="tm" align="center" style="width:100%; float: left;">
+		</div>
 	</div>
 	<div style="width:50%; height: 400px; float: right;">
 		<!-- 구글맵 -->

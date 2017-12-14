@@ -21,7 +21,7 @@
 	#content {
 		height:100%;
 	}
-	img {
+	.imgs {
 		height: 40px;
 		width: 40px;
 	}
@@ -82,10 +82,10 @@
 					<tbody>
 						<tr> <!--  teamNum, m.userid, m.idx as memberNum, w.status, m.img -->
 							<c:if test="${userTeam.status == 2}">
-								<th>유저   </th><td><img src="<%= request.getContextPath() %>/resources/images/${userTeam.img}"> ${userTeam.name} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${userTeam.teamNum}팀  팀장]</td> 
+								<th>유저   </th><td><img src="<%= request.getContextPath() %>/resources/images/${userTeam.img}" class="imgs"> ${userTeam.name} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${userTeam.teamNum}팀  팀장]</td> 
 							</c:if>
 							<c:if test="${userTeam.status == 1}">
-								<th>유저   </th><td><img src="<%= request.getContextPath() %>/resources/images/${userTeam.img}"> ${userTeam.name} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${userTeam.teamNum}팀   팀원]</td> 
+								<th>유저   </th><td><img src="<%= request.getContextPath() %>/resources/images/${userTeam.img}" class="imgs"> ${userTeam.name} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${userTeam.teamNum}팀   팀원]</td> 
 							</c:if>
 						</tr>
 						<tr>

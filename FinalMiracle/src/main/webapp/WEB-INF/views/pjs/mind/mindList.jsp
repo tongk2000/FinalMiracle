@@ -21,7 +21,7 @@ request.setCharacterEncoding("UTF-8");
 	td, th {
 		text-align:center;
 	}
-	.img {
+	.imgs {
 		width:25px;
 		height:25px;
 	}
@@ -35,9 +35,9 @@ request.setCharacterEncoding("UTF-8");
    	.selectLine {
     	background-color:gray;
     }
-    img {
-		width:25px;
-		height:25px;
+    .image {
+		width:50px;
+		height:50px;
 	}
 	th {
 		background-color:black;
@@ -88,7 +88,7 @@ request.setCharacterEncoding("UTF-8");
 								<c:if test="${md.tstatus == 2 || sessionScope.loginUser.userid == md.fk_userid}">
 									<td width="15%">
 										<a onClick="goUserInfo('${md.fk_userid}');">
-											<img class="img" src="<%= request.getContextPath()%>/resources/images/${md.img}"/>  <span class="userid" >${md.fk_userid}</span>	<!-- 아이디 -->
+											<img class="imgs" src="<%= request.getContextPath()%>/resources/images/${md.img}"/>  <span class="userid" >${md.fk_userid}</span>	<!-- 아이디 -->
 										</a>
 									</td>
 								</c:if>		
