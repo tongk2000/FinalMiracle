@@ -7,5 +7,11 @@ public interface InterChattingService {
 
 	List<HashMap<String, Object>> getChatRoom(int idx);
 
+	List<HashMap<String, Object>> getChattingContent(String cridx);
+
+	void chatting(HashMap<String, Object> map);
+
+	
+
 
 }

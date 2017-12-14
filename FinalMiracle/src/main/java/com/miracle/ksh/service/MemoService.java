@@ -80,5 +80,23 @@ public class MemoService implements InterMemoService {
 		int n = dao.MemoDel(idx);
 		return n;
 	}
+
+	@Override
+	public int MemoGarbage(HashMap<String, String> map) {
+		int n = dao.MemoGarbage(map);
+		return n;
+	}
+
+	@Override
+	public int MemoRestore(HashMap<String, String> map) {
+		int n = dao.MemoRestore(map);
+		return n;
+	}
+
+	@Override
+	public int MemoDel(HashMap<String, String> map) {
+		int n = dao.MemoDel(map);
+		return n;
+	}
 	
 }

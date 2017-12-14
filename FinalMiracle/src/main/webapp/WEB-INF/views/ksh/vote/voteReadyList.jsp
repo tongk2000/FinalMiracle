@@ -119,10 +119,10 @@
 		<thead>
 			<tr>
 				<th style="width: 5%;">투표번호</th>
-				<th style="width: 5%;">팀번호</th>
-				<th style="width: 5%;">팀원번호</th>
+				<th style="width: 5%;">팀 / <br/>팀원번호</th>
+				<th style="width: 10%;">글쓴이</th>
 				<th style="width: 10%;">제목</th>
-				<th style="width: 20%">내용</th>
+				<th style="width: 15%">내용</th>
 				<th style="width: 5%;">시작날짜</th>
 				<th style="width: 5%;">종료날짜</th>
 				<th style="width: 10%;">문항</th>
@@ -137,8 +137,11 @@
 				<c:set value="${votevo.IDX}" var="voteidx" />
 				<tr>
 					<td>${votevo.IDX}</td>
-					<td>${votevo.FK_TEAM_IDX}</td>
-					<td>${votevo.FK_TEAMWON_IDX}</td>
+					<td>${votevo.FK_TEAM_IDX} / ${votevo.FK_TEAMWON_IDX}</td>
+					<td>
+						<img src="<%= request.getContextPath() %>/resources/files/${votevo.IMG}" width="30px" height="30px">
+						${votevo.NAME}(${votevo.USERID})
+					</td>
 					<td>${votevo.SUBJECT}</td>
 					<td>${votevo.CONTENT}</td>
 					<td>${votevo.STARTDATE}</td>

@@ -291,5 +291,20 @@
 		delete from tbl_memo
 		where idx = #{idx}
 	</delete>
+	
+	<update id="MemoGarbages" parameterType="HashMap">
+		update tbl_memo set groups = '휴지통'
+		where idx = #{idxs}
+	</update>
+	
+	<update id="MemoRestores" parameterType="HashMap">
+		update tbl_memo set groups = '전체'
+		where idx = #{idxs}
+	</update>
+	
+	<delete id="MemoDels" parameterType="HashMap">
+		delete from tbl_memo
+		where idx = #{idxs}
+	</delete>
 
 </mapper>

@@ -12,6 +12,7 @@ import com.miracle.ksh.model.TeamVO;
 import com.miracle.ksh.model.TeamwonVO;
 
 import oracle.net.aso.i;
+import oracle.net.aso.l;
 
 @Service
 public class TMService implements InterTMService {
@@ -197,6 +198,12 @@ public class TMService implements InterTMService {
 	public String getTeamLeaderName(String fk_team_idx) {
 		String name = dao.getTeamLeaderName(fk_team_idx);
 		return name;
+	}
+
+	@Override
+	public String getMyEmail(int login_idx) {
+		String email = dao.getMyEmail(login_idx);
+		return email;
 	}
 
 }
