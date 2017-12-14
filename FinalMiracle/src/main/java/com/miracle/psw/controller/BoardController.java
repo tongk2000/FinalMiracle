@@ -35,7 +35,7 @@ public class BoardController {
 	public String faqList(HttpServletRequest req, HttpSession session) {
 		List<FaqBoardVO> faqList = null;  
 		
-		String gobackURL = MyUtil.getCurrentURL(req);
+		String gobackURL = req.getParameter("gobackURL");
 		req.setAttribute("gobackURL", gobackURL);
 		
 		String colname = req.getParameter("colname");
@@ -50,7 +50,7 @@ public class BoardController {
 		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 		
 		int totalCount = 0;
-		int sizePerPage = 7;
+		int sizePerPage = 10;
 		int	currentShowPageNo = 0;
 		int totalPage = 0;
 		
@@ -70,10 +70,10 @@ public class BoardController {
 		map.put("startRno", String.valueOf(startRno));
 		map.put("endRno", String.valueOf(endRno));
 		
-		if( (colname != null && search != null && category != null) &&
-			(!colname.trim().isEmpty() && !search.trim().isEmpty()) &&
-			(!colname.equals("null") && !search.equals("null")) &&
-			(!category.equals("null") && !category.trim().isEmpty())) {  // 검색어가 있는 경우
+		if( (colname != null && search != null) && 
+			(!colname.trim().isEmpty() && !search.trim().isEmpty()) && 
+			(!colname.equals("null") && !search.equals("null")) 
+		   ){  // 검색어가 있는 경우
 			faqList = service.faqListWithSearch(map);
 		} else {  // 검색어가 없는경우
 			faqList = service.faqListWithNoSearch(map);
@@ -82,7 +82,8 @@ public class BoardController {
 		if( (colname != null && search != null && category != null) &&
 			(!colname.trim().isEmpty() && !search.trim().isEmpty()) &&
 			(!colname.equals("null") && !search.equals("null")) &&
-			(!category.equals("null") && !category.trim().isEmpty())) {  // 검색어가 있는 경우
+			(!category.equals("null") && !category.trim().isEmpty()) 
+		   ) {  // 검색어가 있는 경우
 			totalCount = service.getTotalCountWithSearch(map);
 		} else {  // 검색어가 없는경우
 			totalCount = service.getTotalCountWithNoSearch(map);
@@ -92,9 +93,8 @@ public class BoardController {
 		String pagebar = "";
 		
 		if( (colname != null && search != null && category != null) &&
-			(!colname.trim().isEmpty() && !search.trim().isEmpty()) &&
-			(!colname.equals("null") && !search.equals("null")) &&
-			(!category.equals("null") && !category.trim().isEmpty())) {
+			(!colname.trim().isEmpty() && !search.trim().isEmpty() && !category.trim().isEmpty() ) &&
+			(!colname.equals("null") && !search.equals("null") && !category.equals("null")) ) {
 			// ================================================ *** 검색이 있을 경우 *** ====================================
 			pagebar = "<ul>";
 			pagebar += MyUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentShowPageNo, colname, search, category, "faqList.mr");
@@ -110,6 +110,7 @@ public class BoardController {
 		req.setAttribute("faqList", faqList);
 		req.setAttribute("colname", colname);
 		req.setAttribute("search", search);
+		req.setAttribute("category", category);
 		
 		return "psw/board/faqList.all";
 	}  // end of public String faqList(HttpServletRequest req, HttpSession session) --------------------------------
@@ -138,9 +139,6 @@ public class BoardController {
 		@SuppressWarnings("unchecked")
 		HashMap<String, String> teamInfo =  (HashMap<String, String>)session.getAttribute("teamInfo");
 		
-		String gobackURL = req.getParameter("gobackURL");
-		req.setAttribute("gobackURL", gobackURL);
-		
 		String fk_team_idx = teamInfo.get("team_idx");
 		String fk_teamwon_idx = teamInfo.get("teamwon_idx");
 
@@ -166,7 +164,7 @@ public class BoardController {
 		
 		int blockSize = 10;
 		
-		if (str_currentShowPageNo == null) {
+		if (str_currentShowPageNo == null || str_currentShowPageNo.equals("")) {
 			currentShowPageNo = 1;
 		} else {
 			currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
@@ -199,6 +197,9 @@ public class BoardController {
 		pagebar += "</ul>";
 		
 		session.setAttribute("readCntPermission", "yes");  // f5 눌러도 조회수 안올리기 하기 위한 것.(session 에 키값 지정)
+		
+		req.setAttribute("currentShowPageNo", currentShowPageNo);
+		req.setAttribute("sizePerPage", sizePerPage);
 		
 		req.setAttribute("pagebar", pagebar);
 		req.setAttribute("freeList", freeList);
@@ -258,9 +259,14 @@ public class BoardController {
 			session.removeAttribute("readCntPermission"); // 글목록 본 후에 세션값 삭제.
 		} else {
 			freevo = service.getViewWithNoReadCnt(idx);
-		}	
+		}
+		
 		req.setAttribute("freevo", freevo);
 		req.setAttribute("gobackURL", gobackURL);
+		req.setAttribute("currentShowPageNo", req.getParameter("currentShowPageNo"));
+		req.setAttribute("sizePerPage", req.getParameter("sizePerPage"));
+		req.setAttribute("colname", req.getParameter("colname"));
+		req.setAttribute("search", req.getParameter("search"));
 		
 		// ==================================== *** 댓글 목록 보여주기 *** ======================
 		List<FreeCommentVO> freeCommentList = service.freeListComment(idx);

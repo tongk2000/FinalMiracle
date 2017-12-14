@@ -6,7 +6,7 @@
 	.modal.modal-center {
 	  text-align: center;
 	}
-	@media screen and (min-width: 768px) { 
+	@media screen and (min-width: 400px) { 
 	  .modal.modal-center:before {
 	    display: inline-block;
 	    vertical-align: middle;
@@ -121,20 +121,22 @@
 	}
  	
 	// ======================================== *** 글번호와 URL을 받아서 1개 글 정보 보여주기 *** ===========================
-	function goView(idx, gobackURL){
+	function goView(idx){
 		var frm = document.idxFrm;
 		frm.idx.value = idx;
-		frm.gobackURL.value = gobackURL;
 		
 		frm.method = "get";
 		frm.action = "<%= request.getContextPath() %>/freeView.mr";
 		frm.submit();
 	}
+	
 </script>
+
+
 <div style="margin-left: 5%;">
-	<div style="margin-left: 5%; padding: 10px; border: solid 0px red; width: 80%;">
+	<div style="margin-left: 15%; padding: 10px; border: solid 0px red; width: 100%;">
 		
-		<table id="table" style="width: 68%; border: 1px solid dimgray; border-left: none; border-right: none;">
+		<table id="table" style="width: 600px; border: 1px solid dimgray; border-left: none; border-right: none;">
 			<!-- ============================= *** 자유게시판 소개 *** =================================== -->
 			<tr class="title above">
 				<td colspan="2" style="padding-left: 20px; font-weight: bold;">자유게시판입니다.</td>
@@ -143,7 +145,7 @@
 			<td colspan="2" style="padding-left: 10px;">
 				미풍양속을 해치지 않는 범위 내에서 자유롭게 작성해주세요.<br/>
 				단, 팀원간 마찰은 <a href="<%= request.getContextPath() %>/mindList.mr">마음의 소리 게시판</a>을,
-				       팀내 공지사항은 <a href="<%= request.getContextPath() %>/noticeList.mr">공지사항</a> 게시판을,
+				        팀내 공지사항은 <a href="<%= request.getContextPath() %>/noticeList.mr">공지사항</a> 게시판을,
 				<br/>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:1 대화를 원하시는 회원님은 <a href="<%= request.getContextPath() %>/mindList.mr">쪽지</a> 또는 
 				<a href="<%= request.getContextPath() %>/chatting.mr">채팅</a> 기능을 이용해주시기 바랍니다.
@@ -153,7 +155,7 @@
 			<tr style="border: 1px solid lightgray; border-top: none; border-left: none; border-right: none;">
 				<td colspan="2" style="padding-left: 10px;"> 
 					<br/>
-					<span style="color: #578CA9;" onClick="goView('${freevo.idx}', '${gobackURL}')">≪ 이전글 </span> &nbsp;&nbsp;&nbsp;
+					<span style="color: #578CA9;" onClick="">≪ 이전글 </span> &nbsp;&nbsp;&nbsp;
 					<span style="font-weight: bold;">현재 글번호 : </span>${freevo.idx} &nbsp;&nbsp;&nbsp;
 					<span style="color: #578CA9;">다음글 ≫</span>
 					<br/>
@@ -161,7 +163,7 @@
 			</tr>
 		</table >
 		<!-- ============================= *** 제목, 게시글 작성자 및 상세정보 *** ========================= -->
-		<table style="width: 80%; border: 1px solid dimgray; border-left: none; border-right: none;">
+		<table style="width: 600px; border: 1px solid dimgray; border-left: none; border-right: none;">
 			<tr>
 	           	<th style="width: 8%; padding-top: 10px;">
 					<img src="<%= request.getContextPath() %>/resources/images/${freevo.img}" style="width: 90px; height: 90px;" align="middle">
@@ -192,30 +194,31 @@
 		<br/>
 		<!-- ============================================================ *** 목록 , 게시글 수정 / 삭제 버튼 *** =================================== -->
 		<div>
-			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/freeList.mr'">목록보기</button>
+			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/freeList.mr?currentShowPageNo=${currentShowPageNo}&sizePerPage=${sizePerPage}&colname=${colname}&search=${search}'">목록보기</button>
 			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/freeEdit.mr?idx=${freevo.idx}'">수정</button>
 			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/freeDel.mr?idx=${freevo.idx}&userid=${freevo.userid}'">삭제</button>
 		</div>	
 		<br/>
 		
 		<!-- ======================= *** 댓글쓰기 폼 추가 *** ================================== -->
-		<div style="border: 1px solid #006E51; border-left: none; border-right: none; width: 80%; padding: 5px; background-color: #98DDDE">
+		<div style="border: 1px solid #006E51; border-left: none; border-right: none; width: 600px; padding: 5px; background-color: #98DDDE">
 			<form name="addWriteFrm" action="<%= request.getContextPath() %>/freeComment.mr" method="get">
-				<span style="font-family: verdana; padding-left: 15px;">
-					<span style="font-weight: bold;">작성자 : </span>${sessionScope.loginUser.userid} [${sessionScope.loginUser.name}]
+				<span style="font-family: verdana; padding-left: 10px;">
+					<span style="font-weight: bold; font-size: 9pt;">작성자 : </span>${sessionScope.loginUser.userid} [${sessionScope.loginUser.name}]
 				</span>&nbsp;
 				<input type="hidden" name="userid" value="${sessionScope.loginUser.userid}" size="3" readonly />
 				<input type="hidden" name="name" value="${sessionScope.loginUser.name}" size="3" class="short" readonly />&nbsp;&nbsp;
 				
-				<span style="font-family: Georgia; font-weight: bold;">댓글 : </span>
+				<span style="font-family: Georgia; font-weight: bold; font-size: 9pt;">댓글 : </span>
 				<input type="text" name="content" class="long" size="40" />
 				
 				<!-- ==================== *** 댓글에 달리는 원게시물 글번호(tblBoard idx) *** =========================== -->
 				<input type="hidden" name="parentIdx" value="${freevo.idx}" />
 				
 				<!-- ==================== *** 돌아갈 글목록 페이지 *** ================================================ -->
-				<input type="hidden" name="gobackURL" value="${gobackURL}">
-				&nbsp;<button type="button" onClick="goWrite();">댓글작성</button>
+				<input type="hidden" name="" value="">
+				&nbsp;
+				<a class="replyWriteButtonATag" onClick="goWrite();" style="font-size: 9pt; text-decoration: none; color: black; cursor: pointer;">댓글</a>
 			</form>
 		</div>
 		
@@ -224,25 +227,23 @@
 		<div style = "border: 0px solid pink;">
 			<!-- ======================================== *** 댓글 내용 보여주기 *** =================================================== -->
 			<c:if test="${not empty freeCommentList}">
-				<table id="comment" style="width: 80%; padding: 10px;">
+				<table id="comment" style="width: 550px; padding: 5px;">
 					<c:forEach var="commentvo" items="${freeCommentList}" >
 						<tr id="comment${commentvo.idx}">
 							<td style="border: 0px solid lightgray; border-left: none; border-right: none; width: 3%;">
 								<img src="<%= request.getContextPath() %>/resources/images/${commentvo.img}" style="width: 30px; height: 25px; vertical-align: middle; padding-top: 2px; padding-bottom: 2px;" align="middle">
 							</td>
 							<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 12%; padding-left: 10px;">
-								<span class="repleInfo" onClick="showUserInfo('${commentvo.userid}')">
+								<span class="repleInfo" onClick="showUserInfo('${commentvo.userid}')" style="font-size: 9pt;">
 									${commentvo.userid} [${commentvo.name}]
 								</span>
 							</td>
 							<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 30%; padding-left: 10px;">
-								<span style="font-size: 11pt;">${commentvo.content}</span>
+								<span style="font-size: 9pt;">${commentvo.content}</span>
 							</td>
 							<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 20%; padding-left: 10px;">
-								${commentvo.regDate}
+								<span style="font-size: 9pt;">${commentvo.regDate}</span>
 							</td>
-							<!-- ============================= *** 대댓글 달기 칸 만들기 *** =============================== -->
-							
 						</tr>
 					</c:forEach>
 				</table>
@@ -252,10 +253,18 @@
 	</div>
 </div>
 
+	
+	
+
+<!-- ////////////////////////////////////////////////////////////////////////////////////// -->
+
 <!-- 해당 글 조회용 폼 생성 -->
 <form name="idxFrm">
-	<input type="hidden" name="idx" />
-	<input type="hidden" name="gobackURL" />
+	<input type="text" name="idx"/>
+	<input type="text" name="currentShowPageNo" value="${currentShowPageNo}"/>
+	<input type="text" name="sizePerPage" value="${sizePerPage}"/>
+	<input type="text" name="colname" value="${colname}"/>
+	<input type="text" name="search" value="${search}"/>
 </form>
 
 
@@ -271,7 +280,7 @@
 				<h4 class="modal-title">회원 상세 정보</h4>
 			</div>
 			<div class="modal-body">
-			<p></p>
+			
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

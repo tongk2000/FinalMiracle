@@ -44,7 +44,7 @@
 =======
 				var html = "";
 				<%-- html <img src="<%= request.getContextPath() %>/resources/files/20171208183923121001009307995.jpg" style="width:200px; heigth:200px;" /> --%>
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
+<%-- >>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 				html += "<img src='<%= request.getContextPath() %>/resources/files/"+img+"' height='150px;' width='150px;'><br/>";
 				html += "팀 이름 : " + name + "<br/>";
 				html += "설립자 : " + leader + "<br/>";
@@ -77,7 +77,7 @@
 		</div>
 <<<<<<< HEAD
 	</div>	
-</div> --%>
+</div> --%> 
 
 <!-- <br/><br/>
 <div align="center" style="float:left; width:400px; height:150px; margin-left:400px;"><a class="btn btn-primary" onclick="launchGoogleMap()">크게 보기</a><br/></div>
@@ -103,4 +103,4 @@
 =======
 >>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 	</div>
-</div>
+</div>--%>

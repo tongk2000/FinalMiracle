@@ -145,6 +145,8 @@
 		$(document).on("click", ".modalClose", function(){
 			$('.modal').modal('hide');
 		}); // end of $(".modalClose").click(function() --------------------------------------------------
+				
+		
 		
 		// ================== *** 자유게시판에서 검색기능 이용했을 시 검색어 유지시키기 *** ================
 		searchKeep();
@@ -156,6 +158,7 @@
 			$("#colname").val("${colname}");
 			$("#search").val("${search}");
 		</c:if>
+		
 	}
 	
 	// ==================================== *** userid 또는 name 을 클릭했을 경우 사용자정보를 포함한 모달창 띄우기 *** ===================
@@ -189,11 +192,9 @@
 	}
 	
 	// ======================================== *** 글번호와 URL을 받아서 1개 글 정보 보여주기 *** ===========================
-	function goView(idx, gobackURL){
+	function goView(idx){
 		var frm = document.idxFrm;
 		frm.idx.value = idx;
-		frm.gobackURL.value = gobackURL;
-		
 		frm.method = "get";
 		frm.action = "<%= request.getContextPath() %>/freeView.mr";
 		frm.submit();
@@ -210,6 +211,7 @@
 			frm.submit();
 		}
 	}	
+	
 </script>
 
 </head>
@@ -267,7 +269,7 @@
 							<!-- ======================= *** 자유게시판 목록에서 제목 클릭시 해당 게시글 상세 내용 보여주기 *** ============================ -->
 							<td style="border: 1px solid lightgray; border-left: none; border-right: none; padding-left: 10px;">
 								<c:if test="${freevo.commentCnt > 0}">
-									<span class="subject" onClick="goView('${freevo.idx}','${gobackURL}')">
+									<span class="subject" onClick="goView(${freevo.idx})">
 										<span style="font-family: Georgia;">${freevo.subject}</span>
 									</span>
 									<span style="color: red; font-weight: bold; font-style: italic; font-size: smaller; vertical-align: super;">
@@ -275,7 +277,7 @@
 									</span>
 								</c:if>
 								<c:if test="${freevo.commentCnt == 0}">
-									<span class="subject" onClick="goView('${freevo.idx}','${gobackURL}')">
+									<span class="subject" onClick="goView(${freevo.idx})">
 										<span style="font-family: Times;">${freevo.subject}</span>
 									</span>
 								</c:if>
@@ -298,6 +300,7 @@
 			<span class="addFree" onClick="javascript:location.href='<%= request.getContextPath() %>/freeAdd.mr'" style="font-size: 10pt; font-family: arial black; text-decoration: none; color: black; cursor: pointer;">글쓰기</span>
 		</div>
 		&nbsp;&nbsp;&nbsp;
+		
 		<!-- ===================================== *** 글 검색용 폼 생성 *** ================================================== -->
 		<div style="float: right; margin-right: 20%; margin-top: 5px;">
 			<form name="searchFrm" action="<%= request.getContextPath() %>/freeList.mr" method="get">
@@ -321,9 +324,13 @@
 	
 	<!-- 해당 글 조회용 폼 생성 -->
 	<form name="idxFrm">
-		<input type="hidden" name="idx" />
-		<input type="hidden" name="gobackURL" />
+		<input type="hidden" name="idx"/>
+		<input type="hidden" name="currentShowPageNo" value="${currentShowPageNo}"/>
+		<input type="hidden" name="sizePerPage" value="${sizePerPage}"/>
+		<input type="hidden" name="colname" value="${colname}"/>
+		<input type="hidden" name="search" value="${search}"/>
 	</form>
+	
 	
 </body>
 </html>
