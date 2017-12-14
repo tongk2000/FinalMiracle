@@ -8,6 +8,9 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -255,6 +258,50 @@ public class MemoController {
 		
 	}
 	
+	//체크박스에 선택한 메모들을 휴지통으로 보내보자
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	@RequestMapping(value="/memoChkGarbage.mr", method={RequestMethod.GET})
+	public String memoChkGarbage(HttpServletRequest req){
+		
+		String[] idxs = req.getParameterValues("chk_memo"); //선택된 메모 idx들
+		String gobackURL = req.getParameter("gobackURL");
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		int cnt = 0;
+		
+		for(int i = 0; i<idxs.length; i++){
+			int n = 0;
+			
+			map.put("idxs", idxs[i]);
+			n = service.MemoGarbage(map); //메모를 휴지통으로 보내보자
+			
+			if(n == 1){
+				cnt++;
+			}
+		}
+		
+		if(cnt == idxs.length){
+			String msg = "선택된 메모들을 휴지통으로 보냈습니다.";
+			String loc = gobackURL;
+			//"javascript:history.back()";
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		} else {
+			String msg = "선택된 메모들을 휴지통으로 보내는 데 실패했습니다.";
+			String loc = gobackURL;
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		}	
+		
+	}
+	
 	//메모를 삭제해보자
 	@RequestMapping(value="/memoRestore.mr", method={RequestMethod.GET})
 	public String memoRestore(HttpServletRequest req){
@@ -285,6 +332,52 @@ public class MemoController {
 		}	
 	}
 	
+	
+	//휴지통에 존재하는 체크박스에 선택한 메모들을 복구시켜보자
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	@RequestMapping(value="/memoChkRestore.mr", method={RequestMethod.GET})
+	public String memoChkRestore(HttpServletRequest req){
+		
+		String[] idxs = req.getParameterValues("chk_memo"); //선택된 메모 idx들
+		String gobackURL = req.getParameter("gobackURL");
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		int cnt = 0;
+		
+		for(int i = 0; i<idxs.length; i++){
+			int n = 0;
+			
+			map.put("idxs", idxs[i]);
+			n = service.MemoRestore(map); //메모를 휴지통으로 보내보자
+			
+			if(n == 1){
+				cnt++;
+			}
+		}
+		
+		if(cnt == idxs.length){
+			String msg = "선택된 메모들의 복구가 완료되었습니다.";
+			String loc = gobackURL;
+			//"javascript:history.back()";
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		} else {
+			String msg = "선택된 메모들의 복구에 실패하였습니다.";
+			String loc = gobackURL;
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		}	
+		
+	}
+	
+	//메모를 삭제해보자
 	@RequestMapping(value="/memoDel.mr", method={RequestMethod.POST})
 	public String memoDel(HttpServletRequest req){
 		
@@ -313,6 +406,50 @@ public class MemoController {
 			
 			return "ksh/msg.not";
 		}	
+	}
+	
+	//선택된 메모들을 삭제시켜보자
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	@RequestMapping(value="/memoChkDel.mr", method={RequestMethod.POST})
+	public String memoChkDel(HttpServletRequest req){
+		
+		String[] idxs = req.getParameterValues("chk_memo"); //선택된 메모 idx들
+		String gobackURL = req.getParameter("gobackURL");
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		int cnt = 0;
+		
+		for(int i = 0; i<idxs.length; i++){
+			int n = 0;
+			
+			map.put("idxs", idxs[i]);
+			n = service.MemoDel(map); //메모를 휴지통으로 보내보자
+			
+			if(n == 1){
+				cnt++;
+			}
+		}
+		
+		if(cnt == idxs.length){
+			String msg = "선택된 메모들의 삭제가 완료되었습니다.";
+			String loc = gobackURL;
+			//"javascript:history.back()";
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		} else {
+			String msg = "선택된 메모들의 삭제에 실패하였습니다.";
+			String loc = gobackURL;
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		}	
+		
 	}
 	
 	

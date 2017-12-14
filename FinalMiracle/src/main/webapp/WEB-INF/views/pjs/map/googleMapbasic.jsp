@@ -134,7 +134,7 @@
 </head>
 <body>
 
-	<div id="googleMap"	style="width: 80%; height: 80%; margin: auto; margin:20% 10% 20% 20% ; "></div>
+	<div id="googleMap"	style="width: 100%; height: 400px;"></div>
 
 </body>
 </html>

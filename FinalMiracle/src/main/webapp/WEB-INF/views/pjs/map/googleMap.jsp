@@ -249,7 +249,7 @@
 			<div id="displayList" style="background-color:black; z-index:1000"></div>
 	</div>
 	
-	<div id="googleMap"	style="width: 40%; height: 70%; margin: auto; margin:20% 10% 20% 20% ; "></div>
+	<div id="googleMap" style="width: 100%; height: 100%;"></div>
 	
 	<div class="modal fade" id="mapInfo" role="dialog"></div>
 	<form name="map">

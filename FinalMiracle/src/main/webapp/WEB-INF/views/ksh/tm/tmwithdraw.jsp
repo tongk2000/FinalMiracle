@@ -224,11 +224,8 @@
 	<input type="text" name="search1" id="search1" size="40" />
 	<button type="button" onclick="goSearch1();">검색</button>
 
-</div>
+<br/><br/><br/>
 
-<br/><br/>
-
-<div style="padding-left: 10%; border: solid 0px red; width: 100%;">
 	<h1>탈퇴 목록</h1>
 	
 	<div style="margin-top: 20px;">

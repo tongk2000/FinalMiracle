@@ -74,12 +74,28 @@
 		frm.submit();
 	}
 	
+	function goChkGarbage(){
+		var frm = document.listFrm;
+		
+		frm.action = "<%= request.getContextPath() %>/memoChkGarbage.mr";
+		frm.method = "get";
+		frm.submit();
+	}
+	
 	function goRestore(idx){
 		var frm = document.idxFrm;
 		
 		frm.idx.value = idx;
 		
 		frm.action = "<%= request.getContextPath() %>/memoRestore.mr";
+		frm.method = "get";
+		frm.submit();
+	}
+	
+	function goChkRestore(){
+		var frm = document.listFrm;
+		
+		frm.action = "<%= request.getContextPath() %>/memoChkRestore.mr";
 		frm.method = "get";
 		frm.submit();
 	}
@@ -98,6 +114,17 @@
 
 	}
 	
+	function goChkDel(){
+		var frm = document.listFrm;
+		
+		if(confirm("선택된 메모들을 삭제하시겠습니까?")){
+			
+			frm.action = "<%= request.getContextPath() %>/memoChkDel.mr";
+			frm.method = "post";
+			frm.submit();
+		}
+	}
+	
 	function goSearch(){
 		var frm = document.listFrm;
 		var search = $("#search").val();
@@ -108,6 +135,17 @@
 		} else {
 			frm.submit();
 		}
+	}
+	
+	function allcheck(){
+		cbox = listFrm.chk_memo;
+	    if(cbox.length) {  // 여러 개일 경우
+	        for(var i = 0; i<cbox.length;i++) {
+	            cbox[i].checked=listFrm.chk_Allmemo.checked;
+	        }
+	    } else { // 한 개일 경우
+	        cbox.checked=listFrm.chk_Allmemo.checked;
+	    }
 	}
 
 </script>
@@ -147,6 +185,7 @@
 	<table id="table">
 		<thead>
 			<tr>
+				<th style="width: 5%;" align="center"><input type="checkbox" name="chk_Allmemo" onclick="allcheck();">선택</th>
 				<th style="width: 5%;">메모번호</th>
 				<th style="width: 5%;">회원번호</th>
 				<th style="width: 5%;">팀원번호</th>
@@ -155,14 +194,16 @@
 				<th style="width: 5%;">분류</th>
 				<th style="width: 15%;">작성일</th>
 				<th style="width: 15%;">최종수정일</th>
-				<th style="width: 15%;">비고</th>
+				<th style="width: 10%;">비고</th>
 			</tr>
 		</thead>
 		
 		<c:if test="${not empty memoList}">
 		<tbody>
 			<c:forEach var="memovo" items="${memoList}" varStatus="status">
+				<c:set var="groups" value="${memovo.groups}" />
 				<tr>
+					<td align="center"><input type="checkbox" name="chk_memo" value="${memovo.idx}"></td>
 					<td>${memovo.idx}</td>
 					<td>${memovo.fk_member_idx}</td>
 					<td>${memovo.fk_teamwon_idx}</td>
@@ -212,8 +253,18 @@
 	<button type="button" onclick="goSearch();">검색</button>
 	
 	<div style="margin-top: 20px;">
-		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoAdd.mr'">메모작성</button>&nbsp;
+		<c:if test="${groups ne '휴지통'}">
+			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoAdd.mr'">메모작성</button>&nbsp;
+			<button type="button" onClick="goChkGarbage();">선택휴지통</button>&nbsp;
+		</c:if>
+		<c:if test="${groups eq '휴지통'}">
+			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoAdd.mr'">메모작성</button>&nbsp;
+			<button type="button" onClick="goChkRestore();">선택복구</button>&nbsp;
+			<button type="button" onClick="goChkDel();">선택삭제</button>&nbsp;
+		</c:if>
 	</div>
+	
+	<input type="hidden" name="gobackURL" value="${gobackURL}">
 
 </div>
 </form>
