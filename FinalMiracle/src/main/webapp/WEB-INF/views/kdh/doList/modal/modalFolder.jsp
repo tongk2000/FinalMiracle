@@ -103,69 +103,14 @@
 								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="importanceAvg" value="${map.fvo.importanceAvg}" />
 							</td>
 						</tr>
-						
-						<tr>
-							<td class="infoClass">첨부파일</td>
-							<td>
-								<table style="width:100%;">
-									<c:if test="${empty map.folder_fileList}">
-										<tr>
-											<td style="border:none;">등록된 첨부파일이 없습니다.</td>
-										</tr>
-									</c:if>
-									<c:if test="${not empty map.folder_fileList}">
-										<c:forEach var="ffvo" items="${map.folder_fileList}" varStatus="status">
-											<tr class="trLine">
-												<td style="border:none;">
-													<span>
-														<input type="button" value="del">
-														<a style="text-decoration:none;" class="pointer" 
-														   href="<%=request.getContextPath()%>/do_fileDownload.mr?orgFilename=${ffvo.orgFilename}&serFilename=${ffvo.serFilename}">
-															${ffvo.orgFilename}(${ffvo.filesize})
-														</a>:${ffvo.userid}
-													</span>
-												</td>
-											</tr>
-										</c:forEach>
-									</c:if>
-								</table>
-							</td>
-						<tr>
-						<tr>
-							<td class="infoClass">파일추가</td>
-							<td id="fileCnt">
-								<table style="width:100%;">
-									<tr class="trLine">
-										<td style="border:none;">
-											<input type="button" value="+"/>
-											<input type="file" name="attach" id="attach" style="display:inline-block;"/>
-											<input type="button" value="-" style="display:inline-block;"/>
-										</td>
-									</tr>
-									<tr class="trLine">
-										<td style="border:none;">
-											<input type="button" value="+"/>
-											<input type="file" name="attach" id="attach" style="display:inline-block;"/>
-											<input type="button" value="-" style="display:inline-block;"/>
-										</td>
-									</tr>
-									<tr class="trLine">
-										<td style="border:none;">
-											<input type="button" value="+"/>
-											<input type="file" name="attach" id="attach" style="display:inline-block;"/>
-											<input type="button" value="-" style="display:inline-block;"/>
-										</td>
-									</tr>
-								</table>
-							</td>
-						</tr>
+						<jsp:include page="modalFileList.jsp"/> <!-- 파일리스트는 공통이라 따로 뺌 -->
 					</tbody>
 				</table>
 				folder_idx:<input type="text" name="idx" id="folder_idx" value="${map.fvo.idx}" /> <!-- 폴더번호 저장용 -->
 			</form>
 			<br/>
 			<div id="modalCommentPage">
-				<jsp:include page="modalCommentPage.jsp"/>
+				<jsp:include page="modalCommentPage.jsp"/> <!-- 댓글리스트는 공통이라 따로 뺌 -->
 			</div>
 		</div>
 		<div class="modal-footer">

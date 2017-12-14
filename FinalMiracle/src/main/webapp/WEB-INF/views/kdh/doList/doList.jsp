@@ -741,7 +741,7 @@
 			$dateColor.css({"background-color":"green"});
 		}
 	} // end of function setDayColor(idx) ---------------------------------------------------------------------------------------------------------------
-	
+
 	
 	// 요소에 댓글 추가하고 새로운 댓글 리스트 받아오기(xml)
 	function addComment() {
@@ -811,6 +811,10 @@
 		$("#myDoing").text("");
 		$("#myLapse").text("");
 		$("#myComplete").text("");
+	}
+	
+	function subFileInput(this) {
+		$(this).
 	}
 </script>
 
