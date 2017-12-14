@@ -16,7 +16,7 @@
 	}
 	table, td, tr, th {
 		border : 1px solid black;
-		padding:20px;
+		padding:7px;
 	}
 	#content {
 		height:100%;
@@ -28,6 +28,9 @@
 </style>
 <script>
 	$(document).ready(function(){
+		$("#cancel").blur(function(){
+			window.location.reload();
+		});
 		$("#addPeople").hide
 		$('.summernote').summernote({
 	      height: 350,          // 기본 높이값
@@ -36,43 +39,83 @@
 	      focus: true,          // 페이지가 열릴때 포커스를 지정함
 	      lang: 'ko-KR'         // 한국어 지정(기본값은 en-US)
 	    });
-		
-	/* 	$("#spinneroqty").spinner({
-  	      spin: function( event, ui ) {
-  	        if( ui.value > 100 ) {
-  	          $( this ).spinner( "value", 0 ); 
-  	          /* 4 -> 3
-  	          inPeople+4 
-  	          return false;
-  	        } 
-  	        else if ( ui.value < 0 ) {
-  	          $( this ).spinner( "value", 0 );
-  	          $("#selectPeople").append($("#addPeople").html());
-  	          $("#selectPeople").find("#inPeople").addClass("inPeople"+$("#spinneroqty").val() ) );
-  	          return false;
-  	        }
-  	      }
-	  	});
-		$("#spinneroqty").change(function(){
+		$("#spinnerOqty").spinner({
+	  	      spin: function( event, ui ) {
+	  	        if( ui.value > 10 ) {
+	  	          $( this ).spinner( "value", 0 ); 
+	  	          return false;
+	  	        } 
+	  	        else if ( ui.value < 0 ) {
+	  	          $( this ).spinner( "value", 0 );
+	  	          return false;
+	  	        }
+	  	      }
+	  	    });
 			
-		}); */
+		$("#spinnerOqty").bind("spinstop", function(){
+			// 스핀너는 이벤트가 "change" 가 아니라 "spinstop" 이다.
+			var html = "";
+			
+			var spinnerOqtyVal = $("#spinnerOqty").val();
+			var i = $("#spinnerOqty").val();
+			if(spinnerOqtyVal == "0") {
+				$("#divfileattach").empty();
+				return;
+			}
+			else
+			{
+				for(var i=0; i<parseInt(spinnerOqtyVal); i++) {
+					if(i == 0) {
+						html +="<br/><br/>";
+						html +="<div style='float:left'>";
+						html +="<select name='choice' id='choice"+i+"' class='choice'> ";
+						html +="<c:forEach var='team' items='${mapteam}'> ";
+						html +="<option value='${team.userid}'>${team.name}    ${team.teamNum}팀</option> ";  
+						html +="</c:forEach> ";
+						html +="</select>"; 
+						html +="</div>";  
+						/* html +="<input type='text' name='items' id='num'+i class='form-control' style='width: 300px;' /> "; */
+					}
+					else {
+						html +="<div style='float:left; margin-left:5px;'>";
+						html +="<select name='choice' id='choice"+i+"' class='choice'> ";
+						html +="<c:forEach var='team' items='${mapteam}'> ";
+						html +="<option value='${team.userid}'>${team.name}    ${team.teamNum}팀</option>";  
+						html +="</c:forEach> ";
+						html +="</select>"; 
+						html +="</div>";  
+					}
+				}	
+				$("#divfileattach").empty();
+				$("#divfileattach").append(html);
+			}
+		});
+		
 	});	
+	function goWrite() {
+		var arr = new Array();
+		var cnt=0;
+		$(".choice").each(function(){
+			arr[cnt] = $("#choice"+cnt).val();
+			cnt++;
+		});
+		var frm = document.write;
+		frm.idx.value = arr;
+		alert($("#subject").val());
+		alert($("#content").val());
+		frm.subject.value = $("#subject").val();
+		frm.content.value = $("#content").val();
+		frm.userid.value = "${sessionScope.loginUser.userid}";
+		frm.action="memoWriteEnd.mr";
+		frm.method="post";
+		frm.submit();
+	}
 </script>
 <meta charset="UTF-8">
 <title>쪽지쓰기</title>
-<script type="text/javascript">
-	$(document).ready(function(){
-		$("#cancel").blur(function(){
-			history.back();
-		});
-		
-		/* $(".item").change(function(){
-			var item = $(this).val();
-		}); */
-	});
-</script>
 </head>
 <body>
+	<c:set var="team" value="${teamNum}"></c:set>
 	<div style="border:1px solid green; padding:9px;">
 		<div style="border:1px solid red; padding:9px;">
 			<div style="border:1px solid blue; padding:9px;"  align="center">
@@ -95,22 +138,26 @@
 						</tr>
 						<tr>
 							<th>보낼 사람</th>
-							<td id="d">
-							<input id="spinneroqty" name="ibgoqty" value="0" style="width: 30px; height: 20px; z-index:1000;">
-							<div id="selectPeople">
-								<div class="d" style="border:1px solid pink;">
-									<%-- <input type="radio" id="team" name="item" class="item" value="1"><label for="team">팀원</label>
-									<select name="choice" id="choice">
-										<c:forEach var="team" items="${mapteam}">
-											<option value="${team.name}">${team.name +' '+team.teamNum}</option> <!--${team.name +', '+team.teamNum}  -->
-										</c:forEach>
-									</select>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --%>
+			         		<td>
+			         		    <label for="spinnerOqty">선택 : </label>
+			  		            <input id="spinnerOqty" value="0" style="width: 30px; height: 20px;">
+			         		    <div id="divfileattach" style="display:inline;"></div>
+			         		</td>
+							<%-- <td id="d">
+								<div id="selectPeople">
+									<div class="d" style="border:4px dotted pink;">
+										<input type="radio" id="team" name="item" class="item" value="1"><label for="team">팀원</label>
+										<select name="choice" id="choice">
+											<c:forEach var="team" items="${mapteam}">
+												<option value="${team.name}">${team.name +' '+team.teamNum}</option> <!--${team.name +', '+team.teamNum}  -->
+											</c:forEach>
+										</select> 
+									</div>
 								</div>
-							</div>
-							</td>	
+							</td>	 --%>
 						</tr>
 						<tr>
-							<th>제목   </th><td><input type="text" name="subject" id="subject"/></td>
+							<th>제목   </th><td><input type="text" id="subject"/></td>
 						</tr>
 						<tr>
 							<th>내용   </th><td><textarea name="content" id="content" class="summernote"></textarea></td>
@@ -118,12 +165,18 @@
 					</tbody>
 				</table>
 				<div style="border:1px solid gray; display:relative">
-					<button type="reset" onClick="javascript:location.reload()" id="cancel">취소</button>
+					<button type="reset" onClick="javascript:history.back();" id="cancel">취소</button>
 					<button type="button" onClick="goWrite();">완료</button>
 				</div>
 			</div>
 		</div>
 	</div>
+	<form name="write">
+		<input type="hidden" name="userid">
+		<input type="hidden" name="idx">
+		<input type="hidden" name="subject">
+		<input type="hidden" name="content">
+	</form>
 </body>
 </html>
 

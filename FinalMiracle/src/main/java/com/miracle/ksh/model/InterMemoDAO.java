@@ -27,6 +27,12 @@ public interface InterMemoDAO {
 
 	int MemoDel(String idx); //메모를 삭제해보자
 
+	int MemoGarbage(HashMap<String, String> map); //선택된 메모들을 휴지통으로 넘겨보자
+
+	int MemoRestore(HashMap<String, String> map); //휴지통에 있는 선택된 메모들을 복구시켜보자
+
+	int MemoDel(HashMap<String, String> map); //휴지통에 있는 선택된 메모들을 삭제시켜보자
+
 	
 
 }

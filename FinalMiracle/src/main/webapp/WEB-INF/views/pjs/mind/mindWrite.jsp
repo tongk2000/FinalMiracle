@@ -4,9 +4,6 @@
 request.setCharacterEncoding("UTF-8");
 %>    
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%
-request.setCharacterEncoding("UTF-8");
-%>
 <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/resources/jqueryuicss/jquery-ui.css" />
 <link href="<%=request.getContextPath() %>/resources/summernote/summernote.css" rel="stylesheet">
 <script type="text/javascript" src="<%= request.getContextPath() %>/resources/jqueryuijs/jquery-ui.js"></script>
@@ -22,6 +19,7 @@ request.setCharacterEncoding("UTF-8");
 		width:25px;
 		height:25px;
 	}
+	
 </style>
 </head>
 <body>
@@ -84,7 +82,6 @@ request.setCharacterEncoding("UTF-8");
 			frm.submit();
 		}
 		$(document).ready(function(){
-			
 			$('.summernote').summernote({
 		      height: 300,          // 기본 높이값
 		      minHeight: null,      // 최소 높이값(null은 제한 없음)

@@ -68,4 +68,6 @@ public interface InterTMService {
 
 	String getTeamLeaderName(String fk_team_idx); //footer에 들어갈 팀 정보의 설립자 이름을 가져오자
 
+	String getMyEmail(int login_idx); //메일을 보내기 위한 자신의 이메일을 알아보자
+
 }

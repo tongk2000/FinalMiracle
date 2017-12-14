@@ -7,18 +7,49 @@
 <mapper namespace="chatting">
 	
 	<resultMap type="java.util.HashMap" id="chatroomlist">
+		<result property="cridx" 			column="cridx" 				javaType="int" />
 		<result property="roomname" 		column="roomname" 			javaType="String" />
 		<result property="personnum" 		column="personnum" 			javaType="int" />
 		<result property="notreadmessage" 	column="notreadmessage" 	javaType="int" />
 	</resultMap>
 	<select id="getChatRoom" parameterType="int" resultMap="chatroomlist">
-		select cr.roomname as roomname, cr.person as personnum, cm.notreadmessage as notreadmessage
+		select cr.cr_idx as cridx, cr.roomname as roomname, cr.person as personnum, cm.notreadmessage as notreadmessage
 		from chat_member cm join tbl_chat_room cr
 		on cm.fk_cr_idx = cr.cr_idx
 		where cm.cm_status = 1
 		and cm.fk_member_idx = #{idx}
 	</select>
 	
+	
+	<resultMap type="java.util.HashMap" id="chattinglist">
+		<result property="midx" 			column="midx" 				javaType="int" />
+		<result property="message" 			column="message" 			javaType="String" />
+		<result property="chattime" 		column="chattime" 			javaType="String" />
+		<result property="readcount" 		column="readcount" 			javaType="int" />
+		<result property="realfilename" 	column="realfilename" 		javaType="String" />
+		<result property="filesize" 		column="filesize" 			javaType="int" />
+		<result property="name" 			column="name" 				javaType="String" />
+		<result property="img" 				column="img" 				javaType="String" />
+	</resultMap>
+	<select id="getChattingContent" parameterType="String" resultMap="chattinglist">
+		select m.idx as midx, cc.message as message, cc.time as chattime, cc.readcount as readcount, cc.realfilename as realfilename, cc.filesize as filesize, m.name as name, m.img as img
+		from chat_content cc join tbl_chat_room cr
+		on cr.cr_idx = cc.fk_cr_idx
+		join tbl_member m
+		on cc.fk_member_idx = m.idx
+		where cr.cr_idx = #{cridx}
+		order by cc.cc_idx
+	</select>
+	
+	
+	<insert id="insertMessage" parameterType="HashMap">
+		insert into chat_content
+		values(seq_chat_content.nextval, #{cridx},  #{idx},  #{message},  sysdate, 0, default, default, default)
+	</insert>
+	<update id="notreadmessage" parameterType="HashMap">
+		update chat_member set notreadmessage = notreadmessage+1
+		where fk_cr_idx = #{cridx}
+	</update>
 	
 	
 	

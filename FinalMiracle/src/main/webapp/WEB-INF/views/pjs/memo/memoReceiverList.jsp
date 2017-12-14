@@ -30,6 +30,7 @@
     }
     .grayColor {
     	background-color:gray;
+    	cursor: pointer;
     }
 </style>
 <script>
@@ -109,7 +110,7 @@
 						<c:if test="${not empty list}">
 							<c:forEach var="receiver" items="${list}" varStatus="status">
 								<tr class="line">
-									<td>${status.count}<input type="hidden" value="${receiver.idx}"/></td>
+									<td><input type="checkbox" value="${receiver.idx}"><input type="hidden" value="${receiver.idx}"/></td>
 									<td><img src="<%=request.getContextPath()%>/resources/images/${receiver.img}"> ${receiver.sender}</td>
 									<td onClick="goView('${receiver.idx}', '${userTeam.teamNum}');">${receiver.subject}</td>
 									<td>${receiver.receiver}</td>

@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
     
 <style type="text/css">
 	table, th, td {border: solid gray 1px;}
@@ -132,10 +133,10 @@
 		<thead>
 			<tr>
 				<th style="width: 5%;">투표번호</th>
-				<th style="width: 5%;">팀번호</th>
-				<th style="width: 5%;">팀원번호</th>
+				<th style="width: 5%;">팀 / <br/>팀원번호</th>
+				<th style="width: 10%;">글쓴이</th>
 				<th style="width: 10%;">제목</th>
-				<th style="width: 20%">내용</th>
+				<th style="width: 15%">내용</th>
 				<th style="width: 5%;">시작날짜</th>
 				<th style="width: 5%;">종료날짜</th>
 				<th style="width: 10%;">문항</th>
@@ -150,8 +151,11 @@
 				<c:set value="${votevo.IDX}" var="voteidx" />
 				<tr>
 					<td>${votevo.IDX}</td>
-					<td>${votevo.FK_TEAM_IDX}</td>
-					<td>${votevo.FK_TEAMWON_IDX}</td>
+					<td>${votevo.FK_TEAM_IDX} / ${votevo.FK_TEAMWON_IDX}</td>
+					<td>
+						<img src="<%= request.getContextPath() %>/resources/files/${votevo.IMG}" width="30px" height="30px">
+						${votevo.NAME}(${votevo.USERID})
+					</td>
 					<td>${votevo.SUBJECT}</td>
 					<td>${votevo.CONTENT}</td>
 					<td>${votevo.STARTDATE}</td>
@@ -175,8 +179,10 @@
 						<input type="text" id="commcontent${votevo.IDX}" name="commcontent${votevo.IDX}" size="35px;" />
 						<button type="button" onClick="goCommAdd('${votevo.IDX}');">등록</button>&nbsp;
 						<br/>
+						
 						<c:forEach var="votecommvo" items="${voteCommList}" varStatus="status">
 							<c:set value="${votecommvo.FK_VOTE_IDX}" var="votecommidx" />
+							
 							<c:if test="${voteidx eq votecommidx}">
 								<img src="<%= request.getContextPath() %>/resources/files/${votecommvo.IMG}" width="30px" height="30px">
 								${votecommvo.NAME}(${votecommvo.COMMDATE})<br/>${votecommvo.CONTENT}

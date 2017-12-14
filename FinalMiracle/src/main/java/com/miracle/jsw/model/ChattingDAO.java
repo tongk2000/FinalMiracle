@@ -19,6 +19,25 @@ public class ChattingDAO implements InterChattingDAO {
 		return list;
 	}
 
+	@Override
+	public List<HashMap<String, Object>> getChattingContent(String cridx) {
+		List<HashMap<String, Object>> list = sqlsession.selectList("chatting.getChattingContent",cridx);
+		return list;
+	}
+
+	@Override
+	public void insertMessage(HashMap<String, Object> map) {
+		sqlsession.insert("chatting.insertMessage",map);
+		
+	}
+
+	@Override
+	public void notreadmessage(HashMap<String, Object> map) {
+		sqlsession.update("chatting.notreadmessage",map);
+		
+	}
+
+
 	
 
 }

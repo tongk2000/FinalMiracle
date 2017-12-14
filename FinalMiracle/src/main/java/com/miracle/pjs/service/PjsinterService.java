@@ -37,6 +37,8 @@ public interface PjsinterService {
 	
 	HashMap<String, String> getDepth(String parameter); // 수정글의 depth, groupno 구해오는 메소드
 	
+	int getCountReply(HashMap<String, Object> map); // 리스트의 댓글 수 가져오기
+	
 //==========================================================================================================================================================//	
 	
 	// === *** 마음의 소리 게시판 *** === //
@@ -99,6 +101,10 @@ public interface PjsinterService {
 
 	//String getCheckNum(HashMap<String, String> map); // 몇명이 읽었는지 반환
 	
+	int checkReadCount(String parameter); //readcount가 1인지 0인지 알아오자 몰라서 편법씀
+	
+	int insertMemo(HashMap<String, Object> map, List<String> list); // 메모입력
+	
 //==========================================================================================================================================================//	
 
 	
@@ -107,6 +113,13 @@ public interface PjsinterService {
 	// 로그인한 유저의 팀정보를 가져오기 위
 
 	HashMap<String, String> getUserTeam(HashMap<String, String> team);
+
+	String getMessage(HashMap<String, String> map); // 알람 ajax버전
+
+	
+
+
+	
 
 	
 

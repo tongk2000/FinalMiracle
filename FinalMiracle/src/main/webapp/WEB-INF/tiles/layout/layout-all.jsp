@@ -17,11 +17,11 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/resources/jqueryuijs/jquery-ui.js"></script>
 
 <style type="text/css">
-	.container{border:1px solid red; width:90%; min-height:1000px; padding:0px;}
-	.header{border:1px solid black; width:100%; min-height:120px;}
-	.sideInfo{border:1px solid blue; width:10%; min-height:850px; float:left;}
-	.content{border:1px solid green; width:90%; min-height:850px; float:right;}
-	.footer{border:1px solid black; width:100%; min-height:100px; clear:both;}
+	.container{/* border:1px solid red; */ width:100%; min-height:1000px; padding:0px;}
+	.header{/* border:1px solid black; */ width:100%; min-height:50px;}
+	.sideInfo{/* border:1px solid blue; */ width:2%; min-height:850px; float:left;}
+	.content{/* border:1px solid green; */ width:97%; min-height:850px; float:right;}
+	.footer{/* border:1px solid black; */ width:100%; min-height:100px; clear:both;}
 </style>
 
 </head>

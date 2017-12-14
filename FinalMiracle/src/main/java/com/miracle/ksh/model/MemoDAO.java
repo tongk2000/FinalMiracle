@@ -78,5 +78,23 @@ public class MemoDAO implements InterMemoDAO {
 		int n = sqlsession.delete("kshMemo.MemoDel", idx);
 		return n;
 	}
+
+	@Override
+	public int MemoGarbage(HashMap<String, String> map) {
+		int n = sqlsession.update("kshMemo.MemoGarbages", map);
+		return n;
+	}
+
+	@Override
+	public int MemoRestore(HashMap<String, String> map) {
+		int n = sqlsession.update("kshMemo.MemoRestores", map);
+		return n;
+	}
+
+	@Override
+	public int MemoDel(HashMap<String, String> map) {
+		int n = sqlsession.delete("kshMemo.MemoDels", map);
+		return n;
+	}
 	
 }
