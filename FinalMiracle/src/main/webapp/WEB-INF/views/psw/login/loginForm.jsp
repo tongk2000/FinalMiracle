@@ -171,7 +171,7 @@
 </head>
 
 
-<body>
+<body background="<%= request.getContextPath() %>/resources/images/loginbg.png">
 	<div class="content">
 		<div style="width: 60%; margin-top: 10%; margin-left: 20%; height: 500px; border-radius: 10px; background-color: #4F84C4;">
 			<br />
@@ -180,7 +180,7 @@
 			</h2>
 			<p class="bg-primary">&nbsp;</p>
 
-			<form name="loginFrm" style="margin-left: 20%;">
+			<form name="loginFrm" style="margin-left: 25%;">
 				<div class="mydiv" style="margin-left: 15%;" align="center">
 					<span class="mydisplay myfont">아이디</span> <span
 						class="mydisplay myfont" style="margin-top: 30px;">암&nbsp;&nbsp;&nbsp;호</span>
@@ -193,7 +193,7 @@
 				<div class="mydiv" style="margin-left: 20%;">
 					<a data-toggle="modal" class="modalOpen" data-target="#userIdfind" data-dismiss="modal">
 						<span style="color: white;">ID 찾기</span>
-					</a> / 
+					</a> &nbsp;	
 					<a data-toggle="modal" class="modalOpen" data-target="#passwdFind" data-dismiss="modal">
 						<span style="color: white;">PW 찾기</span>
 					</a>
@@ -203,12 +203,12 @@
 				<br/><br/>
 				<div class="mydiv" style="margin-left: 18%;">
 					아직 회원가입을 안하셨나요? &nbsp; 
-					<a href="<%= request.getContextPath() %>/member_register.mr">
-						<span style="color: orange; font-weight: bold;">[회원가입]</span>
+					<a href="<%= request.getContextPath() %>/member_register.mr" class="btn btn-primary">
+						<span class="glyphicon glyphicon-user"></span> 회원가입
 					</a>
 				</div>
 				<br/><br/>
-				<div class="mydiv" style="margin-left: 20%;">Welcome to ⓒ Miracle World ~ !!</div>
+				<div class="mydiv" style="margin-left: 23%;">Welcome to ⓒ Miracle World ~ !!</div>
 			</form>
 		</div>
 

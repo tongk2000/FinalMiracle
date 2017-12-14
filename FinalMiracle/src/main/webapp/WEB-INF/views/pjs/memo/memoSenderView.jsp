@@ -21,7 +21,7 @@
 	#content {
 		height:100%;
 	}
-	img {
+	.imgs {
 		height: 40px;
 		width: 40px;
 	}
@@ -68,10 +68,10 @@
 						<c:set var="sender" value="${map}"></c:set>
 						<tr> <!-- IDX, SUBJECT, CONTENT, SENDER, SSTATUS, img, w.status -->
 						<c:if test="${sender.status == 2}">
-							<th>유저 :  </th><td><img src="<%= request.getContextPath() %>/resources/images/${sender.img}"> ${sender.sender} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${teamNum}팀  팀장]</td> 
+							<th>유저 :  </th><td><img src="<%= request.getContextPath() %>/resources/images/${sender.img}" class="imgs"> ${sender.sender} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${teamNum}팀  팀장]</td> 
 						</c:if>
 						<c:if test="${sender.status == 1}">
-							<th>유저 :  </th><td><img src="<%= request.getContextPath() %>/resources/images/${sender.img}"> ${sender.sender} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${teamNum}팀   팀원]</td> 
+							<th>유저 :  </th><td><img src="<%= request.getContextPath() %>/resources/images/${sender.img}" class="imgs"> ${sender.sender} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${teamNum}팀   팀원]</td> 
 						</c:if>
 						</tr>
 						<tr>

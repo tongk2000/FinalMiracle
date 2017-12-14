@@ -1,8 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<<<<<<< HEAD
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+
+<%-- <script>
+=======
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 
 <script type="text/javascript">
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 	$(document).ready(function(){
 		teamCall();
 	});
@@ -31,8 +37,14 @@
 				
 				$("#tm").empty();
 				
+<<<<<<< HEAD
+				var html = "";
+
+				html <img src="<%= request.getContextPath() %>/resources/files/20171208183923121001009307995.jpg" style="width:200px; heigth:200px;" />
+=======
 				var html = "";
 				<%-- html <img src="<%= request.getContextPath() %>/resources/files/20171208183923121001009307995.jpg" style="width:200px; heigth:200px;" /> --%>
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 				html += "<img src='<%= request.getContextPath() %>/resources/files/"+img+"' height='150px;' width='150px;'><br/>";
 				html += "팀 이름 : " + name + "<br/>";
 				html += "설립자 : " + leader + "<br/>";
@@ -52,7 +64,6 @@
 <style>
 </style>
 
-
 <div style="width:100%; height:500px; border:4px dotted red; "> <!-- 전체 푸터 -->
 	<div style="border:4px dotted skyblue; width:50%; float: left;">
 		<!-- 회사정보 -->
@@ -64,7 +75,32 @@
 		<div class="footer googleMap" style="border: 2px solid blue; width: 100%; height:500px;"> 
 			<iframe class="ifram" src="<%=request.getContextPath()%>/googleMapbasic.mr" style="border:1px solid pink; width:100%; heigth:500px;" ></iframe>
 		</div>
+<<<<<<< HEAD
+	</div>	
+</div> --%>
 
-		<iframe src="<%=request.getContextPath()%>/googleMapbasic.mr" style="width:100%; height: 404px;"></iframe>
+<!-- <br/><br/>
+<div align="center" style="float:left; width:400px; height:150px; margin-left:400px;"><a class="btn btn-primary" onclick="launchGoogleMap()">크게 보기</a><br/></div>
+<div align="left" style="display:inline-block; width:500px; height:150px; margin-left:50px;" id="tm"></div>
+<br/><br/>
+<br/><br/>
+
+<div class="modal-body" id="launchMapBody" style="width:50%; height:10%; border:1px solid blue;">
+	<div id="googleMap"	style="width: 40%; height: 70%; margin: auto; margin:20% 10% 20% 20% ; "></div>
+	
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
+</div> -->
+
+<!-- <div class="modal-body" id="launchMapBody" style="border:4px solid red"> 
+	<div id="googleMap"	style="width: 40%; height: 70%; margin: auto; margin:20% 10% 20% 20% ; "></div>
+</div> -->
+
+<%-- 
+<div style="float:left; width:50%;">
+	<!-- 구글맵 -->
+	<div class="footer googleMap" style="border: 2px solid blue; width: 100%;"> 
+		<iframe src="<%=request.getContextPath()%>/googleMapbasic.mr" style="border:1px solid pink; height:300px;"></iframe>
+=======
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 	</div>
 </div>

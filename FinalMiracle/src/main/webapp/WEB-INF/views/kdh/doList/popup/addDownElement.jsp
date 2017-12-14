@@ -123,8 +123,8 @@
 	
 	function addDownElement() {
 		var frm = document.addDownElementFrm;
-		frm.method = "post";
 		frm.action = "do_addDownElementEnd.mr";
+		frm.method = "post";
 		frm.submit();
 	} // end of function addDownElement() ---------------------------------------------------------------------------------------------------
 	

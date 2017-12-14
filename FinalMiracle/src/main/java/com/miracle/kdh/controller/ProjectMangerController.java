@@ -1,5 +1,7 @@
 package com.miracle.kdh.controller;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,8 +17,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.miracle.kdh.model.FolderVO;
 import com.miracle.kdh.model.Folder_CommentVO;
+import com.miracle.kdh.model.Folder_FileVO;
+import com.miracle.kdh.model.Folder_TeamwonVO;
 import com.miracle.kdh.model.PageVO;
 import com.miracle.kdh.service.ProjectManagerService;
+import com.miracle.kdh.util.FileManagerKDH;
 import com.miracle.psw.model.MemberVO;
 import com.miracle.psw.service.MemberService;
 
@@ -24,6 +29,8 @@ import com.miracle.psw.service.MemberService;
 public class ProjectMangerController {
 	@Autowired
 	ProjectManagerService svc;
+	@Autowired
+	FileManagerKDH fileManager;
 	
 	@Autowired
 	MemberService msvc; // 추후. 팀 세션 정보 추가되면 삭제해야함
@@ -36,8 +43,6 @@ public class ProjectMangerController {
 		// 추후. 여기부터 ~~~~~
 		// ses.removeAttribute("loginUser");
 		// ses.removeAttribute("teamInfo");
-		
-		
 		if(ses.getAttribute("loginUser") == null) {
 			MemberVO mvo = new MemberVO();
 			mvo = msvc.getLoginMember("kdh");
@@ -103,7 +108,7 @@ public class ProjectMangerController {
 	@RequestMapping(value="do_getSelectFolderInfo.mr", method={RequestMethod.GET})
 	public String do_getSelectFolderInfo(HttpServletRequest req) {
 		int idx = Integer.parseInt(req.getParameter("idx"));
-		PageVO pvo = new PageVO(); 
+		PageVO pvo = new PageVO();
 		pvo.setShowIdx(idx);
 		pvo.setSelectPage(1);
 		pvo.setSizePerPage(5);
@@ -131,10 +136,57 @@ public class ProjectMangerController {
 		return "kdh/doList/modal/modalTask.not";
 	} // end of String do_getSelectFolderInfo(HttpServletRequest req) -----------------------------------------------
 	
-	// 선택한 폴더의 정보를 수정하기
+	// 선택한 요소의 정보를 수정하기
 	@RequestMapping(value="do_goModalEdit.mr", method={RequestMethod.POST})
-	public String do_goModalEdit(HttpServletRequest req, FolderVO fvo) {		
-		int result = svc.do_goModalEdit(fvo);
+	public String do_goModalEdit(HttpServletRequest req, HttpSession ses, FolderVO fvo, Folder_FileVO ffvo) {
+		// 파일 정보 저장을 위해 세션에 있는 팀원번호 받아오기 시작
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo");
+		String fk_teamwon_idx = teamInfo.get("teamwon_idx");
+		// 파일 정보 저장을 위해 세션에 있는 팀원번호 받아오기 끝
+		
+		// ***** 파일 업로드하고 ffvo 에 파일 정보 저장하기 시작 *****
+		if(!ffvo.getAttach().isEmpty()) { // attach 가 비어있지 않다면(즉, 첨부된 파일이 있다면)
+			String root = ses.getServletContext().getRealPath("/"); // WAS 의 metadata 경로를 알아온다.
+			System.out.println("Controller.root : "+root);
+			
+			String path = root+"resources"+File.separator+"files";
+			System.out.println("Controller.path : "+path);
+			
+			String orgFilename = ffvo.getAttach().getOriginalFilename(); // 사용자가 올린 원본 파일명
+			System.out.println("Controller.orgFilename : "+orgFilename);
+			
+			long filesize = ffvo.getAttach().getSize(); // 파일크기를 읽어옴
+			System.out.println("Controller.filesize : "+filesize);
+			
+			byte[] bytes = null; // 첨부파일을 WAS 디스크에 저장할때 사용되는 용도
+			String serFilename = "";
+			try {
+				bytes = ffvo.getAttach().getBytes();
+				serFilename = fileManager.doFileUpload(bytes, orgFilename, path);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			ffvo.setFk_folder_idx(fvo.getIdx());
+			ffvo.setFk_teamwon_idx(Integer.parseInt(fk_teamwon_idx));
+			ffvo.setSerFilename(serFilename);
+			ffvo.setOrgFilename(orgFilename);
+			ffvo.setFilesize(filesize);
+		}
+		// ***** 파일 업로드하고 ffvo 에 파일 정보 저장하기 끝 *****
+		
+		// ***** 수정되는 요소의 팀원 리스트를 ftvo 에 넣기 시작 *****
+		List<Folder_TeamwonVO> ftList = new ArrayList<Folder_TeamwonVO>();
+		String[] folder_teamwonIdxArr = req.getParameterValues("folder_teamwonIdxArr");
+		for(int i=0; i<folder_teamwonIdxArr.length; i++) {
+			Folder_TeamwonVO ftvo = new Folder_TeamwonVO();
+			ftvo.setFk_teamwon_idx(Integer.parseInt(folder_teamwonIdxArr[i]));
+			ftvo.setFk_folder_idx(fvo.getIdx());
+			ftList.add(ftvo);
+		} 
+		// ***** 수정되는 요소의 팀원 리스트를 ftvo 에 넣기 끝 *****
+		
+		int result = svc.do_goModalEdit(fvo, ftList, ffvo);
 		
 		JSONObject json = new JSONObject();
 		json.put("result", result);
@@ -187,9 +239,9 @@ public class ProjectMangerController {
 		String term = req.getParameter("term"); // 페이징 기간을 가져옴
 		String page = (String)req.getParameter("page"); // 페이징 이동할 페이지를 가져옴
 		
-		HashMap<String, Object> endMap = svc.addDownElementEnd(fvo, map, term, page); // 트랜잭션 결과와 새로 추가된 요소의 정보를 가져옴 
+		map = svc.addDownElementEnd(fvo, map, term, page); // 트랜잭션 결과와 새로 추가된 요소의 정보를 가져옴 
 		
-		req.setAttribute("endMap", endMap);
+		req.setAttribute("map", map);
 		
 		return "kdh/doList/popup/addDownElementEnd.not";
 	} // end of String addDownElementEnd(HttpServletRequest req, FolderVO fvo) ----------------------------------------------
@@ -243,12 +295,22 @@ public class ProjectMangerController {
 	} // end of String addComment(HttpServletRequest req, HttpSession ses, Folder_CommentVO fcvo) -----------------------------------------------------
 	
 	// 특정 페이지의 댓글 리스트 가져오기
-	@RequestMapping(value="do_goCommentPage", method={RequestMethod.GET})
+	@RequestMapping(value="do_goCommentPage.mr", method={RequestMethod.GET})
 	public String goCommentPage(HttpServletRequest req, PageVO pvo) {
 		HashMap<String, Object> map = svc.getFolder_commentInfo(pvo);
 		req.setAttribute("map", map);
 		return "kdh/doList/modal/modalCommentPage.not";
 	} // end of String goCommentPage(HttpServletRequest req, PageVO pvo) ----------------------------------------------------------------------------------
+	
+	// 내가 속한 요소의 idx 받아오기
+	@RequestMapping(value="do_getMyElement.mr", method={RequestMethod.GET})
+	public String getMyElement(HttpServletRequest req, HttpSession ses) {
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> map = (HashMap<String, String>)ses.getAttribute("teamInfo");		
+		HashMap<String, Object> returnMap = svc.getMyElement(map);
+		req.setAttribute("map", returnMap);
+		return "kdh/doList/getMyElement.xml";
+	} // end of public List<String> getMyElement(HashMap<String, String> map) ---------------------------------------------------------------
 	
 }
 	 

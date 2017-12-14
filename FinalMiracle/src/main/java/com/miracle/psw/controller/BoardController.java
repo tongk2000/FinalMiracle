@@ -237,8 +237,7 @@ public class BoardController {
 		map2.put("infoProfile", mdvo.getProfile());
 		
 		return map2;
-	}
-	
+	}	
 	
 	// ===================================================== *** 자유게시판 글 1개 보여주기 *** =====================================
 	@RequestMapping(value="/freeView.mr", method={RequestMethod.GET})

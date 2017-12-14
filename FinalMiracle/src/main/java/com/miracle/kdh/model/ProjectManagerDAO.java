@@ -12,31 +12,37 @@ public class ProjectManagerDAO {
 	@Autowired
 	SqlSessionTemplate sql;  
 	
-	// 모든 폴더, 할일 리스트를 가져오기
+	// 모든 요소를 가져오기
 	public List<FolderVO> getAllDoList(String team_idx) {
 		List<FolderVO> doList = sql.selectList("do.getAllDoList", team_idx);
 		return doList;
 	} // end of List<FolderVO> getAllDoList() ------------------------------------------ 
 	
-	// 선택한 폴더의 정보를 가져오는 메소드
+	// 선택한 요소의 정보를 가져오기
 	public FolderVO getFolderInfo(int idx) {
 		FolderVO fvo = sql.selectOne("do.getFolderInfo",idx);
 		return fvo;
 	} // end of FolderVO getFolderInfo(String idx) ------------------------------------------ 
 	
-	// 선택한 폴더에 소속된 팀원 리스트를 가져오는 메소드
+	// 선택한 요소에 소속된 팀원 리스트를 가져오기
 	public List<Folder_TeamwonVO> getFolder_teamwonInfo(int idx) {
 		List<Folder_TeamwonVO> folder_teamwonList  = sql.selectList("do.getFolder_teamwonInfo",idx);
 		return folder_teamwonList;
 	} // end of List<Folder_TeamwonVO> getFolder_teamwonInfo(String idx) ------------------------------------------ 
 	
-	// 선택한 폴더에 작성된 댓글 리스트를 가져오는 메소드
+	// 선택한 요소에 포함된 파일 리스트를 가져오기
+	public List<Folder_FileVO> getFolder_fileInfo(int idx) {
+		List<Folder_FileVO> folder_fileList = sql.selectList("do.getFolder_fileInfo", idx);
+		return folder_fileList;
+	} // end of List<Folder_CommentVO> getFolder_fileInfo(int idx) ------------------------------------------
+	
+	// 선택한 요소에 작성된 댓글 리스트를 가져오기
 	public List<Folder_CommentVO> getFolder_commentInfo(PageVO pvo) {
 		List<Folder_CommentVO> folder_commentList = sql.selectList("do.getFolder_commentInfo", pvo);
 		return folder_commentList;
-	} // end of List<Folder_CommentVO> getFolder_commentInfo(String idx) ------------------------------------------ 
+	} // end of List<Folder_CommentVO> getFolder_commentInfo(PageVO pvo) ------------------------------------------
 
-	// 선택한 폴더의 정보를 수정하기
+	// 선택한 요소의 정보를 수정하기
 	public int do_goModalEdit(FolderVO fvo) {
 		int result = sql.update("do.goModalEdit", fvo);
 		return result;
@@ -47,7 +53,7 @@ public class ProjectManagerDAO {
 		sql.update("do.setTaskComplete", fvo);
 	} // end of void setTaskComplete(FolderVO fvo) -----------------------------------------------------------------------
 	
-	// 하위 폴더 추가할때 상위 폴더의 정보 받아오기
+	// 하위 요소 추가할때 상위 폴더의 정보 받아오기
 	public HashMap<String, String> getUpFolder(String upIdx) {
 		HashMap<String, String> map = sql.selectOne("do.getUpFolder",upIdx);
 		return map;
@@ -59,22 +65,22 @@ public class ProjectManagerDAO {
 		return teamwonList;
 	} // end of List<HashMap<String, String>> getTeamwonList(String team_idx) -----------------------------------------------------------
 	
-	// 하위 폴더 추가하기
+	// 하위 요소 추가하기
 	public int addDownElement(FolderVO fvo) {
 		int result = sql.insert("do.addDownElement",fvo);
 		return result;
 	} // end of int addDownElement(FolderVO fvo) -------------------------------------------------------------------------------------------
 
-	// 폴더나 할일 추가할때 담당 팀원 추가하기(가장 최근에 올라온 folderIdx를 구해서 입력주는 방식임)
+	// 요소 추가할때 담당 팀원 추가하기(가장 최근에 올라온 folderIdx를 구해서 입력주는 방식임)
 	public int addDoTeamwon(HashMap<String, Object> map) {
 		int result = sql.insert("do.addDoTeamwon",map);
 		return result;
 	} // end of int addDoTeamwon(HashMap<String, Object> map) ------------------------------------------------------------------------
 
 	// 방금 추가한 요소를 가져오기
-	public FolderVO getAddedElement() {
-		FolderVO fvo = sql.selectOne("do.getAddedElement");
-		return fvo;
+	public List<FolderVO> getAddedElement() {
+		List<FolderVO> doList = sql.selectList("do.getAddedElement");
+		return doList;
 	} // end of FolderVO getAddedElement() -----------------------------------------------------------------------------------------------
 
 	// 선택한 요소와 그 하위요소들 삭제하기
@@ -124,6 +130,46 @@ public class ProjectManagerDAO {
 		int totalCommentCnt = sql.selectOne("do.getTotalCommentCnt", idx);
 		return totalCommentCnt;
 	} // end of int getTotalCommentCnt(int idx) -----------------------------------------------------------------------------------------
+	
+	// 내가 속한 요소의 idx 받아오기
+	public List<String> getMyElement(HashMap<String, String> map) {
+		List<String> myElementList = sql.selectList("do.getMyElement", map);
+		return myElementList;
+	} // end of public List<String> getMyElement(HashMap<String, String> map) ---------------------------------------------------------------
+	
+	// 요소 수정시 팀원 목록 수정하기 시작
+	// 1. 먼저 해당 요소의 팀원을 전부 탈퇴상태로 업데이트 후
+	public void updateAllFolderTeamwon(int fk_folder_idx) {
+		sql.update("do.updateAllFolderTeamwon", fk_folder_idx);
+	}
+	// 2. 요소 수정시 기존에 insert 했었던 팀원이라면 먼저 update 해주고
+	public int updateFolderTeamwon(Folder_TeamwonVO ftvo) {
+		int result = sql.update("do.updateFolderTeamwon", ftvo);
+		return result;
+	} 
+	// 3. 없던 팀원이라면 새로 insert 해준다.
+	public int insertFolderTeamwon(Folder_TeamwonVO ftvo) {
+		int result = sql.update("do.insertFolderTeamwon", ftvo);
+		return  result;
+	} // 요소 수정시 팀원 목록 수정하기 끝 -------------------------------------------------------------------------------------
+	
+	// 진행전, 진행중, 기한경과, 완료 건수를 가져오기
+	public HashMap<String, String> getPeriodCnt() {
+		HashMap<String, String> periodCntMap = sql.selectOne("do.getPeriodCnt");
+		return periodCntMap;
+	} // end of HashMap<String, String> getPeriodCnt() --------------------------------------------------------------------
+	
+	// 진행전, 진행중, 기한경과, 완료 건수를 팀원별로 가져오기
+	public HashMap<String, String> getPeriodCntByTeamwon(HashMap<String, String> map) {
+		HashMap<String, String> periodCntMap = sql.selectOne("do.getPeriodCntByTeamwon", map);
+		return periodCntMap;
+	} // end of HashMap<String, String> getPeriodCnt() --------------------------------------------------------------------
+	
+	// 첨부파일의 정보를 입력해주기
+	public int insertFolderFile(Folder_FileVO ffvo) {
+		int result = sql.update("do.insertFolderFile", ffvo);
+		return result;
+	} // end of int insertFolderFile(Folder_FileVO ffvo) --------------------------------------------------------------------
 }
 
 

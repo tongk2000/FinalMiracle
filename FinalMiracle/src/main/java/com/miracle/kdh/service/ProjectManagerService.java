@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.miracle.kdh.model.FolderVO;
 import com.miracle.kdh.model.Folder_CommentVO;
+import com.miracle.kdh.model.Folder_FileVO;
 import com.miracle.kdh.model.Folder_TeamwonVO;
 import com.miracle.kdh.model.PageVO;
 import com.miracle.kdh.model.ProjectManagerDAO;
@@ -26,19 +27,23 @@ public class ProjectManagerService {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("doList", doList);
 		
+		HashMap<String, String> periodCntMap = dao.getPeriodCnt();
+		map.put("periodCntMap", periodCntMap);
+		
 		if(term.equals("7")) {
 			int result = dao.updatePageDateWeek(page); // 페이징 처리를 위해 1주간의 날짜를 동적으로 수정하기
 			if(result > 0) {
-				List<HashMap<String, String>> pageDateList = dao.getPageDateWeek(); // 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기
+				List<HashMap<String, String>> pageDateList = dao.getPageDateWeek(); // 수정된 1주간의 날짜를 받아오기
 				map.put("pageDateList", pageDateList);
 			}
 		} else if(term.equals("30")) {
-			int result = dao.updatePageDateMonth(page); // 페이징 처리를 위해 1주간의 날짜를 동적으로 수정하기
+			int result = dao.updatePageDateMonth(page); // 페이징 처리를 위해 한달간의 날짜를 동적으로 수정하기
 			if(result > 0) {
-				List<HashMap<String, String>> pageDateList = dao.getPageDateMonth(); // 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기
+				List<HashMap<String, String>> pageDateList = dao.getPageDateMonth(); // 수정된 한달간의 날짜를 받아오기
 				map.put("pageDateList", pageDateList);
 			}
 		}
+		
 		return map;
 	} // end of List<FolderVO> getAllDoList() ------------------------------------------
 	
@@ -50,6 +55,9 @@ public class ProjectManagerService {
 		// 선택한 폴더에 소속된 팀원 리스트를 가져옴
 		List<Folder_TeamwonVO> folder_teamwonList = dao.getFolder_teamwonInfo(pvo.getShowIdx());
 		
+		// 선택한 요소에 포함된 파일 리스트를 가져옴
+		List<Folder_FileVO> folder_fileList = dao.getFolder_fileInfo(pvo.getShowIdx());
+		
 		// 선택한 폴더에 작성된 댓글 리스트를 가져옴
 		List<Folder_CommentVO> folder_commentList = dao.getFolder_commentInfo(pvo);
 		
@@ -59,15 +67,33 @@ public class ProjectManagerService {
 		HashMap<String, Object> map = new HashMap<String, Object>();  
 		map.put("fvo", fvo);
 		map.put("folder_teamwonList", folder_teamwonList);
+		map.put("folder_fileList", folder_fileList);
 		map.put("folder_commentList", folder_commentList);
 		map.put("pvo", pvo);
 		
 		return map;
 	} // end of HashMap<String, Object> getSelectFolderInfo(String idx) ------------------------------------------ 
 
-	// 선택한 폴더의 정보를 수정하기
-	public int do_goModalEdit(FolderVO fvo) {
-		int result = dao.do_goModalEdit(fvo);
+	// 선택한 요소의 정보를 수정하기
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int do_goModalEdit(FolderVO fvo, List<Folder_TeamwonVO> ftList, Folder_FileVO ffvo) {
+		dao.do_goModalEdit(fvo); // 요소 정보 수정하기
+		int result = 0;
+		
+		if(!ffvo.getAttach().isEmpty()) { // 첨부된 파일이 있다면
+			dao.insertFolderFile(ffvo); // DB에 파일 정보를 넣어줌
+		}
+		
+		// ***** 요소의 수정된 팀원 정보를 tbl_folder_teamwon 에 업데이트 혹은 인서트 하기 시작 ***** 
+		dao.updateAllFolderTeamwon(fvo.getIdx()); // 먼저 해당 요소의 팀원을 전부 탈퇴상태로 업데이트 후
+		for(Folder_TeamwonVO ftvo : ftList) {
+			result = dao.updateFolderTeamwon(ftvo); // 만약 해당 요소에 이미 등록돼있던 팀원이라면 일반상태로 업데이트 후에 1을 받아올테고
+			if(result == 0) { // 없다면 0 을 받아오므로
+				result = dao.insertFolderTeamwon(ftvo); // 없던 팀원이라면 새로 insert 해준다. 
+			}
+		} 
+		// ***** 요소의 수정된 팀원 정보를 tbl_folder_teamwon 에 업데이트 혹은 인서트 하기 끝 *****
+		
 		return result;
 	} // end of int do_goModalEdit(FolderVO fvo) --------------------------------------------------------------------
 
@@ -91,9 +117,10 @@ public class ProjectManagerService {
 	// 하위요소 추가하기(+추가된 요소에 소속된 담당들도 folder_teamwon 테이블에 추가)
 	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
 	public HashMap<String, Object> addDownElementEnd(FolderVO fvo, HashMap<String, Object> map, String term, String page) {
-		int result1 = dao.addDownElement(fvo); // 하위 폴더 추가하기
-		int result2 = dao.addDoTeamwon(map); // 폴더나 할일 추가할때 담당 팀원 추가하기(가장 최근에 올라온 folderIdx를 구해서 입력주는 방식임)
-		fvo = dao.getAddedElement(); // 방금 추가한 요소를 가져오기
+		int result1 = dao.addDownElement(fvo); // 하위요소 추가하기
+		int result2 = dao.addDoTeamwon(map); // 하위요소 추가할때 담당 팀원 추가하기(가장 최근에 올라온 folderIdx를 구해서 입력주는 방식임)
+		List<FolderVO> doList = dao.getAddedElement(); // 방금 추가한 요소를 가져오기
+		fvo = doList.get(0); // 동적으로 페이지를 재구성하기 위해 vo도 하나 넘겨줌
 		
 		List<HashMap<String, String>> pageDateList = null;
 		if(term.equals("7")) {
@@ -107,12 +134,13 @@ public class ProjectManagerService {
 				pageDateList = dao.getPageDateMonth(); // 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기
 			}
 		}
-		HashMap<String, Object> endMap = new HashMap<String, Object>();
-		endMap.put("result", result1*result2);
-		endMap.put("fvo", fvo);
-		endMap.put("pageDateList", pageDateList);
+		map = new HashMap<String, Object>();
+		map.put("result", result1*result2);
+		map.put("doList", doList);
+		map.put("fvo", fvo);
+		map.put("pageDateList", pageDateList);
 		
-		return endMap;
+		return map;
 	} // end of int addDownElementEnd(FolderVO fvo, HashMap<String, Object> map) -----------------------------------------------------
 
 	// 선택한 요소와 그 하위요소들 삭제하기
@@ -150,6 +178,19 @@ public class ProjectManagerService {
 		map.put("pvo", pvo);
 		return map;
 	} // end of List<Folder_CommentVO> getFolder_commentInfo(PageVO pvo) -----------------------------------------------------------------------------------
+	
+	// 내가 속한 요소의 idx 받아오기
+	public HashMap<String, Object> getMyElement(HashMap<String, String> map) {
+		List<String> myElementList = dao.getMyElement(map);
+		HashMap<String, String> periodCntMap = dao.getPeriodCntByTeamwon(map);
+		HashMap<String, Object> returnMap = new HashMap<String, Object>();
+		returnMap.put("myElementList", myElementList);
+		returnMap.put("periodCntMap", periodCntMap);
+		return returnMap;
+	} // end of public List<String> getMyElement(HashMap<String, String> map) ---------------------------------------------------------------
+	
+	
+	
 	
 	// 페이징 처리하기(PageVO 를 받아서 setPageBar 후에 해당 PagaVO 를 반환하는 방식)
 	public PageVO getCommentPagingBar(PageVO pvo) {
