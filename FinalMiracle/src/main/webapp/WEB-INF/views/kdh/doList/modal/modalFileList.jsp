@@ -36,7 +36,7 @@
 				<td style="border:none;">
 					<input type="button" value="+"/>
 					<input type="file" name="attach" id="attach" style="display:inline-block;"/>
-					<input type="button" value="-" style="display:inline-block;" onclick="subFileInput(this)"/>
+					<input type="button" value="-" style="display:inline-block;" onclick="minusFileInput()"/>
 				</td>
 			</tr>
 		</table>

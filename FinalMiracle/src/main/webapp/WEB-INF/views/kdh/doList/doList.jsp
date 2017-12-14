@@ -813,8 +813,8 @@
 		$("#myComplete").text("");
 	}
 	
-	function subFileInput(this) {
-		$(this).
+	function minusFileInput(e) {
+		alert($(e.target).val());
 	}
 </script>
 
