@@ -4,7 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<style>
+<style type="text/css">
 	th, td:not(.pageDateLine){
 		border:1px solid black;
 		word-wrap:break-word; /* 글자 넘치면 자동 줄바꿈 */
@@ -20,6 +20,9 @@
 	.pointer{
 		cursor:pointer;
 	}
+	.pointerOver{
+		color:blue;
+	}
 	
 	td.infoClass {
 		border-top:ridge;
@@ -27,7 +30,6 @@
 		border-right:ridge;
 		color:black;
 		font-weight:bold;
-		width:100px;
 	}
 	
 	td.infoData {
@@ -96,6 +98,10 @@
 	.myElement {
 		background-color:#ffff99;
 	}
+	
+	.seperatorLine {
+		border-right:3px solid black;
+	}
 </style>
 
 <script type="text/javascript">
@@ -147,7 +153,6 @@
 			selectTaskInfo(frm);
 		});
 		
-				
 		// 선택한 폴더 접고 펴기
 		$(document).on("click", ".element", function(){
 			var $this = $(this);
@@ -279,7 +284,6 @@
 			}
 		}); // end of $(document).on("keyup", ".hiddenEditInput", function() --------------------------------------------------------------------------
 		
-				
 		// 요소 모달창의 정보를 수정하기
 		$(document).on("click", ".modalEdit", function(){
 			$("#modalInfoFrm").ajaxForm({
@@ -413,14 +417,21 @@
 		}); // end of $(".modalClose").click(function() ------------------------------------------------------------------------------------------------------
 		
 		
-		// 테이블 라인 선택시 백그라운드칼라로 옅은 회색 주기 (새로 추가한 요소도 잡기 위해 어쩔 수 없이 document 로 처리함..)
-		$(document).on("mouseover", "tr:has(td)", function(){ // $("tr:has(td)") : tr 태그 중에서 td 태그인것만 선택함. th는 제외함
+		// line 클래스 마우스 오버시 백그라운드칼라로 옅은 회색 주기 (새로 추가한 요소도 잡기 위해 어쩔 수 없이 document 로 처리함..)
+		$(document).on("mouseover", ".trLine", function(){ // $("tr:has(td)") : tr 태그 중에서 td 태그인것만 선택함. th는 제외함
 			$(this).addClass("selectLine");
 		}); // end of $(document).on("mouseover", "tr:has(td)", function() ------------------------------------------------------------------
-		$(document).on("mouseout", "tr:has(td)", function(){
+		$(document).on("mouseout", ".trLine", function(){
 			$(this).removeClass("selectLine");
 		}); // end of $(document).on("mouseout", "tr:has(td)", function() ------------------------------------------------------------------
 		
+		// pointer 클래스 마우스 오버시 css 바꿔주기
+		$(document).on("mouseover", ".pointer", function(){
+			$(this).addClass("pointerOver");
+		}); // end of $(document).on("mouseover", ".pointer", function() ------------------------------------------------------------------
+		$(document).on("mouseout", ".pointer", function(){
+			$(this).removeClass("pointerOver");
+		}); // end of $(document).on("mouseout", ".pointer", function() ------------------------------------------------------------------
 		
 		// 우클릭 메뉴에서 삭제 누르면 사용자한테 물어본 후 해당 행 삭제하는 함수 호출하기
 		$(document).on("click", "#deleteRcm", function(){
@@ -470,8 +481,8 @@
 						
 						$("#addTeamwon").append(html);
 						
-						$("#btn_add").text("담당 [추가▼]");
-						var left = $("#btn_add").position().left+50;
+						$("#btn_add").text("[추가▼]");
+						var left = $("#btn_add").position().left+25;
 						var top = $("#btn_add").position().top;
 						top = top + ($("#btn_add").height());
 						$("#teamwonList").css({"left":left+"px", "top":top+"px"});
@@ -481,7 +492,7 @@
 					}
 				});
 			} else { // 팀원 표시창이 떠 있다면
-				$("#btn_add").text("담당 [추가▷]");
+				$("#btn_add").text("[추가▷]");
 				$("#teamwonList").remove();
 			} // end of 외부 if ~ else --------------------------------------------------------------------------------------------------
 		}); // end of $("#btn_add").click(function() -----------------------------------------------------------------------------------
@@ -500,7 +511,7 @@
 			$(this).remove();
 			if( !($("#teamwonList").find("td").hasClass("selectTeamwon")) ) { // 팀원표시창에 남은 팀원이 없다면
 				$("#teamwonList").remove();
-				$("#btn_add").text("담당 [추가▷]");
+				$("#btn_add").text("[추가▷]");
 			}
 		}); // end of $(document).on("click", ".selectTeamwon", function() ----------------------------------------------------------------
 		
@@ -510,7 +521,7 @@
 			var bool2 = $(e.target).attr("id") == "btn_add";
 			if(!bool1 && !bool2) { // 클릭 대상이 팀원 선택창이나 추가 버튼이 아니라면
 				$("#teamwonList").remove();
-				$("#btn_add").text("담당 [추가▷]");
+				$("#btn_add").text("[추가▷]");
 			}
 		}); // end of $(document).mousedown(function() ------------------------------------------------------
 		
@@ -518,7 +529,7 @@
 		$(document).on("keydown", function(e){
 			if(e.keyCode == 27) {
 				$("#teamwonList").remove();
-				$("#btn_add").text("담당 [추가▷]");
+				$("#btn_add").text("[추가▷]");
 			}
 		}); // end of $(document).on("keydown", function(e) ----------------------------------------------------------------------
 		// 팀원 추가, 삭제 끝 -------------------------------------------------------------------------------------------------------------
@@ -807,17 +818,16 @@
 	<table style="width:100%; border:1px solid black;">
 		<thead>
 			<tr>
-				<th colspan="4">
+				<th colspan="7" class="seperatorLine" style="width:65%;">
 					<span id="allClose" class="pointer" style="margin-left:20px;">[ 전체접기</span>  ||  <span id="allOpen" class="pointer">전체펴기</span> ]
 					&nbsp;&nbsp;&nbsp;&nbsp;
 					[ <span class="pointer" onclick="myElementOn()">내할일표시</span>  ||  <span class="pointer" onclick="myElementOff()">해제</span> ]
 				</th>
-				<th></th>
-				<th></th>
-				<th colspan="${map.pageDateList.size()}" style="text-align:center;"></th>
+				<th colspan="${map.pageDateList.size()}" style="text-align:center; width:35%;"></th>
 			</tr>
+			
 			<tr>
-				<th colspan="4">
+				<th colspan="7" class="seperatorLine">
 					<div style="margin-left:20px; border-left:10px solid lightgreen; height:10px; display:inline;"></div>
 					진행전(${map.periodCntMap.before}건<span id="myBefore" style="color:#ffff99;"></span>)
 					<div style="margin-left:10px; border-left:10px solid green; height:10px; display:inline;"></div>
@@ -827,8 +837,6 @@
 					<div style="margin-left:10px; border-left:10px solid gray; height:10px; display:inline;"></div>
 					완료(${map.periodCntMap.complete}건<span id="myComplete" style="color:#ffff99;"></span>)
 				</th>
-				<th></th>
-				<th></th>
 				<th colspan="${map.pageDateList.size()}" style="text-align:center;">
 					<form name="pageDateFrm" method="get" action="do_changePageDate.mr">
 						<span class="pointer" onclick="beforeTerm()">◀</span>
@@ -846,13 +854,15 @@
 					</form>
 				</th>
 			</tr>
+			
 			<tr>
-				<th style="width:50%">제목</th>
+				<th>제목</th>
+				<th>담당</th>
+				<th>파일</th>
+				<th>댓글</th>
 				<th>시작일</th>
 				<th>마감일</th>
-				<th>중요도</th>
-				<th></th>
-				<th></th>
+				<th class="seperatorLine">중요도</th>
 				<c:forEach var="pageDate" items="${map.pageDateList}">
 					<th class="pointer" ondblClick="callToday()" style="
 						<c:if test="${pageDate.dotw == '토' || pageDate.dotw == '일'}">
@@ -867,7 +877,7 @@
 		</thead>
 		<tbody>
 			<c:if test="${empty map.doList}"> <!-- 프로젝트 리스트가 비었다면 -->
-				<td colspan="4">등록된 프로젝트가 없습니다.</td>
+				<td colspan="9">등록된 프로젝트가 없습니다.</td>
 			</c:if>
 			<jsp:include page="doListLine.jsp"/> <!-- 여러번 활용하기 위해 할일 리스트는 다른 페이지로 뺏음 -->
 		</tbody>
@@ -881,16 +891,13 @@
 		<tr>
 			<th class="rcmSubject"></th>
 		</tr>
-		<tr>
-			<td class="rcm" id="addFolderRcm">상위요소추가</td>
-		</tr>
-		<tr>
+		<tr class="trLine">
 			<td class="rcm" id="addFolderRcm" onclick="addDownElement()">하위요소추가</td>
 		</tr>
-		<tr>
+		<tr class="trLine">
 			<td class="rcm" id="modalFolderRcm">조회/수정</td>
 		</tr>
-		<tr>
+		<tr class="trLine">
 			<td class="rcm" id="deleteRcm">삭제</td>
 		</tr>
 	</table>
@@ -902,13 +909,13 @@
 		<tr>
 			<th class="rcmSubject"></th>
 		</tr>
-		<tr>
+		<tr class="trLine">
 			<td class="rcm" id="statusRcm">완료처리</td>
 		</tr>
-		<tr>
+		<tr class="trLine">
 			<td class="rcm" id="modalTaskRcm">조회/수정</td>
 		</tr>
-		<tr>
+		<tr class="trLine">
 			<td class="rcm" id="deleteRcm">삭제</td>
 		</tr>
 	</table>

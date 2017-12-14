@@ -38,17 +38,17 @@
 			<form name="modalInfoFrm" id="modalInfoFrm" enctype="multipart/form-data" method="post">
 			<!-- enctype="multipart/form-data" : 파일 첨부를 위해 인코딩 타입 설정 -->
 			<!-- method="post" : 파일 보낼때는 반드시 post 여야만 한다. -->
-				<table>
+				<table style="width:100%;">
 					<tbody>
-						<tr>
-							<td class="infoClass">폴더이름</td>
-							<td class="infoData showInfo">${map.fvo.subject}
+						<tr class="trLine">
+							<td class="infoClass" style="width:135px;">폴더이름</td>
+							<td class="infoData showInfo" style="width:500px;">${map.fvo.subject}
 							<td class="infoData hiddenEdit">
 								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="subject" value="${map.fvo.subject}" />
 							</td>
 						</tr>
 						
-						<tr>
+						<tr class="trLine">
 							<td class="infoClass">폴더개요</td>
 							<td class="infoData showInfo">${map.fvo.content}
 							<td class="infoData hiddenEdit">
@@ -56,7 +56,7 @@
 							</td>
 						</tr>
 
-						<tr>
+						<tr class="trLine">
 							<td class="infoClass">시작일</td>
 							<td class="infoData showInfo">${map.fvo.startDate}</td>
 							<td class="infoData hiddenEdit">
@@ -64,18 +64,17 @@
 							</td>
 						</tr>
 
-						<tr>
+						<tr class="trLine">
 							<td class="infoClass">마감일</td>
 							<td class="infoData showInfo">${map.fvo.lastDate}</td>
 							<td class="infoData hiddenEdit">
 								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="lastDate" value="${map.fvo.lastDate}" />
 							</td>
-						
 						</tr>
 
 						<tr>
 							<td id="addTeamwon" class="infoClass">
-								<div id="btn_add" class="pointer">담당 [추가▷]</div>
+								담당&nbsp;<div id="btn_add" style="display:inline-block;"class="pointer">[추가▷]</div>
 							</td>
 							<td class="infoData">
 								<div style="float:left; width:100%;" id="selectedTeamwon">
@@ -89,7 +88,7 @@
 							</td>
 						</tr>
 
-						<tr>
+						<tr class="trLine">
 							<td class="infoClass">폴더 중요도</td>
 							<td class="infoData showInfo">${map.fvo.importance}</td>
 							<td class="infoData hiddenEdit">
@@ -97,7 +96,7 @@
 							</td>
 						</tr>
 						
-						<tr>
+						<tr class="trLine">
 							<td class="infoClass">하위 요소 중요도</td>
 							<td class="infoData showInfo">${map.fvo.importanceAvg}</td>
 							<td class="infoData hiddenEdit">
@@ -106,24 +105,58 @@
 						</tr>
 						
 						<tr>
-							<td>첨부파일</td>
+							<td class="infoClass">첨부파일</td>
 							<td>
-								<c:if test="${empty map.folder_fileList}">
-									등록된 첨부파일이 없습니다.
-								</c:if>
-								<c:if test="${not empty map.folder_fileList}">
-									<c:forEach var="ffvo" items="${map.folder_fileList}" varStatus="status">
-										<c:if test="${status.index != 0}">
-											<br/>
-										</c:if>
-										<span>${ffvo.orgFilename}(${ffvo.filesize}):${ffvo.userid}</span>
-									</c:forEach>
-								</c:if>
+								<table style="width:100%;">
+									<c:if test="${empty map.folder_fileList}">
+										<tr>
+											<td style="border:none;">등록된 첨부파일이 없습니다.</td>
+										</tr>
+									</c:if>
+									<c:if test="${not empty map.folder_fileList}">
+										<c:forEach var="ffvo" items="${map.folder_fileList}" varStatus="status">
+											<tr class="trLine">
+												<td style="border:none;">
+													<span>
+														<input type="button" value="del">
+														<a style="text-decoration:none;" class="pointer" 
+														   href="<%=request.getContextPath()%>/do_fileDownload.mr?orgFilename=${ffvo.orgFilename}&serFilename=${ffvo.serFilename}">
+															${ffvo.orgFilename}(${ffvo.filesize})
+														</a>:${ffvo.userid}
+													</span>
+												</td>
+											</tr>
+										</c:forEach>
+									</c:if>
+								</table>
 							</td>
 						<tr>
 						<tr>
-							<td>
-								<input type="file" name="attach" id="attach" /> <!-- type="file" : 파일을 선택하고 저장할 수 있는 타입 -->
+							<td class="infoClass">파일추가</td>
+							<td id="fileCnt">
+								<table style="width:100%;">
+									<tr class="trLine">
+										<td style="border:none;">
+											<input type="button" value="+"/>
+											<input type="file" name="attach" id="attach" style="display:inline-block;"/>
+											<input type="button" value="-" style="display:inline-block;"/>
+										</td>
+									</tr>
+									<tr class="trLine">
+										<td style="border:none;">
+											<input type="button" value="+"/>
+											<input type="file" name="attach" id="attach" style="display:inline-block;"/>
+											<input type="button" value="-" style="display:inline-block;"/>
+										</td>
+									</tr>
+									<tr class="trLine">
+										<td style="border:none;">
+											<input type="button" value="+"/>
+											<input type="file" name="attach" id="attach" style="display:inline-block;"/>
+											<input type="button" value="-" style="display:inline-block;"/>
+										</td>
+									</tr>
+								</table>
 							</td>
 						</tr>
 					</tbody>

@@ -41,8 +41,8 @@
 				<table>
 					<tbody>
 						<tr>
-							<td class="infoClass">할일제목</td>
-							<td class="infoData showInfo">${map.fvo.subject}
+							<td class="infoClass" style="width:100px;">할일제목</td>
+							<td class="infoData showInfo" style="width:500px;">${map.fvo.subject}
 							<td class="infoData hiddenEdit">
 								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="subject" value="${map.fvo.subject}" />
 							</td>
@@ -75,7 +75,7 @@
 	
 						<tr>
 							<td id="addTeamwon" class="infoClass">
-								<div id="btn_add" class="pointer">담당 [추가▷]</div>
+								담당&nbsp;<div id="btn_add" style="display:inline-block;"class="pointer">[추가▷]</div>
 							</td>
 							<td class="infoData">
 								<div style="float:left; width:100%;" id="selectedTeamwon">
@@ -116,6 +116,29 @@
 						</tr>
 						
 						<tr>
+							<td class="infoClass">첨부파일</td>
+							<td>
+								<c:if test="${empty map.folder_fileList}">
+									등록된 첨부파일이 없습니다.
+								</c:if>
+								<c:if test="${not empty map.folder_fileList}">
+									<c:forEach var="ffvo" items="${map.folder_fileList}" varStatus="status">
+										<c:if test="${status.index != 0}">
+											<br/>
+										</c:if>
+										<span>
+											<input type="button" value="del">
+											<a style="text-decoration:none;" class="pointer" 
+											   href="<%=request.getContextPath()%>/do_fileDownload.mr?orgFilename=${ffvo.orgFilename}&serFilename=${ffvo.serFilename}">
+												${ffvo.orgFilename}(${ffvo.filesize})
+											</a>:${ffvo.userid}
+										</span>
+									</c:forEach>
+								</c:if>
+							</td>
+						<tr>
+						<tr>
+							<td class="infoClass">파일추가</td>
 							<td>
 								<input type="file" name="attach" id="attach" /> <!-- type="file" : 파일을 선택하고 저장할 수 있는 타입 -->
 							</td>

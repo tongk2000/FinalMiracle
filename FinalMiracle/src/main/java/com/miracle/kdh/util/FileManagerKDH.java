@@ -34,11 +34,13 @@ public class FileManagerKDH {
 		
 		// ***** 유효성 검사가 끝나면 다음을 실행한다. *****
 		String serFilename = String.format("%1$tY%1$tm%1$td%1$tH%1$tM%1$tS", Calendar.getInstance()); // 년월일시분초 를 가져오고
-		System.out.println("FileManager.serFilename1 : "+serFilename);
-		serFilename += System.nanoTime(); // 나노초를 더하고 (참고로 랜덤은 같은 숫자가 나올수도 있기 때문에 나노초를 이용하는것)
-		System.out.println("FileManager.serFilename2 : "+serFilename);
+		// 20171214172145
+		
+		serFilename += System.nanoTime(); // 나노초를 더하고 (참고로 랜덤은 같은 숫자가 나올수도 있기 때문에 대신 나노초를 이용하는것)
+		// 2017121417214528262951792671
+		
 		serFilename += fileExt; // 확장자를 붙여준다.
-		System.out.println("FileManager.serFilename3 : "+serFilename);
+		// 2017121417214528262951792671.jpg
 		
 		File dir = new File(path); // 파일 경로를 사용하는 File 객체 생성
 		if(!dir.exists()) { // 업로드할 경로가 없으면 
@@ -47,24 +49,10 @@ public class FileManagerKDH {
 		
 		String pathname = path + File.separator + serFilename; // File.separator (파일 분리기호) : 서버의 운영체제가 windows 계열이라면 "\" 를 말하고
 															   //                                  Unix 계열이라면 "/" 를 말한다.
-		System.out.println("FileManager.pathname : "+pathname);
-		
-	/*
-		다음 부분을 이렇게도 처리 가능함
-		byte[] b=new byte[1024];
-            int size=0;
-            FileOutputStream fos = new FileOutputStream(pathname);
-            
-            while((size=is.read(b))!=-1) {
-                  fos.write(b, 0, size);
-            }
-            
-            fos.close();
-            is.close();
-
-	*/	
-		FileOutputStream fos = new FileOutputStream(pathname); // 파일 내보내는(서버에 저장하는) 직렬화 객체 생성??
-		fos.write(bytes); // 대충 직렬화해서 내보낸다는건 알겠는데 bytes 가 뭔지..
+		// C:\FinalMiracle\.metadata\.plugins\org.eclipse.wst.server.core\tmp3\wtpwebapps\FinalMiracle\resources\files\2017121417214528262951792671.jpg
+	
+		FileOutputStream fos = new FileOutputStream(pathname); // 파일을 직렬화해서 해당 pathname 경로로 내보내는(서버에 저장하는) 객체
+		fos.write(bytes); // 컨트롤단에서 bytes = ffvo.getAttach().getBytes(); 으로 뷰단에서 받아온 파일을 직렬화해서 보내온것 
 		fos.close();
 		
 		return serFilename; // 서버에 저장되는 파일명 반환(DB에 파일명 저장하려고~)

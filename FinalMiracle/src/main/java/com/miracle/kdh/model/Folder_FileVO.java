@@ -1,5 +1,7 @@
 package com.miracle.kdh.model;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 public class Folder_FileVO {
@@ -14,12 +16,11 @@ public class Folder_FileVO {
 	// ,constraint FK_ff_fk_folder_idx foreign key (fk_folder_idx) references tbl_folder(idx)
 	// );
 	
-	private MultipartFile attach; // 진짜 파일 ==> WAS(톰캣) 디스크에 저장됨.
 	private String userid; // 올린 사람 가져오기용
 	
 	public Folder_FileVO() {}
 	public Folder_FileVO(int idx, int fk_folder_idx, int fk_teamwon_idx, String serFilename, String orgFilename,
-			long filesize, MultipartFile attach, String userid) {
+			long filesize, String userid) {
 		super();
 		this.idx = idx;
 		this.fk_folder_idx = fk_folder_idx;
@@ -27,7 +28,6 @@ public class Folder_FileVO {
 		this.serFilename = serFilename;
 		this.orgFilename = orgFilename;
 		this.filesize = filesize;
-		this.attach = attach;
 	}
 	
 	public int getIdx() {
@@ -65,12 +65,6 @@ public class Folder_FileVO {
 	}
 	public void setFilesize(long filesize) {
 		this.filesize = filesize;
-	}
-	public MultipartFile getAttach() {
-		return attach;
-	}
-	public void setAttach(MultipartFile attach) {
-		this.attach = attach;
 	}
 	public String getUserid() {
 		return userid;

@@ -76,12 +76,14 @@ public class ProjectManagerService {
 
 	// 선택한 요소의 정보를 수정하기
 	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
-	public int do_goModalEdit(FolderVO fvo, List<Folder_TeamwonVO> ftList, Folder_FileVO ffvo) {
+	public int do_goModalEdit(FolderVO fvo, List<Folder_TeamwonVO> ftList, List<Folder_FileVO> ffList) {
 		dao.do_goModalEdit(fvo); // 요소 정보 수정하기
 		int result = 0;
 		
-		if(!ffvo.getAttach().isEmpty()) { // 첨부된 파일이 있다면
-			dao.insertFolderFile(ffvo); // DB에 파일 정보를 넣어줌
+		if(ffList.size() != 0) { // 첨부된 파일이 있다면
+			for(Folder_FileVO ffvo : ffList) {
+				dao.insertFolderFile(ffvo); // DB에 파일 정보를 넣어줌
+			}
 		}
 		
 		// ***** 요소의 수정된 팀원 정보를 tbl_folder_teamwon 에 업데이트 혹은 인서트 하기 시작 ***** 
@@ -160,7 +162,6 @@ public class ProjectManagerService {
 		
 		if(result > 0) {
 			List<Folder_CommentVO> folder_commentList = dao.getFolder_commentInfo(pvo);
-			System.out.println(folder_commentList.size());
 			map.put("folder_commentList", folder_commentList);
 			pvo = getCommentPagingBar(pvo);
 			map.put("pvo", pvo);

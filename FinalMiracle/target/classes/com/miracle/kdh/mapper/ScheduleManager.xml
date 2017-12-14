@@ -71,7 +71,7 @@
 	
 	<!-- 선택한 요소에 포함된 파일 리스트를 가져오기 -->
 	<select id="getFolder_fileInfo" resultType="com.miracle.kdh.model.Folder_FileVO">
-		select idx, fk_folder_idx, fk_teamwon_idx, filename, orgfilename, filesize
+		select idx, fk_folder_idx, fk_teamwon_idx, serfilename, orgfilename, filesize
 		     , (select userid from view_teamwonWithUserid where idx = fk_teamwon_idx) as userid
 		from tbl_folder_file
 		where fk_folder_idx = #{idx}

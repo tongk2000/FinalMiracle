@@ -57,7 +57,7 @@
 		</c:if>
 		<c:if test="${not empty map.folder_commentList}">
 			<c:forEach var="fcvo" items="${map.folder_commentList}" varStatus="status">
-				<tr>
+				<tr class="trLine">
 					<td>${fcvo.userid}</td>
 					<td>${fcvo.content}</td>
 					<td>${fcvo.writeDate}</td>
