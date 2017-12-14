@@ -44,7 +44,7 @@
 	</select>
 	
 	
-	<!-- 선택한 폴더의 정보를 가져오기 -->
+	<!-- 선택한 요소의 정보를 가져오기 -->
 	<select id="getFolderInfo" resultType="com.miracle.kdh.model.FolderVO">
 		select idx, fk_teamwon_idx, subject, content
 		     , to_char(startdate, 'yyyy-mm-dd') as startdate
@@ -59,18 +59,26 @@
 	</select>
 	
 	
-	<!-- 선택한 폴더에 소속된 팀원 리스트를 가져오기 -->
+	<!-- 선택한 요소에 소속된 팀원 리스트를 가져오기 -->
 	<select id="getFolder_teamwonInfo" resultType="com.miracle.kdh.model.Folder_TeamwonVO">
 		select idx, fk_folder_idx, fk_teamwon_idx, acceptability, status
 		     , (select userid from view_teamwonWithUserid where idx = fk_teamwon_idx) as userid
 		     , getProceedingTaskCnt(fk_teamwon_idx,#{idx}) as proceedingTaskCnt
      		 , getCompleteTaskCnt(fk_teamwon_idx,#{idx}) as completeTaskCnt
 		from tbl_folder_teamwon
+		where fk_folder_idx = #{idx} and status = 1
+	</select>
+	
+	<!-- 선택한 요소에 포함된 파일 리스트를 가져오기 -->
+	<select id="getFolder_fileInfo" resultType="com.miracle.kdh.model.Folder_FileVO">
+		select idx, fk_folder_idx, fk_teamwon_idx, filename, orgfilename, filesize
+		     , (select userid from view_teamwonWithUserid where idx = fk_teamwon_idx) as userid
+		from tbl_folder_file
 		where fk_folder_idx = #{idx}
 	</select>
 	
 	
-	<!-- 선택한 폴더에 작성된 댓글 리스트를 가져오기(혹은 특정 페이지로 이동) -->
+	<!-- 선택한 요소에 작성된 댓글 리스트를 가져오기(혹은 특정 페이지로 이동) -->
 	<select id="getFolder_commentInfo" parameterType="com.miracle.kdh.model.PageVO" resultType="com.miracle.kdh.model.Folder_CommentVO">
 		select T.*
 		from (
@@ -253,10 +261,73 @@
 		connect by prior idx = fk_folder_idx
 	</select>
 	
+	<!-- 요소에 댓글 추가하기 -->
 	<insert id="addComment" parameterType="com.miracle.kdh.model.Folder_CommentVO">
 		insert into tbl_folder_comment
 		values(seq_folder_comment.nextval, #{fk_folder_idx}, #{fk_teamwon_idx}, #{content}, default, default)
 	</insert>
+	
+	
+	<!-- 요소 수정시 팀원 목록 수정하기 시작 -->
+	<!-- 1. 먼저 해당 요소의 팀원을 전부 탈퇴상태로 업데이트 후 -->
+	<update id="updateAllFolderTeamwon" parameterType="com.miracle.kdh.model.Folder_TeamwonVO">
+		update tbl_folder_teamwon set status = 0
+		where fk_folder_idx = #{fk_folder_idx}
+	</update>
+	<!-- 2. 요소 수정시 기존에 insert 했었던 팀원이라면 먼저 update 해주고 -->
+	<update id="updateFolderTeamwon" parameterType="com.miracle.kdh.model.Folder_TeamwonVO">
+		update tbl_folder_teamwon set status = 1
+		where fk_folder_idx = #{fk_folder_idx} and fk_teamwon_idx = #{fk_teamwon_idx}
+	</update>
+	<!-- 3. 없던 팀원이라면 새로 insert 해준다. -->
+	<insert id="insertFolderTeamwon" parameterType="com.miracle.kdh.model.Folder_TeamwonVO">
+		insert into tbl_folder_teamwon 
+		values(seq_folder_teamwon.nextval, #{fk_folder_idx}, #{fk_teamwon_idx}, 0, 1)
+	</insert>
+	<!-- 요소 수정시 팀원 목록 수정하기 끝 -->
+	
+	
+	<!-- 내가 속한 요소의 idx 받아오기 -->
+	<select id="getMyElement" parameterType="HashMap" resultType="String">
+		select f.idx
+		from tbl_folder F
+		join tbl_folder_teamwon FT
+		on f.idx = ft.fk_folder_idx
+		where f.fk_teamwon_idx in (select idx from tbl_teamwon where fk_team_idx = #{team_idx})
+		  and ft.fk_teamwon_idx = #{teamwon_idx}
+		  and ft.status = 1
+	</select>
+	
+	<!-- 진행전, 진행중, 기한경과, 완료 건수를 가져오기 -->
+	<resultMap id="getPeriodCnt" type="HashMap">
+		<result property="before" column="before" javaType="String"/>
+		<result property="doing" column="doing" javaType="String"/>
+		<result property="lapse" column="lapse" javaType="String"/>
+		<result property="complete" column="complete" javaType="String"/>
+	</resultMap>
+	<select id="getPeriodCnt" resultMap="getPeriodCnt"> <!-- 전체 건수 -->
+		select (select count(*) from tbl_folder where status = 1 and startdate > sysdate) as before
+		     , (select count(*) from tbl_folder where status = 1 and startdate &lt; sysdate and sysdate &lt; lastdate) as doing
+		     , (select count(*) from tbl_folder where status = 1 and lastdate &lt; sysdate) as lapse
+		     , (select count(*) from tbl_folder where status = 0) as complete
+		from dual
+	</select>
+	<select id="getPeriodCntByTeamwon" resultMap="getPeriodCnt"> <!-- 팀원별 건수 -->
+		select (select count(*) from tbl_folder where status = 1 and startdate > sysdate
+		           and idx in (select fk_folder_idx from tbl_folder_teamwon where fk_teamwon_idx = #{teamwon_idx} and status = 1)) as before
+		     , (select count(*) from tbl_folder where status = 1 and startdate &lt; sysdate and sysdate &lt; lastdate
+		           and idx in (select fk_folder_idx from tbl_folder_teamwon where fk_teamwon_idx = #{teamwon_idx} and status = 1)) as doing
+		     , (select count(*) from tbl_folder where status = 1 and lastdate &lt; sysdate
+		           and idx in (select fk_folder_idx from tbl_folder_teamwon where fk_teamwon_idx = #{teamwon_idx} and status = 1)) as lapse
+		     , (select count(*) from tbl_folder where status = 0
+		           and idx in (select fk_folder_idx from tbl_folder_teamwon where fk_teamwon_idx = #{teamwon_idx} and status = 1)) as complete
+		from dual
+	</select>
+	
+	<update id="insertFolderFile" parameterType="com.miracle.kdh.model.Folder_FileVO">
+		insert into tbl_folder_file
+		values(seq_folder_file.nextval, #{fk_folder_idx}, #{fk_teamwon_idx}, #{serFilename}, #{orgFilename}, #{filesize})
+	</update>
 </mapper>
 
 

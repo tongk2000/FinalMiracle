@@ -6,7 +6,7 @@
 
 <c:if test="${not empty map.doList}"> <!-- 프로젝트 리스트가 있다면 -->
 	<c:forEach var="dvo" items="${map.doList}">
-		<tr id="${dvo.idx}" 
+		<tr id="${dvo.idx}"
 			<c:if test="${dvo.fk_folder_idx == 0}">
 				style="font-size:14pt; font-weight:bold;"
 			</c:if>

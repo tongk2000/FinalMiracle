@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 
-<script>
+<%-- <script>
 	$(document).ready(function(){
 		teamCall();
 	});
@@ -33,7 +33,7 @@
 				
 				var html = "";
 
-				<%-- html <img src="<%= request.getContextPath() %>/resources/files/20171208183923121001009307995.jpg" style="width:200px; heigth:200px;" /> --%>
+				html <img src="<%= request.getContextPath() %>/resources/files/20171208183923121001009307995.jpg" style="width:200px; heigth:200px;" />
 				html += "<img src='<%= request.getContextPath() %>/resources/files/"+img+"' height='150px;' width='150px;'><br/>";
 				html += "팀 이름 : " + name + "<br/>";
 				html += "설립자 : " + leader + "<br/>";
@@ -65,7 +65,7 @@
 			<iframe class="ifram" src="<%=request.getContextPath()%>/googleMapbasic.mr" style="border:1px solid pink; width:100%; heigth:100%;"></iframe>
 		</div>
 	</div>	
-</div>
+</div> --%>
 
 <!-- <br/><br/>
 <div align="center" style="float:left; width:400px; height:150px; margin-left:400px;"><a class="btn btn-primary" onclick="launchGoogleMap()">크게 보기</a><br/></div>
