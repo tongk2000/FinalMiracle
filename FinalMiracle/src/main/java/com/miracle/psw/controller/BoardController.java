@@ -270,13 +270,8 @@ public class BoardController {
 		return "psw/board/freeView.all";
 	}
 	
-	// ===================================================== *** 자유게시판 이전글 , 다음글 보여주기 *** ===============================
-	@RequestMapping(value="/freeBeforeNextView.mr")
-	public String freeBeforeNextView(HttpServletRequest req, HttpSession session){
-		String idx = req.getParameter("idx");
-		
-		return "psw/board/freeView.all";
-	}
+	
+
 	
 	// ===================================================== *** 자유게시판 글 쓰기 *** ============================================
 	@RequestMapping(value="/freeAdd.mr", method={RequestMethod.GET})
@@ -348,6 +343,29 @@ public class BoardController {
 		return "psw/board/freeComment.not";
 	}
 	
+	
+	// ====================================================== *** 자유게시판 자신이 쓴 글 삭제하기 *** =======================================
+	@RequestMapping(value="/freeDel.mr")
+	public String freeDel(HttpServletRequest req, HttpSession session) throws Throwable {
+		String idx = req.getParameter("idx");
+		String userid = req.getParameter("userid");
+		
+		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		
+		if(!loginUser.getUserid().equals(userid)){
+			String msg = "다른 사용자의 글은 삭제가 불가합니다.";
+			String loc = "javascript:history.back();";
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			return "psw/msg.not";
+			
+		} else {
+			int result = service.delFree(idx);
+			req.setAttribute("result", result);
+			
+			return "psw/board/freeDelEnd.not";
+		}
+	}
 	
 	
 	

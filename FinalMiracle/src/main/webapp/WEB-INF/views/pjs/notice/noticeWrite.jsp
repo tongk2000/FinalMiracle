@@ -71,7 +71,6 @@ request.setCharacterEncoding("UTF-8");
 			frm.submit();
 		}
 		$(document).ready(function(){
-			
 			$('.summernote').summernote({
 		      height: 300,          // 기본 높이값
 		      minHeight: null,      // 최소 높이값(null은 제한 없음)

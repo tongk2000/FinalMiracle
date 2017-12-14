@@ -68,14 +68,14 @@
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** JSON 검색한 리스트를 불러온다. *** === -->
 	<select id="getNoticeJSONList" parameterType="HashMap" resultType="String">
-		<if test="'fk_userid'.equals(searchType)">
+		<if test='"fk_userid".equals(searchType) and !"".equals(searchString)'>
 			select fk_userid
 			from tbl_notice n join tbl_member m        on n.fk_userid = m.userid
 		                      join tbl_teamwon w       on m.idx = w.fk_member_idx
 		                      join tbl_team t          on w.fk_team_idx = t.idx
 			where ${searchType} like '%'||#{searchString}||'%' and n.status = 1 and m.status = 1 and t.idx = #{t_idx}
 		</if>
-		<if test="'subject'.equals(searchType)">
+		<if test='"subject".equals(searchType) and !"".equals(searchString)'>
 			select subject
 			from tbl_notice n join tbl_member m        on n.fk_userid = m.userid
 		                      join tbl_teamwon w       on m.idx = w.fk_member_idx
@@ -192,7 +192,17 @@
  		<result property="groupno" 			column="groupno" 	javaType="String"></result>
  	</resultMap>
 <!-- ============================================================================================================================================================= -->	
-
+	<!-- === ***  *** === -->
+	<select id="getCountReply" parameterType="HashMap" resultType="int">
+		select count(*)   
+		from  tbl_notice n join tbl_noticereply y on n.idx = y.fk_idx
+		where n.idx = #{idx}
+	</select>
+<!-- ============================================================================================================================================================= -->	
+	
+	
+	
+	
 	
 	
 
@@ -351,6 +361,7 @@
 	<!-- === *** 구글맵 전체 정보를 가져온다. *** === -->
 	<select id="getMap" resultType="com.miracle.pjs.model.MapVO">
 		select * from tbl_map 
+		order by idx
 	</select>
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 구글맵에서 검색한 정보를 가져온다. *** === -->
@@ -553,7 +564,7 @@
 	<!-- === *** 해당 idx의 보낸 쪽지를 삭제한다. *** === -->
 	<update id="delSenderMemo" parameterType="HashMap">
 		<if test="idxArr != null">
-            update tbl_memomeomory set sstatus = 0
+            update tbl_memomemory set sstatus = 0
         	where idx in
         	<foreach collection="idxArr" index="i" open="(" separator="," close=")" >
         		${idxArr[i]}
@@ -581,11 +592,13 @@
 <!-- ============================================================================================================================================================= -->	
 	<!-- === ***  *** === -->
 	<select id="getTeam" parameterType="String" resultMap="getTeam">
-		select m.name, fk_team_idx as teamNum 
+		select m.idx, m.name, fk_team_idx as teamNum , m.userid
         from tbl_member m join tbl_teamwon w on m.idx=w.fk_member_idx
         where w.fk_team_idx = #{teamNum}
 	</select>
 	<resultMap id="getTeam" type="HashMap">
+		<result property="idx" 					column="idx" 			javaType="String"></result>
+		<result property="userid" 				column="userid" 		javaType="String"></result>
  		<result property="name" 				column="name" 			javaType="String"></result>
  		<result property="teamNum" 				column="teamNum" 		javaType="String"></result>
  	</resultMap>	
@@ -598,13 +611,14 @@
 	<resultMap id="getAllMember" type="HashMap">
  		<result property="name" 				column="name" 			javaType="String"></result>
  		<result property="teamNum" 				column="teamNum" 		javaType="String"></result>
- 	</resultMap> -->	
+ 	</resultMap> -->
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 쪽지를 받은 사람이 읽었는지 않 읽었는지 update *** === -->
-	<select id="getMessage" parameterType="String">
-		select count(*)
-        from tbl_memoreceiver
-        where rreadCount = 0 and receiver = #{userid}
+	<select id="getMessage" parameterType="HashMap" resultType="String">
+		 select count(*)
+   		 from tbl_memoreceiver r join tbl_member m on r.receiver = m.userid
+                                 join tbl_teamwon w on m.idx = w.fk_member_idx
+    	 where rreadCount = 0 and m.userid = #{userid} and w.fk_team_idx=#{idx} and rstatus=1
 	</select>
 <!-- ============================================================================================================================================================= -->	
 
@@ -615,8 +629,23 @@
         where idx = #{idx}
 	</select>
 <!-- ============================================================================================================================================================= -->	
-	
-	
+	<!-- === *** 쪽지를 받은 사람이 읽었는지 않 읽었는지 update *** === -->
+	<insert id="insertsender" parameterType="HashMap" >
+		insert into tbl_memomemory
+		values(seq_memomemory.nextval, #{subject}, #{content}, #{writeuserid}, default, default)
+	</insert>
+<!-- ============================================================================================================================================================= -->	
+	<!-- === *** 쪽지를 받은 사람이 읽었는지 않 읽었는지 update *** === -->
+	<select id="getSenderLastIdx" parameterType="HashMap" resultType="String">
+		 select max(idx) from tbl_memomemory where sender = #{writeuserid}
+	</select>
+<!-- ============================================================================================================================================================= -->	
+	<!-- === *** 쪽지를 받은 사람이 읽었는지 않 읽었는지 update *** === -->
+	<insert id="insertreceiver" parameterType="HashMap" >
+		insert into tbl_memoreceiver
+		values(seq_memoreceiver.nextval, #{userid}, default, default, #{idx}, null)
+	</insert>
+<!-- ============================================================================================================================================================= -->	
 	
 	
 	

@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>자유게시판 게시글 수정</title>
+<title>자유게시판 게시글 삭제</title>
 
 
 
@@ -48,17 +48,15 @@
 		      height: 300,          // 기본 높이값
 		      minHeight: null,      // 최소 높이값(null은 제한 없음)
 		      maxHeight: null,      // 최대 높이값(null은 제한 없음)
-		      //focus: true,        // 페이지가 열릴때 포커스를 지정함
 		      lang: 'ko-KR'         // 한국어 지정(기본값은 en-US)
 	    });
 	}); // end of $(document).ready() -------------------------------------------------------
 
-	function goUpdate() {
-		// 유효성 검사 생략
-		var editFrm = document.editFrm;
-		editFrm.action = "<%= request.getContextPath() %>/freeEditEnd.mr";
-		editFrm.method = "post";
-		editFrm.submit();
+	function goDelete() {
+		var delFrm = document.freeDelFrm;
+		delFrm.action = "/board/frreeDelEnd.mr";
+		delFrm.method = "post";
+		delFrm.submit();
 	}
 </script>
 
@@ -69,10 +67,10 @@
 <div style="padding-left: 10%; border: solid 0px red;">
 	<div style="padding-top: 10px; ">
 		<span style="font-size: 15pt; font-weight: bold;">자유게시판 </span>
-		<span style="font-size: 13pt; font-family: verdana;">게시글 수정</span>
+		<span style="font-size: 13pt; font-family: verdana;">게시글 삭제</span>
 	</div>
 	<div>
-		<form name="editFrm">     
+		<form name="freeDelFrm">     
 			<table id="table">
 				<tr>
 					<th>글번호</th>
@@ -100,7 +98,7 @@
 			
 			<div>
 				<br/>
-				<button type="button" onClick="goUpdate();">수정하기</button>
+				<button type="button" onClick="goDelete();">삭제하기</button>
 				<button type="button" onClick="javascript:history.back();">돌아가기</button>
 			</div>
 		
