@@ -41,8 +41,8 @@
 				<table>
 					<tbody>
 						<tr>
-							<td class="infoClass">할일제목</td>
-							<td class="infoData showInfo">${map.fvo.subject}
+							<td class="infoClass" style="width:100px;">할일제목</td>
+							<td class="infoData showInfo" style="width:500px;">${map.fvo.subject}
 							<td class="infoData hiddenEdit">
 								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="subject" value="${map.fvo.subject}" />
 							</td>
@@ -75,7 +75,7 @@
 	
 						<tr>
 							<td id="addTeamwon" class="infoClass">
-								<div id="btn_add" class="pointer">담당 [추가▷]</div>
+								담당&nbsp;<div id="btn_add" style="display:inline-block;"class="pointer">[추가▷]</div>
 							</td>
 							<td class="infoData">
 								<div style="float:left; width:100%;" id="selectedTeamwon">
@@ -115,18 +115,14 @@
 							</td>
 						</tr>
 						
-						<tr>
-							<td>
-								<input type="file" name="attach" id="attach" /> <!-- type="file" : 파일을 선택하고 저장할 수 있는 타입 -->
-							</td>
-						</tr>
+						<jsp:include page="modalFileList.jsp"/> <!-- 파일리스트는 공통이라 따로 뺌 -->
 					</tbody>
 				</table>
 				folder_idx:<input type="text" name="idx" id="folder_idx" value="${map.fvo.idx}" /> <!-- 폴더번호 저장용 -->
 			</form>
 			<br/>
 			<div id="modalCommentPage">
-				<jsp:include page="modalCommentPage.jsp"/>
+				<jsp:include page="modalCommentPage.jsp"/> <!-- 댓글리스트는 공통이라 따로 뺌 -->
 			</div>
 		</div>
 		<div class="modal-footer">

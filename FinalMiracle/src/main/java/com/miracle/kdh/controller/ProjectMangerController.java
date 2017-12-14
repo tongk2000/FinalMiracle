@@ -1,11 +1,14 @@
 package com.miracle.kdh.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
@@ -14,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.miracle.kdh.model.FolderVO;
 import com.miracle.kdh.model.Folder_CommentVO;
@@ -138,40 +143,48 @@ public class ProjectMangerController {
 	
 	// 선택한 요소의 정보를 수정하기
 	@RequestMapping(value="do_goModalEdit.mr", method={RequestMethod.POST})
-	public String do_goModalEdit(HttpServletRequest req, HttpSession ses, FolderVO fvo, Folder_FileVO ffvo) {
+	public String do_goModalEdit(HttpServletRequest req, HttpSession ses, MultipartHttpServletRequest freq, FolderVO fvo) {
 		// 파일 정보 저장을 위해 세션에 있는 팀원번호 받아오기 시작
 		@SuppressWarnings("unchecked")
 		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo");
 		String fk_teamwon_idx = teamInfo.get("teamwon_idx");
-		// 파일 정보 저장을 위해 세션에 있는 팀원번호 받아오기 끝
+		// 파일 정보 저장을 위해 세션에 있는 팀원번호 받아오기 끝 
 		
 		// ***** 파일 업로드하고 ffvo 에 파일 정보 저장하기 시작 *****
-		if(!ffvo.getAttach().isEmpty()) { // attach 가 비어있지 않다면(즉, 첨부된 파일이 있다면)
-			String root = ses.getServletContext().getRealPath("/"); // WAS 의 metadata 경로를 알아온다.
-			System.out.println("Controller.root : "+root);
-			
-			String path = root+"resources"+File.separator+"files";
-			System.out.println("Controller.path : "+path);
-			
-			String orgFilename = ffvo.getAttach().getOriginalFilename(); // 사용자가 올린 원본 파일명
-			System.out.println("Controller.orgFilename : "+orgFilename);
-			
-			long filesize = ffvo.getAttach().getSize(); // 파일크기를 읽어옴
-			System.out.println("Controller.filesize : "+filesize);
-			
-			byte[] bytes = null; // 첨부파일을 WAS 디스크에 저장할때 사용되는 용도
-			String serFilename = "";
-			try {
-				bytes = ffvo.getAttach().getBytes();
-				serFilename = fileManager.doFileUpload(bytes, orgFilename, path);
-			} catch (Exception e) {
-				e.printStackTrace();
+		List<MultipartFile> attachList = freq.getFiles("attach");
+		List<Folder_FileVO> ffList = new ArrayList<Folder_FileVO>();  
+		if(attachList != null && attachList.size() != 0) { // attach 가 비어있지 않다면(즉, 첨부된 파일이 있다면)
+			for(MultipartFile attach : attachList) {
+				System.out.println(attach);
+				
+				String root = ses.getServletContext().getRealPath("/"); // WAS 의 metadata 경로를 알아온다.
+				// C:\FinalMiracle\.metadata\.plugins\org.eclipse.wst.server.core\tmp3\wtpwebapps\FinalMiracle\
+				
+				String path = root+"resources"+File.separator+"files";
+				// C:\FinalMiracle\.metadata\.plugins\org.eclipse.wst.server.core\tmp3\wtpwebapps\FinalMiracle\resources\files
+				
+				String orgFilename = attach.getOriginalFilename(); // 사용자가 올린 원본 파일명
+				// 입퇴실체크.jpg
+				
+				long filesize = attach.getSize(); // 파일크기를 읽어옴
+				// 126922
+				
+				byte[] bytes = null; // 첨부파일을 WAS 디스크에 저장할때 사용되는 용도
+				String serFilename = "";
+				try {
+					bytes = attach.getBytes();
+					serFilename = fileManager.doFileUpload(bytes, orgFilename, path);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				Folder_FileVO ffvo = new Folder_FileVO();
+				ffvo.setFk_folder_idx(fvo.getIdx());
+				ffvo.setFk_teamwon_idx(Integer.parseInt(fk_teamwon_idx));
+				ffvo.setSerFilename(serFilename);
+				ffvo.setOrgFilename(orgFilename);
+				ffvo.setFilesize(filesize);
+				ffList.add(ffvo);
 			}
-			ffvo.setFk_folder_idx(fvo.getIdx());
-			ffvo.setFk_teamwon_idx(Integer.parseInt(fk_teamwon_idx));
-			ffvo.setSerFilename(serFilename);
-			ffvo.setOrgFilename(orgFilename);
-			ffvo.setFilesize(filesize);
 		}
 		// ***** 파일 업로드하고 ffvo 에 파일 정보 저장하기 끝 *****
 		
@@ -186,7 +199,7 @@ public class ProjectMangerController {
 		} 
 		// ***** 수정되는 요소의 팀원 리스트를 ftvo 에 넣기 끝 *****
 		
-		int result = svc.do_goModalEdit(fvo, ftList, ffvo);
+		int result = svc.do_goModalEdit(fvo, ftList, ffList);
 		
 		JSONObject json = new JSONObject();
 		json.put("result", result);
@@ -197,6 +210,36 @@ public class ProjectMangerController {
 		
 		return "kdh/json.not";
 	} // end of String do_goModalEdit(HttpServletRequest req, FolderVO fvo) ----------------------------------------------
+	
+	// 첨부파일 다운로드 받기
+	@RequestMapping(value="do_fileDownload.mr", method={RequestMethod.GET})
+	public void fileDownload(HttpServletRequest req, HttpServletResponse res, HttpSession ses, Folder_FileVO ffvo) {
+		String orgFilename = ffvo.getOrgFilename();
+		String serFilename = ffvo.getSerFilename();
+		
+		String root = ses.getServletContext().getRealPath("/");
+		// C:\FinalMiracle\.metadata\.plugins\org.eclipse.wst.server.core\tmp3\wtpwebapps\FinalMiracle\
+		
+		String path = root+"resources"+File.separator+"files";
+		// C:\FinalMiracle\.metadata\.plugins\org.eclipse.wst.server.core\tmp3\wtpwebapps\FinalMiracle\resources\files
+
+		boolean flag = false;
+		flag = fileManager.doFileDownload(serFilename, orgFilename, path, res);
+		if(!flag) { // 다운로드가 실패했다면
+			res.setContentType("text/html; charset=UTF-8");
+            PrintWriter writer = null;
+            
+            try {
+                  writer = res.getWriter();
+                  // 웹브라우저상에 메시지를 쓰기 위한 객체생성.
+            } catch (IOException e) {
+                  
+            }
+            
+            writer.println("<script type='text/javascript'>alert('파일 다운로드가 불가능합니다.!!')</script>");      
+		}
+	}
+	
 	
 	// 할일 완료, 미완료 처리하기
 	@RequestMapping(value="do_taskComplete.mr", method={RequestMethod.GET})

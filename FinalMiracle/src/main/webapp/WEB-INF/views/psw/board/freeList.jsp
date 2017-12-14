@@ -183,7 +183,7 @@
 					 +  "<span style='font-weight: bold;'>소개 : </span>" + data.infoProfile ;
 				
 				$(".modal-body").html(html);
-				$("#myModal").modal();
+				$("#freeListModal").modal();
 			}, // end of success: function()----------
 			error: function(request, status, error){
 				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -338,7 +338,7 @@
 
 <!-- 회원 상세정보 모달 창 -->
 <!-- Modal -->
-<div class="modal fade modal-center" id="myModal" role="dialog">
+<div class="modal fade modal-center" id="freeListModal" role="dialog">
 	<div class="modal-dialog modal-sm modal-center">
 		<!-- Modal content-->
 		<div class="modal-content">
@@ -356,6 +356,22 @@
 
 	</div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
