@@ -95,7 +95,7 @@
 </head>
 
 
-<body>
+<body background="<%= request.getContextPath() %>/resources/images/loginbg.png">
 	<div class="content">
 		<div style="width: 60%; margin-top: 10%; margin-left: 20%; height: 500px; border-radius: 10px; background-color: #4F84C4;">
 			<br/>
@@ -104,12 +104,12 @@
 			</h2>
 			<p class="bg-primary">&nbsp;</p>
 
-			<form name="teamFrm" style="margin-left: 20%;">
-				<div class="mydiv" style="margin-left: 15%;" align="center">
+			<form name="teamFrm" style="margin-left: 25%;">
+				<div class="mydiv" style="margin-left: 20%;" align="center">
 					<span class="mydisplay myfont">팀장인 팀</span>
 					<span class="mydisplay myfont" style="margin-top: 30px;">팀원인 팀</span>
 				</div>
-				<div class="mydiv" style="margin-left: 5%;">
+				<div class="mydiv" style="margin-left: 3%;">
 					<select class="mydisplay form-control" name="team_idx1" id="team_idx1" style="size: 200px;">
 						<option value="">선택</option>
 						<c:forEach var="teamvo" items="${teamlist1}" varStatus="status">
@@ -124,7 +124,7 @@
 						</c:forEach>
 					</select>
 				</div>
-				<br/><br/>
+				<br/><br/><br/><br/>
 				<div class="mydiv" style="margin-left: 20%;">
 					&nbsp;&nbsp;&nbsp;
 					<button class="btn btn-success" style="width: 100px; font-size: 14pt;" type="button" id="teamCreate" onclick="javascript:location.href='<%= request.getContextPath() %>/tmCreate.mr'">팀 생성</button>

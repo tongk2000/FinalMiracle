@@ -41,7 +41,20 @@ public interface InterBoardDAO {
 	MemberVO showUserInfo(HashMap<String, Object> map);
 	MemberDetailVO showUserDetailInfo(HashMap<String, Object> map);
 
+	// ================================= *** 자유게시판 해당 게시글 1개 삭제하기 Transaction *** ================================
+	int isExistComment(String idx);
+	int deleteContent(String idx);
+	int deleteComment(String idx);
+
 	
 	
 
 }
+
+
+
+
+
+
+
+

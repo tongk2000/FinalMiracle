@@ -7,6 +7,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.miracle.pjs.model.MapVO;
 import com.miracle.pjs.model.PjsinterDAO;
@@ -117,6 +120,12 @@ public class PjsserviceImpl implements PjsinterService {
 		// 수정글의 depth, groupno를 구해온다.
 		HashMap<String, String> depth = dao.getDepth(parameter);
 		return depth;
+	}
+	@Override
+	public int getCountReply(HashMap<String, Object> map) {
+		// 리스트의 댓글 수 가져오기
+		int count = dao.getCountReply(map);
+		return count;
 	}
 	
 	
@@ -361,6 +370,28 @@ public class PjsserviceImpl implements PjsinterService {
 		int readcount = dao.checkReadCount(parameter);
 		return readcount;
 	}
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int insertMemo(HashMap<String, Object> map, List<String> list) {
+		// 메모입력
+		int n = dao.insertsender(map);
+		System.out.println("=========여기오니????=========="+n);
+		String idx = dao.getSenderLastIdx(map);
+		System.out.println("===============idx================"+idx);
+		HashMap<String, Object> map2 = new HashMap<String, Object>();
+		map2.put("idx", idx);
+		int z=1;
+		int m=0;
+		for(int i=0; i<list.size(); i++) {
+			System.out.println("===============list=================="+list.get(i));
+			map2.put("userid", list.get(i));
+			m = dao.insertreceiver(map2);
+			System.out.println("================m=================="+m);
+			z *= m;
+		}
+		return (n*z);
+	}
+	
 	
 	
 //==========================================================================================================================================================//	
@@ -373,7 +404,12 @@ public class PjsserviceImpl implements PjsinterService {
 		HashMap<String, String> userTeam = dao.getUserTeam(team);
 		return userTeam;
 	}
-	
+	@Override
+	public String getMessage(HashMap<String, String> map) {
+		// 알람 ajax버전
+		String num = dao.getMessage(map);
+		return num;
+	}
 	
 	
 	

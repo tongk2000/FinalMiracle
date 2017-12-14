@@ -256,7 +256,7 @@ public class MemberController {
 				req.setAttribute("loc", loc);
 			}
 		}
-		return "psw/login/editMyInfo.all";
+		return "psw/login/editMyInfo.not";
 	}  // end of public String editMyInfo(HttpServletRequest req, HttpSession session) ----------------------------------------
 	
 	

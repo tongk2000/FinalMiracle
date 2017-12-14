@@ -193,4 +193,10 @@ public class TMDAO implements InterTMDAO {
 		return name;
 	}
 
+	@Override
+	public String getMyEmail(int login_idx) {
+		String email = sqlsession.selectOne("kshTM.getMyEmail", login_idx);
+		return email;
+	}
+
 }

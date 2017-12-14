@@ -7,6 +7,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -102,6 +104,13 @@ public class GeniousPjsController {
 			int totalPage=(int)Math.ceil((double)totalCount / sizePerPage);
 			String pagebar = MyUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentPage, searchType, searchString, null, "noticeList.mr");
 			List<HashMap<String, String>> list = service.getNoticeList(map); 
+			for(int i=0; i<list.size(); i++) {
+				map.put("idx", list.get(i).get("n_idx"));
+				int count = service.getCountReply(map);
+				String str_count = String.valueOf(count);
+				list.get(i).put("count", str_count);
+				map.remove("idx");
+			}
 			req.setAttribute("list", list);
 			req.setAttribute("searchType", searchType);
 			req.setAttribute("searchString", searchString);
@@ -595,6 +604,7 @@ public class GeniousPjsController {
 			count.remove("idx");
 			count.remove("userid");
 			count.remove("teamNum");
+			name = "";
 		}
 		String pagebar = MyUtil.getPageBar(sizePerPage, blockSize, totalPage, currentPage, "memomemory.mr");
 		
@@ -652,10 +662,55 @@ public class GeniousPjsController {
 		List<HashMap<String, String>> mapteam = service.getTeam(((HashMap<String, String>)ses.getAttribute("teamInfo")).get("team_idx"));//같은 팀 정보를 추출
 		
 		//List<HashMap<String, String>> mapAll = service.getAllMember();//모든 팀 정보를 추출
-		req.setAttribute("mapteam", mapteam); // name, teamNum
+		req.setAttribute("mapteam", mapteam); // name, teamNum, userid
 		//req.setAttribute("mapAll", mapAll);
 		req.setAttribute("userTeam", userTeam);
+		for(int i=0; i<mapteam.size(); i++) {
+			System.out.println("==================="+mapteam.get(i).get("name"));
+			System.out.println("==================="+mapteam.get(i).get("teamNum"));
+			System.out.println("==================="+mapteam.get(i).get("idx"));
+		}
 		return "pjs/memo/memoWrite.all";
+	}/* ================================================================================================================================================== */
+	@RequestMapping(value="memoWriteEnd.mr", method={RequestMethod.POST})
+	public String memoWriteEnd(HttpServletRequest req) {
+		String receiver = req.getParameter("idx");
+		String subject = req.getParameter("subject").replaceAll("\r\n", "<br/>");
+		String content = req.getParameter("content").replaceAll("\r\n", "<br/>");
+		String writeUserid = req.getParameter("userid");
+		String[] str_arr = receiver.split(",");
+		List<String> list = new ArrayList<String>();
+		int cnt=0;
+		for(int i=0; i<str_arr.length; i++) {
+			for(int j=i+1; j<str_arr.length; j++) {
+				if(str_arr[i].equals(str_arr[j]))
+					cnt++;
+			}
+			if(cnt==0) {
+				list.add(str_arr[i]);
+			}
+			cnt=0;
+		}
+		for(int i=0; i<list.size(); i++) {
+			System.out.println("======================list================"+list.get(i));
+		}
+		// 메모 insert하기
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("subject",subject);
+		map.put("content",content);
+		map.put("writeuserid",writeUserid);
+		int n = service.insertMemo(map, list);
+		String loc="location.href='memoreceiver.mr;'";
+		if(n > 0) {
+			String msg = "입력 성공!";
+			req.setAttribute("msg", msg);
+		}
+		else {
+			String msg = "입력 실패";
+			req.setAttribute("msg", msg);
+		}
+		req.setAttribute("loc", loc);
+		return "pjs/error.not";	
 	}/* ================================================================================================================================================== */
 	@RequestMapping(value="memoSenderView.mr", method={RequestMethod.GET})
 	public String memoSenderView(HttpServletRequest req, HttpSession ses) {
@@ -725,6 +780,28 @@ public class GeniousPjsController {
 		}
 		req.setAttribute("loc", loc);
 		return "pjs/error.not";
+	}/* ================================================================================================================================================== */
+	@RequestMapping(value="alarm.mr", method={RequestMethod.GET})
+	public String alarm(HttpServletRequest req) {
+		String idx = req.getParameter("idx");
+		String userid = req.getParameter("userid");
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("idx", idx);
+		map.put("userid", userid);
+		
+		JSONArray jsonList = new JSONArray();
+		if( !map.get("idx").trim().isEmpty() && !map.get("userid").trim().isEmpty() ) {
+			// search값에 해당하는 제목를 가져온다.
+			String list = service.getMessage(map);
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("alarm", list);
+				jsonList.put(jsonObj);
+		}
+		String searchJSON = jsonList.toString(); // .toString() 변환이유 : 출력목적!!
+		System.out.println("searchJSON 문자열값 : "+searchJSON);
+		req.setAttribute("searchJSON", searchJSON);
+		System.out.println("================================1111=============================="+searchJSON);
+		return "pjs/memo/JSON.not";
 	}/* ================================================================================================================================================== */
 
 	

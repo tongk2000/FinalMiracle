@@ -236,6 +236,9 @@
 </head>
 <body>
 <div class="modal-body" id="launchMapBody">
+<<<<<<< HEAD
+	<div id="googleMap"	style="width: 90%; height: 85%;  margin:0% 0% 0% 6% ; "></div>
+=======
 	<select id="choice" name="choice" style="font-size:12pt;">
 		<option value="0" selected> 전체</option>
 		<option value="1" >팀정보</option>
@@ -249,13 +252,27 @@
 			<div id="displayList" style="background-color:black; z-index:1000"></div>
 	</div>
 	
-	<div id="googleMap"	style="width: 40%; height: 70%; margin: auto; margin:20% 10% 20% 20% ; "></div>
+	<div id="googleMap" style="width: 100%; height: 100%;"></div>
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 	
 	<div class="modal fade" id="mapInfo" role="dialog"></div>
 	<form name="map">
 		<input type="hidden" name="choice">
 		<input type="hidden" name="searchString">
 	</form>
+	<select id="choice" name="choice" style="font-size:12pt;">
+		<option value="0" selected> 전체</option>
+		<option value="1" >팀정보</option>
+		<option value="-1">맛집정보</option>
+	</select>
+	
+	<input type="text" name="searchString" id="searchString" />
+	<button type="button" id="goSearch">검색</button>
+	
+	<div class="height">
+			<div id="displayList" style="background-color:black; z-index:1000"></div>
+	</div>
+	
 </div>
 
 </body>

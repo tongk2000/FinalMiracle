@@ -10,6 +10,9 @@
 		<result property="IDX" 				column="idx" 			javaType="String" />
  		<result property="FK_TEAM_IDX" 			column="fk_team_idx" 			javaType="String" />
  		<result property="FK_TEAMWON_IDX" 			column="fk_teamwon_idx" 			javaType="String" />
+ 		<result property="USERID" 			column="userid" 			javaType="String" />
+ 		<result property="NAME" 			column="name" 			javaType="String" />
+ 		<result property="IMG" 			column="img" 			javaType="String" />
  		<result property="SUBJECT" 			column="subject" 		javaType="String" />
  		<result property="CONTENT" 			column="content" 			javaType="String" />
  		<result property="STARTDATE" 	column="startdate" 	javaType="String" />
@@ -74,7 +77,8 @@
 	<select id="VoteTotalCount1" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_vote A join tbl_teamwon B
-		on A.fk_teamwon_idx = B.idx
+		on A.fk_teamwon_idx = B.idx join tbl_member C
+        on B.fk_member_idx = C.idx
 		where A.status = 1
 		and B.fk_team_idx = #{fk_team_idx}
 		and enddate >= sysdate
@@ -84,15 +88,16 @@
 	
 	
 	<select id="VoteListYesPaging1" parameterType="HashMap" resultMap="VoteListPagingMap">
-		select idx, fk_team_idx, fk_teamwon_idx, subject, content, startdate, enddate, status
+		select idx, fk_team_idx, fk_teamwon_idx, userid, name, img, subject, content, startdate, enddate, status
 		from (
 			select rownum as RNO,
-				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.subject, V.content, V.startdate, V.enddate, V.status
+				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.userid, V.name, V.img, V.subject, V.content, V.startdate, V.enddate, V.status
 			from (
-				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
+				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, C.userid, C.name, C.img, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
 				      to_char(A.enddate, 'yyyy-mm-dd') as enddate, A.status
 				from tbl_vote A join tbl_teamwon B
-				on A.fk_teamwon_idx = B.idx
+				on A.fk_teamwon_idx = B.idx join tbl_member C
+                on B.fk_member_idx = C.idx
 				where A.status = 1
 				and B.fk_team_idx = #{fk_team_idx}
 				and enddate >= sysdate
@@ -106,15 +111,16 @@
 	
 	
 	<select id="VoteEndListYesPaging1" parameterType="HashMap" resultMap="VoteListPagingMap">
-		select idx, fk_team_idx, fk_teamwon_idx, subject, content, startdate, enddate, status
+		select idx, fk_team_idx, fk_teamwon_idx, userid, name, img, subject, content, startdate, enddate, status
 		from (
 			select rownum as RNO,
-				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.subject, V.content, V.startdate, V.enddate, V.status
+				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.userid, V.name, V.img, V.subject, V.content, V.startdate, V.enddate, V.status
 			from (
-				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
+				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, C.userid, C.name, C.img, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
 				      to_char(A.enddate, 'yyyy-mm-dd') as enddate, A.status
 				from tbl_vote A join tbl_teamwon B
-				on A.fk_teamwon_idx = B.idx
+				on A.fk_teamwon_idx = B.idx join tbl_member C
+                on B.fk_member_idx = C.idx
 				where A.status = 1
 				and B.fk_team_idx = #{fk_team_idx}
 				and enddate <![CDATA[<]]> sysdate
@@ -129,7 +135,8 @@
 	<select id="VoteEndTotalCount1" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_vote A join tbl_teamwon B
-		on A.fk_teamwon_idx = B.idx
+		on A.fk_teamwon_idx = B.idx join tbl_member C
+        on B.fk_member_idx = C.idx
 		where A.status = 1
 		and B.fk_team_idx = #{fk_team_idx}
 		and enddate <![CDATA[<]]> sysdate
@@ -154,15 +161,16 @@
 	
 	
 	<select id="VoteListYesPaging2" parameterType="HashMap" resultMap="VoteListPagingMap">
-		select idx, fk_team_idx, fk_teamwon_idx, subject, content, startdate, enddate, status
+		select idx, fk_team_idx, fk_teamwon_idx, userid, name, img, subject, content, startdate, enddate, status
 		from (
 			select rownum as RNO,
-				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.subject, V.content, V.startdate, V.enddate, V.status
+				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.userid, V.name, V.img, V.subject, V.content, V.startdate, V.enddate, V.status
 			from (
-				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
+				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, C.userid, C.name, C.img, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
 				      to_char(A.enddate, 'yyyy-mm-dd') as enddate, A.status
 				from tbl_vote A join tbl_teamwon B
-				on A.fk_teamwon_idx = B.idx
+				on A.fk_teamwon_idx = B.idx join tbl_member C
+                on B.fk_member_idx = C.idx
 				where A.status = 1
 				and B.fk_team_idx = #{fk_team_idx}
 				and enddate >= sysdate
@@ -179,7 +187,8 @@
 	<select id="VoteTotalCount2" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_vote A join tbl_teamwon B
-		on A.fk_teamwon_idx = B.idx
+		on A.fk_teamwon_idx = B.idx join tbl_member C
+        on B.fk_member_idx = C.idx
 		where A.status = 1
 		and B.fk_team_idx = #{fk_team_idx}
 		and enddate > sysdate
@@ -190,15 +199,16 @@
 	
 	
 	<select id="VoteEndListYesPaging2" parameterType="HashMap" resultMap="VoteListPagingMap">
-		select idx, fk_team_idx, fk_teamwon_idx, subject, content, startdate, enddate, status
+		select idx, fk_team_idx, fk_teamwon_idx, userid, name, img, subject, content, startdate, enddate, status
 		from (
 			select rownum as RNO,
-				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.subject, V.content, V.startdate, V.enddate, V.status
+				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.userid, V.name, V.img, V.subject, V.content, V.startdate, V.enddate, V.status
 			from (
-				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
+				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, C.userid, C.name, C.img, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
 				      to_char(A.enddate, 'yyyy-mm-dd') as enddate, A.status
 				from tbl_vote A join tbl_teamwon B
-				on A.fk_teamwon_idx = B.idx
+				on A.fk_teamwon_idx = B.idx join tbl_member C
+                on B.fk_member_idx = C.idx
 				where A.status = 1
 				and B.fk_team_idx = #{fk_team_idx}
 				and enddate <![CDATA[<]]> sysdate
@@ -214,7 +224,8 @@
 	<select id="VoteEndTotalCount2" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_vote A join tbl_teamwon B
-		on A.fk_teamwon_idx = B.idx
+		on A.fk_teamwon_idx = B.idx join tbl_member C
+        on B.fk_member_idx = C.idx
 		where A.status = 1
 		and B.fk_team_idx = #{fk_team_idx}
 		and enddate <![CDATA[<]]> sysdate
@@ -223,15 +234,16 @@
 	</select>
 	
 	<select id="VoteMyListYesPaging1" parameterType="HashMap" resultMap="VoteListPagingMap">
-		select idx, fk_team_idx, fk_teamwon_idx, subject, content, startdate, enddate, status
+		select idx, fk_team_idx, fk_teamwon_idx, userid, name, img, subject, content, startdate, enddate, status
 		from (
 			select rownum as RNO,
-				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.subject, V.content, V.startdate, V.enddate, V.status
+				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.userid, V.name, V.img, V.subject, V.content, V.startdate, V.enddate, V.status
 			from (
-				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
+				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, C.userid, C.name, C.img, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
 				      to_char(A.enddate, 'yyyy-mm-dd') as enddate, A.status
 				from tbl_vote A join tbl_teamwon B
-				on A.fk_teamwon_idx = B.idx
+				on A.fk_teamwon_idx = B.idx join tbl_member C
+                on B.fk_member_idx = C.idx
 				where B.fk_team_idx = #{fk_team_idx}
                 <if test="votekind.equals('ing')">
                 	and A.status = 1
@@ -259,15 +271,16 @@
 	</select>
 	
 	<select id="VoteMyListYesPaging2" parameterType="HashMap" resultMap="VoteListPagingMap">
-		select idx, fk_team_idx, fk_teamwon_idx, subject, content, startdate, enddate, status
+		select idx, fk_team_idx, fk_teamwon_idx, userid, name, img, subject, content, startdate, enddate, status
 		from (
 			select rownum as RNO,
-				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.subject, V.content, V.startdate, V.enddate, V.status
+				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.userid, V.name, V.img, V.subject, V.content, V.startdate, V.enddate, V.status
 			from (
-				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
+				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, C.userid, C.name, C.img, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
 				      to_char(A.enddate, 'yyyy-mm-dd') as enddate, A.status
 				from tbl_vote A join tbl_teamwon B
-				on A.fk_teamwon_idx = B.idx
+				on A.fk_teamwon_idx = B.idx join tbl_member C
+                on B.fk_member_idx = C.idx
 				where A.status = 1
 				and B.fk_team_idx = #{fk_team_idx}
                 and A.fk_teamwon_idx = #{fk_teamwon_idx}
@@ -334,15 +347,16 @@
 	
 	
 	<select id="VoteReadyListYesPaging1" parameterType="HashMap" resultMap="VoteListPagingMap">
-		select idx, fk_team_idx, fk_teamwon_idx, subject, content, startdate, enddate, status
+		select idx, fk_team_idx, fk_teamwon_idx, userid, name, img, subject, content, startdate, enddate, status
 		from (
 			select rownum as RNO,
-				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.subject, V.content, V.startdate, V.enddate, V.status
+				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.userid, V.name, V.img, V.subject, V.content, V.startdate, V.enddate, V.status
 			from (
-				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
+				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, C.userid, C.name, C.img, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
 				      to_char(A.enddate, 'yyyy-mm-dd') as enddate, A.status
 				from tbl_vote A join tbl_teamwon B
-				on A.fk_teamwon_idx = B.idx
+				on A.fk_teamwon_idx = B.idx join tbl_member C
+                on B.fk_member_idx = C.idx
 				where A.status = 1
                 and B.fk_team_idx = #{fk_team_idx}
                 and enddate >= sysdate
@@ -354,12 +368,12 @@
 	</select>
 	
 	<select id="VoteReadyListYesPaging2" parameterType="HashMap" resultMap="VoteListPagingMap">
-		select idx, fk_team_idx, fk_teamwon_idx, subject, content, startdate, enddate, status
+		select idx, fk_team_idx, fk_teamwon_idx, userid, name, img, subject, content, startdate, enddate, status
 		from (
 			select rownum as RNO,
-				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.subject, V.content, V.startdate, V.enddate, V.status
+				  V.idx, V.fk_team_idx, V.fk_teamwon_idx, V.userid, V.name, V.img, V.subject, V.content, V.startdate, V.enddate, V.status
 			from (
-				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
+				select A.idx, B.fk_team_idx, A.fk_teamwon_idx, C.userid, C.name, C.img, A.subject, A.content, to_char(A.startdate, 'yyyy-mm-dd') as startdate, 
 				      to_char(A.enddate, 'yyyy-mm-dd') as enddate, A.status
 				from tbl_vote A join tbl_teamwon B
 				on A.fk_teamwon_idx = B.idx
@@ -377,7 +391,8 @@
 	<select id="VoteReadyTotalCount1" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_vote A join tbl_teamwon B
-		on A.fk_teamwon_idx = B.idx
+		on A.fk_teamwon_idx = B.idx join tbl_member C
+        on B.fk_member_idx = C.idx
 		where A.status = 1
 		and B.fk_team_idx = #{fk_team_idx}
 		and enddate >= sysdate
@@ -387,7 +402,8 @@
 	<select id="VoteReadyTotalCount2" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_vote A join tbl_teamwon B
-		on A.fk_teamwon_idx = B.idx
+		on A.fk_teamwon_idx = B.idx join tbl_member C
+        on B.fk_member_idx = C.idx
 		where A.status = 1
 		and B.fk_team_idx = #{fk_team_idx}
 		and enddate >= sysdate
@@ -399,7 +415,8 @@
 	<select id="VoteMyTotalCount1" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_vote A join tbl_teamwon B
-		on A.fk_teamwon_idx = B.idx
+		on A.fk_teamwon_idx = B.idx join tbl_member C
+        on B.fk_member_idx = C.idx
 		where A.status = 1
 		<if test="votekind.equals('ing')">
 			and B.fk_team_idx = #{fk_team_idx}
@@ -426,7 +443,8 @@
 	<select id="VoteMyTotalCount2" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_vote A join tbl_teamwon B
-		on A.fk_teamwon_idx = B.idx
+		on A.fk_teamwon_idx = B.idx join tbl_member C
+        on B.fk_member_idx = C.idx
 		where A.status = 1
 		<if test="votekind.equals('ing')">
 			and B.fk_team_idx = #{fk_team_idx}

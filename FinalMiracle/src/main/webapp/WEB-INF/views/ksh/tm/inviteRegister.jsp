@@ -22,7 +22,7 @@
 	background-color: #4F84C4;
 	width: 75%;
 	margin-top: 50px;
-	margin-left: 100px;
+	margin-left: 12%;
 }
 
 table#tblMemberRegister {
@@ -399,7 +399,7 @@ th#th {
 </head>
 
 
-<body>
+<body background="<%= request.getContextPath() %>/resources/images/loginbg.png">
 	<div class="content" align="center">
 		<form name="registerFrm">
 			<table id="tblMemberRegister" style="margin-bottom: 30px;">
@@ -506,7 +506,7 @@ th#th {
 							<a class="btn btn-sm btn-success" onClick="goRegister(event);">
 								<span style="color: white; font-size: 14pt;"><span class="glyphicon glyphicon-check"></span> 회원가입 </span>
 							</a> &nbsp;&nbsp; 
-							<a class="btn btn-sm btn-success" href="<%=request.getContextPath()%>/member_login.mr">
+							<a class="btn btn-sm btn-danger" href="<%=request.getContextPath()%>/member_login.mr">
 								<span style="color: white; font-size: 14pt;">
 								<span class="glyphicon glyphicon-remove"></span> 로그인화면으로 </span>
 							</a>
