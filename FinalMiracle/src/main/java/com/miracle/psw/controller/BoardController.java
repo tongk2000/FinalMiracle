@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -209,7 +208,7 @@ public class BoardController {
 		return "psw/board/freeList.all";
 	}
 	
-	// ================================================== *** 자유게시판 목록에서 userid또는 성명 클릭시 유저정보 보여주기 *** ===============
+	// ================================================== *** 자유게시판 목록에서 userid 또는 성명 클릭시 유저정보 보여주기 *** ===============
 	@RequestMapping(value="/freeUserInfo.mr", method={RequestMethod.GET})
 	@ResponseBody
 	public HashMap<String, Object> freeUserInfo(HttpServletRequest req, MemberVO mvo, MemberDetailVO mdvo){

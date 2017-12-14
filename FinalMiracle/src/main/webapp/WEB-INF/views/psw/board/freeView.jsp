@@ -131,7 +131,7 @@
 		frm.submit();
 	}
 </script>
-<div style="overflow-y: auto; height: 840px;">
+<div style="margin-left: 5%;">
 	<div style="margin-left: 5%; padding: 10px; border: solid 0px red; width: 80%;">
 		
 		<table id="table" style="width: 68%; border: 1px solid dimgray; border-left: none; border-right: none;">
@@ -227,18 +227,18 @@
 				<table id="comment" style="width: 80%; padding: 10px;">
 					<c:forEach var="commentvo" items="${freeCommentList}" >
 						<tr id="comment${commentvo.idx}">
-							<td style="border: 1px dashed #D8AE47; border-left: none; border-right: none; width: 5%;">
-								<img src="<%= request.getContextPath() %>/resources/images/${commentvo.img}" style="width: 35px; height: 30px;" align="middle">
+							<td style="border: 0px solid lightgray; border-left: none; border-right: none; width: 3%;">
+								<img src="<%= request.getContextPath() %>/resources/images/${commentvo.img}" style="width: 30px; height: 25px; vertical-align: middle; padding-top: 2px; padding-bottom: 2px;" align="middle">
 							</td>
-							<td style="border: 1px dashed #D8AE47; border-left: none; border-right: none; width: 20%; padding-left: 10px; background-color: lightblue">
+							<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 12%; padding-left: 10px;">
 								<span class="repleInfo" onClick="showUserInfo('${commentvo.userid}')">
 									${commentvo.userid} [${commentvo.name}]
 								</span>
 							</td>
-							<td style="border: 1px dashed #D8AE47; border-left: none; border-right: none; width: 30%; padding-left: 10px;">
+							<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 30%; padding-left: 10px;">
 								<span style="font-size: 11pt;">${commentvo.content}</span>
 							</td>
-							<td style="border: 1px dashed #D8AE47; border-left: none; border-right: none; width: 20%; padding-left: 10px;">
+							<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 20%; padding-left: 10px;">
 								${commentvo.regDate}
 							</td>
 							<!-- ============================= *** 대댓글 달기 칸 만들기 *** =============================== -->

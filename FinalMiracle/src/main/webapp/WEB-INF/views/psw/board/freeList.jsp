@@ -245,20 +245,20 @@
 			<table style="width: 80%; border: 1px solid dimgray; border-left: none; border-right: none;">
 				<thead>
 					<tr>
-						<th style="padding: 5px;">글번호</th>
-						<th style="padding: 5px;">작성자</th>
-						<th style="padding: 5px; padding-left: 20px;">글제목</th>
-						<th style="padding: 5px;">조회수</th>
-						<th style="padding: 5px; padding-left: 20px;">등록일자</th>
+						<th style="text-align: center;">글번호</th>
+						<th style="text-align: center;">작성자</th>
+						<th style="text-align: center;">글제목</th>
+						<th style="text-align: center;">조회수</th>
+						<th style="text-align: center;">등록일자</th>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach var="freevo" items="${freeList}" varStatus="status">
 						<tr>
-							<td style="border: 1px solid lightgray; border-left: none; border-right: none; padding-left: 15px;">
+							<td style="border: 1px solid lightgray; border-left: none; border-right: none; text-align: center;">
 								${freevo.idx}
 							</td>
-							<td  style="border: 1px solid lightgray; border-left: none; border-right: none; padding-left: 10px;">
+							<td  style="border: 1px solid lightgray; border-left: none; border-right: none; text-align: center;">
 								<span class="infoDetail" onClick="showUserInfo('${freevo.userid}')">
 									<span style="font-size: 11pt; font-family: verdana; ">${freevo.userid} [${freevo.name}]</span>
 								</span>
@@ -281,10 +281,10 @@
 								</c:if>
 							</td>
 							
-							<td style="border: 1px solid lightgray; border-left: none; border-right: none; padding-left: 10px;">
+							<td style="border: 1px solid lightgray; border-left: none; border-right: none; text-align: center;">
 								${freevo.readCnt}
 							</td>
-							<td style="border: 1px solid lightgray; border-left: none; border-right: none; padding-left: 5px;">
+							<td style="border: 1px solid lightgray; border-left: none; border-right: none; text-align: center;">
 								${freevo.regDate}
 							</td>
 						</tr>
