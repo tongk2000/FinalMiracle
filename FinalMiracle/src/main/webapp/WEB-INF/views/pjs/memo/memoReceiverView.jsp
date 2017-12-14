@@ -12,11 +12,10 @@
 <style>
 	th {
 		background-color:gray;
-		padding:10px;
 	}
-	table, td, tr, th {
+	td, tr, th {
 		border : 1px solid black;
-		padding:20px;
+		padding:7px;
 	}
 	#content {
 		height:100%;
@@ -82,7 +81,7 @@
 				</table>
 			</div>
 			<div style="border:1px solid gray; float:right">
-				<button type="reset" onClick="javascript:history.back();" id="back">뒤로가기</button>
+				<button type="reset" onClick="javascript:location.href='memoreceiver.mr';" id="back">뒤로가기</button>
 				<button type="button" onClick="goDel('${receiver.idx}');">삭제</button>
 			</div>
 		</div>

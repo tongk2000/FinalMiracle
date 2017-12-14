@@ -7,6 +7,11 @@ request.setCharacterEncoding("UTF-8");
 <!DOCTYPE>
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/resources/jqueryuicss/jquery-ui.css" />
+<link href="<%=request.getContextPath() %>/resources/summernote/summernote.css" rel="stylesheet">
+<script type="text/javascript" src="<%= request.getContextPath() %>/resources/jqueryuijs/jquery-ui.js"></script>
+<script src="<%=request.getContextPath() %>/resources/summernote/summernote.js"></script>
+<script src="<%=request.getContextPath() %>/resources/summernote/lang/summernote-ko-KR.js"></script>
 <meta charset="UTF-8">
 <title>공지사항 글</title>
 <style>
@@ -29,7 +34,10 @@ request.setCharacterEncoding("UTF-8");
 		width:20%;
 	}
 	tr, th, td {
-		border:1px solid red;
+		border:1px solid black;
+	}
+	th {
+		background-color:gray;
 	}
 	
 </style>
@@ -38,7 +46,7 @@ request.setCharacterEncoding("UTF-8");
 <c:set var="user" value="${map}" /> <!-- teamNum , userid , teamNum , status -->
 	<div style="border: 1px solid green; width:100%;">
 		<div style="border: 1px solid yellow;">
-			<table style="border: 1px solid red; width: 80%;">
+			<table style="border: 2px dotted red;">
 				<thead>
 					<tr>
 						<th colspan="2">공지글</th>
@@ -49,7 +57,7 @@ request.setCharacterEncoding("UTF-8");
 						<td width="12%">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="img"> &nbsp;&nbsp; ${user.userid}</td>
 					</tr>
 					<tr>
-						<td width="12%">팀정보 : </td><td>${user.team_idx}</td>
+						<td width="12%" >팀정보 : </td><td style="padding-left:12px;">${user.team_idx} 팀</td>
 					</tr>
 					<tr>
 						<td width="12%">제목 :</td>
@@ -57,7 +65,7 @@ request.setCharacterEncoding("UTF-8");
 					</tr>
 					<tr style="min-height: 200px;">
 						<td>내용 :</td>
-						<td height="200px">${user.content}</td>
+						<td><textarea name="content" id="content" class="summernote">${user.content}</textarea></td>
 					</tr>
 				</tbody>
 			</table>
@@ -89,6 +97,13 @@ request.setCharacterEncoding("UTF-8");
 				var nidx = "${nidx}";
 				goClick(nidx,contents);
 			});
+			$('.summernote').summernote({
+		      height: 300,          // 기본 높이값
+		      minHeight: null,      // 최소 높이값(null은 제한 없음)
+		      maxHeight: null,      // 최대 높이값(null은 제한 없음)
+		      focus: true,          // 페이지가 열릴때 포커스를 지정함
+		      lang: 'ko-KR'         // 한국어 지정(기본값은 en-US)
+		    });
 		});
 		function getReply() {
 			var data_form = {"nidx":"${nidx}"};
