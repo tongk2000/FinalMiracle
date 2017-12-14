@@ -3,7 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 
 <script type="text/javascript">
-
 	$(document).ready(function(){
 		teamCall();
 	});
@@ -33,7 +32,6 @@
 				$("#tm").empty();
 				
 				var html = "";
-
 				<%-- html <img src="<%= request.getContextPath() %>/resources/files/20171208183923121001009307995.jpg" style="width:200px; heigth:200px;" /> --%>
 				html += "<img src='<%= request.getContextPath() %>/resources/files/"+img+"' height='150px;' width='150px;'><br/>";
 				html += "팀 이름 : " + name + "<br/>";
@@ -49,22 +47,19 @@
 			}
 		});
 	}
-
 </script>
 
 <style>
-	.ifram {overflow-Y:hidden;}
 </style>
 
-
-<div style="width:100%; height:400px;">
-	<div style="width:50%; float: left;">
-		<!-- 회사정보 -->
-		<div class="footer" id="tm" align="center" style="width:100%; float: left;">
-		</div>
+<div style="width: 100%; height: 400px;">
+	<div style="/* border:4px dotted skyblue; */ width:50%; float: left;">
+			<!-- 회사정보 -->
+			<div class="footer" id="tm" align="center" style="width:100%; float: left;">
+			</div>
 	</div>
 	<div style="width:50%; height: 400px; float: right;">
-	<!-- 구글맵 -->
+		<!-- 구글맵 -->
 		<iframe src="<%=request.getContextPath()%>/googleMapbasic.mr" style="width:100%; height: 404px;"></iframe>
 	</div>
 </div>

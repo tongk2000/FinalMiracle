@@ -47,7 +47,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		// ===================================== *** summernote text area 편집기 불러오기 *** ==============
+		// ===================================== *** summernote text area 편집기 불러오기 *** ==================================
 		$('.summernote').summernote({
 		      height: 300,          // 기본 높이값
 		      minHeight: null,      // 최소 높이값(null은 제한 없음)
@@ -56,6 +56,7 @@
 		      lang: 'ko-KR'         // 한국어 지정(기본값은 en-US)
 	    });
 		
+		// =========================================== *** 자유게시판 글목록에서 제목에 마우스 가져댈 경우 css 효과 주기 *** ===================
 		$(".subject").bind("mouseover", function(event){
 			var $target = $(event.target);
 			$target.addClass("subjectStyle");
@@ -65,6 +66,7 @@
 			$target.removeClass("subjectStyle");
 		});
 		
+		// ====================================================== *** 회원 아이디나 성명 클릭시 상세정보 모달창으로 띄우기 *** ===============
 		$(".infoDetail").bind("mouseover", function(event){
 			var $target = $(event.target);
 			$target.addClass("infoStyle");
@@ -73,7 +75,8 @@
 			var $target = $(event.target);
 			$target.removeClass("infoStyle");
 		});
-
+		
+		// ================== *** 자유게시판에서 검색기능 이용했을 시 검색어 유지시키기 *** ================
 		searchKeep();
 	});  // end of $(document).ready() ---------------------------------
 	
@@ -225,11 +228,10 @@
 </html>
 
 
-<!-- 모달 창 -->
+<!-- 회원 상세정보 모달 창 -->
 <!-- Modal -->
 <div class="modal fade" id="myModal" role="dialog">
 	<div class="modal-dialog">
-
 		<!-- Modal content-->
 		<div class="modal-content">
 			<div class="modal-header">

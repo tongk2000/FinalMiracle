@@ -21,5 +21,17 @@ public class ChattingService implements InterChattingService {
 		return list;
 	}
 
+	@Override
+	public List<HashMap<String, Object>> getChattingContent(String cridx) {
+		List<HashMap<String, Object>> list = dao.getChattingContent(cridx);
+		return list;
+	}
+
+	@Override
+	public void chatting(HashMap<String, Object> map) {
+		dao.insertMessage(map);
+		dao.notreadmessage(map);
+	}
+
 	
 }

@@ -37,25 +37,20 @@
 	      lang: 'ko-KR'         // 한국어 지정(기본값은 en-US)
 	    });
 		
-	/* 	$("#spinneroqty").spinner({
+	$("#spinneroqty").spinner({
   	      spin: function( event, ui ) {
   	        if( ui.value > 100 ) {
   	          $( this ).spinner( "value", 0 ); 
-  	          /* 4 -> 3
-  	          inPeople+4 
+  	          
   	          return false;
   	        } 
   	        else if ( ui.value < 0 ) {
   	          $( this ).spinner( "value", 0 );
-  	          $("#selectPeople").append($("#addPeople").html());
-  	          $("#selectPeople").find("#inPeople").addClass("inPeople"+$("#spinneroqty").val() ) );
+  	         
   	          return false;
   	        }
   	      }
 	  	});
-		$("#spinneroqty").change(function(){
-			
-		}); */
 	});	
 </script>
 <meta charset="UTF-8">
@@ -63,7 +58,7 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		$("#cancel").blur(function(){
-			history.back();
+			window.location.reload();
 		});
 		
 		/* $(".item").change(function(){
@@ -98,13 +93,13 @@
 							<td id="d">
 							<input id="spinneroqty" name="ibgoqty" value="0" style="width: 30px; height: 20px; z-index:1000;">
 							<div id="selectPeople">
-								<div class="d" style="border:1px solid pink;">
-									<%-- <input type="radio" id="team" name="item" class="item" value="1"><label for="team">팀원</label>
-									<select name="choice" id="choice">
+								<div class="d" style="border:4px dotted pink;">
+									<input type="radio" id="team" name="item" class="item" value="1"><label for="team">팀원</label>
+									<%-- <select name="choice" id="choice">
 										<c:forEach var="team" items="${mapteam}">
 											<option value="${team.name}">${team.name +' '+team.teamNum}</option> <!--${team.name +', '+team.teamNum}  -->
 										</c:forEach>
-									</select>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --%>
+									</select> --%>
 								</div>
 							</div>
 							</td>	
@@ -118,7 +113,7 @@
 					</tbody>
 				</table>
 				<div style="border:1px solid gray; display:relative">
-					<button type="reset" onClick="javascript:location.reload()" id="cancel">취소</button>
+					<button type="reset" onClick="javascript:history.back();" id="cancel">취소</button>
 					<button type="button" onClick="goWrite();">완료</button>
 				</div>
 			</div>

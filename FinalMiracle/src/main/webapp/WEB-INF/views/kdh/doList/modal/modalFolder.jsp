@@ -29,7 +29,7 @@
 							<td class="infoClass">폴더이름</td>
 							<td class="infoData showInfo">${map.fvo.subject}
 							<td class="infoData hiddenEdit">
-								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="subject" value="${fvo.subject}" />
+								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="subject" value="${map.fvo.subject}" />
 							</td>
 						</tr>
 						
@@ -37,7 +37,7 @@
 							<td class="infoClass">폴더개요</td>
 							<td class="infoData showInfo">${map.fvo.content}
 							<td class="infoData hiddenEdit">
-								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="content" value="${fvo.content}" />
+								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="content" value="${map.fvo.content}" />
 							</td>
 						</tr>
 
@@ -45,7 +45,7 @@
 							<td class="infoClass">시작일</td>
 							<td class="infoData showInfo">${map.fvo.startDate}</td>
 							<td class="infoData hiddenEdit">
-								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="startDate" value="${fvo.startDate}" />
+								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="startDate" value="${map.fvo.startDate}" />
 							</td>
 						</tr>
 
@@ -53,7 +53,7 @@
 							<td class="infoClass">마감일</td>
 							<td class="infoData showInfo">${map.fvo.lastDate}</td>
 							<td class="infoData hiddenEdit">
-								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="lastDate" value="${fvo.lastDate}" />
+								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="lastDate" value="${map.fvo.lastDate}" />
 							</td>
 						
 						</tr>
@@ -62,7 +62,7 @@
 							<td class="infoClass">담당</td>
 							<td class="infoData">
 								<c:forEach var="ftvo" items="${map.folder_teamwonList}" varStatus="status">
-									${ftvo.userid}(${ftvo.proceedingTaskCnt}:${ftvo.completeTaskCnt})<c:if test="${status.count != folder_teamwonList.size()}">,</c:if>
+									${ftvo.userid}(${ftvo.proceedingTaskCnt}:${ftvo.completeTaskCnt})<c:if test="${status.count != map.folder_teamwonList.size()}">,</c:if>
 								</c:forEach>
 							</td>
 						</tr>
@@ -71,7 +71,7 @@
 							<td class="infoClass">폴더 중요도</td>
 							<td class="infoData showInfo">${map.fvo.importance}</td>
 							<td class="infoData hiddenEdit">
-								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="importance" value="${fvo.importance}" />
+								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="importance" value="${map.fvo.importance}" />
 							</td>
 						</tr>
 						
@@ -79,7 +79,7 @@
 							<td class="infoClass">하위 요소 중요도</td>
 							<td class="infoData showInfo">${map.fvo.importanceAvg}</td>
 							<td class="infoData hiddenEdit">
-								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="importanceAvg" value="${fvo.importanceAvg}" />
+								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="importanceAvg" value="${map.fvo.importanceAvg}" />
 							</td>
 						</tr>
 					</tbody>

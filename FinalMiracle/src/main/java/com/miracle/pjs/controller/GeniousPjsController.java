@@ -674,8 +674,11 @@ public class GeniousPjsController {
 		info.put("teamNum", req.getParameter("teamNum"));
 		HashMap<String,String> map =  service.getReceiverIdx(info); // r.idx, y.sender, r.rstatus, r.rreadcount, y.subject, y.content, y.sstatus, m.img , r.receiver
 		if("1".equals(ses.getAttribute("readCount")) && !(map.get("sender").equals(((MemberVO)ses.getAttribute("loginUser")).getUserid())) && map.get("receiver").equals(((MemberVO)ses.getAttribute("loginUser")).getUserid()) ) {
-			int n = service.updateRreadCount(req.getParameter("idx"), ((MemberVO)ses.getAttribute("loginUser")).getUserid());
-			System.out.println("================================n========================="+n);
+			int readcount=service.checkReadCount(req.getParameter("idx"));
+			if(readcount == 0) {
+				int n = service.updateRreadCount(req.getParameter("idx"), ((MemberVO)ses.getAttribute("loginUser")).getUserid());
+				System.out.println("================================n========================="+n);
+			}
 		}
 		
 		req.setAttribute("map", map); // IDX, SUBJECT, CONTENT, SENDER, SSTATUS, img, 팀원인지 팀장인지status

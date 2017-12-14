@@ -27,33 +27,33 @@
 					<tbody>
 						<tr>
 							<td class="infoClass">할일제목</td>
-							<td class="infoData showInfo">${fvo.subject}
+							<td class="infoData showInfo">${map.fvo.subject}
 							<td class="infoData hiddenEdit">
-								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="subject" value="${fvo.subject}" />
+								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="subject" value="${map.fvo.subject}" />
 							</td>
 						</tr>
 						
 						<tr>
 							<td class="infoClass">할일개요</td>
-							<td class="infoData showInfo">${fvo.content}
+							<td class="infoData showInfo">${map.fvo.content}
 							<td class="infoData hiddenEdit">
-								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="content" value="${fvo.content}" />
+								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="content" value="${map.fvo.content}" />
 							</td>
 						</tr>
 	
 						<tr>
 							<td class="infoClass">시작일</td>
-							<td class="infoData showInfo">${fvo.startDate}</td>
+							<td class="infoData showInfo">${map.fvo.startDate}</td>
 							<td class="infoData hiddenEdit">
-								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="startDate" value="${fvo.startDate}" />
+								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="startDate" value="${map.fvo.startDate}" />
 							</td>
 						</tr>
 	
 						<tr>
 							<td class="infoClass">마감일</td>
-							<td class="infoData showInfo">${fvo.lastDate}</td>
+							<td class="infoData showInfo">${map.fvo.lastDate}</td>
 							<td class="infoData hiddenEdit">
-								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="lastDate" value="${fvo.lastDate}" />
+								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="lastDate" value="${map.fvo.lastDate}" />
 							</td>
 	
 						</tr>
@@ -61,40 +61,40 @@
 						<tr>
 							<td class="infoClass">담당</td>
 							<td class="infoData">
-								<c:forEach var="ftvo" items="${folder_teamwonList}" varStatus="status">
-									${ftvo.userid}(${ftvo.proceedingTaskCnt}:${ftvo.completeTaskCnt})<c:if test="${status.count != folder_teamwonList.size()}">,</c:if>
+								<c:forEach var="ftvo" items="${map.folder_teamwonList}" varStatus="status">
+									${ftvo.userid}(${ftvo.proceedingTaskCnt}:${ftvo.completeTaskCnt})<c:if test="${status.count != map.folder_teamwonList.size()}">,</c:if>
 								</c:forEach>
 							</td>
 						</tr>
 	
 						<tr>
 							<td class="infoClass">할일 중요도</td>
-							<td class="infoData showInfo">${fvo.importance}</td>
+							<td class="infoData showInfo">${map.fvo.importance}</td>
 							<td class="infoData hiddenEdit">
-								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="importance" value="${fvo.importance}" />
+								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="importance" value="${map.fvo.importance}" />
 							</td>
 						</tr>
 						
 						<tr>
 							<td class="infoClass">완료여부</td>
 							<td class="infoData">
-								<c:if test="${fvo.status == 0}"> <!-- 완료된 할일이라면 -->
-									<input type="checkbox" id="modalStatus${fvo.idx}" class="status" checked/>
+								<c:if test="${map.fvo.status == 0}"> <!-- 완료된 할일이라면 -->
+									<input style="cursor:pointer;" type="checkbox" id="modalStatus${map.fvo.idx}" class="status" checked/>
 									<span style="color:green;" id="modalStatus">
-										<label for="modalStatus${fvo.idx}">완료</label>
+										<label style="cursor:pointer;" for="modalStatus${map.fvo.idx}">완료</label>
 									</span>
 								</c:if>
-								<c:if test="${fvo.status == 1}"> <!-- 미완료된 할일이라면 -->
-									<input type="checkbox" id="modalStatus${fvo.idx}" class="status"/>
+								<c:if test="${map.fvo.status == 1}"> <!-- 미완료된 할일이라면 -->
+									<input style="cursor:pointer;" type="checkbox" id="modalStatus${map.fvo.idx}" class="status"/>
 									<span style="color:red;" id="modalStatus">
-										<label for="modalStatus${fvo.idx}">미완료</label>
+										<label style="cursor:pointer;" for="modalStatus${map.fvo.idx}">미완료</label>
 									</span>
 								</c:if>
 							</td>
 						</tr>
 					</tbody>
 				</table>
-				<input type="hidden" name="idx" value="${fvo.idx}" /> <!-- 폴더번호 저장용 -->
+				<input type="hidden" name="idx" value="${map.fvo.idx}" /> <!-- 폴더번호 저장용 -->
 			</form>
 			<br/>
 			<div id="modalCommentPage">

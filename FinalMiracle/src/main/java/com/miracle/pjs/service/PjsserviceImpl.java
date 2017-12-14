@@ -355,6 +355,12 @@ public class PjsserviceImpl implements PjsinterService {
 		String list = dao.getCheckNum(map);
 		return list;
 	}*/
+	@Override
+	public int checkReadCount(String parameter) {
+		// readcount가 1인지 0인지 알아오자 몰라서 편법씀
+		int readcount = dao.checkReadCount(parameter);
+		return readcount;
+	}
 	
 	
 //==========================================================================================================================================================//	
