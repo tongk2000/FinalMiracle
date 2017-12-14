@@ -52,7 +52,7 @@
 <style>
 </style>
 
-<<<<<<< HEAD
+
 <div style="width:100%; height:500px; border:4px dotted red; "> <!-- 전체 푸터 -->
 	<div style="border:4px dotted skyblue; width:50%; float: left;">
 		<!-- 회사정보 -->
@@ -61,22 +61,10 @@
 		</div>
 	</div>
 	<div style="border:4px dotted yellow; width:50%; height: 500px; float: right;">
-=======
-<div style="width: 100%; height: 400px;">
-	<div style="/* border:4px dotted skyblue; */ width:50%; float: left;">
-			<!-- 회사정보 -->
-			<div class="footer" id="tm" align="center" style="width:100%; float: left;">
-			</div>
-	</div>
-	<div style="width:50%; height: 400px; float: right;">
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
-		<!-- 구글맵 -->
-<<<<<<< HEAD
 		<div class="footer googleMap" style="border: 2px solid blue; width: 100%; height:500px;"> 
 			<iframe class="ifram" src="<%=request.getContextPath()%>/googleMapbasic.mr" style="border:1px solid pink; width:100%; heigth:500px;" ></iframe>
 		</div>
-=======
+
 		<iframe src="<%=request.getContextPath()%>/googleMapbasic.mr" style="width:100%; height: 404px;"></iframe>
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 	</div>
 </div>
