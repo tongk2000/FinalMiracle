@@ -9,7 +9,34 @@ public class FreeCommentVO {
 	private int parentIdx;    	  // 원게시물 글번호
 	private int status;           // 글삭제여부 1 : 사용가능한 글,  0 : 삭제된 글
 	                              // 댓글은 원글이 삭제되면 자동적으로 삭제되어야 한다.
+	private int groupno;
+	private int depthno;
+	private int orderno;
 	
+	public int getGroupno() {
+		return groupno;
+	}
+
+	public void setGroupno(int groupno) {
+		this.groupno = groupno;
+	}
+
+	public int getDepthno() {
+		return depthno;
+	}
+
+	public void setDepthno(int depthno) {
+		this.depthno = depthno;
+	}
+
+	public int getOrderno() {
+		return orderno;
+	}
+
+	public void setOrderno(int orderno) {
+		this.orderno = orderno;
+	}
+
 	private String name;
 	private String img;
 	
@@ -32,7 +59,8 @@ public class FreeCommentVO {
 
 	public FreeCommentVO() { }
 	
-	public FreeCommentVO(int idx, String userid, String content, String regDate, int parentIdx, int status) {
+	public FreeCommentVO(int idx, String userid, String content, String regDate, int parentIdx, int status
+						,int groupno, int depthno, int orderno) {
 		
 		this.idx = idx;
 		this.userid = userid;
@@ -40,6 +68,9 @@ public class FreeCommentVO {
 		this.regDate = regDate;
 		this.parentIdx = parentIdx;
 		this.status = status;
+		this.groupno = groupno;
+		this.depthno = depthno;
+		this.orderno = orderno;
 	}
 
 	

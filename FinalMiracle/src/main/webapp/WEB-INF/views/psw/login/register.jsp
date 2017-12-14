@@ -17,42 +17,42 @@
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 
 <style>
-.content {
-	border-radius: 15px;
-	background-color: #4F84C4;
-	width: 75%;
-	margin-top: 50px;
-	margin-left: 100px;
-}
-
-table#tblMemberRegister {
-	width: 90%;
-	border-collapse: collapse;
-	margin: 10px;
-}
-
-table#tblMemberRegister #th {
-	height: 40px;
-	text-align: center;
-	background-color: silver;
-	font-size: 13pt;
-}
-
-table#tblMemberRegister td {
-	text-align: center;
-	height: 50px;
-}
-
-th#th {
-	background-color: darkgray;
-	font-size: 13pt;
-}
-
-.star {
-	color: purple;
-	font-weight: bold;
-	font-size: 13pt;
-}
+	.content {
+		border-radius: 15px;
+		background-color: #4F84C4;
+		width: 75%;
+		margin-top: 50px;
+		margin-left: 100px;
+	}
+	
+	table#tblMemberRegister {
+		width: 90%;
+		border-collapse: collapse;
+		margin: 10px;
+	}
+	
+	table#tblMemberRegister #th {
+		height: 40px;
+		text-align: center;
+		background-color: silver;
+		font-size: 13pt;
+	}
+	
+	table#tblMemberRegister td {
+		text-align: center;
+		height: 50px;
+	}
+	
+	th#th {
+		background-color: darkgray;
+		font-size: 13pt;
+	}
+	
+	.star {
+		color: purple;
+		font-weight: bold;
+		font-size: 13pt;
+	}
 </style>
 
 
