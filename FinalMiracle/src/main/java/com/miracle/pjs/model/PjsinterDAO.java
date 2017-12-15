@@ -35,6 +35,7 @@ public interface PjsinterDAO {
 	
 	HashMap<String, String> getDepth(String parameter); // 수정글쓰기의 depth, groupno를 구해온다.
 	
+	int getCountReply(HashMap<String, Object> map); // 댓글 수 가져오기
 	
 //==========================================================================================================================================================//	
 	
@@ -107,10 +108,16 @@ public interface PjsinterDAO {
 
 	//String getCheckNum(HashMap<String, String> map); // 몇명이 읽었는지 반환
 	
-	String getMessage(String userid);// 메세지 알람
+	String getMessage(HashMap<String, String> map);// 메세지 알람
 	
 	int checkReadCount(String parameter); //readcount가 0인지 1인지
 
+	int insertsender(HashMap<String, Object> map); // sender insert
+	
+	String getSenderLastIdx(HashMap<String, Object> map); // sender의 가장 최신 idx가져오기
+	
+	int insertreceiver(HashMap<String, Object> map); // receiver입력
+	
 //==========================================================================================================================================================//	
 
 	
@@ -126,6 +133,9 @@ public interface PjsinterDAO {
 
 	
 
+	
+
+	
 	
 	
 

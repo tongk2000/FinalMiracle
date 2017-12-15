@@ -11,16 +11,36 @@
 <script src="<%=request.getContextPath() %>/resources/summernote/lang/summernote-ko-KR.js"></script>
 
 <style type="text/css">
-	table, th, td, input, textarea {border: solid dimgray 1px;}
+	table, th, td, textarea {
+		border: solid darkgray 1px;
+		border-left: none;
+		border-right: none;
+	}
 	
 	#table {
-	border-collapse: collapse;
-	width: 80%;}
-	#table th, #table td{padding: 10px; font-size: 13pt;}
-	#table th{width: 120px; background-color: #DDDDDD;}
-	#table td{width: 480px;}
+		border-collapse: collapse;
+		width: 70%;
+	}
+	#table th, #table td{
+		padding: 10px;
+		font-size: 11pt;
+	}
+	#table th{
+		width: 10%; 
+		background-color: #DFCFBE;
+	}
+	#table td{
+		width: 50%;
+	}
 	.long {width: 470px;}
 	.short {width: 120px;}
+	
+	.addButtonStyle {
+		text-decoration: inherit;
+		font-style: italic;
+		font-size: 12pt;
+		color: navy;
+	}
 </style>
 
 
@@ -38,6 +58,15 @@
 		      lang: 'ko-KR'         // 한국어 지정(기본값은 en-US)
 	    });
 		
+		$(".addButton").bind("mouseover", function(event){
+			var $target = $(event.target);
+			$target.addClass("addButtonStyle");
+		});
+		$(".addButton").bind("mouseout", function(event){
+			var $target = $(event.target);
+			$target.removeClass("addButtonStyle");
+		});
+		
 	}); // end of $(document).ready() -------------------------------------------------------
 
 	function goWrite() {
@@ -53,10 +82,13 @@
 
 <body>
 
-<div style="color: navy; width: 100%; border: 1px solid red;" align="center" >
-	<h1>자유게시판 글쓰기</h1>
+<div style="margin-left: 10%; width: 90%; border: 0px solid red;">
+	<div>
+		<span style="font-size: 14pt; font-weight: bold; font-family: verdana;">자유게시판</span>
+		<span style="font-size: 12pt; font-weight: bold; font-family: arial;"> 글쓰기</span>
+	</div>
 	
-	<div style="border: 1px solid blue; width: 90%;" >
+	<div style="border: 0px solid blue; width: 80%;" >
 		<form name="writeFrm">
 			<table id="table">
 			 
@@ -83,10 +115,11 @@
 	            	</td>
 	         	</tr>
 			</table>
-			<br/>
 			
-			<button type="button" onClick="goWrite();">쓰기</button>
-			<button type="button" onClick="javascript:history.back();">취소</button>
+			<div style="float: right; margin-right: 30%; margin-top: 10px;">
+				<span class="addButton" style="font-size: 11pt; font-family: verdana; font-weight: bold; cursor: pointer;" onClick="goWrite();">글쓰기</span>&nbsp;&nbsp;
+				<span class="addButton" style="font-size: 11pt; font-family: verdana; font-weight: bold; cursor: pointer;" onClick="javascript:history.back();">취소</span>
+			</div>
 		</form>
 	</div>
 

@@ -12,16 +12,15 @@
 <style>
 	th {
 		background-color:gray;
-		padding:10px;
 	}
-	table, td, tr, th {
+	td, tr, th {
 		border : 1px solid black;
-		padding:20px;
+		padding:7px;
 	}
 	#content {
 		height:100%;
 	}
-	img {
+	.imgs {
 		height: 40px;
 		width: 40px;
 	}
@@ -66,10 +65,10 @@
 					<c:set var="receiver" value="${map}"></c:set>
 						<tr> <!-- IDX, SUBJECT, CONTENT, SENDER, SSTATUS, name, img, w.status -->
 							<c:if test="${receiver.status == 2}">
-								<th>유저 :  </th><td><img src="<%= request.getContextPath() %>/resources/images/${receiver.img}"> ${receiver.name} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${teamNum}팀  팀장]</td> 
+								<th>유저 :  </th><td><img src="<%= request.getContextPath() %>/resources/images/${receiver.img}" class="imgs"> ${receiver.name} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${teamNum}팀  팀장]</td> 
 							</c:if>
 							<c:if test="${receiver.status == 1}">
-								<th>유저 :  </th><td><img src="<%= request.getContextPath() %>/resources/images/${receiver.img}"> ${receiver.name} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${teamNum}팀   팀원]</td> 
+								<th>유저 :  </th><td><img src="<%= request.getContextPath() %>/resources/images/${receiver.img}" class="imgs"> ${receiver.name} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${teamNum}팀   팀원]</td> 
 							</c:if>
 						</tr>
 						<tr>
@@ -82,7 +81,7 @@
 				</table>
 			</div>
 			<div style="border:1px solid gray; float:right">
-				<button type="reset" onClick="javascript:history.back();" id="back">뒤로가기</button>
+				<button type="reset" onClick="javascript:location.href='memoreceiver.mr';" id="back">뒤로가기</button>
 				<button type="button" onClick="goDel('${receiver.idx}');">삭제</button>
 			</div>
 		</div>

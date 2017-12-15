@@ -86,6 +86,11 @@
 			frm.submit();
 		}
 	}
+	
+	function goEmail(email){
+		
+		window.open("tmWriteEmail.mr?email="+email, "subwinpop", "left=500px, top=500px, width=800px, height=600px");
+	}
 
 </script>
 
@@ -140,7 +145,7 @@
 					<td>${tmAddr.NAME}</td>
 					<td>${tmAddr.BIRTH1}년 ${tmAddr.BIRTH2}월 ${tmAddr.BIRTH3}일</td>
 					<td>${tmAddr.HP1}-${tmAddr.HP2}-${tmAddr.HP3}</td>
-					<td>${tmAddr.EMAIL}</td>
+					<td><a href="javascript:goEmail('${tmAddr.EMAIL}');">${tmAddr.EMAIL}</a></td>
 					<td>${tmAddr.POST1}-${tmAddr.POST2}</td>
 					<td>${tmAddr.ADDR1}<br/>${tmAddr.ADDR2}</td>
 					<td>${tmAddr.PROFILE}</td>

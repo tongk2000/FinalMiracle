@@ -8,7 +8,7 @@ request.setCharacterEncoding("UTF-8");
 <html>
 <head>
 <style>
-	img {
+	.imgs {
 		width:25px;
 		height:25px;
 	}
@@ -110,8 +110,8 @@ request.setCharacterEncoding("UTF-8");
 						<c:if test="${not empty list}"> <!-- RNO, IDX, SUBJECT, CONTENT, SENDER, SSTATUS, NAME, TEAMNUM, IMG, writedate -->
 							<c:forEach var="sender" items="${list}" varStatus="status">
 								<tr class="line">
-									<td>${status.count}<input type="hidden" value="${sender.idx}"/></td>
-									<td><img src="<%=request.getContextPath()%>/resources/images/${sender.img}"> ${sender.name}</td>
+									<td><input type="checkbox" value="${sender.idx}"><input type="hidden" value="${sender.idx}"/></td>
+									<td><img src="<%=request.getContextPath()%>/resources/images/${sender.img}" class="imgs"> ${sender.name}</td>
 									<td onClick="goView('${sender.idx}', '${userTeam.teamNum}');">${sender.subject}</td>
 									<td>${sender.names}</td>
 									<td>${sender.writedate}</td>

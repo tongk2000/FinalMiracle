@@ -1,13 +1,10 @@
 package com.miracle.ksh.controller;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
@@ -16,15 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.MultipartRequest;
 
 import com.miracle.kdh.service.ProjectManagerService;
 import com.miracle.ksh.model.TeamVO;
 import com.miracle.ksh.model.TeamwonVO;
-import com.miracle.ksh.model.VoteItemVO;
 import com.miracle.ksh.service.InterTMService;
 import com.miracle.ksh.util.MyUtil;
 import com.miracle.psw.model.MemberDetailVO;
@@ -955,6 +949,49 @@ public class TMController {
 		req.setAttribute("str_jsonMap", str_jsonMap);
 		
 		return "ksh/json/teamInfo.not";
+	}
+	
+	//이메일을 보내주는 팝업을 띄워보자
+	@RequestMapping(value="/tmWriteEmail.mr", method={RequestMethod.GET})
+	public String tmWriteEmail(HttpServletRequest req, HttpSession session){
+		
+		MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
+		int login_idx = loginUser.getIdx();
+		
+		String sendEmail = service.getMyEmail(login_idx);
+		String receiveEmail = req.getParameter("email");
+		
+		req.setAttribute("sendEmail", sendEmail);
+		req.setAttribute("receiveEmail", receiveEmail);
+		
+		return "ksh/tm/emailForm.not";
+	}
+	
+	//이메일을 보내보자
+	@RequestMapping(value="/tmWriteEmailEnd.mr", method={RequestMethod.POST})
+	public String tmWriteEmailEnd(HttpServletRequest req, HttpSession session){
+		
+		String sendEmail = req.getParameter("sendEmail");
+		String receiveEmail = req.getParameter("receiveEmail");
+		
+		String subject = req.getParameter("subject");
+		String content = req.getParameter("content");
+		
+		GoogleMail mail = new GoogleMail();
+		
+		try {
+			mail.sendmail_tmAddress(sendEmail, receiveEmail, subject, content);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		String msg = "이메일이 전송 되었습니다.";
+		String loc = "javascript:window.close();";
+		
+		req.setAttribute("msg", msg);
+		req.setAttribute("loc", loc);
+		
+		return "ksh/msg.not";
 	}
 	
 	/*

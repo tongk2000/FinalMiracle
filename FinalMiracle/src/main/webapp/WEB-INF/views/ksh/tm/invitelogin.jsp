@@ -180,7 +180,7 @@
 			</h2>
 			<p class="bg-primary">&nbsp;</p>
 
-			<form name="loginFrm" style="margin-left: 20%;">
+			<form name="loginFrm" style="margin-left: 25%;">
 				<div class="mydiv" style="margin-left: 15%;" align="center">
 					<span class="mydisplay myfont">아이디</span> <span
 						class="mydisplay myfont" style="margin-top: 30px;">암&nbsp;&nbsp;&nbsp;호</span>
@@ -203,12 +203,12 @@
 				<br/><br/>
 				<div class="mydiv" style="margin-left: 18%;">
 					아직 회원가입을 안하셨나요? &nbsp;
-					<a href="<%= request.getContextPath() %>/tmRegister.mr?team_idx=${team_idx}">
-						<span style="color: orange; font-weight: bold;">[회원가입]</span>
+					<a href="<%= request.getContextPath() %>/member_register.mr" class="btn btn-primary">
+						<span class="glyphicon glyphicon-user"></span> 회원가입
 					</a>
 				</div>
 				<br/><br/>
-				<div class="mydiv" style="margin-left: 20%;">Welcome to ⓒ Miracle World ~ !!</div>
+				<div class="mydiv" style="margin-left: 23%;">Welcome to ⓒ Miracle World ~ !!</div>
 				<input type="hidden" id="team_idx" name="team_idx" value="${team_idx}" />
 			</form>
 		</div>

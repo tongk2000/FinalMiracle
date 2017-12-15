@@ -98,7 +98,7 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
 	    	
 	    	PjsinterDAO dao = sqlsession.getMapper(PjsinterDAO.class);
 	    	this.logger.info(message.getPayload());
-	    	session.sendMessage(new TextMessage(dao.getMessage(message.getPayload()))); // 사용자가 보낸 메세지
+	    	//session.sendMessage(new TextMessage(dao.getMessage(message.getPayload()))); // 사용자가 보낸 메세지
 	    }
 	    
        //       afterConnectionClosed(WebSocketSession session, CloseStatus status) 메소드는 

@@ -13,6 +13,7 @@ public class BoardDAO implements InterBoardDAO {
 	@Autowired
 	private SqlSessionTemplate sqlsession;
 
+	// ===================================== *** FAQ 게시판 *** ===================================================
 	@Override
 	public List<FaqBoardVO> faqList() {
 		List<FaqBoardVO> list = sqlsession.selectList("board_psw.faqList");
@@ -130,6 +131,23 @@ public class BoardDAO implements InterBoardDAO {
 	public MemberDetailVO showUserDetailInfo(HashMap<String, Object> map) {
 		MemberDetailVO vo = sqlsession.selectOne("board_psw.showUserDetailInfo", map);
 		return vo;
+	}
+
+	// ================================= *** 자유게시판 해당 게시글 1개 삭제하기 Transaction *** ================================
+	@Override
+	public int isExistComment(String idx) {  // 해당 게시글에 댓글의 유무 확인하기
+		int cnt = sqlsession.selectOne("board_psw.isExistComment", idx);
+		return cnt;
+	}
+	@Override
+	public int deleteContent(String idx) {  // 해당 게시글 1개 삭제(update 처리)
+		int n = sqlsession.update("board_psw.deleteContent", idx);
+		return n;
+	}
+	@Override
+	public int deleteComment(String idx) {  // 해당 게시글에 덧글이 있는 경우 댓글 모두 삭제(update 처리)
+		int n = sqlsession.update("board_psw.deleteComment", idx);
+		return n;
 	}
 	
 	

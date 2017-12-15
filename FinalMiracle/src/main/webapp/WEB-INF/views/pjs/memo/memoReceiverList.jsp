@@ -8,7 +8,7 @@
 <html>
 <head>
 <style>
-	img {
+	.imgs {
 		width:25px;
 		height:25px;
 	}
@@ -111,7 +111,7 @@
 							<c:forEach var="receiver" items="${list}" varStatus="status">
 								<tr class="line">
 									<td>${status.count}<input type="hidden" value="${receiver.idx}"/></td>
-									<td><img src="<%=request.getContextPath()%>/resources/images/${receiver.img}"> ${receiver.sender}</td>
+									<td><img src="<%=request.getContextPath()%>/resources/images/${receiver.img}" class="imgs"> ${receiver.sender}</td>
 									<td onClick="goView('${receiver.idx}', '${userTeam.teamNum}');">${receiver.subject}</td>
 									<td>${receiver.receiver}</td>
 									<c:if test="${receiver.rreadcount == 0}">

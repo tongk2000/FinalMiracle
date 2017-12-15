@@ -17,11 +17,12 @@ request.setCharacterEncoding("UTF-8");
 		border: 1px solid black;
 		border-collapse:none;
 		height:30px;
+		padding:7px;
 	}
 	td, th {
 		text-align:center;
 	}
-	.img {
+	.imgs {
 		width:25px;
 		height:25px;
 	}
@@ -35,9 +36,9 @@ request.setCharacterEncoding("UTF-8");
    	.selectLine {
     	background-color:gray;
     }
-    img {
-		width:25px;
-		height:25px;
+    .image {
+		width:50px;
+		height:50px;
 	}
 	th {
 		background-color:black;
@@ -53,18 +54,9 @@ request.setCharacterEncoding("UTF-8");
 </head>
 <body>
 <c:set var="user" value="${userTeam}" />
-	<div align="center" style="width:80%; margin:auto; border:red;">
+	<div align="center" style="border:red 3px dotted;"> 
+	<div style="width:80%; border:red 3px dotted; " align="center">
 		<h2>마음의 소리 게시판</h2>
-		<form name="frm">
-			<select id="searchType" name="searchType" style="font-size:12pt;">
-				<option value="fk_userid">아이디</option>
-				<option value="subject">제목</option>
-			</select>
-			<input type="text" id="searchString" name="searchString" />
-			<button type="button" id="btnClick" onClick="goSearch();">검색</button><br/>
-			<div><div class="min"><div class="min"><div class="min"><div class="min"><div class="min"><div class="min">
-				<div id="displayList" style="background-color:red; width:150px; margin-left: 28px; border-top: 0px; border: solid black 1px;"></div>
-			</div></div></div></div></div></div></div>
 			<table style="width:100%;">
 				<thead>
 					<tr>
@@ -84,11 +76,11 @@ request.setCharacterEncoding("UTF-8");
 					<c:if test="${not empty list}">
 						<c:forEach var="md" items="${list}" varStatus="status">
 							<tr class="line"> <!-- d_idx, fk_userid subject regday readcount img, depth, status, t_idx, groupno, tstatus -->
-								<td width="5%">${status.count}<input type="hidden" value="${md.d_idx}"/></td>	<!-- 번호 -->
+								<td width="5%"><input type="checkbox"><input type="hidden" value="${md.d_idx}"/></td>	<!-- 번호 -->
 								<c:if test="${md.tstatus == 2 || sessionScope.loginUser.userid == md.fk_userid}">
 									<td width="15%">
 										<a onClick="goUserInfo('${md.fk_userid}');">
-											<img class="img" src="<%= request.getContextPath()%>/resources/images/${md.img}"/>  <span class="userid" >${md.fk_userid}</span>	<!-- 아이디 -->
+											<img class="imgs" src="<%= request.getContextPath()%>/resources/images/${md.img}"/>  <span class="userid" >${md.fk_userid}</span>	<!-- 아이디 -->
 										</a>
 									</td>
 								</c:if>		
@@ -124,17 +116,29 @@ request.setCharacterEncoding("UTF-8");
 				</tbody>
 			</table>
 			<br/>
-			<div style="float:right;">
-				<c:if test="${user.status == 1}" >
-					<button type="button" id="del">삭제</button>
-					<button type="button" onClick="goWrite();">글쓰기</button>
-				</c:if>
+			<div align="center" style="padding-bottom:20px;">
+				${pagebar}
 			</div>	
-		</form>
-		<br/><br/>
-		${pagebar}
+			<div style="float:right;">
+					<c:if test="${user.status == 1}" >
+						<button type="button" id="del">삭제</button>
+						<button type="button" onClick="goWrite();">글쓰기</button>
+					</c:if>
+			</div>
+			<br/><br/>
+			<form name="frm">
+				<select id="searchType" name="searchType" style="font-size:12pt;">
+					<option value="fk_userid">아이디</option>
+					<option value="subject">제목</option>
+				</select>
+				<input type="text" id="searchString" name="searchString" />
+				<button type="button" id="btnClick" onClick="goSearch();">검색</button><br/><br/><br/>
+				<div style="display:block; z-index:1000; margin-top:-40px;" align="center">
+					<div id="displayList" style="background-color:white; width:175px; margin-left: 28px; border-top: 0px; border: solid gray 3px;"></div>
+				</div>
+			</form>
 	</div>
-	
+	</div>
 	<form name="view">
 		<input type="hidden" name="idx" />
 		<input type="hidden" name="userid" />
@@ -217,6 +221,21 @@ request.setCharacterEncoding("UTF-8");
 				$(this).addClass("grayColor");
 			},function(){
 				$(this).removeClass("grayColor");
+			});
+			$("#displayList").click(function(event){
+				var word = "";
+				var $target = $(event.target);
+				if($target.is(".first")) {
+					word = $target.text() + $target.next().text() + $target.next().next().text();
+				}
+				else if($target.is(".second")) {
+					word = $target.prev().text() + $target.text() + $target.next().text();
+				}
+				else if($target.is(".third")) {
+					word = $target.prev().prev().text() + $target.prev().text() + $target.text();
+				}
+				$("#search").val(word); // 텍스트박스에 검색된 결과의 문자열을 입력해준다.
+				$("#displayList").hide();
 			});
 		});
 		function keep() {

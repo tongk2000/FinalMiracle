@@ -349,5 +349,13 @@
 		on A.idx = B.fk_member_idx
 		where B.idx = #{fk_team_idx}
 	</select>
+	
+	
+	<select id="getMyEmail" parameterType="int" resultType="String">
+		select B.email
+		from tbl_member A join tbl_member_detail B
+		on A.idx = B.fk_member_idx
+		where A.idx = #{login_idx}
+	</select>
 
 </mapper>

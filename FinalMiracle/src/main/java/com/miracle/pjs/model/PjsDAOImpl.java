@@ -125,6 +125,12 @@ public class PjsDAOImpl implements PjsinterDAO {
 		HashMap<String, String> depth = sqlsession.selectOne("pjsfinal.getDepth", parameter);
 		return depth;
 	}
+	@Override
+	public int getCountReply(HashMap<String, Object> map) {
+		// 댓글 수 가져오기
+		int count = sqlsession.selectOne("pjsfinal.getCountReply", map);
+		return count;
+	}
 	
 	
 	
@@ -321,9 +327,9 @@ public class PjsDAOImpl implements PjsinterDAO {
 		return list;
 	}*/
 	@Override
-	public String getMessage(String userid) {
+	public String getMessage(HashMap<String, String> map) {
 		// 메세지 알람
-		String n = sqlsession.selectOne("pjsfinal.getMessage", userid);
+		String n = sqlsession.selectOne("pjsfinal.getMessage", map);
 		return n;
 	}
 	@Override
@@ -332,6 +338,25 @@ public class PjsDAOImpl implements PjsinterDAO {
 		int readcount = sqlsession.selectOne("pjsfinal.checkReadCount", parameter);
 		return readcount;
 	}
+	@Override
+	public int insertsender(HashMap<String, Object> map) {
+		// sender 삽입
+		int n = sqlsession.insert("pjsfinal.insertsender",map);
+		return n;
+	}
+	@Override
+	public String getSenderLastIdx(HashMap<String, Object> map) {
+		// 최신 idx 가져오기
+		String idx = sqlsession.selectOne("pjsfinal.getSenderLastIdx", map);
+		return idx;
+	}
+	@Override
+	public int insertreceiver(HashMap<String, Object> map) {
+		// receiver 삽입
+		int n = sqlsession.insert("pjsfinal.insertreceiver",map);
+		return n;
+	}
+
 	
 	
 	
@@ -344,7 +369,6 @@ public class PjsDAOImpl implements PjsinterDAO {
 		return userTeam;
 	}
 	
-
 
 	
 	

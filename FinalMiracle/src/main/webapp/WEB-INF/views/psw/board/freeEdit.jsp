@@ -16,14 +16,24 @@
 <script src="<%=request.getContextPath() %>/resources/summernote/lang/summernote-ko-KR.js"></script>
 
 <style type="text/css">
-	table, th, td, input, textarea {border: solid gray 1px;}
+	table, th, td, textarea { 
+		border: solid lightgray 1px;
+		border-left: none;
+		border-right: none;
+	}
 	
-	#table, #table2 {border-collapse: collapse;
-	 		         width: 600px;
-	 		        }
-	#table th, #table td{padding: 5px;}
-	#table th{width: 120px; background-color: #DDDDDD;}
-	#table td{width: 480px;}
+	#table, #table2 {
+		border-collapse: collapse;
+		width: 70%;
+	}
+	#table th, #table td{
+		padding: 10px;}
+	#table th{
+		width: 10%; background-color: #DFCFBE;
+	}
+	#table td{
+		width: 50%;
+	}
 	.long {width: 470px;}
 	.short {width: 120px;} 	
 	
@@ -57,39 +67,45 @@
 <body>
 
 <div style="padding-left: 10%; border: solid 0px red;">
-	<h1>글수정</h1>
-	
-	<form name="editFrm">     
-		<table id="table">
-			<tr>
-				<th>글번호</th>
-				<td>${freevo.idx}
-					<input type="hidden" name="idx" value="${freevo.idx}" />
-				</td>
-			</tr>
-			<tr>
-				<th>아이디</th>
-				<td>${freevo.userid}</td>
-			</tr>
-			<tr>
-				<th>성명</th>
-				<td>${freevo.name}</td>
-			</tr>
-			<tr>
-	           	<th>제목</th>
-	           	<td><input type="text" name="subject" value="${freevo.subject}" style="width: 300px;" /></td>
-	        	</tr>
-			<tr>
-				<th>내용</th>
-				<td><textarea name="content" id="content" class="summernote">${freevo.content}</textarea></td>
-			</tr>
-		</table>
+	<div style="padding-top: 10px; ">
+		<span style="font-size: 15pt; font-weight: bold;">자유게시판 </span>
+		<span style="font-size: 13pt; font-family: verdana;">게시글 수정</span>
+	</div>
+	<div>
+		<form name="editFrm">     
+			<table id="table">
+				<tr>
+					<th>글번호</th>
+					<td>${freevo.idx}
+						<input type="hidden" name="idx" value="${freevo.idx}" />
+					</td>
+				</tr>
+				<tr>
+					<th>아이디</th>
+					<td>${freevo.userid}</td>
+				</tr>
+				<tr>
+					<th>성명</th>
+					<td>${freevo.name}</td>
+				</tr>
+				<tr>
+		           	<th>제목</th>
+		           	<td><input type="text" name="subject" value="${freevo.subject}" style="width: 90%;;" /></td>
+		        	</tr>
+				<tr>
+					<th>내용</th>
+					<td><textarea name="content" id="content" class="summernote">${freevo.content}</textarea></td>
+				</tr>
+			</table>
+			
+			<div>
+				<br/>
+				<button type="button" onClick="goUpdate();">수정하기</button>
+				<button type="button" onClick="javascript:history.back();">돌아가기</button>
+			</div>
 		
-		<br/>
-		<button type="button" onClick="goUpdate();">완료</button>
-		<button type="button" onClick="javascript:history.back();">취소</button>
-	
-	</form>	
+		</form>	
+	</div>
 		
 </div>
 
