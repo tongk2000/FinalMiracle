@@ -33,5 +33,43 @@ public class ChattingService implements InterChattingService {
 		dao.notreadmessage(map);
 	}
 
+	@Override
+	public void read(HashMap<String, Object> map) {
+		dao.read(map);
+		
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getChattingMember(String cridx) {
+		List<HashMap<String, Object>> list = dao.getChattingMember(cridx);
+		return list;
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getAllTeam() {
+		List<HashMap<String, Object>> list = dao.getAllTeam();
+		return list;
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getTeamwonNotMe(HashMap<String, Object> map) {
+		List<HashMap<String, Object>> list = dao.getTeamwonNotMe(map);
+		return list;
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getAllNotMe(int idx) {
+		List<HashMap<String, Object>> list = dao.getAllNotMe(idx);
+		return list;
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getFindNotMe(HashMap<String, Object> map) {
+		List<HashMap<String, Object>> list = dao.getFindNotMe(map);
+		return list;
+	}
+
+	
+	
 	
 }
