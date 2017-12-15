@@ -206,4 +206,16 @@ public class TMService implements InterTMService {
 		return email;
 	}
 
+	@Override
+	public int setTeamwonLeader(HashMap<String, String> tmMap) {
+		int n = dao.setTeamwonLeader(tmMap);
+		return n;
+	}
+
+	@Override
+	public int tmWithDrawCancel(HashMap<String, String> map) {
+		int n = dao.tmWithDrawCancel(map);
+		return 0;
+	}
+
 }

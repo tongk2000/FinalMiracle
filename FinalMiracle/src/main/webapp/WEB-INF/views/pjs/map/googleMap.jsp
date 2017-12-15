@@ -236,9 +236,9 @@
 </head>
 <body>
 <div class="modal-body" id="launchMapBody">
-<<<<<<< HEAD
+
 	<div id="googleMap"	style="width: 90%; height: 85%;  margin:0% 0% 0% 6% ; "></div>
-=======
+
 	<select id="choice" name="choice" style="font-size:12pt;">
 		<option value="0" selected> 전체</option>
 		<option value="1" >팀정보</option>
@@ -253,7 +253,6 @@
 	</div>
 	
 	<div id="googleMap" style="width: 100%; height: 100%;"></div>
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 	
 	<div class="modal fade" id="mapInfo" role="dialog"></div>
 	<form name="map">

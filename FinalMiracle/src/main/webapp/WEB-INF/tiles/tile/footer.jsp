@@ -52,16 +52,16 @@
 <style>
 </style>
 
-<div style="width:100%; height:500px; border:4px dotted red; "> <!-- 전체 푸터 -->
-	<div style="border:4px dotted skyblue; width:50%; float: left;">
+<div style="width:100%; height:500px;"> <!-- 전체 푸터 -->
+	<div style="width:50%; float: left;">
 		<!-- 회사정보 -->
-		<div class="footer" style="border:4px dotted blue; width:100%; float: left;"> 
-			<div class="footer" id="tm" style="border:4px dotted green; width:100%;"></div>
+		<div class="footer" style="width:100%; float: left;" align="center"> 
+			<div class="footer" id="tm" style="width:100%;"></div>
 		</div>
 	</div>
-	<div style="border:4px dotted yellow; width:50%; height: 500px; float: right;">
-		<div class="footer googleMap" style="border: 2px solid blue; width: 100%; height:500px;"> 
-			<iframe class="ifram" src="<%=request.getContextPath()%>/googleMapbasic.mr" style="border:1px solid pink; width:100%; heigth:500px;" ></iframe>
+	<div style="width:50%; height: 500px; float: right;">
+		<div class="footer googleMap" style="width: 100%; height:400px;"> 
+			<iframe class="ifram" src="<%=request.getContextPath()%>/googleMapbasic.mr" style="width:100%; height: 400px;" ></iframe>
 		</div>
 	</div>
 </div>

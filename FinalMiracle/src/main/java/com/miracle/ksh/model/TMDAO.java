@@ -199,4 +199,16 @@ public class TMDAO implements InterTMDAO {
 		return email;
 	}
 
+	@Override
+	public int setTeamwonLeader(HashMap<String, String> tmMap) {
+		int n = sqlsession.insert("kshTM.setTeamwonLeader", tmMap);
+		return n;
+	}
+
+	@Override
+	public int tmWithDrawCancel(HashMap<String, String> map) {
+		int n = sqlsession.update("kshTM.tmWithDrawCancel", map);
+		return n;
+	}
+
 }

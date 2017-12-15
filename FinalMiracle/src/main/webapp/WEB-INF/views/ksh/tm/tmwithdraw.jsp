@@ -89,6 +89,7 @@
 		
 		if(confirm("탈퇴 요청을 승인하시겠습니까?")){
 			frm.idx.value = idx;
+			frm.method = "post";
 			frm.action = "tmWithdrawEnd.mr";
 			frm.submit();
 		}
@@ -99,17 +100,30 @@
 		
 		if(confirm("해당 팀원을 복구시키겠습니까?")){
 			frm.idx.value = idx;
+			frm.method = "post";
 			frm.action = "tmRestore.mr";
 			frm.submit();
 		}
 	}
 	
-	function goWithdraw(){
+	function goWithdraw(idx){
+		var frm = document.idxFrm;
 		
-		if(confirm("정말로 팀에서 탈퇴하시겠습니까?")){
-
-			location.href="<%= request.getContextPath() %>/tmWithdraw.mr";
+		if(confirm("탈퇴 처리를 하시겠습니까?")){
+			frm.idx.value = idx;
+			frm.method = "post";
+			frm.action = "tmWithdrawEnd.mr";
+			frm.submit();
 		}
+	}
+	
+	function goWithDrawCancle(idx){
+		var frm = document.idxFrm;
+		
+		frm.idx.value = idx;
+		frm.method = "post";
+		frm.action = "tmWithdrawCancel.mr";
+		frm.submit();
 	}
 	
 	function goInvite(){
@@ -118,6 +132,7 @@
 		
 		if(inputemail != null){
 			frm.email.value = inputemail;
+			frm.method = "get";
 			frm.action = "tmInvite.mr";
 			frm.submit();
 		}
@@ -193,7 +208,10 @@
 					<td>${req.STATUS}</td>
 					<td>${req.REGDATE}</td>
 					<td>${req.DISDATE}</td>
-					<td><button type="button" id="btnWithDraw" name="btnWithDraw" onclick="goWithDraw('${wd.IDX}');">탈퇴처리</button></td>
+					<td>
+						<button type="button" id="btnWithDraw" name="btnWithDraw" onclick="goWithDraw('${req.IDX}');">탈퇴처리</button><br/>
+						<button type="button" id="btnWithDraw" name="btnWithDraw" onclick="goWithDrawCancle('${req.IDX}');">탈퇴취소</button>
+					</td>
 				</tr>
 			</c:forEach>
 		</tbody>

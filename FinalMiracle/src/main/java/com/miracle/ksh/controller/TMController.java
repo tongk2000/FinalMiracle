@@ -11,6 +11,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
@@ -185,12 +189,11 @@ public class TMController {
 	}
 	
 	
+	@Transactional(propagation=Propagation.REQUIRED, isolation= Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
 	@RequestMapping(value="/tmCreateEnd.mr", method={RequestMethod.POST})
-	public String tmCreateEnd(MultipartHttpServletRequest req){
+	public String tmCreateEnd(MultipartHttpServletRequest req, HttpSession session){
 		
-		HttpSession ses = req.getSession();
-		
-		MemberVO loginUser = (MemberVO) ses.getAttribute("loginUser");
+		MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
 		
 		String fk_member_idx = String.valueOf(loginUser.getIdx());
 		String name = req.getParameter("name");
@@ -206,9 +209,10 @@ public class TMController {
 		
 		String newFileName = "default.jpg";
 		
+		HashMap<String, String> tmMap = new HashMap<String, String>();
+		
 		if(attach != null && !attach.isEmpty()) {
-			// WAS 의 webapp 의 절대경로를 알아와야 한다. 
-			HttpSession session = req.getSession();
+			// WAS 의 webapp 의 절대경로를 알아와야 한다.
 			String root = session.getServletContext().getRealPath("/"); 
 			String path = root + "resources"+File.separator+"files";
 			// path 가 첨부파일들을 저장할 WAS(톰캣)의 폴더가 된다. 
@@ -241,46 +245,89 @@ public class TMController {
 				} catch (Exception e) {
 					
 				}
+
+				tmMap.put("fk_member_idx", fk_member_idx);
+				tmMap.put("name", name);
+				tmMap.put("hp1", hp1);
+				tmMap.put("hp2", hp2);
+				tmMap.put("hp3", hp3);
+				tmMap.put("post1", post1);
+				tmMap.put("post2", post2);
+				tmMap.put("addr1", addr1);
+				tmMap.put("addr2", addr2);
+				tmMap.put("newFileName", newFileName);
+				
+				
+				int n = service.TeamCreate(tmMap);
+				
+				int m = service.setTeamwonLeader(tmMap);
+				
+				if(n > 0 && m > 0){
+					String msg = "팀 생성이 완료되었습니다.";
+					String loc = "tmForm.mr";
+					
+					req.setAttribute("msg", msg);
+					req.setAttribute("loc", loc);
+					
+					return "ksh/msg.not";
+				} else {
+					String msg = "팀 생성에 실패하였습니다.";
+					String loc = "tmForm.mr";
+					
+					req.setAttribute("msg", msg);
+					req.setAttribute("loc", loc);
+					
+					return "ksh/msg.not";
+				}
+				
+		    } else {
+		    	String msg = "제대로 된 이미지 파일로 첨부해주세요.";
+				String loc = "javascript:history.back()";
+				
+				req.setAttribute("msg", msg);
+				req.setAttribute("loc", loc);
+				
+				return "ksh/msg.not";
 		    }
 			
 		} else {
 			newFileName = "defaultImg.png";
+			
+			tmMap.put("fk_member_idx", fk_member_idx);
+			tmMap.put("name", name);
+			tmMap.put("hp1", hp1);
+			tmMap.put("hp2", hp2);
+			tmMap.put("hp3", hp3);
+			tmMap.put("post1", post1);
+			tmMap.put("post2", post2);
+			tmMap.put("addr1", addr1);
+			tmMap.put("addr2", addr2);
+			tmMap.put("newFileName", newFileName);
+			
+			
+			int n = service.TeamCreate(tmMap);
+			
+			int m = service.setTeamwonLeader(tmMap);
+			
+			if(n > 0 && m > 0){
+				String msg = "팀 생성이 완료되었습니다.";
+				String loc = "tmForm.mr";
+				
+				req.setAttribute("msg", msg);
+				req.setAttribute("loc", loc);
+				
+				return "ksh/msg.not";
+			} else {
+				String msg = "팀 생성에 실패하였습니다.";
+				String loc = "tmForm.mr";
+				
+				req.setAttribute("msg", msg);
+				req.setAttribute("loc", loc);
+				
+				return "ksh/msg.not";
+			}
 		}
-		
-		HashMap<String, String> tmMap = new HashMap<String, String>();
-		tmMap.put("fk_member_idx", fk_member_idx);
-		tmMap.put("name", name);
-		tmMap.put("hp1", hp1);
-		tmMap.put("hp2", hp2);
-		tmMap.put("hp3", hp3);
-		tmMap.put("post1", post1);
-		tmMap.put("post2", post2);
-		tmMap.put("addr1", addr1);
-		tmMap.put("addr2", addr2);
-		tmMap.put("newFileName", newFileName);
-		
-		
-		int n = service.TeamCreate(tmMap);
-		
-		if(n > 0){
-			String msg = "팀 생성이 완료되었습니다.";
-			String loc = "tmForm.mr";
-			
-			req.setAttribute("msg", msg);
-			req.setAttribute("loc", loc);
-			
-			return "ksh/msg.not";
-		} else {
-			String msg = "팀 생성에 실패하였습니다..";
-			String loc = "tmForm.mr";
-			
-			req.setAttribute("msg", msg);
-			req.setAttribute("loc", loc);
-			
-			return "ksh/msg.not";
-		}
-		
-		
+
 	}
 	
 	@RequestMapping(value="/tmSession.mr", method={RequestMethod.GET})
@@ -992,6 +1039,38 @@ public class TMController {
 		req.setAttribute("loc", loc);
 		
 		return "ksh/msg.not";
+	}
+	
+	//탈퇴요청을 취소해보자
+	@RequestMapping(value="/tmWithdrawCancel.mr", method={RequestMethod.POST})
+	public String WithdrawCancle(HttpServletRequest req, HttpSession session){
+		
+		String idx = req.getParameter("idx");
+		String gobackURL = req.getParameter("gobackURL");
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("idx", idx);
+		
+		int n = service.tmWithDrawCancel(map);
+		
+		if(n>0){
+			String msg = "탈퇴요청 취소 처리가 완료되었습니다.";
+			String loc = gobackURL;
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		} else {
+			String msg = "탈퇴요청 취소 처리에 실패하였습니다.";
+			String loc = gobackURL;
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		}
+		
 	}
 	
 	/*
