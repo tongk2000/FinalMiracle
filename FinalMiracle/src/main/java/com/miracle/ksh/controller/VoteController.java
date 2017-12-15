@@ -19,8 +19,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.miracle.ksh.model.VoteCommVO;
 import com.miracle.ksh.model.VoteItemVO;
 import com.miracle.ksh.model.VoteVO;
 import com.miracle.ksh.service.InterVoteService;
@@ -374,15 +376,17 @@ public class VoteController {
 	//투표 작성 페이지에서 다 작성하면 실행해보자
 	@Transactional(propagation=Propagation.REQUIRED, isolation= Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
 	@RequestMapping(value="/voteAddEnd.mr", method={RequestMethod.POST})
-	public String voteAddEnd(HttpServletRequest req){
+	public String voteAddEnd(HttpServletRequest req, HttpSession session){
 		
-		HttpSession session = req.getSession();
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo = (HashMap<String, String>)session.getAttribute("teamInfo");
 		
 		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser"); //로그인된 정보를 불러오자
 		
 		//System.out.println(loginUser.getIdx());
 		
 		String idx = String.valueOf(loginUser.getIdx());
+		String fk_teamwon_idx = teamInfo.get("teamwon_idx");
 		
 		String subject = req.getParameter("subject"); //제목
 		String content = req.getParameter("content"); //내용
@@ -463,6 +467,7 @@ public class VoteController {
 			mapVote.put("startdate", startdate);
 			mapVote.put("enddate", enddate);
 			mapVote.put("idx", idx);
+			mapVote.put("fk_teamwon_idx", fk_teamwon_idx);
 			
 			//System.out.println(subject + "/" + content + "/" + enddate);
 			
@@ -997,7 +1002,6 @@ public class VoteController {
 		}
 		
 		return "ksh/msg.not";
-	}
-	
+	}	
 	
 }

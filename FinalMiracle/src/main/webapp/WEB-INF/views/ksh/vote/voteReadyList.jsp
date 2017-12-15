@@ -92,6 +92,35 @@
 		frm.submit();
 	}
 	
+	function showUserInfo(userid) {
+		var form_data = { "userInfo" : userid };
+		$.ajax({
+			url: "freeUserInfo.mr",
+			type: "GET",
+			data: form_data,  // url 요청페이지로 보내는 ajax 요청 데이터
+			dataType: "JSON", // ajax 요청에 의해 url 요청페이지로 부터 리턴받는 데이터타입. xml, json, html, text 가 있음.
+			success: function(data) {				
+				var html = "";
+				
+				var imgPath = data.infoImg;
+				html += "<div style='float: right;'><img src='<%= request.getContextPath() %>/resources/images/" + imgPath + "' style='width: 100px; height: 100px;' /></div>" + "<br/>"
+					 +  "<span style='font-weight: bold;'>ID : </span>"+ data.infoUserid + "<br/>"
+					 +  "<span style='font-weight: bold;'>성명 : </span>"+ data.infoName + "<br/>"
+					 +  "<span style='font-weight: bold;'>핸드폰 : </span>" +data.infoHp1 + "-" +data.infoHp2+"-"+data.infoHp3 +"<br/>"
+					 +  "<span style='font-weight: bold;'>생년월일 : </span>" +data.infoBirth1 + " / " + data.infoBirth2 + " / " + data.infoBirth3 + "<br/>"
+					 +  "<span style='font-weight: bold;'>주소 : </span>" + data.infoAddr1 + " " + data.infoAddr2 + "</span><br/>"
+					 +  "<span style='font-weight: bold;'>이메일 : </span>" + data.infoEmail + "<br/><br/>"
+					 +  "<span style='font-weight: bold;'>소개 : </span>" + data.infoProfile ;
+				
+				$("#InfoModalBody").html(html);
+				$("#InfoModal").modal();
+			}, // end of success: function()----------
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		}); // end of $.ajax()------------------------
+	}
+	
 	
 </script>
 
@@ -140,19 +169,23 @@
 					<td>${votevo.FK_TEAM_IDX} / ${votevo.FK_TEAMWON_IDX}</td>
 					<td>
 						<img src="<%= request.getContextPath() %>/resources/files/${votevo.IMG}" width="30px" height="30px">
-						${votevo.NAME}(${votevo.USERID})
+						<a href="javascript:showUserInfo('${votevo.USERID}')">${votevo.NAME}(${votevo.USERID})</a>
 					</td>
 					<td>${votevo.SUBJECT}</td>
 					<td>${votevo.CONTENT}</td>
 					<td>${votevo.STARTDATE}</td>
 					<td>${votevo.ENDDATE}</td>
 					<td>
+						<c:set value="0" var="votesum" />
 						<c:forEach var="voteitemvo" items="${voteItemList}" varStatus="status">
 							<c:set value="${voteitemvo.fk_vote_idx}" var="voteitemidx" />
 							<c:if test="${voteidx eq voteitemidx}">
 								* ${voteitemvo.item} : ${voteitemvo.votenum}표<br/>
+								<c:set var="votesum" value="${votesum + voteitemvo.votenum}" />
 							</c:if>
 						</c:forEach>
+						<br/>
+						참여한 인원 : <c:out value="${votesum}"/>명
 					</td>
 					<td>
 						<%-- <c:if test="${voteidx eq sessionScope.idx}"> --%>
@@ -237,3 +270,25 @@
 	<input type="hidden" id="delidx" name="delidx" />
 	<input type="hidden" name="gobackURL" value="${gobackURL}" />
 </form>
+
+
+<!-- 회원 상세정보 모달 창 -->
+<!-- Modal -->
+<div class="modal fade modal-center" id="InfoModal" role="dialog">
+	<div class="modal-dialog modal-sm modal-center">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">회원 상세 정보</h4>
+			</div>
+			<div class="modal-body" id="InfoModalBody">
+			
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+
+	</div>
+</div>

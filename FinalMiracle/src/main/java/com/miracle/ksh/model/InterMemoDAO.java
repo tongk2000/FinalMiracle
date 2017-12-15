@@ -33,6 +33,8 @@ public interface InterMemoDAO {
 
 	int MemoDel(HashMap<String, String> map); //휴지통에 있는 선택된 메모들을 삭제시켜보자
 
+	int MemoUpdateGroups(HashMap<String, String> map); //선택된 메모들의 분류를 변경시켜보자
+
 	
 
 }

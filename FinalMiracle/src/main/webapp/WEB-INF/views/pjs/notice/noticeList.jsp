@@ -50,15 +50,16 @@ request.setCharacterEncoding("UTF-8");
 </head>
 <body>
 	<c:set var="team" value="${userTeam}"></c:set>
-	<div align="center" style="width:80%; margin:auto; border:4px dotted black;">
+	<div align="center" >
 		<h2>공지사항 게시판</h2>
 			
-			<table style="width:100%;">
+			<table style="width:90%;">
 				<thead>
 					<tr>
 						<th>번호</th>		<!-- 번호 -->
 						<th>아이디</th>	<!-- 아이디 -->
 						<th>제목</th>		<!-- 제목 -->
+						<th>첨부파일</th>
 						<th>글쓴 시간</th>	<!-- 글쓴 시간 -->
 						<th>조회수</th>	<!-- 조회수-->
 					</tr>
@@ -80,14 +81,21 @@ request.setCharacterEncoding("UTF-8");
 									</a>
 								</td>	
 							<c:if test="${nt.depth == 0}">
-									<td width="45%" onClick="goView('${nt.n_idx}','${nt.fk_userid}', '${nt.t_idx}')"><span style="color:red; margin-left:10px;">${nt.subject} <span style="color:blue">&nbsp;&nbsp;&nbsp;[댓글 수 : ${nt.count}]</span></span></td><!-- 제목 -->
+									<td width="35%" onClick="goView('${nt.n_idx}','${nt.fk_userid}', '${nt.t_idx}')"><span style="color:red; margin-left:10px;">${nt.subject} <span style="color:blue">&nbsp;&nbsp;&nbsp;[댓글 수 : ${nt.count}]</span></span></td><!-- 제목 -->
 							</c:if>
 							<c:if test="${nt.depth > 0}">
-									<td width="45%" onClick="goView('${nt.n_idx}','${nt.fk_userid}','${nt.t_idx}')" style="margin-left:10px; padding-left:${nt.depth*10}px; color:black; font-weight:bold; ">└ [답글] ${nt.subject} <span style="color:blue">&nbsp;&nbsp;&nbsp;[댓글 수 : ${nt.count}]</span></td><!-- 제목 -->
+									<td width="35%" onClick="goView('${nt.n_idx}','${nt.fk_userid}','${nt.t_idx}')" style="margin-left:10px; padding-left:${nt.depth*10}px; color:black; font-weight:bold; ">└ [답글] ${nt.subject} <span style="color:blue">&nbsp;&nbsp;&nbsp;[댓글 수 : ${nt.count}]</span></td><!-- 제목 -->
 							</c:if>
+							<c:if test="${nt.file > 0}">
+								    <td width="10%" style="text-align:center;"><img src="<%=request.getContextPath() %>/resources/images/disk.gif" ></td>
+							</c:if>	
+							<c:if test="${nt.file == 0}">
+								    <td width="10%" style="text-align:center;">X</td>
+							</c:if>	
 								<td width="25%" style="text-align:center;">${nt.regday}</td><!-- 날짜 -->
 								<td width="10%" style="text-align:center;">${nt.readcount}</td><!-- 조회수 -->
-							</tr>		
+							</tr>
+							<input type="hidden" id="nidx"name="aidx" value="${nt.n_idx}"/>		
 						</c:forEach>
 					</c:if>
 				</tbody>
@@ -129,6 +137,7 @@ request.setCharacterEncoding("UTF-8");
 		<input type="hidden" name="teamidx" />
 	</form>
 	<form name="write">
+		<input type="hidden" name="idx" />
 		<input type="hidden" name="userid" />
 		<input type="hidden" name="teamNum" />
 	</form>
@@ -216,7 +225,7 @@ request.setCharacterEncoding("UTF-8");
 				else if($target.is(".third")) {
 					word = $target.prev().prev().text() + $target.prev().text() + $target.text();
 				}
-				$("#search").val(word); // 텍스트박스에 검색된 결과의 문자열을 입력해준다.
+				$("#searchString").val(word); // 텍스트박스에 검색된 결과의 문자열을 입력해준다.
 				$("#displayList").hide();
 			});
 			
@@ -274,6 +283,7 @@ request.setCharacterEncoding("UTF-8");
 			</c:if>
 			var frm = document.write;
 			frm.teamNum.value= t_teamNum;
+			frm.idx.value = $("#nidx").val();
 			frm.userid.value=m_userid;
 			frm.action="<%=request.getContextPath()%>/noticeWrite.mr";
 			frm.method="post";

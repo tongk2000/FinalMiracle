@@ -37,6 +37,42 @@ public class ChattingDAO implements InterChattingDAO {
 		
 	}
 
+	@Override
+	public void read(HashMap<String, Object> map) {
+		sqlsession.update("chatting.read", map);
+		
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getChattingMember(String cridx) {
+		List<HashMap<String, Object>> list = sqlsession.selectList("chatting.getChattingMember",cridx);
+		return list;
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getAllTeam() {
+		List<HashMap<String, Object>> list = sqlsession.selectList("chatting.getAllTeam");
+		return list;
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getTeamwonNotMe(HashMap<String, Object> map) {
+		List<HashMap<String, Object>> list = sqlsession.selectList("chatting.getTeamwonNotMe", map);
+		return list;
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getAllNotMe(int idx) {
+		List<HashMap<String, Object>> list = sqlsession.selectList("chatting.getAllNotMe", idx);
+		return list;
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getFindNotMe(HashMap<String, Object> map) {
+		List<HashMap<String, Object>> list = sqlsession.selectList("chatting.getFindNotMe", map);
+		return list;
+	}
+
 
 	
 

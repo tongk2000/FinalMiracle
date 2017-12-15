@@ -105,9 +105,10 @@
  <!-- ============================================================================================================================================================= -->	
  	<!-- === *** 게시판의 idx로 해당 글의 정보를 보여주는 뷰단으로 정보전달하기 *** === -->
 	<select id="getIdxTeam" parameterType="HashMap" resultMap="idxTeam">
-		select W.Fk_Team_Idx as team_idx, m.userid as userid, m.img, n.subject, n.content ,w.status
+		select W.Fk_Team_Idx as team_idx, m.userid as userid, m.img, n.subject, n.content ,w.status, f.*, n.idx as n_idx
 		from tbl_notice n join tbl_member m on n.fk_userid = M.Userid 
-						left join tbl_teamwon w on w.fk_member_idx = M.Idx
+                              left join tbl_teamwon w on w.fk_member_idx = M.Idx
+                              join tbl_noticefile f on f.fk_idx = n.idx
 		where n.idx = #{nidx} and w.fk_team_idx = #{teamidx}
 	</select>
 	<resultMap id="idxTeam" type="HashMap">
@@ -117,6 +118,12 @@
  		<result property="subject" 				column="subject" 		javaType="String"></result>
  		<result property="content" 				column="content" 		javaType="String"></result>
  		<result property="status" 				column="status" 		javaType="String"></result>
+ 		<result property="idx" 					column="idx"	 		javaType="String"></result>
+ 		<result property="filename" 			column="filename" 		javaType="String"></result>
+ 		<result property="orgfilename" 			column="orgfilename" 	javaType="String"></result>
+ 		<result property="filesize" 			column="filesize" 		javaType="String"></result>
+ 		<result property="fk_idx" 				column="fk_idx"			javaType="String"></result>
+ 		<result property="n_idx" 				column="n_idx"			javaType="String"></result>
  	</resultMap>
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 팀장이 게시물 삭제할 경우 *** === -->
@@ -150,15 +157,16 @@
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 리플 글 가져오기 *** === -->
 	<select id="getComment" parameterType="String" resultType="com.miracle.pjs.model.ReplyVO">
-		select * from tbl_noticereply
-		where fk_idx = #{idx}
-		order by regday DESC
+    	  select  reply_content, regday, sesid, m.img
+		  from tbl_noticereply r join tbl_member m on m.userid = r.sesid
+		  where fk_idx = #{idx}
+		  order by regday DESC
 	</select>
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 리플글 입력하기 *** === -->
 	<insert id="setComment" parameterType="HashMap">
 		insert into tbl_noticereply
-		values(seq_noticereply.nextval,#{idx}, #{comment}, default, default, seq_noticereply.nextval, default)
+		values(seq_noticereply.nextval,#{idx}, #{comment}, default, default, seq_noticereply.nextval, default, #{userid})
 	</insert>
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 조회수 늘리기 *** === -->
@@ -667,7 +675,33 @@
  		<result property="img" 				column="img" 			javaType="String"></result>
  		<result property="name" 			column="name" 			javaType="String"></result>
  	</resultMap>
-
-
-
+<!-- ============================================================================================================================================================= -->	
+	<!-- === *** 쪽지를 받은 사람이 읽었는지 않 읽었는지 update *** === -->
+	<insert id="setNoticeWriteWithFile" parameterType="HashMap" >
+		insert into tbl_noticefile
+		values(seq_noticefile.nextval, #{newfilename}, #{originalfilename}, #{filesize}, #{idx})
+	</insert>
+<!-- ============================================================================================================================================================= -->	
+<!-- === *** 쪽지를 받은 사람이 읽었는지 않 읽었는지 update *** === -->
+	<select id="getfilename" parameterType="HashMap" resultType="String">
+		  select count(*)
+          from tbl_notice n join tbl_noticefile f on n.idx = f.idx
+          where f.fk_idx= #{idx}
+	</select>
+<!-- ============================================================================================================================================================= -->	
+	<select id="getViewWithNoAddCount" parameterType="HashMap" resultType="com.miracle.pjs.model.FileVO">
+		select *
+		from tbl_noticefile
+		where idx = #{fidx}
+	</select>
+<!-- ============================================================================================================================================================= -->	
+	 <select id="getmemoReadCount" parameterType="String" resultType="String">
+		 select count(*)
+         from tbl_memomemory m join tbl_memoreceiver r on m.idx = r.fk_idx
+         where r.fk_idx = #{string} and r.rreadcount = 0
+	</select>
+		
+<!-- ============================================================================================================================================================= -->	
+          
+          
 </mapper>

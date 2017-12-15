@@ -22,6 +22,7 @@
 <script type="text/javascript">
 
 	$(document).ready(function(){
+		
 		searchKeep();
 		
 		$("#sizePerPage").change(function(){
@@ -106,7 +107,64 @@
 
 		frm.submit();
 	}
-	
+<%-- 	
+	function goCommMore(idx){
+		var data_form = {"idx":idx}
+		
+		$.ajax({
+			url:"voteCommListMore.mr",
+			type:"get",
+			data:data_form,
+			dataType:"html",
+			success:function(data) {
+				var content = "";
+				for(var i=0; i<data.CommMapList.length; i++){
+					
+					content += '<img src="<%= request.getContextPath() %>/resources/files/'+data.CommMapList[i].img+'" width="30px" height="30px">';
+					content += data.CommMapList[i].name+'('+data.CommMapList[i].commdate+')<br/>'+data.CommMapList[i].content;
+					if(data.CommMapList[i].idx == data.CommMapList[i].memidx){
+						content += '<button type="button" onClick="goCommDel('data.CommMapList[i].idx');">삭제</button>';
+					}
+					content += '<br/>'
+				}
+				$(content).appendTo("#moreComm");
+			},
+			error:function() {
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		});
+	}
+	 --%>
+	 
+	function showUserInfo(userid) {
+		var form_data = { "userInfo" : userid };
+		$.ajax({
+			url: "freeUserInfo.mr",
+			type: "GET",
+			data: form_data,  // url 요청페이지로 보내는 ajax 요청 데이터
+			dataType: "JSON", // ajax 요청에 의해 url 요청페이지로 부터 리턴받는 데이터타입. xml, json, html, text 가 있음.
+			success: function(data) {				
+				var html = "";
+				
+				var imgPath = data.infoImg;
+				html += "<div style='float: right;'><img src='<%= request.getContextPath() %>/resources/images/" + imgPath + "' style='width: 100px; height: 100px;' /></div>" + "<br/>"
+					 +  "<span style='font-weight: bold;'>ID : </span>"+ data.infoUserid + "<br/>"
+					 +  "<span style='font-weight: bold;'>성명 : </span>"+ data.infoName + "<br/>"
+					 +  "<span style='font-weight: bold;'>핸드폰 : </span>" +data.infoHp1 + "-" +data.infoHp2+"-"+data.infoHp3 +"<br/>"
+					 +  "<span style='font-weight: bold;'>생년월일 : </span>" +data.infoBirth1 + " / " + data.infoBirth2 + " / " + data.infoBirth3 + "<br/>"
+					 +  "<span style='font-weight: bold;'>주소 : </span>" + data.infoAddr1 + " " + data.infoAddr2 + "</span><br/>"
+					 +  "<span style='font-weight: bold;'>이메일 : </span>" + data.infoEmail + "<br/><br/>"
+					 +  "<span style='font-weight: bold;'>소개 : </span>" + data.infoProfile ;
+				
+				$("#InfoModalBody").html(html);
+				$("#InfoModal").modal();
+			}, // end of success: function()----------
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		}); // end of $.ajax()------------------------
+	}
+	 
 </script>
 
 <form id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/voteList.mr" method="get" enctype="multipart/form-data">
@@ -154,21 +212,25 @@
 					<td>${votevo.FK_TEAM_IDX} / ${votevo.FK_TEAMWON_IDX}</td>
 					<td>
 						<img src="<%= request.getContextPath() %>/resources/files/${votevo.IMG}" width="30px" height="30px">
-						${votevo.NAME}(${votevo.USERID})
+						<a href="javascript:showUserInfo('${votevo.USERID}')">${votevo.NAME}(${votevo.USERID})</a>
 					</td>
 					<td>${votevo.SUBJECT}</td>
 					<td>${votevo.CONTENT}</td>
 					<td>${votevo.STARTDATE}</td>
 					<td>${votevo.ENDDATE}</td>
 					<td>
+						<c:set value="0" var="votesum" />
 						<c:forEach var="voteitemvo" items="${voteItemList}" varStatus="status">
 							<c:set value="${voteitemvo.fk_vote_idx}" var="voteitemidx" />
 							<c:if test="${voteidx eq voteitemidx}">
 								<input type="radio" name="voteitem_info" value="${voteitemvo.item}">${voteitemvo.item}&nbsp;${voteitemvo.votenum}표
 								<button type="button" onClick="goVote('${votevo.IDX}', '${votevo.FK_TEAMWON_IDX}', '${voteitemvo.idx}', '${gobackURL}');">선택</button>
-								<br>
+								<br/>
+								<c:set var="votesum" value="${votesum + voteitemvo.votenum}" />
 							</c:if>
-						</c:forEach>	
+						</c:forEach>
+						<br/>
+						참여한 인원 : <c:out value="${votesum}"/>명
 					</td>
 					<td>
 						<%-- <c:if test="${votevo.FK_TEAMWON_IDX eq sessionScope.idx}"> --%>
@@ -179,20 +241,22 @@
 						<input type="text" id="commcontent${votevo.IDX}" name="commcontent${votevo.IDX}" size="35px;" />
 						<button type="button" onClick="goCommAdd('${votevo.IDX}');">등록</button>&nbsp;
 						<br/>
-						
-						<c:forEach var="votecommvo" items="${voteCommList}" varStatus="status">
-							<c:set value="${votecommvo.FK_VOTE_IDX}" var="votecommidx" />
-							
-							<c:if test="${voteidx eq votecommidx}">
-								<img src="<%= request.getContextPath() %>/resources/files/${votecommvo.IMG}" width="30px" height="30px">
-								${votecommvo.NAME}(${votecommvo.COMMDATE})<br/>${votecommvo.CONTENT}
-								<c:if test="${votecommvo.MEMIDX eq sessionScope.loginUser.idx}">
-									<%-- <button type="button" onClick="goCommAdd('${votevo.IDX}', '${votecommvo.IDX}');">수정</button>&nbsp; --%>
-									<button type="button" onClick="goCommDel('${votecommvo.COMMIDX}');">삭제</button>
+						<div id="moreComm">
+							<c:forEach var="votecommvo" items="${voteCommList}" varStatus="status" begin="0" end="20">
+								<c:set value="${votecommvo.FK_VOTE_IDX}" var="votecommidx" />
+								
+								<c:if test="${voteidx eq votecommidx}">
+									<img src="<%= request.getContextPath() %>/resources/files/${votecommvo.IMG}" width="30px" height="30px">
+									${votecommvo.NAME}(${votecommvo.COMMDATE})<br/>${votecommvo.CONTENT}
+									<c:if test="${votecommvo.MEMIDX eq sessionScope.loginUser.idx}">
+										<%-- <button type="button" onClick="goCommAdd('${votevo.IDX}', '${votecommvo.IDX}');">수정</button>&nbsp; --%>
+										<button type="button" onClick="goCommDel('${votecommvo.COMMIDX}');">삭제</button>
+									</c:if>
+									<br/>
 								</c:if>
-								<br/>
-							</c:if>
-						</c:forEach>	
+							</c:forEach>
+						</div>
+						<%-- <button type="button" onClick="goCommMore('${votevo.IDX}');">더보기</button> --%>
 					</td>
 				</tr>
 			</c:forEach>
@@ -227,11 +291,6 @@
 	<div style="margin-top: 20px;">
 		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteAdd.mr'">투표작성</button>&nbsp;
 	</div>
-	
-	
-	
-	
-
 </div>
 </form>
 
@@ -257,3 +316,25 @@
 	<input type="hidden" name="idx" />
 	<input type="hidden" name="gobackURL" value="${gobackURL}">
 </form>
+
+
+<!-- 회원 상세정보 모달 창 -->
+<!-- Modal -->
+<div class="modal fade modal-center" id="InfoModal" role="dialog">
+	<div class="modal-dialog modal-sm modal-center">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">회원 상세 정보</h4>
+			</div>
+			<div class="modal-body" id="InfoModalBody">
+			
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+
+	</div>
+</div>

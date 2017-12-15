@@ -3,23 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
    
 <style type="text/css">
-	.modal.modal-center {
-	  text-align: center;
-	}
-	@media screen and (min-width: 400px) { 
-	  .modal.modal-center:before {
-	    display: inline-block;
-	    vertical-align: middle;
-	    content: " ";
-	    height: 100%;
-	  }
-	}
-	.modal-dialog.modal-center {
-	  display: inline-block;
-	  text-align: left;
-	  vertical-align: middle; 
-	}
-	
+
 	.title {
 		border: 1px solid lightgray;
 		border-left: none;
@@ -43,12 +27,16 @@
 		font-size: 11pt;
 		cursor: pointer;
 	}
+	
+	.freeListRowCssStyle {
+		background-color: lightgray;
+	}
 
 </style>
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		// ==================================================== *** 회원 아이디나 성명 클릭시 상세정보 모달창으로 띄우기 *** ===============
+		// ==================================================== *** 회원 아이디나 성명에 mouseover out 효과주기 *** ===============
 		$(".repleInfo").bind("mouseover", function(event){
 			var $target = $(event.target);
 			$target.addClass("infoStyle");
@@ -65,6 +53,18 @@
 			var $target = $(event.target);
 			$target.removeClass("subjectInfoStyle");
 		});
+	
+		$(".freeListCss").bind("mouseover", function(event){
+			var $target = $(event.target);
+			$target.addClass(".freeListCssStyle");
+		});
+		// ================================== *** 행 전체에 hover 효과 주기 *** ============================
+		$(".freeListRow").hover(function(){ 
+			$(this).addClass("freeListRowCssStyle");
+		},function(){
+			$(this).removeClass("freeListRowCssStyle");
+		});
+
 		// ============================================== *** 페이지 전체에서 esc 키를 누르면 모달창을 닫기 *** =======
 		$(document).on("keydown", function(){
 			var modalFlag = $('.modal').is(':visible');
@@ -112,7 +112,7 @@
 					 +  "<span style='font-weight: bold;'>소개 : </span>" + data.infoProfile ;
 				
 				$(".modal-body").html(html);
-				$("#myModal").modal();
+				$("#freeViewModal").modal();
 			}, // end of success: function()----------
 			error: function(request, status, error){
 				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -133,77 +133,83 @@
 </script>
 
 
-<div style="margin-left: 5%;">
-	<div style="margin-left: 15%; padding: 10px; border: solid 0px red; width: 100%;">
-		
-		<table id="table" style="width: 600px; border: 1px solid dimgray; border-left: none; border-right: none;">
-			<!-- ============================= *** 자유게시판 소개 *** =================================== -->
-			<tr class="title above">
-				<td colspan="2" style="padding-left: 20px; font-weight: bold;">자유게시판입니다.</td>
-			</tr>
-			<tr class="title">
-			<td colspan="2" style="padding-left: 10px;">
-				미풍양속을 해치지 않는 범위 내에서 자유롭게 작성해주세요.<br/>
-				단, 팀원간 마찰은 <a href="<%= request.getContextPath() %>/mindList.mr">마음의 소리 게시판</a>을,
-				        팀내 공지사항은 <a href="<%= request.getContextPath() %>/noticeList.mr">공지사항</a> 게시판을,
-				<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:1 대화를 원하시는 회원님은 <a href="<%= request.getContextPath() %>/mindList.mr">쪽지</a> 또는 
-				<a href="<%= request.getContextPath() %>/chatting.mr">채팅</a> 기능을 이용해주시기 바랍니다.
-			</td>
-			</tr>
-			<!-- ============================= *** 공 백 *** ================================ -->
-			<tr style="border: 1px solid lightgray; border-top: none; border-left: none; border-right: none;">
-				<td colspan="2" style="padding-left: 10px;"> 
+<div style="height: auto; border: 3px dotted pink;" align="center">
+	<div style="border: solid 1px red; width: 650px;" >
+		<div style="float: left;">
+			<table id="table" style="width: 500px; border: 1px solid dimgray; border-left: none; border-right: none;">
+				<!-- ============================= *** 자유게시판 소개 *** =================================== -->
+				<tr class="title above">
+					<td colspan="2" style="padding-left: 20px; font-weight: bold; font-size: 10pt;">자유게시판입니다.</td>
+				</tr>
+				<tr class="title">
+				<td colspan="2" style="padding-left: 10px; font-size: 10pt;">
+					미풍양속을 해치지 않는 범위 내에서 자유롭게 작성해주세요.<br/>
+					단, 팀원간 마찰은 <a href="<%= request.getContextPath() %>/mindList.mr">마음의 소리 게시판</a>을,
+					        팀내 공지사항은 <a href="<%= request.getContextPath() %>/noticeList.mr">공지사항</a> 게시판을,
 					<br/>
-					<span style="color: #578CA9;" onClick="">≪ 이전글 </span> &nbsp;&nbsp;&nbsp;
-					<span style="font-weight: bold;">현재 글번호 : </span>${freevo.idx} &nbsp;&nbsp;&nbsp;
-					<span style="color: #578CA9;">다음글 ≫</span>
-					<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:1 대화를 원하시는 회원님은 <a href="<%= request.getContextPath() %>/mindList.mr">쪽지</a> 또는 
+					<a href="<%= request.getContextPath() %>/chatting.mr">채팅</a> 기능을 이용해주시기 바랍니다.
 				</td>
-			</tr>
-		</table >
+				</tr>
+				<!-- ============================= *** 공 백 *** ================================ -->
+				<tr style="border: 1px solid lightgray; border-top: none; border-left: none; border-right: none;">
+					<td colspan="2" style="padding-left: 10px;"> 
+						<br/>
+						<span style="font-size: 9pt; color: #578CA9;" onClick="">≪ 이전글 </span> &nbsp;&nbsp;&nbsp;
+						<span style="font-size: 10pt; font-weight: bold;">현재 글번호 : </span>${freevo.idx} &nbsp;&nbsp;&nbsp;
+						<span style="font-size: 9pt; color: #578CA9;">다음글 ≫</span>
+						<br/>
+					</td>
+				</tr>
+			</table >
+		</div>
 		<!-- ============================= *** 제목, 게시글 작성자 및 상세정보 *** ========================= -->
-		<table style="width: 600px; border: 1px solid dimgray; border-left: none; border-right: none;">
-			<tr>
-	           	<th style="width: 8%; padding-top: 10px;">
-					<img src="<%= request.getContextPath() %>/resources/images/${freevo.img}" style="width: 90px; height: 90px;" align="middle">
-	           	</th>
-	           	<td style="border: 1px solid lightgray; border-top: none; border-left: none; border-right: none; padding-left: 20px; padding-top: 10px; padding-bottom: 10px; width: 60%;">
-		           	<input type="hidden" name="idx" value="${freevo.idx}" />
-		           	<span style="font-weight: bold; font-size: 11pt;">
-		           		제목 : ${freevo.subject}
-		           	</span>
-		           	<br/><br/>
-			           	아이디 : <span class="subjectInfo" onClick="showUserInfo('${freevo.userid}')">${freevo.userid}</span> / 
-			           	성명 : <span class="subjectInfo" onClick="showUserInfo('${freevo.userid}')">${freevo.name}</span><br/>
-			           	조회수 : ${freevo.readCnt}<br/>
-			           	등록일자 : ${freevo.regDate}<br/>
-	           	</td>
-	       	</tr>
-	       	<!-- ============================= *** 내용물 *** ================================ -->
-			<tr>
-				<td colspan="2" style="padding-left: 20px;">
-					<br/><br/>
-					<span style="font-size: 11pt; font-family: 옛한글;">${freevo.content}</span>
-					<br/><br/>
-				</td>
-			</tr>
-		
-		</table>
-		
-		<br/>
-		<!-- ============================================================ *** 목록 , 게시글 수정 / 삭제 버튼 *** =================================== -->
 		<div>
-			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/freeList.mr?currentShowPageNo=${currentShowPageNo}&sizePerPage=${sizePerPage}&colname=${colname}&search=${search}'">목록보기</button>
-			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/freeEdit.mr?idx=${freevo.idx}'">수정</button>
-			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/freeDel.mr?idx=${freevo.idx}&userid=${freevo.userid}'">삭제</button>
-		</div>	
-		<br/>
+			<table style="width: 650px; border: 1px solid darkgray; border-left: none; border-right: none;">
+				<tr>
+		           	<th style="width: 8%; padding-top: 5px;">
+						<img src="<%= request.getContextPath() %>/resources/images/${freevo.img}" style="width: 90px; height: 90px;" align="middle">
+		           	</th>
+		           	<td style="border: 1px solid lightgray; border-top: none; border-left: none; border-right: none; padding-left: 20px; padding-top: 10px; padding-bottom: 10px; width: 60%;">
+			           	<input type="hidden" name="idx" value="${freevo.idx}" />
+			           	<span style="font-weight: bold; font-size: 11pt;">
+			           		제목 : ${freevo.subject}
+			           	</span>
+			           	<br/><br/>
+			           	<span style="font-size: 10pt;">
+				           	아이디 : <span class="subjectInfo" onClick="showUserInfo('${freevo.userid}')">${freevo.userid}</span> / 
+				           	성명 : <span class="subjectInfo" onClick="showUserInfo('${freevo.userid}')">${freevo.name}</span><br/>
+				           	조회수 : ${freevo.readCnt}<br/>
+				           	등록일자 : ${freevo.regDate}<br/>
+				        </span>
+		           	</td>
+		       	</tr>
+		       	<!-- ============================= *** 내용물 *** ================================ -->
+				<tr style="min-height: 300px;">
+					<td colspan="2" style="padding-left: 20px; padding-bottom: 15px;">
+						<br/>
+						<span style="font-size: 10pt; font-family: 옛한글;">${freevo.content}</span>
+						<br/>
+					</td>
+				</tr>
+			
+			</table>
+		</div>
+		
+		<!-- ============================================================ *** 목록 , 게시글 수정 / 삭제 버튼 *** =================================== -->
+		<div style="float: left; margin-left: 10px;">
+			<a style="font-size: 9pt; text-decoration: none; color: black; cursor: pointer;" href="javascript:location.href='<%= request.getContextPath() %>/freeList.mr?currentShowPageNo=${currentShowPageNo}&sizePerPage=${sizePerPage}&colname=${colname}&search=${search}'">목록보기</a>
+		</div>
+		<div style="float: right; margin-right: 20px;">
+			<a style="font-size: 9pt; text-decoration: none; color: black; cursor: pointer;" href="javascript:location.href='<%= request.getContextPath() %>/freeEdit.mr?idx=${freevo.idx}'">글수정</a> &nbsp;&nbsp;&nbsp;
+			<a style="font-size: 9pt; text-decoration: none; color: black; cursor: pointer;" href="javascript:location.href='<%= request.getContextPath() %>/freeDel.mr?idx=${freevo.idx}&userid=${freevo.userid}'">글삭제</a>
+		</div><br/><br/>
+		
 		
 		<!-- ======================= *** 댓글쓰기 폼 추가 *** ================================== -->
-		<div style="border: 1px solid #006E51; border-left: none; border-right: none; width: 600px; padding: 5px; background-color: #98DDDE">
+		<div style="border: 1px solid lightgray; border-left: none; border-right: none; width: 600px; padding: 2px; background-color: lightblue;" align="center">
 			<form name="addWriteFrm" action="<%= request.getContextPath() %>/freeComment.mr" method="get">
-				<span style="font-family: verdana; padding-left: 10px;">
+				<span style="font-family: verdana; ">
 					<span style="font-weight: bold; font-size: 9pt;">작성자 : </span>${sessionScope.loginUser.userid} [${sessionScope.loginUser.name}]
 				</span>&nbsp;
 				<input type="hidden" name="userid" value="${sessionScope.loginUser.userid}" size="3" readonly />
@@ -215,19 +221,14 @@
 				<!-- ==================== *** 댓글에 달리는 원게시물 글번호(tblBoard idx) *** =========================== -->
 				<input type="hidden" name="parentIdx" value="${freevo.idx}" />
 				
-				<!-- ==================== *** 돌아갈 글목록 페이지 *** ================================================ -->
-				<input type="hidden" name="" value="">
-				&nbsp;
 				<a class="replyWriteButtonATag" onClick="goWrite();" style="font-size: 9pt; text-decoration: none; color: black; cursor: pointer;">댓글</a>
 			</form>
 		</div>
 		
-		<br/>
-		
-		<div style = "border: 0px solid pink;">
+		<div style = "border: 0px solid pink; margin-top: 3px;">
 			<!-- ======================================== *** 댓글 내용 보여주기 *** =================================================== -->
 			<c:if test="${not empty freeCommentList}">
-				<table id="comment" style="width: 550px; padding: 5px;">
+				<table id="comment" style="width: 600px; padding: 2px; margin-bottom: 5px;">
 					<c:forEach var="commentvo" items="${freeCommentList}" >
 						<tr id="comment${commentvo.idx}">
 							<td style="border: 0px solid lightgray; border-left: none; border-right: none; width: 3%;">
@@ -251,7 +252,90 @@
 		</div>
 		
 	</div>
-</div>
+
+
+	<!-- ==================================== *** 자유게시판 목록 *** ============================================ -->
+	<div style="border: 1px solid blue; width: 650px; padding-top: 10px;">
+		<table style="width: 650px; border: 1px solid dimgray; border-left: none; border-right: none;">
+			<thead>
+				<tr>
+					<th style="text-align: center;">글번호</th>
+					<th style="text-align: center;">작성자</th>
+					<th style="text-align: center;">글제목</th>
+					<th style="text-align: center;">조회수</th>
+					<th style="text-align: center;">등록일자</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="freevo" items="${freeList}" varStatus="status">
+					<tr class="freeListRow">
+						<td style="border: 1px solid lightgray; border-left: none; border-right: none; text-align: center;">
+							${freevo.idx}
+						</td>
+						<td  style="border: 1px solid lightgray; border-left: none; border-right: none; text-align: center;">
+							<span class="infoDetail" onClick="showUserInfo('${freevo.userid}')">
+								<span style="font-size: 11pt; font-family: verdana; cursor: pointer; ">${freevo.userid} [${freevo.name}]</span>
+							</span>
+						</td>
+						
+						<!-- ======================= *** 자유게시판 목록에서 제목 클릭시 해당 게시글 상세 내용 보여주기 *** ============================ -->
+						<td style="border: 1px solid lightgray; border-left: none; border-right: none; padding-left: 10px;">
+							<c:if test="${freevo.commentCnt > 0}">
+								<span class="subject" onClick="goView(${freevo.idx})">
+									<span style="font-family: Georgia; cursor: pointer;">${freevo.subject}</span>
+								</span>
+								<span style="color: red; font-weight: bold; font-style: italic; font-size: smaller; vertical-align: super;">
+									[${freevo.commentCnt}]
+								</span>
+							</c:if>
+							<c:if test="${freevo.commentCnt == 0}">
+								<span class="subject" onClick="goView(${freevo.idx})">
+									<span style="font-family: Georgia; cursor: pointer;">${freevo.subject}</span>
+								</span>
+							</c:if>
+						</td>
+						
+						<td style="border: 1px solid lightgray; border-left: none; border-right: none; text-align: center;">
+							${freevo.readCnt}
+						</td>
+						<td style="border: 1px solid lightgray; border-left: none; border-right: none; text-align: center;">
+							${freevo.regDate}
+						</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+		
+		<div style="width: 150px; float: left; margin-left: 10px;" align="left">
+			<span class="showFreeList" onClick="javascript:location.href='<%= request.getContextPath() %>/freeList.mr'" style="font-size: 10pt; font-family: arial black; color: black; cursor: pointer;">첫목록보기</span>&nbsp;
+			<span class="addFree" onClick="javascript:location.href='<%= request.getContextPath() %>/freeAdd.mr'" style="font-size: 10pt; font-family: arial black; text-decoration: none; color: black; cursor: pointer;">글쓰기</span>
+		</div>
+		<!-- ===================================== *** 글 검색용 폼 생성 *** ================================================== -->
+		<div style="width: 300px; float: right;">
+			<form name="searchFrm" action="<%= request.getContextPath() %>/freeList.mr" method="get">
+				<select name="colname" id="colname" style="height: 20px; vertical-align: middle; size:3;">
+					<option value="subject">제목</option>
+					<option value="content">내용</option>
+					<option value="userid">아이디</option>
+					<option value="name">성명</option>
+				</select>
+				
+				<input type="text" name="search" id="search" size="20" style="height: 20px; vertical-align: middle;" />
+				<a class="searchFreeList" onClick="goSearch();" style="font-size: 10pt; font-family: arial black; text-decoration: none; color: black; cursor: pointer;">검색</a>
+			</form>
+		</div>	<br/>			
+		
+		
+		<!-- 페이지 바 만들기 -->
+		<div style="width: 600px; clear: both; border: 0px solid green;">
+			<div align="left">${pagebar}</div>
+		</div>
+		
+	</div>
+	
+</div>	
+	
+	
 
 	
 	
@@ -260,18 +344,18 @@
 
 <!-- 해당 글 조회용 폼 생성 -->
 <form name="idxFrm">
-	<input type="text" name="idx"/>
-	<input type="text" name="currentShowPageNo" value="${currentShowPageNo}"/>
-	<input type="text" name="sizePerPage" value="${sizePerPage}"/>
-	<input type="text" name="colname" value="${colname}"/>
-	<input type="text" name="search" value="${search}"/>
+	<input type="hidden" name="idx"/>
+	<input type="hidden" name="currentShowPageNo" value="${currentShowPageNo}"/>
+	<input type="hidden" name="sizePerPage" value="${sizePerPage}"/>
+	<input type="hidden" name="colname" value="${colname}"/>
+	<input type="hidden" name="search" value="${search}"/>
 </form>
 
 
 
 <!-- 회원 상세정보 모달 창 -->
 <!-- Modal -->
-<div class="modal fade modal-center" id="myModal" role="dialog">
+<div class="modal fade modal-center" id="freeViewModal" role="dialog">
 	<div class="modal-dialog modal-sm modal-center">
 		<!-- Modal content-->
 		<div class="modal-content">

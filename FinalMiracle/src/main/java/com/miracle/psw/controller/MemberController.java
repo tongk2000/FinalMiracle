@@ -100,14 +100,14 @@ public class MemberController {
 	}  // end of public String idFind(HttpServletRequest req) -------------------------------------------------------
 	
 	/* 
-		======================================================================================== *** 비밀번호 찾기 *** ============
+		============================================================== *** 비밀번호 찾기 *** ============
 		1.폼에서 userid 와 email 을 입력받아옴(controll)
 		2-1.해당 정보와 매칭되는 유저 정보 가져오기(service)
 			2.2.매칭되는 정보가 있는지 없는지 controll 단으로 전송
 		3-1.정보가 맞을시 인증코드 발송(controll)
 			3-2.정보가 틀릴시 메시지 발송(controll)
 	*/
-	@RequestMapping(value="/member_pwdFind.mr")  // 첫 모달창 GET방식, 사용자정보입력시 POST방식
+	@RequestMapping(value="/member_pwdFind.mr")  // 첫 모달창 GET 방식, 사용자정보입력시 POST 방식
 	public String pwdFind(HttpServletRequest req) {  // 비밀번호 찾기
 		String userid = req.getParameter("userid");
 		String email = req.getParameter("email");

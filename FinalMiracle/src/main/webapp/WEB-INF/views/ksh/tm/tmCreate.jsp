@@ -21,7 +21,7 @@
 	border-radius: 15px;
 	background-color: #4F84C4;
 	width: 50%;
-	margin-top: 16%;
+	margin-top: 13%;
 	margin-left: 25%;
 }
 
@@ -313,6 +313,28 @@ th#th {
 			}
 		}).open();
 	}
+	
+	function fileCheck(obj) {
+		pathpoint = obj.value.lastIndexOf('.');
+		filepoint = obj.value.substring(pathpoint+1,obj.length);
+		filetype = filepoint.toLowerCase();
+		
+		if(filetype=='jpg' || filetype=='gif' || filetype=='png' || filetype=='jpeg' || filetype=='bmp') {
+			// 정상적인 이미지 확장자 파일일 경우 ...
+		} else {
+			alert('이미지 파일만 선택할 수 있습니다.');
+			parentObj = obj.parentNode
+			node = parentObj.replaceChild(obj.cloneNode(true),obj);
+			return false;
+		}
+		
+		if(filetype=='bmp') {
+			upload = confirm('BMP 파일은 웹상에서 사용하기엔 적절한 이미지 포맷이 아닙니다.\n그래도 계속 하시겠습니까?');
+			
+			if(!upload) return false;
+		}
+	}
+
 
 </script>
 
@@ -333,45 +355,75 @@ th#th {
 				</thead>
 				<tbody>
 					<tr>
-						<td style="width: 20%; font-weight: bold;">팀명&nbsp;<span
-							class="star">*</span></td>
-						<td style="width: 80%; text-align: left;"><input type="text"
-							id="name" name="name" class="requiredInfo" maxlength="20" required /> <span
-							class="error">팀 명은 필수입력 사항입니다.</span></td>
+						<td style="width: 20%; font-weight: bold;">팀명&nbsp;<span class="star">*</span></td>
+						<td style="width: 80%; text-align: left;">
+							<div style="float: left; width: 30%">
+								<input type="text" id="name" name="name" class="form-control requiredInfo" maxlength="20" required />
+								<span class="error">팀 명은 필수입력 사항입니다.</span>
+							</div>
+						</td>
 					</tr>
 					<tr>
 						<td style="width: 20%; font-weight: bold;">연락처</td>
-						<td style="width: 80%; text-align: left;"><select id="hp1"
-							name="hp1">
-								<option value="010" selected>010</option>
-						</select>&nbsp;-&nbsp; <input type="text" id="hp2" name="hp2" size="4"
-							maxlength="4" />&nbsp;-&nbsp; <input type="text" id="hp3"
-							name="hp3" size="4" maxlength="4" /> <span
-							class="error error_hp">연락처 형식이 아닙니다.</span></td>
+						<td style="width: 80%; text-align: left;">
+							<div style="float: left; width: 15%">
+								<select id="hp1" name="hp1" class="form-control" style="width: 90%;">
+									<option value="010" selected>010</option>
+								</select>
+								
+							</div>
+							<div style="float: left; width: 2%" align="center">
+								-&nbsp;&nbsp;&nbsp;
+							</div>
+							<div style="float: left; width: 15%">
+								<input type="text" id="hp2" name="hp2" size="4" maxlength="4" class="form-control" style="width: 90%" />
+							</div>
+							<div style="float: left; width: 2%" align="center">
+								-&nbsp;&nbsp;&nbsp;
+							</div>
+							<div style="float: left; width: 15%">
+								<input type="text" id="hp3" name="hp3" size="4" maxlength="4" class="form-control" style="width: 90%" /> 
+							</div>
+							<span class="error error_hp">연락처 형식이 아닙니다.</span>
+						</td>
 					</tr>
 					<tr>
 						<td style="width: 20%; font-weight: bold;">이미지(로고)</td>
 						<td>
-							<input type="file" name="attach" />
+							<input type="file" name="attach" class="form-control" style="width: 50%;" onchange="fileCheck(this)" accept="image/gif, image/jpg, image/jpeg, image/png" />
 						</td>
 					</tr>
 					<tr>
 						<td style="width: 20%; font-weight: bold;">우편번호</td>
 						<td style="width: 80%; text-align: left;">
-						<input type="text" id="post1" name="post1" size="4" maxlength="3" />&nbsp;-&nbsp;
-						<input type="text" id="post2" name="post2" size="4" maxlength="3" />&nbsp;&nbsp;
-
-						<!-- 우편번호찾기 --> 
-						<a class="btn btn-xs btn-warning" onClick="openDaumPostnum();">
-							<span style="color: #4F84C4;"><span class="glyphicon glyphicon-ok-circle"></span> 우편번호검색</span>
-						</a> 
-						<span class="error error_post">우편번호 형식이 아닙니다.</span></td>
+							<div style="float: left; width: 15%">
+								<input type="text" id="post1" name="post1" size="4" maxlength="3" class="form-control" />
+							</div>
+							<div style="float: left; width: 5%" align="center">
+								&nbsp;-&nbsp;
+							</div>
+							<div style="float: left; width: 15%">
+								<input type="text" id="post2" name="post2" size="4" maxlength="3" class="form-control" />
+							</div>
+							<div style="float: left; width: 5%" align="center">
+								&nbsp;&nbsp;
+							</div>
+							<div style="float: left; width: 15%">
+								<!-- 우편번호찾기 --> 
+								<a class="btn btn-sm btn-warning" onClick="openDaumPostnum();">
+									<span style="color: #4F84C4;"><span class="glyphicon glyphicon-ok-circle"></span> 우편번호검색</span>
+								</a> 
+							</div>
+							<div style="float: left; width: 15%">
+								<span class="error error_post">우편번호 형식이 아닙니다.</span>
+							</div>
+						</td>	
 					</tr>
 					<tr>
 						<td style="width: 20%; font-weight: bold;">주소</td>
 						<td style="width: 80%; text-align: left;">
-						<input type="text" id="addr1" name="addr1" size="60" maxlength="150" /><br style="line-height: 200%" />
-						<input type="text" id="addr2" name="addr2" size="60" maxlength="150" />
+							<input type="text" id="addr1" name="addr1" size="60" maxlength="150" class="form-control" />
+							<input type="text" id="addr2" name="addr2" size="60" maxlength="150" class="form-control" />
 						<br/><br/>
 						</td>
 					</tr>

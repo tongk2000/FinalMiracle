@@ -138,7 +138,7 @@
 					<td>${tmvo.IDX}</td>
 					<td>${tmvo.USERID}</td>
 					<td>${tmvo.NAME}</td>
-					<td><img src="<%= request.getContextPath() %>/resources/files/${tmvo.IMG}" style="width:50px; heigth:50px;"></td>
+					<td><img src="<%= request.getContextPath() %>/resources/files/${tmvo.IMG}" style="width:200px; heigth:200px;"></td>
 					<td>${tmvo.REGDATE}</td>
 					<td>
 						<c:if test="${tmvo.STATUS.equals('1')}">	
