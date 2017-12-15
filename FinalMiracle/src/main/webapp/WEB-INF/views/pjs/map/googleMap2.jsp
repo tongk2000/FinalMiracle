@@ -1,19 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<<<<<<< HEAD
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<!DOCTYPE>
+<html>
+<head> 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAk84OfDfwA7xmG8uiaFR0HcSXxrcuHfV4"></script>
 
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.css">
+<%-- <link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/resources/jqueryuicss/jquery-ui.css" />
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/BootStrapStudy/js/bootstrap.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/resources/jqueryuijs/jquery-ui.js"></script>
-<!DOCTYPE>
-<html>
-<head>
+ --%>
 <style>
 	#div_name {
 		width: 70%;
@@ -43,18 +44,17 @@
 		margin-left: 10%;
 		position: relative;
 	}
-	div.height {
-		height:1px;
-	}
-	body {overflow-Y:hidden;}
+	body {overflow-Y:hidden;} 
 </style>
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		$("#displayList").hide();	
+	
 		google.maps.event.addDomListener(window, 'load', initialize); // 구글사에서 그대로 따옴!!! ====== 구글맵 생성
 		function initialize(){ // 사용자가 커스텀마이즈 할 수 있다.									    ====== 구글맵 처음 시작할 때
 		    var mapOptions = { // 구글 맵 옵션 설정
-		        zoom : 19, // 기본 확대율(줌 크기조절) , 숫자가 클수록 줌 크기가 확대되는 것이다. 숫자가 작아질 수록 광대역을 볼 수 있다.
+		        zoom : 14, // 기본 확대율(줌 크기조절) , 숫자가 클수록 줌 크기가 확대되는 것이다. 숫자가 작아질 수록 광대역을 볼 수 있다.
 		        center : new google.maps.LatLng(37.531333, 126.89856710000004), // 처음 지도의 중앙 위치 세팅!!
 		        //-------------------------------------------------------------------- 지도 옵션에 관련한 세부사항들
 		        disableDefaultUI : false,  // 기본 UI(지도창에 나오는 부수적인 아이콘들, 없으면 지도만 나온다.) 비활성화 여부
@@ -162,6 +162,7 @@
 			return html;	
 		}
 		$("#searchString").keyup(function(){
+			$("#displayList").show();
 			var data_form = {"searchString":$("#searchString").val(),
 							 "choice":$("#choice").val()};
 			$.ajax({
@@ -177,7 +178,7 @@
 							var index = wordstr.toLowerCase().indexOf( $("#searchString").val().toLowerCase() );
 							var len = $("#searchString").val().length;
 							var result = "";
-							result = "<span class='first' style='color:blue;'>" +wordstr.substr(0, index)+ "</span>" + "<span class='second' style='color:white; font-weight:bold;'>" +wordstr.substr(index, len)+ "</span>" + "<span class='third' style='color:blue;'>" +wordstr.substr(index+len, wordstr.length - (index+len) )+ "</span>";  
+							result = "<span class='first' style='color:blue;'>" +wordstr.substr(0, index)+ "</span>" + "<span class='second' style='color:black; font-weight:bold;'>" +wordstr.substr(index, len)+ "</span>" + "<span class='third' style='color:blue;'>" +wordstr.substr(index+len, wordstr.length - (index+len) )+ "</span>";  
 							resultHTML += "<span class='one' style='cursor:pointer;'>"+ result +"</span><br/>"; 
 						}); // end of each
 					}
@@ -220,6 +221,7 @@
 			$("#displayList").hide();
 		});
 		keep();
+		teamCall();
 	}); // end of $(document).ready()-------------------------
 	function keep() {
 		<c:if test="${choice!=null&&choice!=''}">
@@ -229,65 +231,95 @@
 			$("#searchString").val("${searchString}");
 		</c:if>
 	}
-	
 	function launchMap() {
 		$("#launchMapModal").modal();
+	}
+	function launchGoogleMap(){
+		window.open("googleMapbasic.mr", "subwinpop", "left=300px, top=300px, width=600px, height=600px");
+	}
+	function teamCall(){
+		$.ajax({
+			url: "tmFooter.mr",
+			type: "GET",
+			dataType: "JSON",
+			success: function(data){
+				var name = data[0].name;
+				var tel1 = data[0].tel1;
+				var tel2 = data[0].tel2;
+				var tel3 = data[0].tel3;
+				var post1 = data[0].post1;
+				var post2 = data[0].post2;
+				var addr1 = data[0].addr1;
+				var addr2 = data[0].addr2;
+				var regdate = data[0].regdate;
+				var img = data[0].img
+				var leader = data[0].leader
+				
+				$("#tm").empty();
+				
+				var html = "";
+				<%-- html <img src="<%= request.getContextPath() %>/resources/files/20171208183923121001009307995.jpg" style="width:200px; heigth:200px;" /> --%>
+				html += "<div style='float:left'><img src='<%= request.getContextPath() %>/resources/files/"+img+"' height='150px;' width='150px;'></div><br/>";
+				html += "<div style='float:right; margin-right:310px;	'>팀 이름 : " + name + "</div><br/>";
+				html += "설립자 : " + leader + "<br/>";
+				html += "전화번호 : " + tel1 + "-" + tel2 + "-" + tel3 + "<br/>";
+				html += "우편번호 : " + post1 + "-" + post2 + "<br/>";
+				html += "주소 : <a onClick='launchGoogleMap();'>" + addr1 + " " + addr2 + "</a><br/>";
+				html += "설립일 : " + regdate + "<br/>";
+				
+				$("#tm").html(html);
+			}, error: function(request, status, error){
+				alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+			}
+		});
 	}
 </script>
 </head>
 <body>
-<div class="modal-body" id="launchMapBody">
 
-	<div id="googleMap"	style="width: 90%; height: 85%;  margin:0% 0% 0% 6% ; "></div>
-
-	<select id="choice" name="choice" style="font-size:12pt;">
-		<option value="0" selected> 전체</option>
-		<option value="1" >팀정보</option>
-		<option value="-1">맛집정보</option>
-	</select>
-	
-	<input type="text" name="searchString" id="searchString"/>
-	<button type="button" id="goSearch">검색</button>
-	
-	<div class="height">
-			<div id="displayList" style="background-color:black; z-index:1000"></div>
+<div style="width:100%; height:500px; border:4px dotted red; "> 
+	<div style="border:4px dotted skyblue; width:50%; height:250px; float: left;" align="center">
+		
+		<div style="border:4px dotted blue; width:100%; float: left;"> 
+			<span >회사정보</span>
+			<div id="tm" style="border:4px dotted green; margin-top:50px; width:100%;"></div>
+		</div>
 	</div>
 	
-	<div id="googleMap" style="width: 100%; height: 100%;"></div>
-	
-	<div class="modal fade" id="mapInfo" role="dialog"></div>
-	<form name="map">
-		<input type="hidden" name="choice">
-		<input type="hidden" name="searchString">
-	</form>
-	<select id="choice" name="choice" style="font-size:12pt;">
-		<option value="0" selected> 전체</option>
-		<option value="1" >팀정보</option>
-		<option value="-1">맛집정보</option>
-	</select>
-	
-	<input type="text" name="searchString" id="searchString" />
-	<button type="button" id="goSearch">검색</button>
-	
-	<div class="height">
-			<div id="displayList" style="background-color:black; z-index:1000"></div>
+	<div style="border:4px dotted yellow; width:50%; height: 250px; float: right;">
+		<span> 당산 : 서울특별시 영등포구 선유동2로 57 이레빌딩 (구관) 19F, 20F </span>
+		<div align="center">
+			<img src="<%= request.getContextPath() %>/resources/images/당산이미지.PNG" style="width:400px; height:200px; margin-top:5px;"/>
+		</div>
 	</div>
 	
+	<div align="center">
+		<div id="googleMap" style="width: 900px; clear:both; height: 450px; border:1px solid red" ></div>
+	  
+	 	<form name="map">
+			<input type="hidden" name="choice">
+			<input type="hidden" name="searchString">
+		</form>
+		
+		<select id="choice" name="choice" style="font-size:12pt; margin-top:10px;">
+			<option value="0" selected> 전체</option>
+			<option value="1" >팀정보</option>
+			<option value="-1">맛집정보</option>
+		</select>
+		
+		<input type="text" name="searchString" id="searchString" />
+		<button type="button" id="goSearch">검색</button>
+		
+		<div >
+			<div id="displayList" style="background-color:white; border:2px solid gray; width:175px;  margin-left:45px;	 z-index:500;"></div>
+		</div>
+	</div> 
 </div>
 
+<div style="border: 2px solid blue;"> 
+	<div class="modal-body" id="launchMapBody" style="border:2px gray dotted; overflow-x:hidden;overflow-y:hidden "  align="center">
+		<div class="modal fade" id="mapInfo" role="dialog"></div>
+	</div>
+</div>
 </body>
 </html>
-=======
-<div>뜨냐</div>
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle
-
-
-
-
-
-
-
-
-
-
-

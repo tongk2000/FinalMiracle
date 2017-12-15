@@ -129,6 +129,14 @@ public interface PjsinterDAO {
 	// 로그인한 유저의 팀정보를 가져오는 메소드
 	HashMap<String, String> getUserTeam(HashMap<String, String> team);
 
+	int setNoticeWriteWithFile(HashMap<String, String> team); // 공지사항 파일올리기
+
+	String getfilename(HashMap<String, Object> map); // 파일이 있는지 없는지 가져오기
+
+	FileVO getViewWithNoAddCount(HashMap<String, String> map); // 파일 다운로드
+
+	String getmemoReadCount(String string); // 메모 읽었는지 여부 반환
+
 	
 
 	

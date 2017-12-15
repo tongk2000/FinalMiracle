@@ -25,6 +25,7 @@ request.setCharacterEncoding("UTF-8");
 <c:set var="user" value="${map}" />  <!-- teamNum , userid , teamNum , memberNum, status -->
 	<div style="border: 1px solid green; width:100%;">
 		<div style="border: 1px solid yellow;">
+			<form name="writeFrm" enctype="multipart/form-data">
 			<table style="border: 1px solid red; width: 80%;">
 				<thead>
 					<tr>
@@ -33,42 +34,55 @@ request.setCharacterEncoding("UTF-8");
 				</thead>
 				<tbody>
 					<tr>
-						<td width="12%">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="img"> &nbsp;&nbsp; ${user.userid}</td>
+						<td width="12%">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="img"> &nbsp;&nbsp;<input type="hidden" name="userid" value="${user.userid}">${user.userid}</td>
 					</tr>
 					<tr>
-						<td width="12%">팀정보 : </td><td>${user.teamNum}</td>
+						<td width="12%">팀정보 : </td><td><input type="hidden" name="teamNum" value="${user.teamNum}">${user.teamNum}<input type="hidden" name="idx" value="${idx}"></td>
 					</tr>
 					<tr>
 						<td width="12%">제목 : </td>
-						<td><input id="subject" type="text"/></td>
+						<td><input id="subject" type="text" name="subject"/></td>
 					</tr>
 					<tr style="min-height: 200px;">
 						<td>내용 :</td>
 						<td height="200px"><textarea name="content" id="content" class="summernote"></textarea></td>
 					</tr>
+					<tr>
+					   <td>파일첨부</td>
+					   <td><input type="file" name="attach" /></td>
+					</tr>
 				</tbody>
 			</table>
-			<div style="display:block; float:right;"><button type="button" onClick="writeEnd();">완료</button></div>
+			</form>
+			<div style="display:block; float:right;"><button type="button" onClick="goWrite();">완료</button></div>
 		</div>
 	</div>
-	<form name="end">
+	<!-- <form name="end">
+		<input type="hidden" name="idx">
 		<input type="hidden" name="userid">
 		<input type="hidden" name="teamNum">
 		<input type="hidden" name="subject">
 		<input type="hidden" name="content">
-	</form>
+	</form> -->
 	<script>
+		function goWrite() {
+			// 유효성 검사는 생략 하겠음.
+			var frm = document.writeFrm;
+			frm.action="<%=request.getContextPath()%>/noticeWriteEnd.mr";
+			frm.method="post";
+			frm.submit();
+			
+		}
+
 		function writeEnd() {
-			var frm = document.end;
+			/* var frm = document.end;
 			var subject = $("#subject").val();
 			var content = $("#content").val();
 			frm.userid.value = "${user.userid}";
 			frm.teamNum.value = "${user.teamNum}";
 			frm.subject.value = subject;
 			frm.content.value = content;
-			frm.action="<%=request.getContextPath()%>/noticeWriteEnd.mr";
-			frm.method="post";
-			frm.submit();
+			 */
 		}
 		$(document).ready(function(){
 			$('.summernote').summernote({

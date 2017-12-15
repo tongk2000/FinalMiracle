@@ -1,10 +1,14 @@
 package com.miracle.pjs.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
@@ -13,11 +17,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.miracle.pjs.model.FileVO;
 import com.miracle.pjs.model.MapVO;
+import com.miracle.pjs.model.NoticeFileVO;
 import com.miracle.pjs.model.ReplyVO;
 import com.miracle.pjs.service.PjsinterService;
 import com.miracle.pjs.util.MyUtil;
+import com.miracle.pjs.util.PjsFileManager;
 import com.miracle.psw.model.MemberVO;
 
 @Controller
@@ -26,6 +34,8 @@ public class GeniousPjsController {
 	@Autowired
 	private PjsinterService service;
 
+	@Autowired
+	private PjsFileManager filemanager;
 /*=======================================================================================================================================================*/	
 	// ==== *** 공지사항 게시판 *** ==== //
 	@RequestMapping(value="noticeList.mr", method={RequestMethod.GET}) // 공지사항 게시판 리스트
@@ -36,6 +46,8 @@ public class GeniousPjsController {
 		team.put("userid", ((MemberVO) session.getAttribute("loginUser")).getUserid()); // 유저의 아이디를 가져온다.
 		team.put("teamidx", teamInfo.get("team_idx")); 
 		//if(mvo != null) {
+			String url = MyUtil.getCurrentURL(req);
+			session.setAttribute("gobackURL", url);
 			HashMap<String, String> userTeam = service.getUserTeam(team); // 유저의 팀 정보를 가져온다.  teamNum, m.userid, m.idx as memberNum, w.status, m.img
 			req.setAttribute("userTeam", userTeam); // 세션에서 얻을 수 없는 유저의 팀정보를 뷰단으로 보내 여러 조건에 비교용으로 쓴다.
 			session.setAttribute("readCount", "1"); // 게시판 리스트에서 게시글을 읽어야만 readcont가 올라가도록 설정!
@@ -109,6 +121,8 @@ public class GeniousPjsController {
 				int count = service.getCountReply(map);
 				String str_count = String.valueOf(count);
 				list.get(i).put("count", str_count);
+				String file = service.getfilename(map);
+				list.get(i).put("file", file);
 				map.remove("idx");
 			}
 			req.setAttribute("list", list);
@@ -149,6 +163,7 @@ public class GeniousPjsController {
 	@RequestMapping(value="noticeWrite.mr", method={RequestMethod.POST})	// 공지사항 게시판글 쓰기 
 	public String noticeWrite(HttpServletRequest req) {
 		// 게시판을 클릭해서 글을 쓸 경우
+		String idx = req.getParameter("idx");
 		String userid = req.getParameter("userid");
 		String teamNum = req.getParameter("teamNum");
 		HashMap<String, String> team = new HashMap<String, String>();
@@ -156,28 +171,62 @@ public class GeniousPjsController {
 		team.put("teamidx", teamNum);
 		HashMap<String, String> map = service.getUserTeam(team); // teamNum , userid , teamNum , memberNum, status 받는다.  ******************************
 		req.setAttribute("map", map);
+		req.setAttribute("idx", idx);
 		return "pjs/notice/noticeWrite.all";
 	}/* ================================================================================================================================================== */
 	@RequestMapping(value="noticeWriteEnd.mr", method={RequestMethod.POST})	// 공지사항 게시판글 쓰기 
-	public String noticeWriteEnd(HttpServletRequest req) {
+	public String noticeWriteEnd(HttpServletRequest req, HttpSession ses, MultipartHttpServletRequest freq) {
 		// 게시판을 클릭해서 글을 쓸 경우
 		String userid = req.getParameter("userid");
 		String teamNum = req.getParameter("teamNum");
 		String subject = req.getParameter("subject");
 		String content = req.getParameter("content");
+		String idx = req.getParameter("idx");
+		
 		HashMap<String, String> team = new HashMap<String, String>();
 		team.put("userid", userid);
 		team.put("teamidx", teamNum);
 		team.put("subject", subject);
 		team.put("content", content.replace("\r\n","<br>"));
-		int n = service.setNoticeWrite(team);
+		team.put("idx", idx);
+		// 첨부파일이 있는지 없는지 알아오기
+		NoticeFileVO filevo = new NoticeFileVO();
+		filevo.setAttach(freq.getFile("attach"));
+		int n = 0;
+		if(!filevo.getAttach().isEmpty()) {
+			String root = ses.getServletContext().getRealPath("/");
+			String path = root + "resources"+File.separator+"files";
+			String newFileName = "";
+			byte[] bytes=null;
+			long fileSize=0;
+			try{
+				bytes = filevo.getAttach().getBytes();
+				newFileName = filemanager.doFileUpload(bytes, filevo.getAttach().getOriginalFilename(), path);
+				filevo.setFileName(newFileName); // 0001230410240104.jsp
+				filevo.setOrgFilename(filevo.getAttach().getOriginalFilename()); // 강아지.jpg
+				fileSize = filevo.getAttach().getSize();
+				filevo.setFileSize(String.valueOf(fileSize));
+				if(!filevo.getAttach().isEmpty()) {
+					team.put("newfilename", newFileName);
+					team.put("originalfilename", filevo.getAttach().getOriginalFilename());
+					team.put("filesize", String.valueOf(fileSize));
+					n= service.setNoticeWriteWithFile(team);
+				}
+			} catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		else {
+			n = service.setNoticeWrite(team);
+		}
+		///////////////////////////
+		
 		String msg="";
 		String loc="location.href='noticeList.mr;'";
 		if(n>0) 
 			msg="입력성공!";
 		else 
 			msg="입력실패!";
-		System.out.println("=================msg============"+msg);
 		req.setAttribute("msg", msg);
 		req.setAttribute("loc", loc);
 		return "pjs/error.not";
@@ -214,9 +263,14 @@ public class GeniousPjsController {
 		// 공지사항 게시판의 해당 글을 볼 때 그 글의 코멘트를 가져오는 메소드
 		String nidx = req.getParameter("nidx");				//tbl_notice의 idx
 		List<ReplyVO> comment = service.getComment(nidx);
-		String sessionid = ((MemberVO)session.getAttribute("loginUser")).getUserid();
+		for(int i =0; i<comment.size(); i++) {
+			
+			System.out.println("==============================================리플"+comment.get(i).getSesid());
+			
+		}
+		//String sessionid = ((MemberVO)session.getAttribute("loginUser")).getUserid();
 		req.setAttribute("comment", comment);
-		req.setAttribute("sessionid", sessionid);
+		//req.setAttribute("sessionid", sessionid);
 		return "pjs/notice/comment.not";
 	}/* ================================================================================================================================================== */
 	@RequestMapping(value="setnoticeReplyList.mr", method={RequestMethod.POST})	// 공지사항 게시판글 수정
@@ -224,9 +278,11 @@ public class GeniousPjsController {
 		// 공지사항 게시판의 해당 글을 볼 때 그 글의 코멘트를 가져오는 메소드
 		String idx = req.getParameter("idx");
 		String co = req.getParameter("contents");
+		String userid = req.getParameter("userid");
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("idx", idx);
 		map.put("comment", co.replace("\r\n","<br>"));
+		map.put("userid", userid);
 		int n = service.setComment(map); 
 		if(n>0) System.out.println("댓글 입력 성공");
 	}/* ================================================================================================================================================== */
@@ -245,7 +301,7 @@ public class GeniousPjsController {
 		HashMap<String, String> view = new HashMap<String, String>();
 		view.put("nidx", nidx);
 		view.put("teamidx", teamidx);
-		HashMap<String, String> map =  service.getIdxTeam(view); // team_idx, userid, img,  subject, content status 받는다.
+		HashMap<String, String> map =  service.getIdxTeam(view); // USERID, IMG, SUBJECT, CONTENT, STATUS, IDX, FILENAME, ORGFILENAME, FILESIZE, FK_IDX
 		//List<ReplyVO> comment = service.getComment(nidx); // 해당 nidx에 해당하는 comment를 가져온다.
 		//req.setAttribute("sessionid", sessionid);
 		//req.setAttribute("comment", comment);
@@ -293,6 +349,60 @@ public class GeniousPjsController {
 		req.setAttribute("loc", loc);
 		return "pjs/error.not";
 	}/* ================================================================================================================================================== */
+	@RequestMapping(value="download.mr", method = {RequestMethod.GET})
+	public void download(HttpServletRequest req, HttpServletResponse res, HttpSession session) {
+		String nidx = req.getParameter("nidx");
+		String fidx = req.getParameter("fidx");
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("nidx", nidx);
+		map.put("fidx", fidx);
+		// 첨부파일이 있는 글번호
+
+		// 첨부파일이 있는 글번호에서
+		// 201611220930481985323774614.jpg 처럼
+		// 이러한 fileName 값을 DB에서 가져와야 한다.
+		// 또한 orgFileName 값도 DB에서 가져와야 한다.
+
+		FileVO vo = service.getViewWithNoAddCount(map);
+		// 조회수 증가 없이 1개 글 가져오기
+		// 먼저 board.xml 에 가서 id가 getView 인것에서
+		// select 절에 fileName, orgFilename, fileSize 컬럼을
+		// 추가해주어야 한다.
+
+		String fileName = vo.getFilename();
+		// 201611220930481985323774614.jpg 와 같은 것이다.
+		// 이것이 바로 WAS(톰캣) 디스크에 저장된 파일명이다.
+		String orgFilename = vo.getOrgFilename();
+		// Desert.jpg 처럼 다운받을 사용자에게 보여줄 파일명.
+
+		// 첨부파일이 저장되어 있는
+		// WAS(톰캣)의 디스크 경로명을 알아와야만 다운로드를 해줄수 있다.
+		// 이 경로는 우리가 파일첨부를 위해서
+		// /addEnd.action 에서 설정해두었던 경로와 똑같아야 한다.
+		// WAS 의 webapp 의 절대경로를 알아와야 한다.
+		String root = session.getServletContext().getRealPath("/");
+		String path = root + "resources" + File.separator + "files";
+		// path 가 첨부파일들을 저장할 WAS(톰캣)의 폴더가 된다.
+
+		// **** 다운로드 하기 **** //
+		// 다운로드가 실패할 경우 메시지를 띄워주기 위해서
+		// boolean 타입 변수 flag 를 선언한다.
+		boolean flag = false;
+		flag = filemanager.doFileDownload(fileName, orgFilename, path, res);
+		// 다운로드가 성공이면 true 를 반납해주고,
+		// 다운로드가 실패이면 false 를 반납해준다.
+		if (!flag) {
+			// 다운로드가 실패할 경우 메시지를 띄워준다.
+			res.setContentType("text/html; charset=UTF-8");
+			PrintWriter writer = null;
+			try {
+				writer = res.getWriter();
+				// 웹브라우저상에 메시지를 쓰기 위한 객체생성.
+			} catch (IOException e) {
+			}
+			writer.println("<script type='text/javascript'>alert('파일 다운로드가 불가능합니다.!!')</script>");
+		}
+	}/*
 /*=======================================================================================================================================================*/	
 
 	
@@ -312,6 +422,8 @@ public class GeniousPjsController {
 		team.put("userid", mvo.getUserid());
 		team.put("teamidx", teamInfo.get("team_idx"));
 		//if(mvo != null) {
+			String url = MyUtil.getCurrentURL(req);
+			session.setAttribute("gobackURL", url);
 			HashMap<String, String> userTeam = service.getUserTeam(team); // 유저의 팀 정보를 가져온다. ******************************
 			req.setAttribute("userTeam", userTeam); // teamNum , userid  , memberNum, status 받는다.
 			session.setAttribute("readCount", "1"); // 게시판 리스트에서 게시글을 읽어야만 readcont가 올라가도록 설정!
@@ -371,6 +483,7 @@ public class GeniousPjsController {
 		String teamidx = req.getParameter("teamNum");// 뷰단에서 받아온 team_idx
 		String sessionid = ((MemberVO)session.getAttribute("loginUser")).getUserid();
 		System.out.println("===================여기와? ===============================");
+		
 		if("1".equals((String)session.getAttribute("readCount"))&&!userid.equals(sessionid)) {
 			// 조회수를 올린다.!!!!!!!!!!!!!!!!!!!!!!!!!
 			System.out.println("===================여기와?2222222 ===============================");
@@ -415,7 +528,7 @@ public class GeniousPjsController {
 		return "pjs/mind/mindWrite.all";
 	}/* ================================================================================================================================================== */
 	@RequestMapping(value="mindWriteEnd.mr", method={RequestMethod.POST})	// 마음의 소리 게시판글 쓰기 
-	public String mindWriteEnd(HttpServletRequest req) {
+	public String mindWriteEnd(HttpServletRequest req, HttpSession session, NoticeFileVO filevo) {
 		// 게시판을 클릭해서 글을 쓸 경우
 		String nidx = req.getParameter("nidx");
 		String userid = req.getParameter("userid");
@@ -433,6 +546,43 @@ public class GeniousPjsController {
 			team.put("depth", String.valueOf(Integer.parseInt(depth.get("depth"))+1) );
 			team.put("chkid", req.getParameter("chkid"));
 		}
+		
+		String root = session.getServletContext().getRealPath("/"); // 결과값 : C:\SpringWorkspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Board\
+        String path = root + "resources"+File.separator+"files"; // File.separator는 운영체제가 windows이라면 "\"을 말하고
+                                                                                    //                       운영체제가 Unix계열이라면 "/"을 말한다.
+        // ==> path가 첨부파일들을 저장할 WAS(톰캣)의 폴더가 된다.
+        System.out.println(">>>> 확인용 path =>"+path); // 결과값 : C:\SpringWorkspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Board\resources\files
+        // 2. 파일첨부를 위한 변수의 설정 및 값을 초기화한 후 파일 올리기
+        String newFileName=""; // WAS(톰캣) 디스크에 저장할 파일명
+        byte[] bytes=null; // 첨부파일을 WAS(톰캣) 디스크에 저장할때 사용
+        long fileSize=0; // 파일크기를 읽어오기 위한 용도
+        try {
+             bytes = filevo.getAttach().getBytes(); // MultipartFile타입    // getBytes는 첨부된 파일을 바이트단위로 파일을 다 읽어오는 것이다.
+             newFileName = filemanager.doFileUpload(bytes, filevo.getAttach().getOriginalFilename() , path); // 톰켓에 저장될 실제 파일이름을 가져오기
+             
+             // 3. boardvo에 filename값과 oriFilename 값과 filesize값을 알아보자
+             filevo.setFileName(newFileName); // WAS(톰캣)에 저장될 파일명(20161121324325454354353333432.png)
+             filevo.setOrgFilename(filevo.getAttach().getOriginalFilename()); // 파일명(강아지.png)
+             fileSize = filevo.getAttach().getSize();            // 첨부한 파일의 파일크기인데 리턴타입이 long타입
+             filevo.setFileSize(String.valueOf(fileSize) ); // 첨부한 파일의 크기를 String 타입으로 변경해서 저장함!
+        } catch (Exception e) {
+             e.printStackTrace();
+        }
+		        
+	  
+        // **** 첨부파일이 있는지 없는지 알아오기 끝 **** //
+        /*int n = service.add(boardvo);*/                // 파라미터로 vo가 오면 req로 오는 정보를 다 받는다.
+        /*=== #136. 파일첨부가 없는 경우 또는 파일첨부가 있는 경우 service 단으로 호출하기 , 먼저 위의 int n = service.add(boardvo); 주석처리 */
+        
+      /*  int n=0;
+	   	if(filevo.getAttach().isEmpty()) // 파일 첨부가 없으면
+	   		n = service.setMindWrite(filevo);
+	   	else { // 파일첨부가 있다라면
+	   		n = service.setMindWriteWithFile(filevo);
+	   	}
+	   	req.setAttribute("n", n);
+		*/
+	   	
 		int n = service.setMindWrite(team);
 		if(n > 0) {
 			int num = service.updateMindCheckNum(nidx);
@@ -495,7 +645,6 @@ public class GeniousPjsController {
 	public String googleMapbasic(HttpServletRequest req, HttpSession session) {
 		List<MapVO> list = service.getMap(); // 전체 리스트를 반환한다.
 		req.setAttribute("list", list);
-		
 		return "pjs/map/googleMapbasic.not";
 	}/* ================================================================================================================================================= */
 	@RequestMapping(value="googleMap.mr", method={RequestMethod.GET})
@@ -509,7 +658,7 @@ public class GeniousPjsController {
 			List<MapVO> list = service.getMapWithSearch(map); // 전체 리스트를 반환한다.
 			req.setAttribute("list", list);
 			req.setAttribute("choice", choice);
-			req.setAttribute("searchString", searchString);
+			req.setAttribute("searchString", searchString);	
 		}
 		else {
 			List<MapVO> list = service.getMap(); // 전체 리스트를 반환한다.
@@ -517,7 +666,8 @@ public class GeniousPjsController {
 			req.setAttribute("choice", choice);
 			req.setAttribute("searchString", searchString);
 		}
-		return "pjs/map/googleMap.not";
+		System.out.println("여기?");
+		return "pjs/map/googleMap2.all";
 	}/* ================================================================================================================================================= */
 
 	@RequestMapping(value="googleMapJSON.mr", method={RequestMethod.GET})
@@ -559,6 +709,8 @@ public class GeniousPjsController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="memomemory.mr", method={RequestMethod.GET})
 	public String memomemory(HttpServletRequest req, HttpSession ses) {
+		String url = MyUtil.getCurrentURL(req);
+		ses.setAttribute("gobackURL", url);
 		HashMap<String, String> team = new HashMap<String, String>();  // 유저아이디와 팀번호가 유일한 유저를 불러온다.
 		team.put("userid", ((MemberVO) ses.getAttribute("loginUser")).getUserid()); // 유저의 아이디를 가져온다.
 		team.put("teamidx", ((HashMap<String, String>)ses.getAttribute("teamInfo")).get("team_idx")); 
@@ -606,6 +758,11 @@ public class GeniousPjsController {
 			count.remove("teamNum");
 			name = "";
 		}
+		for(int i=0; i<list.size(); i++) {
+			String memoread = service.getmemoReadCount(list.get(i).get("idx"));
+			System.out.println("================================="+list.get(i).get("idx"));
+			list.get(i).put("read", memoread);
+		}
 		String pagebar = MyUtil.getPageBar(sizePerPage, blockSize, totalPage, currentPage, "memomemory.mr");
 		
 		req.setAttribute("nArr", nArr); // 이름 배열
@@ -617,6 +774,8 @@ public class GeniousPjsController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="memoreceiver.mr", method={RequestMethod.GET})
 	public String memosender(HttpServletRequest req, HttpSession ses) {
+		String url = MyUtil.getCurrentURL(req);
+		ses.setAttribute("gobackURL", url);
 		// readCount를 주기위한 방안
 		ses.setAttribute("readCount", "1");
 		HashMap<String, String> team = new HashMap<String, String>();  // 유저아이디와 팀번호가 유일한 유저를 불러온다.
@@ -644,6 +803,7 @@ public class GeniousPjsController {
 		int totalCount = service.getReceiverMemo(map); 
 		int totalPage=(int)Math.ceil((double)totalCount / sizePerPage);
 		List<HashMap<String, String>> list = service.getReceiverMemoList(map);// 리스트 가저요기
+		
 		String pagebar = MyUtil.getPageBar(sizePerPage, blockSize, totalPage, currentPage, "memomemory.mr");
 		
 		req.setAttribute("list", list); // idx, receiver, rreadcount, readdate, subject, content , sender, writedate, name, img

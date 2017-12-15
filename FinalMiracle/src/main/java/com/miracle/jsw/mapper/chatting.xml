@@ -50,6 +50,72 @@
 		update chat_member set notreadmessage = notreadmessage+1
 		where fk_cr_idx = #{cridx}
 	</update>
+	<update id="read" parameterType="HashMap">
+		update chat_member set notreadmessage = 0
+		where fk_cr_idx = #{cridx}
+		and fk_member_idx = #{idx}
+	</update>
+	
+	<resultMap type="java.util.HashMap" id="chattingMemberlist">
+		<result property="idx" 			column="idx" 			javaType="int" />
+		<result property="name" 		column="name" 			javaType="String" />
+		<result property="img" 			column="img" 			javaType="String" />
+	</resultMap>
+	<select id="getChattingMember" parameterType="String" resultMap="chattingMemberlist">
+		select m.idx as idx, m.name as name, m.img as img
+		from chat_member cm join tbl_member m
+		on cm.fk_member_idx = m.idx
+		where cm.cm_status = 1 
+		and cm.fk_cr_idx = #{cridx}
+		order by m.idx
+	</select>
+	
+	
+	<resultMap type="java.util.HashMap" id="TeamList">
+		<result property="tidx" 		column="idx" 			javaType="int" />
+		<result property="midx" 		column="fk_member_idx" 	javaType="int" />
+		<result property="name" 		column="name" 			javaType="String" />
+		<result property="img" 			column="img" 			javaType="String" />
+	</resultMap>
+	<select id="getAllTeam" resultMap="TeamList">
+		select to_char(idx) as idx, to_char(fk_member_idx) as fk_member_idx, name, img
+		from tbl_team
+		where status = 1
+	</select>
+	
+	<resultMap type="java.util.HashMap" id="TeamwonListNotMe">
+		<result property="idx" 		column="idx" 	javaType="int" />
+		<result property="img" 		column="img" 	javaType="String" />
+		<result property="name" 	column="name" 	javaType="String" />
+		<result property="userid" 	column="userid" javaType="String" />
+	</resultMap>
+	<select id="getTeamwonNotMe" parameterType="HashMap" resultMap="TeamwonListNotMe">
+		select m.idx as idx, m.name as name, m.img as img, m.userid as userid
+		from tbl_teamwon tw join tbl_member m
+		on tw.fk_member_idx = m.idx
+		where tw.fk_team_idx = #{tidx}
+		and tw.status != 0
+		and m.status = 1
+		and m.idx != #{idx}
+	</select>
+	
+	<select id="getAllNotMe" parameterType="int" resultMap="TeamwonListNotMe">
+		select idx, name, img, userid
+		from tbl_member 
+		where status = 1
+		and idx != #{idx}
+	</select>
+	
+	<select id="getFindNotMe" parameterType="HashMap" resultMap="TeamwonListNotMe">
+		select idx, name, img, userid
+		from tbl_member
+		where status = 1 
+		and ${what} like '%' || #{subject} ||'%'
+		and idx != #{idx}
+	</select>
+	
+	
+	
 	
 	
 	
