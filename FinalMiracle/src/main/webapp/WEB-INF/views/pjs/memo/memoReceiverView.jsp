@@ -45,6 +45,9 @@
 		frm.method="post";
 		frm.submit();
 	}
+	function goback() {
+		location.href="<%=request.getContextPath()%>/${sessionScope.gobackURL}";
+	}
 </script>
 <meta charset="UTF-8">
 <title>쪽지쓰기</title>
@@ -81,7 +84,9 @@
 				</table>
 			</div>
 			<div style="border:1px solid gray; float:right">
-				<button type="reset" onClick="javascript:location.href='memoreceiver.mr';" id="back">뒤로가기</button>
+				<div style="float:left;" >
+					<button type="button" onClick="goback();">목록보기</button>
+				</div>
 				<button type="button" onClick="goDel('${receiver.idx}');">삭제</button>
 			</div>
 		</div>

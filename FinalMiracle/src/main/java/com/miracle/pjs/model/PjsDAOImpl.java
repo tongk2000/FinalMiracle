@@ -368,6 +368,30 @@ public class PjsDAOImpl implements PjsinterDAO {
 		HashMap<String, String> userTeam = sqlsession.selectOne("pjsfinal.getUserTeam", map);
 		return userTeam;
 	}
+	@Override
+	public int setNoticeWriteWithFile(HashMap<String, String> team) {
+		// 공지사항 파일올리기
+		int n = sqlsession.insert("pjsfinal.setNoticeWriteWithFile", team);
+		return n;
+	}
+	@Override
+	public String getfilename(HashMap<String, Object> map) {
+		// 파일이 있는지 없는지 가져오기
+		String file = sqlsession.selectOne("pjsfinal.getfilename", map);
+		return file;
+	}
+	@Override
+	public FileVO getViewWithNoAddCount(HashMap<String, String> map) {
+		// 파일 다운로드
+		FileVO vo = sqlsession.selectOne("pjsfinal.getViewWithNoAddCount", map);
+		return vo;
+	}
+	@Override
+	public String getmemoReadCount(String string) {
+		// 메모 읽었는지 여부반환
+		String memo = sqlsession.selectOne("pjsfinal.getmemoReadCount", string);
+		return memo;
+	}
 	
 
 	

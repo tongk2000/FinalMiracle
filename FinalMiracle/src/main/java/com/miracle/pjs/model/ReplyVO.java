@@ -7,6 +7,21 @@ public class ReplyVO {
 	private int reply_dep;		      	// 댓글의 깊이(0:댓글, 1:댓글의 댓글, 2:댓글의 댓글의 댓글)
 	private int reply_group;		  	// 어느 글에 소속되어 있는 지
 	private String regday;              // 댓글 작성일자
+	private String sesid;				// 아이디
+	private String img;					// 이미지
+	
+	public String getImg() {
+		return img;
+	}
+	public void setImg(String img) {
+		this.img = img;
+	}
+	public String getSesid() {
+		return sesid;
+	}
+	public void setSesid(String sesid) {
+		this.sesid = sesid;
+	}
 	public ReplyVO(){}
 	public ReplyVO(int idx, String reply_content, int ref_idx, int reply_dep, int reply_group, String regday) {
 		super();

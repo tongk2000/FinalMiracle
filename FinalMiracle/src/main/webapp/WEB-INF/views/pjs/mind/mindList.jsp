@@ -54,8 +54,8 @@ request.setCharacterEncoding("UTF-8");
 </head>
 <body>
 <c:set var="user" value="${userTeam}" />
-	<div align="center" style="border:red 3px dotted;"> 
-	<div style="width:80%; border:red 3px dotted; " align="center">
+	<!-- <div align="center" > 
+	<div style="width:80%; border:red 3px dotted;" align="center"> -->
 		<h2>마음의 소리 게시판</h2>
 			<table style="width:100%;">
 				<thead>
@@ -137,8 +137,8 @@ request.setCharacterEncoding("UTF-8");
 					<div id="displayList" style="background-color:white; width:175px; margin-left: 28px; border-top: 0px; border: solid gray 3px;"></div>
 				</div>
 			</form>
-	</div>
-	</div>
+	<!-- 	</div>
+	</div> -->
 	<form name="view">
 		<input type="hidden" name="idx" />
 		<input type="hidden" name="userid" />
@@ -234,7 +234,7 @@ request.setCharacterEncoding("UTF-8");
 				else if($target.is(".third")) {
 					word = $target.prev().prev().text() + $target.prev().text() + $target.text();
 				}
-				$("#search").val(word); // 텍스트박스에 검색된 결과의 문자열을 입력해준다.
+				$("#searchString").val(word); // 텍스트박스에 검색된 결과의 문자열을 입력해준다.
 				$("#displayList").hide();
 			});
 		});

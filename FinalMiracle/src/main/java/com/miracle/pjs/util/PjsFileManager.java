@@ -81,6 +81,10 @@ public class PjsFileManager {
 	// originalFilename : 클라이언트가 업로드한 파일명
 	// path : 서버에 저장된 경로
 	public boolean doFileDownload(String saveFilename, String originalFilename, String path, HttpServletResponse response) {
+		System.out.println("==========================="+saveFilename);
+		System.out.println("==========================="+originalFilename);
+		System.out.println("==========================="+path);
+		
 		String pathname = path + File.separator + saveFilename; // saveFilename 숫자로 되어진 파일이름
         try {
     		if(originalFilename == null || originalFilename.equals("")) // originalFilename이 없으면 숫자로 되어진 파일이름을 넣어준다.
@@ -89,8 +93,10 @@ public class PjsFileManager {
         } catch (UnsupportedEncodingException e) {
         }
 	    try {
+	    	System.out.println("======================file=======================");
 	        File file = new File(pathname); // pathname은 파일이 있는 전체주소값을 말한다.
 	        if (file.exists()){ // 파일이 있다면
+	        	System.out.println("======================file 있나요?=======================");
 	            byte readByte[] = new byte[4096]; // 읽어들이는 단위 4kb
 	            response.setContentType("application/octet-stream"); 
 				response.setHeader(
@@ -106,6 +112,7 @@ public class PjsFileManager {
 	    		outs.flush();								   
 	    		outs.close();
 	            fin.close();
+	            System.out.println("======================file 오나요?=======================");
 	            return true;
 	        }
 	    } catch(Exception e) {

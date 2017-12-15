@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
-
+<!-- 
 <script type="text/javascript">
 	$(document).ready(function(){
 		teamCall();
@@ -53,9 +53,9 @@
 </style>
 
 
-<div style="width:100%; height:500px; border:4px dotted red; "> <!-- 전체 푸터 -->
+<div style="width:100%; height:500px; border:4px dotted red; "> 
 	<div style="border:4px dotted skyblue; width:50%; float: left;">
-		<!-- 회사정보 -->
+	
 		<div class="footer" style="border:4px dotted blue; width:100%; float: left;"> 
 			<div class="footer" id="tm" style="border:4px dotted green; width:100%;"></div>
 		</div>
@@ -67,4 +67,4 @@
 
 		<iframe src="<%=request.getContextPath()%>/googleMapbasic.mr" style="width:100%; height: 404px;"></iframe>
 	</div>
-</div>
+</div> -->
