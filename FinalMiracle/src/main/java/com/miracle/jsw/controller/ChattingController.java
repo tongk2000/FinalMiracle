@@ -67,33 +67,74 @@ public class ChattingController {
 		else if(req.getParameter("cridx1")!=null)
 		cridx = req.getParameter("cridx1");
 		System.out.println(cridx);
-		List<HashMap<String, Object>> chattingList = service.getChattingContent(cridx);
 		
-		req.setAttribute("chattingList", chattingList);
-		
+		String message = req.getParameter("message");
 		
 		HttpSession session = req.getSession();
 		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
 		
 		int idx = loginUser.getIdx();
 		
-		String message = req.getParameter("message1");
-		
-		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("cridx", cridx);
+		map.put("idx", idx);
 		
 		if(message != null){
-			
-			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put("cridx", cridx);
-			map.put("message", message);
-			map.put("idx", idx);
-			
+			map.put("message", message);		
 			service.chatting(map);
-			
 		}
+		
+		List<HashMap<String, Object>> chattingList = service.getChattingContent(cridx);
+		
+		service.read(map);
+		
+
+		
+		req.setAttribute("chattingList", chattingList);
+		
+
+		
 		
 		return "jsw/chattingContentAjax.not";
 	}
+	
+	@RequestMapping(value="/chattingMemberAjax.mr", method={RequestMethod.GET})
+	public String chattingMessage(HttpServletRequest req, HttpServletResponse res){
+		
+		String cridx = "";
+		if(req.getParameter("cridx")!=null)
+		cridx = req.getParameter("cridx");
+		else if(req.getParameter("cridx1")!=null)
+		cridx = req.getParameter("cridx1");
+		
+		List<HashMap<String, Object>> chattingMember = service.getChattingMember(cridx);
+		req.setAttribute("chattingMember", chattingMember);
+		
+		return "jsw/chattingMemberList.not";
+	}
+	
+	@RequestMapping(value="/newChatting.mr", method={RequestMethod.GET})
+	public String newChating(HttpServletRequest req, HttpServletResponse res){
+		
+		/*HttpSession session = req.getSession();
+		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		
+		int idx = loginUser.getIdx();*/
+		
+		List<HashMap<String, Object>> teamList = service.getAllTeam();
+		
+		req.setAttribute("teamList", teamList);
+		
+		
+		
+	//	List<HashMap<String, Object>> Member = service.getMember();
+		
+		
+		
+		return "jsw/newChattingRoom.not";
+	}
+	
+	
 	/*@RequestMapping(value="/chattingMessage.mr", method={RequestMethod.GET})
 	public String chattingMessage(HttpServletRequest req, HttpServletResponse res){	
 		
@@ -115,5 +156,68 @@ public class ChattingController {
 		
 		return "jsw/chattingContentAjax.not";
 	}*/
+	
+	
+	@RequestMapping(value="/getTeamwonNotMe.mr", method={RequestMethod.GET})
+	public String getTeamwonNotMe(HttpServletRequest req, HttpServletResponse res){
+		
+		HttpSession session = req.getSession();
+		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		
+		int idx = loginUser.getIdx();
+		String tidx = req.getParameter("tidx");
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("tidx", tidx);
+		map.put("idx", idx);
+		
+		List<HashMap<String, Object>> teamwonList = service.getTeamwonNotMe(map);
+		
+		req.setAttribute("teamwonList", teamwonList);
+		
+		
+		return "jsw/memberListNotMe.not";
+	}
+	
+	@RequestMapping(value="/getAllNotMe.mr", method={RequestMethod.GET})
+	public String getAllNotMe(HttpServletRequest req, HttpServletResponse res){
+		
+		HttpSession session = req.getSession();
+		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		
+		int idx = loginUser.getIdx();
+		
+		List<HashMap<String, Object>> teamwonList = service.getAllNotMe(idx);
+		
+		req.setAttribute("teamwonList", teamwonList);
+		
+		
+		return "jsw/memberListNotMe.not";
+	}
+	@RequestMapping(value="/getFindNotMe.mr", method={RequestMethod.GET})
+	public String getFindNotMe(HttpServletRequest req, HttpServletResponse res){
+		
+		HttpSession session = req.getSession();
+		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		
+		int idx = loginUser.getIdx();
+		
+		String subject = req.getParameter("subject");
+		String what = req.getParameter("what");
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("subject", subject);
+		map.put("what", what);
+		map.put("idx", idx);
+		
+		List<HashMap<String, Object>> teamwonList = service.getFindNotMe(map);
+		
+		req.setAttribute("teamwonList", teamwonList);
+		
+		
+		return "jsw/memberListNotMe.not";
+	}
+	
+	
 	
 }

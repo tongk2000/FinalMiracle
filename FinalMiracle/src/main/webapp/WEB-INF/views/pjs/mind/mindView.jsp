@@ -15,7 +15,7 @@ request.setCharacterEncoding("UTF-8");
 <head>
 <meta charset="UTF-8">
 <style>
-	.img {
+	.imgs {
 		width:25px;
 		heigth:25px;
 	}
@@ -52,10 +52,10 @@ request.setCharacterEncoding("UTF-8");
 				<tbody>
 					<tr>
 						<c:if test="${user.status == 2 || sessionScope.loginUser.userid == user.userid}">
-							<td width="12%">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="img"> &nbsp;&nbsp; ${user.userid}</td>
+							<td width="12%">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="imgs"> &nbsp;&nbsp; ${user.userid}</td>
 						</c:if>
 						<c:if test="${user.status == 1 && sessionScope.loginUser.userid != user.userid}">
-							<td width="12%">익명의 유저 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${defaultimg2.img}" class="img"> &nbsp;&nbsp;</td>
+							<td width="12%">익명의 유저 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${defaultimg2.img}" class="imgs"> &nbsp;&nbsp;</td>
 						</c:if>
 					</tr>
 					<tr>

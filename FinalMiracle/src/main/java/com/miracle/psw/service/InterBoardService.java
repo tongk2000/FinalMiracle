@@ -45,6 +45,8 @@ public interface InterBoardService {
 	MemberVO showUserInfo(HashMap<String, Object> map);
 	MemberDetailVO showUserDetailInfo(HashMap<String, Object> map);
 
+	int delFree(String idx) throws Throwable;  // 자유게시판 글 삭제 하기(update방식)
+
 	
 
 

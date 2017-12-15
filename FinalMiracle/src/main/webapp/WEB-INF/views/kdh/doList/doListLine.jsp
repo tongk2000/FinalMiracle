@@ -6,14 +6,14 @@
 
 <c:if test="${not empty map.doList}"> <!-- 프로젝트 리스트가 있다면 -->
 	<c:forEach var="dvo" items="${map.doList}">
-		<tr id="${dvo.idx}" 
+		<tr id="${dvo.idx}"
 			<c:if test="${dvo.fk_folder_idx == 0}">
 				style="font-size:14pt; font-weight:bold;"
 			</c:if>
 			<c:if test="${dvo.fk_folder_idx != 0 and dvo.category == 1}">
 				style="font-size:12pt; font-weight:bold;"
 			</c:if>
-		class="element ${dvo.groupNo} ${dvo.depth}">
+		class="element ${dvo.groupNo} ${dvo.depth} trLine">
 			<td>
 				<input type="hidden" class="fk_folder_idx" value="${dvo.fk_folder_idx}" />
 				<input type="hidden" class="downCnt" value="${dvo.downCnt}" />
@@ -41,6 +41,10 @@
 				</span>
 			</td>
 			
+			<td></td>
+			<td></td>
+			<td></td>
+			
 			<c:if test="${dvo.status == 1}"> <!-- 미완료된 할일이라면 -->
 				<c:if test="${dvo.dayCnt == 0}"> <!-- 시작일 전이라면 -->
 					<td class="dateColor ${dvo.dayCnt}" style="background-color:lightgreen;">${dvo.startDate}</td>
@@ -59,11 +63,8 @@
 				<td class="dateColor ${dvo.dayCnt}" style="background-color:gray;">${dvo.startDate}</td>
 				<td class="dateColor ${dvo.dayCnt}" style="background-color:gray;">${dvo.lastDate}</td>
 			</c:if>
-			<td>${dvo.importance}</td>
-			
-			<td></td>
-			<td></td>
-			
+			<td style="border-right:3px solid black;">${dvo.importance}</td>
+						
 			<c:forEach var="pageDate" items="${map.pageDateList}">
 				<fmt:parseNumber var="startDate" value="${dvo.startDate.replace('-','')}" integerOnly="true"/>
 				<fmt:parseNumber var="lastDate" value="${dvo.lastDate.replace('-','')}" integerOnly="true"/>

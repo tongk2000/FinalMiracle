@@ -157,6 +157,30 @@ public class BoardService implements InterBoardService {
 		return vo;
 	}
 
+	// =========================================== *** 자유게시판 해당글 1개 삭제하기(Transaction) *** ================================
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	@Override
+	public int delFree(String idx) throws Throwable {
+		int count = 0;
+		int result1 = 0;
+		int result2 = 0;
+		
+		int n = 0;
+		
+		count = dao.isExistComment(idx); // 해당글의 댓글 유무 확인하기
+		result1 = dao.deleteContent(idx);  // 해당글 1개 삭제하기
+		
+		if(count > 0){
+			result2 = dao.deleteComment(idx);  // 댓글이 존재하면 해당글의 댓글 삭제하기
+		}
+		
+		if( (result1 > 0 && (count>0 && result2>0)) || (result1 > 0 && count == 0) ) {  //  게시글 1개 삭제(덧글 있는 경우 Or 덧글 없는 경우)
+			n = 1;
+		}
+		
+		return n;
+	}
+
 	
 	
 	

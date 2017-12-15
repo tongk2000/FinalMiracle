@@ -15,7 +15,7 @@ request.setCharacterEncoding("UTF-8");
 <meta charset="UTF-8">
 <title>공지사항 글</title>
 <style>
-	.img {
+	.imgs {
 		width:25px;
 		heigth:25px;
 	}
@@ -53,7 +53,7 @@ request.setCharacterEncoding("UTF-8");
 				</thead>
 				<tbody>
 					<tr>
-						<td width="12%">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="img"> &nbsp;&nbsp; ${user.userid}</td>
+						<td width="12%">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="imgs"> &nbsp;&nbsp; ${user.userid}</td>
 					</tr>
 					<tr>
 						<td width="12%" >팀정보 : </td><td style="padding-left:12px;">${user.team_idx} 팀</td>

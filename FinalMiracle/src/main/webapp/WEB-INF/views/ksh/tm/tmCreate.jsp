@@ -20,9 +20,9 @@
 .content {
 	border-radius: 15px;
 	background-color: #4F84C4;
-	width: 75%;
-	margin-top: 50px;
-	margin-left: 100px;
+	width: 50%;
+	margin-top: 16%;
+	margin-left: 25%;
 }
 
 table#tblMemberRegister {
@@ -319,7 +319,7 @@ th#th {
 </head>
 
 
-<body>
+<body background="<%= request.getContextPath() %>/resources/images/loginbg.png">
 	<div class="content" align="center">
 		<form name="createFrm" enctype="multipart/form-data">
 			<table id="tblMemberRegister" style="margin-bottom: 30px;">
@@ -380,7 +380,7 @@ th#th {
 							<a class="btn btn-sm btn-success" onClick="goRegister(event);">
 								<span style="color: white; font-size: 14pt;"><span class="glyphicon glyphicon-check"></span> 팀 생성 </span>
 							</a> &nbsp;&nbsp; 
-							<a class="btn btn-sm btn-success" href="<%=request.getContextPath()%>/tmForm.mr">
+							<a class="btn btn-sm btn-danger" href="<%=request.getContextPath()%>/tmForm.mr">
 								<span style="color: white; font-size: 14pt;">
 								<span class="glyphicon glyphicon-remove"></span> 팀 선택 </span>
 							</a>

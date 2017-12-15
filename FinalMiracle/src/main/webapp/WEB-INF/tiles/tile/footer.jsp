@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
+<<<<<<< HEAD
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <!-- 
@@ -68,3 +69,6 @@
 		<iframe src="<%=request.getContextPath()%>/googleMapbasic.mr" style="width:100%; height: 404px;"></iframe>
 	</div>
 </div> -->
+=======
+    pageEncoding="UTF-8"%>
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git

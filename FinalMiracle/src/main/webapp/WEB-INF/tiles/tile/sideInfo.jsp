@@ -12,6 +12,7 @@
 	String serverName = "http://"+serverIP+":"+portnumber;
 
 %>
+<<<<<<< HEAD
 <script type="text/javascript">
 	$(document).ready(function(){
 		$(document).tooltip();
@@ -41,13 +42,30 @@
 			}
 		});
 	}
+=======
+
+<style type="text/css">
+
+</style>
+
+<script type="text/javascript">
+	$(function() {
+	    $(document).tooltip();
+	});
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 </script>
 
 <div class="side-info">
+<<<<<<< HEAD
     <ul style="list-style-type: none; margin: 0px; padding: 0px;">
       <li><a href="<%= request.getContextPath() %>/doList.mr" title="메인 페이지"><img src="<%= request.getContextPath() %>/resources/images/icon/00.png" style="width:50px; heigth:50px;" /></a></li>
+=======
+
+    <ul style="list-style-type: none; margin: 0px; padding: 0px;">
+
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
       <li><a href="<%= request.getContextPath() %>/doList.mr" title="일정관리"><img src="<%= request.getContextPath() %>/resources/images/icon/01.png" style="width:50px; heigth:50px;" /></a></li>
-      <li><a href="<%=serverName%><%= request.getContextPath() %>/chatting.mr" title="채팅"><img src="<%= request.getContextPath() %>/resources/images/icon/02.png" style="width:50px; heigth:50px;" /></a></li>
+      <li><a href="<%-- <%=serverName%> --%><%= request.getContextPath() %>/chatting.mr" title="채팅"><img src="<%= request.getContextPath() %>/resources/images/icon/02.png" style="width:50px; heigth:50px;" /></a></li>
       <li><a href="<%= request.getContextPath() %>/commute.mr" title="출퇴근"><img src="<%= request.getContextPath() %>/resources/images/icon/03.png" style="width:50px; heigth:50px;" /></a></li>
       <li><a href="<%= request.getContextPath() %>/faqList.mr" title="FAQ"><img src="<%= request.getContextPath() %>/resources/images/icon/04.png" style="width:50px; heigth:50px;" /></a></li>
       <li><a href="<%= request.getContextPath() %>/noticeList.mr" title="공지사항"><img src="<%= request.getContextPath() %>/resources/images/icon/05.png" style="width:50px; heigth:50px;" /></a></li>
@@ -55,9 +73,17 @@
       <li><a href="<%= request.getContextPath() %>/freeList.mr" title="자유게시판"><img src="<%= request.getContextPath() %>/resources/images/icon/07.png" style="width:50px; heigth:50px;" /></a></li>
       <li><a href="<%= request.getContextPath() %>/voteList.mr" title="투표게시판"><img src="<%= request.getContextPath() %>/resources/images/icon/08.png" style="width:50px; heigth:50px;" /></a></li>
       <li><a href="<%= request.getContextPath() %>/tmList.mr" title="팀원관리"><img src="<%= request.getContextPath() %>/resources/images/icon/09.png" style="width:50px; heigth:50px;" /></a></li>
+<<<<<<< HEAD
       <li><a href="<%= request.getContextPath() %>/memoList.mr" title="메모"><img src="<%= request.getContextPath() %>/resources/images/icon/10.png" style="width:50px; heigth:50px;" /></a></li>
       <li><a href="<%= request.getContextPath() %>/memoreceiver.mr" title="쪽지"  ><img src="<%= request.getContextPath() %>/resources/images/icon/11.png" style="width:50px; heigth:50px;" id="alarm"/></a></li>
       <li style="margin-left:20px;"><a href="<%= request.getContextPath() %>/googleMap.mr" title="회사소개">회사</a></li>
+=======
+      <li><a href="<%= request.getContextPath() %>/memoList.mr" title="메모"><img src="<%= request.getContextPath() %>/resources/images/icon/10.png" style="width:40px; heigth:40px; margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"/></a></li>
+
+      <li><a href="<%= request.getContextPath() %>/memoreceiver.mr" title="쪽지"><img src="<%= request.getContextPath() %>/resources/images/icon/11.png" style="width:50px; heigth:50px;" /></a></li>
+
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
     </ul>
+    
 </div>
 

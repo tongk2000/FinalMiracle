@@ -27,7 +27,7 @@ request.setCharacterEncoding("UTF-8");
 	td {
 		padding-left:5px;
 	}
-	img {
+	.imgs {
 		width:25px;
 		height:25px;
 	}
@@ -76,7 +76,7 @@ request.setCharacterEncoding("UTF-8");
 								<td width="5%" style="text-align:center;"><input type="checkbox"><input type="hidden" value="${nt.n_idx}"/></td><!-- 번호 -->
 								<td width="15%" style="padding-left:10px;">
 									<a onClick="goUserInfo('${nt.fk_userid}');"> <!-- 유저아이디 -->
-										<img class="img" src="<%= request.getContextPath()%>/resources/images/${nt.img}" class="img" /> 
+										<img src="<%= request.getContextPath()%>/resources/images/${nt.img}" class="imgs" /> 
 										<span class="userid">${nt.fk_userid}</span>
 									</a>
 								</td>	
