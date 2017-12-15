@@ -72,6 +72,11 @@
 		cursor: pointer;
 	}
 	
+	.freeListRowCssStyle {
+		background-color: lightgray;
+		cursor: pointer;
+	}
+	
 </style>
 
 <script type="text/javascript">
@@ -84,6 +89,7 @@
 		      lang: 'ko-KR'         // 한국어 지정(기본값은 en-US)
 	    });
 		// =========================================== *** 글목록에서 제목에 마우스 가져댈 경우 css 효과 주기 *** ===================
+ 
 		$(".subject").bind("mouseover", function(event){
 			var $target = $(event.target);
 			$target.addClass("subjectStyle");
@@ -92,6 +98,7 @@
 			var $target = $(event.target);
 			$target.removeClass("subjectStyle");
 		});
+		
 		
 		// =========================================== *** 목록보기 에 마우스 가져댈 경우 css 효과 주기 *** ===================
 		$(".showFreeList").bind("mouseover", function(event){
@@ -217,34 +224,36 @@
 </head>
 
 <body>
-	<div style="border: 0px solid pink; padding: 10px; margin-left: 10%; width: 90%;">
-		<!-- ============================= *** 자유게시판 소개 *** =================================== -->
-		<table>
-			<tr class="title above">
-				<td colspan="2" style="padding-left: 20px; font-weight: bold;">자유게시판입니다.</td>
-			</tr>
-			<tr class="title">
-			<td colspan="2" style="padding-left: 10px; border: 1px solid lightgray; border-left: none; border-right: none;">
-				미풍양속을 해치지 않는 범위 내에서 자유롭게 작성해주세요.<br/>
-				단, 팀원간 마찰은 <a href="<%= request.getContextPath() %>/mindList.mr">마음의 소리 게시판</a>을,
-				       팀내 공지사항은 <a href="<%= request.getContextPath() %>/noticeList.mr">공지사항</a> 게시판을,
-				<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:1 대화를 원하시는 회원님은 <a href="<%= request.getContextPath() %>/mindList.mr">쪽지</a> 또는 
-				<a href="<%= request.getContextPath() %>/chatting.mr">채팅</a> 기능을 이용해주시기 바랍니다.
-			</td>
-			</tr>
-			<!-- ============================= *** 공 백 *** ================================ -->
-			<tr style="border: 0px solid lightgray; border: none;">
-				<td colspan="2" style="padding-left: 20px;"> 
-					<br/>
-				</td>
-			</tr>
-		</table>
 
-		<br/>
+<div style="border: 3px dotted pink;" align="center">
+	<div style="border: 1px solid orange; width: 800px;" align="left">
+		<!-- ============================= *** 자유게시판 소개 *** =================================== -->
+		<div style="width: 600px;">
+			<table>
+				<tr class="title above">
+					<td colspan="2" style="padding-left: 20px; font-weight: bold;">자유게시판입니다.</td>
+				</tr>
+				<tr class="title">
+				<td colspan="2" style="padding-left: 10px; border: 1px solid lightgray; border-left: none; border-right: none;">
+					미풍양속을 해치지 않는 범위 내에서 자유롭게 작성해주세요.<br/>
+					단, 팀원간 마찰은 <a href="<%= request.getContextPath() %>/mindList.mr">마음의 소리 게시판</a>을,
+					       팀내 공지사항은 <a href="<%= request.getContextPath() %>/noticeList.mr">공지사항</a> 게시판을,
+					<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:1 대화를 원하시는 회원님은 <a href="<%= request.getContextPath() %>/mindList.mr">쪽지</a> 또는 
+					<a href="<%= request.getContextPath() %>/chatting.mr">채팅</a> 기능을 이용해주시기 바랍니다.
+				</td>
+				</tr>
+				<!-- ============================= *** 공 백 *** ================================ -->
+				<tr style="border: 0px solid lightgray; border: none;">
+					<td colspan="2" style="padding-left: 20px;"> 
+						<br/>
+					</td>
+				</tr>
+			</table>
+		</div>
 		<!-- ==================================== *** 자유게시판 목록 *** ============================================ -->
-		<div style="width: 100%;">
-			<table style="width: 80%; border: 1px solid dimgray; border-left: none; border-right: none;">
+		<div style="width: 800px;">
+			<table style="width: 800px; border: 1px solid dimgray; border-left: none; border-right: none;">
 				<thead>
 					<tr>
 						<th style="text-align: center;">글번호</th>
@@ -256,7 +265,7 @@
 				</thead>
 				<tbody>
 					<c:forEach var="freevo" items="${freeList}" varStatus="status">
-						<tr>
+						<tr class="freeListRowCss">
 							<td style="border: 1px solid lightgray; border-left: none; border-right: none; text-align: center;">
 								${freevo.idx}
 							</td>
@@ -295,14 +304,13 @@
 			</table>
 		</div>
 		
-		<div style="float: left; margin-top: 5px;">
-			<span class="showFreeList" onClick="javascript:location.href='<%= request.getContextPath() %>/freeList.mr'" style="font-size: 10pt; font-family: arial black; color: black; cursor: pointer;">목록보기</span>&nbsp;
+		<div style="float: left; margin-left: 10px; margin-top: 5px;">
+			<span class="showFreeList" onClick="javascript:location.href='<%= request.getContextPath() %>/freeList.mr'" style="font-size: 10pt; font-family: arial black; color: black; cursor: pointer;">첫목록보기</span>&nbsp;
 			<span class="addFree" onClick="javascript:location.href='<%= request.getContextPath() %>/freeAdd.mr'" style="font-size: 10pt; font-family: arial black; text-decoration: none; color: black; cursor: pointer;">글쓰기</span>
 		</div>
-		&nbsp;&nbsp;&nbsp;
 		
 		<!-- ===================================== *** 글 검색용 폼 생성 *** ================================================== -->
-		<div style="float: right; margin-right: 20%; margin-top: 5px;">
+		<div style="float: right; margin-right: 10px; margin-top: 5px;">
 			<form name="searchFrm" action="<%= request.getContextPath() %>/freeList.mr" method="get">
 				<select name="colname" id="colname" style="height: 20px; vertical-align: middle; box-sizing: border-box; ">
 					<option value="subject">제목</option>
@@ -315,25 +323,30 @@
 				<a class="searchFreeList" onClick="goSearch();" style="font-size: 10pt; font-family: arial black; text-decoration: none; color: black; cursor: pointer;">검색</a>
 			</form>
 		</div>
+		<!-- 페이지 바 만들기 -->
+		<div style="width: 800px; clear: both;">
+			${pagebar}
+		</div>
 	</div>
 	
-	<!-- 페이지 바 만들기 -->
-	<div style="width: 80%; margin-left: 10%;">
-		${pagebar}
-	</div>
 	
-	<!-- 해당 글 조회용 폼 생성 -->
-	<form name="idxFrm">
-		<input type="hidden" name="idx"/>
-		<input type="hidden" name="currentShowPageNo" value="${currentShowPageNo}"/>
-		<input type="hidden" name="sizePerPage" value="${sizePerPage}"/>
-		<input type="hidden" name="colname" value="${colname}"/>
-		<input type="hidden" name="search" value="${search}"/>
-	</form>
+</div>	
+	
 	
 	
 </body>
+
+
 </html>
+
+<!-- 해당 글 조회용 폼 생성 -->
+<form name="idxFrm">
+	<input type="hidden" name="idx"/>
+	<input type="hidden" name="currentShowPageNo" value="${currentShowPageNo}"/>
+	<input type="hidden" name="sizePerPage" value="${sizePerPage}"/>
+	<input type="hidden" name="colname" value="${colname}"/>
+	<input type="hidden" name="search" value="${search}"/>
+</form>
 
 
 <!-- 회원 상세정보 모달 창 -->
