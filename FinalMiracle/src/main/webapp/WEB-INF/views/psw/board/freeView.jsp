@@ -28,16 +28,15 @@
 		cursor: pointer;
 	}
 	
-	.freeListCssStyle {
+	.freeListRowCssStyle {
 		background-color: lightgray;
-		cursor: pointer;
 	}
 
 </style>
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		// ==================================================== *** 회원 아이디나 성명 클릭시 상세정보 모달창으로 띄우기 *** ===============
+		// ==================================================== *** 회원 아이디나 성명에 mouseover out 효과주기 *** ===============
 		$(".repleInfo").bind("mouseover", function(event){
 			var $target = $(event.target);
 			$target.addClass("infoStyle");
@@ -58,6 +57,12 @@
 		$(".freeListCss").bind("mouseover", function(event){
 			var $target = $(event.target);
 			$target.addClass(".freeListCssStyle");
+		});
+		// ================================== *** 행 전체에 hover 효과 주기 *** ============================
+		$(".freeListRow").hover(function(){ 
+			$(this).addClass("freeListRowCssStyle");
+		},function(){
+			$(this).removeClass("freeListRowCssStyle");
 		});
 
 		// ============================================== *** 페이지 전체에서 esc 키를 누르면 모달창을 닫기 *** =======
@@ -180,8 +185,8 @@
 		           	</td>
 		       	</tr>
 		       	<!-- ============================= *** 내용물 *** ================================ -->
-				<tr>
-					<td colspan="2" style="padding-left: 20px; padding-bottom: 5px;">
+				<tr style="min-height: 300px;">
+					<td colspan="2" style="padding-left: 20px; padding-bottom: 15px;">
 						<br/>
 						<span style="font-size: 10pt; font-family: 옛한글;">${freevo.content}</span>
 						<br/>
@@ -263,7 +268,7 @@
 			</thead>
 			<tbody>
 				<c:forEach var="freevo" items="${freeList}" varStatus="status">
-					<tr class="freeListCss">
+					<tr class="freeListRow">
 						<td style="border: 1px solid lightgray; border-left: none; border-right: none; text-align: center;">
 							${freevo.idx}
 						</td>

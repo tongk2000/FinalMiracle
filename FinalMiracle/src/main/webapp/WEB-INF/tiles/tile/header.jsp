@@ -53,7 +53,7 @@
 			dataType: "HTML", // ajax 요청에 의해 url 요청페이지로 부터 리턴받는 데이터타입. xml, json, html, text 가 있음.
 			success: function(data) {				
 				$("#modalBody").html(data);
-				$("#myModal").modal();
+				$("#memberEditModal").modal();
 			}, // end of success: function()----------
 			error: function(request, status, error){
 				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -105,7 +105,7 @@
 
 <!-- 내 정보 수정 모달 창 -->
 <!-- Modal -->
-<div class="modal modal-center fade" id="myModal" role="dialog">
+<div class="modal modal-center fade" id="memberEditModal" role="dialog">
 	<div class="modal-dialog modal-lg modal-center">
 		<!-- Modal content-->
 		<div class="modal-content">
@@ -113,9 +113,10 @@
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
 				<h4 class="modal-title">내 정보 수정</h4>
 			</div>
-			<div class="modal-body" id="modalBody">
+			<div class="modal-body" id="modalBody" style="height: auto;">
 			</div>
 			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 			</div>
 		</div>
 

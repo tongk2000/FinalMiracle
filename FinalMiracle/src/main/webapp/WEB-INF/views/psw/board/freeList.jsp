@@ -45,7 +45,7 @@
 	}
 	
 	.subjectStyle {
-		color: darkgray;
+		color: black;
 		font-weight: bold;
 		font-size: 11pt;
 		cursor: pointer;
@@ -74,7 +74,6 @@
 	
 	.freeListRowCssStyle {
 		background-color: lightgray;
-		cursor: pointer;
 	}
 	
 </style>
@@ -138,6 +137,13 @@
 		$(".infoDetail").bind("mouseout", function(event){
 			var $target = $(event.target);
 			$target.removeClass("infoStyle");
+		});
+		
+		// ================================== *** 행 전체에 hover 효과 주기 *** ============================
+		$(".freeListRow").hover(function(){ 
+			$(this).addClass("freeListRowCssStyle");
+		},function(){
+			$(this).removeClass("freeListRowCssStyle");
 		});
 		
 		// ============================================== *** 페이지 전체에서 esc 키를 누르면 모달창을 닫기 *** =======
@@ -265,7 +271,7 @@
 				</thead>
 				<tbody>
 					<c:forEach var="freevo" items="${freeList}" varStatus="status">
-						<tr class="freeListRowCss">
+						<tr class="freeListRow">
 							<td style="border: 1px solid lightgray; border-left: none; border-right: none; text-align: center;">
 								${freevo.idx}
 							</td>

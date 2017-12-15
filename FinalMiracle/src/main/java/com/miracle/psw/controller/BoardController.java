@@ -155,14 +155,14 @@ public class BoardController {
 		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 		
 		int totalCount = 0;
-		int sizePerPage = 15;
+		int sizePerPage = 20;
 		int	currentShowPageNo = 0;
 		int totalPage = 0;
 		
 		int startRno = 0;
 		int endRno = 0;
 		
-		int blockSize = 10;
+		int blockSize = 5;
 		
 		if (str_currentShowPageNo == null || str_currentShowPageNo.equals("")) {
 			currentShowPageNo = 1;
@@ -295,14 +295,14 @@ public class BoardController {
 		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 		
 		int totalCount = 0;
-		int sizePerPage = 15;
+		int sizePerPage = 10;
 		int	currentShowPageNo = 0;
 		int totalPage = 0;
 		
 		int startRno = 0;
 		int endRno = 0;
 		
-		int blockSize = 10;
+		int blockSize = 5;
 		
 		if (str_currentShowPageNo == null || str_currentShowPageNo.equals("")) {
 			currentShowPageNo = 1;
@@ -346,11 +346,8 @@ public class BoardController {
 		req.setAttribute("colname", colname);
 		req.setAttribute("search", search);
 		
-		
 		return "psw/board/freeView.all";
 	}
-	
-	
 
 	
 	// ===================================================== *** 자유게시판 글 쓰기 *** ============================================
@@ -371,7 +368,6 @@ public class BoardController {
 	@RequestMapping(value="/freeEdit.mr", method={RequestMethod.GET})
 	public String freeEdit(HttpServletRequest req, HttpServletResponse response, HttpSession session) {
 		String idx = req.getParameter("idx"); // 수정할 게시글 글번호 받아오기
-		
 		// 수정해야 할 글 전체내용 가져오기
 		FreeBoardVO freevo = service.getViewWithNoReadCnt(idx);  // 글 조회수(readCnt) 증가없이 글 불러오기
 		
@@ -388,7 +384,6 @@ public class BoardController {
 			return "psw/board/freeEdit.all";
 		}
 	}
-	
 	@RequestMapping(value="/freeEditEnd.mr", method={RequestMethod.POST})
 	public String freeEditEnd(FreeBoardVO freevo, HttpServletRequest req) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
