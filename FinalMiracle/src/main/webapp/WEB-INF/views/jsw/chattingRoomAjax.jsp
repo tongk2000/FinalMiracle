@@ -14,13 +14,13 @@
 
 </head>
 <body>
-	<div>
+	<div style="font-size: 20px;">
 		<c:forEach var="room" items="${roomList}" varStatus="status">
 			<div onclick="goChatRoom(${room.cridx}); scroll();" style="border: 1px solid blue; cursor: pointer;">${room.roomname} <span style="color: gray;">[${room.personnum}]</span>
 				<c:if test="${room.notreadmessage != 0}">
-					<span style="background-color: red;">${room.notreadmessage}</span>
+					<span style="background-color: red; color: white;">${room.notreadmessage}</span>
 				</c:if>
-				<input type="text" value="${room.cridx}" id="cridx${status.count}" name="cridx${status.count}"/>
+				<input type="hidden" value="${room.cridx}" id="cridx${status.count}" name="cridx${status.count}"/>
 			</div>
 		</c:forEach>
 	</div>
