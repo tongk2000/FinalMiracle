@@ -5,6 +5,8 @@
 <%-- ===== tiles 중 header 페이지 만들기  ===== --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+
 <%
 	// === 서버 IP 주소 알아오기 === //
 	InetAddress inet = InetAddress.getLocalHost();
@@ -15,8 +17,6 @@
 %>
 
 <style type="text/css">
-
-	.modal-dialog.modal-fullsize { width: 50%; height: 100%; margin: 0; padding: 0; }
 	
 	.modal.modal-center {
 	  text-align: center;
@@ -51,7 +51,7 @@
 			url: "member_edit.mr",
 			type: "GET",
 			dataType: "HTML", // ajax 요청에 의해 url 요청페이지로 부터 리턴받는 데이터타입. xml, json, html, text 가 있음.
-			success: function(data) {				
+			success: function(data) {	
 				$("#modalBody").html(data);
 				$("#memberEditModal").modal();
 			}, // end of success: function()----------
@@ -106,7 +106,7 @@
 <!-- 내 정보 수정 모달 창 -->
 <!-- Modal -->
 <div class="modal modal-center fade" id="memberEditModal" role="dialog">
-	<div class="modal-dialog modal-lg modal-center">
+	<div class="modal-dialog modal-md modal-center">
 		<!-- Modal content-->
 		<div class="modal-content">
 			<div class="modal-header">
