@@ -150,44 +150,6 @@ public class ProjectMangerController {
 		String fk_teamwon_idx = teamInfo.get("teamwon_idx");
 		// 파일 정보 저장을 위해 세션에 있는 팀원번호 받아오기 끝 
 		
-		// ***** 파일 업로드하고 ffvo 에 파일 정보 저장하기 시작 *****
-		List<MultipartFile> attachList = freq.getFiles("attach");
-		List<Folder_FileVO> ffList = new ArrayList<Folder_FileVO>();  
-		if(attachList != null && attachList.size() != 0) { // attach 가 비어있지 않다면(즉, 첨부된 파일이 있다면)
-			for(MultipartFile attach : attachList) {
-				System.out.println(attach);
-				
-				String root = ses.getServletContext().getRealPath("/"); // WAS 의 metadata 경로를 알아온다.
-				// C:\FinalMiracle\.metadata\.plugins\org.eclipse.wst.server.core\tmp3\wtpwebapps\FinalMiracle\
-				
-				String path = root+"resources"+File.separator+"files";
-				// C:\FinalMiracle\.metadata\.plugins\org.eclipse.wst.server.core\tmp3\wtpwebapps\FinalMiracle\resources\files
-				
-				String orgFilename = attach.getOriginalFilename(); // 사용자가 올린 원본 파일명
-				// 입퇴실체크.jpg
-				
-				long filesize = attach.getSize(); // 파일크기를 읽어옴
-				// 126922
-				
-				byte[] bytes = null; // 첨부파일을 WAS 디스크에 저장할때 사용되는 용도
-				String serFilename = "";
-				try {
-					bytes = attach.getBytes();
-					serFilename = fileManager.doFileUpload(bytes, orgFilename, path);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				Folder_FileVO ffvo = new Folder_FileVO();
-				ffvo.setFk_folder_idx(fvo.getIdx());
-				ffvo.setFk_teamwon_idx(Integer.parseInt(fk_teamwon_idx));
-				ffvo.setSerFilename(serFilename);
-				ffvo.setOrgFilename(orgFilename);
-				ffvo.setFilesize(filesize);
-				ffList.add(ffvo);
-			}
-		}
-		// ***** 파일 업로드하고 ffvo 에 파일 정보 저장하기 끝 *****
-		
 		// ***** 수정되는 요소의 팀원 리스트를 ftvo 에 넣기 시작 *****
 		List<Folder_TeamwonVO> ftList = new ArrayList<Folder_TeamwonVO>();
 		String[] folder_teamwonIdxArr = req.getParameterValues("folder_teamwonIdxArr");
@@ -196,10 +158,15 @@ public class ProjectMangerController {
 			ftvo.setFk_teamwon_idx(Integer.parseInt(folder_teamwonIdxArr[i]));
 			ftvo.setFk_folder_idx(fvo.getIdx());
 			ftList.add(ftvo);
-		} 
-		// ***** 수정되는 요소의 팀원 리스트를 ftvo 에 넣기 끝 *****
+		} // ***** 수정되는 요소의 팀원 리스트를 ftvo 에 넣기 끝 *****
 		
-		int result = svc.do_goModalEdit(fvo, ftList, ffList);
+		// 삭제할 첨부파일 목록을 받아온다.
+		String[] delFileArr = req.getParameterValues("delFileArr");
+		
+		// 서버폴더에 파일저장하고 DB에 저장할 파일 정보 가져오기
+		List<Folder_FileVO> ffList = doFileUpdate(freq, ses, fvo.getIdx(), Integer.parseInt(fk_teamwon_idx));
+		
+		int result = svc.do_goModalEdit(ses, fvo, ftList, ffList, delFileArr);
 		
 		JSONObject json = new JSONObject();
 		json.put("result", result);
@@ -210,36 +177,6 @@ public class ProjectMangerController {
 		
 		return "kdh/json.not";
 	} // end of String do_goModalEdit(HttpServletRequest req, FolderVO fvo) ----------------------------------------------
-	
-	// 첨부파일 다운로드 받기
-	@RequestMapping(value="do_fileDownload.mr", method={RequestMethod.GET})
-	public void fileDownload(HttpServletRequest req, HttpServletResponse res, HttpSession ses, Folder_FileVO ffvo) {
-		String orgFilename = ffvo.getOrgFilename();
-		String serFilename = ffvo.getSerFilename();
-		
-		String root = ses.getServletContext().getRealPath("/");
-		// C:\FinalMiracle\.metadata\.plugins\org.eclipse.wst.server.core\tmp3\wtpwebapps\FinalMiracle\
-		
-		String path = root+"resources"+File.separator+"files";
-		// C:\FinalMiracle\.metadata\.plugins\org.eclipse.wst.server.core\tmp3\wtpwebapps\FinalMiracle\resources\files
-
-		boolean flag = false;
-		flag = fileManager.doFileDownload(serFilename, orgFilename, path, res);
-		if(!flag) { // 다운로드가 실패했다면
-			res.setContentType("text/html; charset=UTF-8");
-            PrintWriter writer = null;
-            
-            try {
-                  writer = res.getWriter();
-                  // 웹브라우저상에 메시지를 쓰기 위한 객체생성.
-            } catch (IOException e) {
-                  
-            }
-            
-            writer.println("<script type='text/javascript'>alert('파일 다운로드가 불가능합니다.!!')</script>");      
-		}
-	}
-	
 	
 	// 할일 완료, 미완료 처리하기
 	@RequestMapping(value="do_taskComplete.mr", method={RequestMethod.GET})
@@ -268,21 +205,25 @@ public class ProjectMangerController {
 	
 	// 하위요소 추가하기
 	@RequestMapping(value="do_addDownElementEnd.mr", method={RequestMethod.POST})
-	public String addDownElementEnd(HttpServletRequest req, HttpSession ses, FolderVO fvo) {		
+	public String addDownElementEnd(HttpServletRequest req, HttpSession ses, MultipartHttpServletRequest freq, FolderVO fvo) {		
 		String[] teamwonIdxArr = req.getParameterValues("teamwonIdx"); // 추가되는 요소에 지정된 담당 팀원목록을 받아옴
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("teamwonIdxArr", teamwonIdxArr);
 		
 		@SuppressWarnings("unchecked")
 		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo"); // 추가하는 팀원이 누구인지 세션에서 가져와서
-		fvo.setFk_teamwon_idx( Integer.parseInt(teamInfo.get("teamwon_idx")) ); // FolderVO 에 넣어줌
+		int fk_teamwon_idx = Integer.parseInt(teamInfo.get("teamwon_idx"));
+		fvo.setFk_teamwon_idx(fk_teamwon_idx); // FolderVO 에 넣어줌
 		
 		map.put("teamwon_idx", Integer.parseInt(teamInfo.get("teamwon_idx")) ); // 폴더팀원목록에도 넣어줌(status 다르게 해주기 위함)
 		
 		String term = req.getParameter("term"); // 페이징 기간을 가져옴
 		String page = (String)req.getParameter("page"); // 페이징 이동할 페이지를 가져옴
 		
-		map = svc.addDownElementEnd(fvo, map, term, page); // 트랜잭션 결과와 새로 추가된 요소의 정보를 가져옴 
+		// 서버폴더에 파일저장하고 DB에 저장할 파일 정보 가져오기
+		List<Folder_FileVO> ffList = doFileUpdate(freq, ses, fvo.getIdx(), fk_teamwon_idx);
+				
+		map = svc.addDownElementEnd(fvo, map, term, page, ffList); // 트랜잭션 결과와 새로 추가된 요소의 정보를 가져옴 
 		
 		req.setAttribute("map", map);
 		
@@ -355,6 +296,79 @@ public class ProjectMangerController {
 		return "kdh/doList/getMyElement.xml";
 	} // end of public List<String> getMyElement(HashMap<String, String> map) ---------------------------------------------------------------
 	
+	
+	// ============================= ***** 파일 관련 메소드 시작 ***** =============================
+	// 파일 업로드하고 ffvo 에 파일 정보 저장하기
+	public List<Folder_FileVO> doFileUpdate(MultipartHttpServletRequest freq, HttpSession ses, int fk_folder_idx, int fk_teamwon_idx) {
+		List<MultipartFile> attachList = freq.getFiles("attach");
+		List<Folder_FileVO> ffList = null;  
+		if(attachList != null && attachList.size() != 0) { // attach 가 비어있지 않다면(즉, 첨부된 파일이 있다면)
+			ffList = new ArrayList<Folder_FileVO>(); 
+			for(MultipartFile attach : attachList) {
+				String root = ses.getServletContext().getRealPath("/"); // WAS 의 metadata 경로를 알아온다.
+				// C:\FinalMiracle\.metadata\.plugins\org.eclipse.wst.server.core\tmp3\wtpwebapps\FinalMiracle\
+				
+				String path = root+"resources"+File.separator+"files";
+				// C:\FinalMiracle\.metadata\.plugins\org.eclipse.wst.server.core\tmp3\wtpwebapps\FinalMiracle\resources\files
+				
+				String orgFilename = attach.getOriginalFilename(); // 사용자가 올린 원본 파일명
+				// 입퇴실체크.jpg
+				
+				long filesize = attach.getSize(); // 파일크기를 읽어옴
+				// 126922
+				
+				byte[] bytes = null; // 첨부파일을 WAS 디스크에 저장할때 사용되는 용도
+				String serFilename = "";
+				try {
+					bytes = attach.getBytes();
+					serFilename = fileManager.doFileUpload(bytes, orgFilename, path);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				Folder_FileVO ffvo = new Folder_FileVO();
+				ffvo.setFk_folder_idx(fk_folder_idx);
+				ffvo.setFk_teamwon_idx(fk_teamwon_idx);
+				ffvo.setSerFilename(serFilename);
+				ffvo.setOrgFilename(orgFilename);
+				ffvo.setFilesize(filesize);
+				ffList.add(ffvo);
+			}
+		}
+		return ffList;
+	} // end of List<Folder_FileVO> doFileUpdate(MultipartHttpServletRequest freq, HttpSession ses, int fk_folder_idx, int fk_teamwon_idx) ----------------------------------
+	
+	// 첨부파일 다운로드 받기
+	@RequestMapping(value="do_fileDownload.mr", method={RequestMethod.GET})
+	public void fileDownload(HttpServletRequest req, HttpServletResponse res, HttpSession ses, Folder_FileVO ffvo) {
+		String orgFilename = ffvo.getOrgFilename();
+		String serFilename = ffvo.getSerFilename();
+		
+		String root = ses.getServletContext().getRealPath("/");
+		// C:\FinalMiracle\.metadata\.plugins\org.eclipse.wst.server.core\tmp3\wtpwebapps\FinalMiracle\
+		
+		String path = root+"resources"+File.separator+"files";
+		// C:\FinalMiracle\.metadata\.plugins\org.eclipse.wst.server.core\tmp3\wtpwebapps\FinalMiracle\resources\files
+
+		boolean flag = false;
+		flag = fileManager.doFileDownload(serFilename, orgFilename, path, res);
+		if(!flag) { // 다운로드가 실패했다면
+			res.setContentType("text/html; charset=UTF-8");
+            PrintWriter writer = null;
+            
+            try {
+                  writer = res.getWriter();
+                  // 웹브라우저상에 메시지를 쓰기 위한 객체생성.
+            } catch (IOException e) {
+                  
+            }
+            
+            writer.println("<script type='text/javascript'>alert('파일 다운로드가 불가능합니다.!!')</script>");      
+		}
+	} // end of void fileDownload(HttpServletRequest req, HttpServletResponse res, HttpSession ses, Folder_FileVO ffvo) --------------------------------
+	
+	// 첨부파일 삭제 하기
+	
+	// ============================= ***** 파일 관련 메소드 끝 ***** =============================
 }
 	 
 
