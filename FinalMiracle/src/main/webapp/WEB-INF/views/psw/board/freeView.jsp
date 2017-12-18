@@ -134,7 +134,7 @@
 
 
 <div style="height: auto; border: 3px dotted pink;" align="center">
-	<div style="border: solid 1px red; width: 650px;" >
+	<div style="border: solid 1px red; width: 800px;" >
 		<div style="float: left;">
 			<table id="table" style="width: 500px; border: 1px solid dimgray; border-left: none; border-right: none;">
 				<!-- ============================= *** 자유게시판 소개 *** =================================== -->
@@ -157,9 +157,19 @@
 				<tr style="border: 1px solid lightgray; border-top: none; border-left: none; border-right: none;">
 					<td colspan="2" style="padding-left: 10px;"> 
 						<br/>
-						<span style="font-size: 9pt; color: #578CA9;" onClick="">≪ 이전글 </span> &nbsp;&nbsp;&nbsp;
+						<c:if test="${freevo.pre_idx ne -9}">
+							<span style="font-size: 9pt; color: #578CA9; cursor: pointer;" onClick="javascript:location.href='<%= request.getContextPath() %>/freeView.mr?idx=${freevo.pre_idx}'">≪ 이전글 </span> &nbsp;&nbsp;&nbsp;
+						</c:if>
+						<c:if test="${freevo.pre_idx eq -9}">
+						</c:if>
+						
 						<span style="font-size: 10pt; font-weight: bold;">현재 글번호 : </span>${freevo.idx} &nbsp;&nbsp;&nbsp;
-						<span style="font-size: 9pt; color: #578CA9;">다음글 ≫</span>
+						<c:if test="${freevo.next_idx ne 0}">
+							<span style="font-size: 9pt; color: #578CA9; cursor: pointer;" onClick="javascript:location.href='<%= request.getContextPath() %>/freeView.mr?idx=${freevo.next_idx}'">다음글 ≫</span>
+						</c:if>		 
+						<c:if test="${freevo.next_idx eq 0}">	
+						</c:if>	
+									
 						<br/>
 					</td>
 				</tr>
@@ -167,7 +177,7 @@
 		</div>
 		<!-- ============================= *** 제목, 게시글 작성자 및 상세정보 *** ========================= -->
 		<div>
-			<table style="width: 650px; border: 1px solid darkgray; border-left: none; border-right: none;">
+			<table style="width: 800px; border: 1px solid darkgray; border-left: none; border-right: none;">
 				<tr>
 		           	<th style="width: 8%; padding-top: 5px;">
 						<img src="<%= request.getContextPath() %>/resources/images/${freevo.img}" style="width: 90px; height: 90px;" align="middle">
@@ -192,15 +202,20 @@
 						<br/>
 						<span style="font-size: 10pt; font-family: 옛한글;">${freevo.content}</span>
 						<br/>
+						
+						<input type="hidden" name="groupno" value="${freevo.groupno}" />
+						<input type="hidden" name="depthno" value="${freevo.depthno}" />
 					</td>
 				</tr>
 			
 			</table>
 		</div>
 		
-		<!-- ============================================================ *** 목록 , 게시글 수정 / 삭제 버튼 *** =================================== -->
+		<!-- ============================================================ *** 목록보기 / 답변글쓰기, 게시글 수정 / 삭제 버튼 *** =================================== -->
 		<div style="float: left; margin-left: 10px;">
 			<a style="font-size: 9pt; text-decoration: none; color: black; cursor: pointer;" href="javascript:location.href='<%= request.getContextPath() %>/freeList.mr?currentShowPageNo=${currentShowPageNo}&sizePerPage=${sizePerPage}&colname=${colname}&search=${search}'">목록보기</a>
+			&nbsp;&nbsp;&nbsp;
+			<a style="font-size: 9pt; text-decoration: none; color: black; cursor: pointer;" href="javascript:location.href='<%= request.getContextPath() %>/freeAdd.mr?fk_idx=${freevo.idx}&groupno=${freevo.groupno}&depthno=${freevo.depthno}'">답변글쓰기</a>
 		</div>
 		<div style="float: right; margin-right: 20px;">
 			<a style="font-size: 9pt; text-decoration: none; color: black; cursor: pointer;" href="javascript:location.href='<%= request.getContextPath() %>/freeEdit.mr?idx=${freevo.idx}'">글수정</a> &nbsp;&nbsp;&nbsp;
@@ -209,7 +224,7 @@
 		
 		
 		<!-- ======================= *** 댓글쓰기 폼 추가 *** ================================== -->
-		<div style="border: 1px solid lightgray; border-left: none; border-right: none; width: 600px; padding: 2px; background-color: lightblue;" align="center">
+		<div style="border: 1px solid lightgray; border-left: none; border-right: none; width: 800px; padding: 2px; background-color: lightblue;" align="center">
 			<form name="addWriteFrm" action="<%= request.getContextPath() %>/freeComment.mr" method="get">
 				<span style="font-family: verdana; ">
 					<span style="font-weight: bold; font-size: 9pt;">작성자 : </span>${sessionScope.loginUser.userid} [${sessionScope.loginUser.name}]
@@ -230,7 +245,7 @@
 		<div style = "border: 0px solid pink; margin-top: 3px;">
 			<!-- ======================================== *** 댓글 내용 보여주기 *** =================================================== -->
 			<c:if test="${not empty freeCommentList}">
-				<table id="comment" style="width: 600px; padding: 2px; margin-bottom: 5px;">
+				<table id="comment" style="width: 700px; padding: 2px; margin-bottom: 5px;">
 					<c:forEach var="commentvo" items="${freeCommentList}" >
 						<tr id="comment${commentvo.idx}">
 							<td style="border: 0px solid lightgray; border-left: none; border-right: none; width: 3%;">
@@ -257,11 +272,11 @@
 
 
 	<!-- ==================================== *** 자유게시판 목록 *** ============================================ -->
-	<div style="border: 1px solid blue; width: 650px; padding-top: 10px;">
+	<div style="border: 1px solid blue; width: 800px; padding-top: 10px;">
 		<div align="left" style="margin-left: 20px;">
-		총 게시글 '<span style="font-size: larger; color: orange;">${totalFreeListCnt}'</span> 개
+		총 게시글 '<span style="font-size: larger; color: orange;">${totalCount}'</span> 개
 		</div>
-		<table style="width: 650px; border: 1px solid dimgray; border-left: none; border-right: none;">
+		<table style="width: 800px; border: 1px solid dimgray; border-left: none; border-right: none;">
 			<thead>
 				<tr style="background-color: silver;">
 					<th style="text-align: center; padding: 2px;">글번호</th>
@@ -285,18 +300,36 @@
 						
 						<!-- ======================= *** 자유게시판 목록에서 제목 클릭시 해당 게시글 상세 내용 보여주기 *** ============================ -->
 						<td style="border: 1px solid lightgray; border-left: none; border-right: none; padding-left: 10px;">
-							<c:if test="${freevo.commentCnt > 0}">
-								<span class="subject" onClick="goView(${freevo.idx})">
-									<span style="font-family: Georgia; cursor: pointer;">${freevo.subject}</span>
-								</span>
-								<span style="color: red; font-weight: bold; font-style: italic; font-size: smaller; vertical-align: super;">
-									[${freevo.commentCnt}]
-								</span>
+							<c:if test="${freevo.depthno == 0}">	
+								<c:if test="${freevo.commentCnt > 0}">
+									<span class="subject" onClick="goView(${freevo.idx})">
+										<span style="font-family: Georgia; cursor: pointer;">${freevo.subject}</span>
+									</span>
+									<span style="color: red; font-weight: bold; font-style: italic; font-size: smaller; vertical-align: super;">
+										[${freevo.commentCnt}]
+									</span>
+								</c:if>
+								<c:if test="${freevo.commentCnt == 0}">
+									<span class="subject" onClick="goView(${freevo.idx})">
+										<span style="font-family: Times; cursor: pointer;">${freevo.subject}</span>
+									</span>
+								</c:if>
 							</c:if>
-							<c:if test="${freevo.commentCnt == 0}">
-								<span class="subject" onClick="goView(${freevo.idx})">
-									<span style="font-family: Georgia; cursor: pointer;">${freevo.subject}</span>
-								</span>
+							<!-- ======================================= *** 답변글이 있는 경우 *** ================================== -->
+							<c:if test="${freevo.depthno > 0}">
+								<c:if test="${freevo.commentCnt > 0}">
+									<span class="subject" onClick="goView(${freevo.idx})" style="cursor: pointer;">
+										<span style="color: navy; padding-left: ${freevo.depthno*10}px; font-size: smaller; font-weight: bold;">┗[답변글] </span>${freevo.subject}
+									</span>
+									<span style="color: red; font-weight: bold; font-style: italic; font-size: smaller; vertical-align: super;">
+										[${freevo.commentCnt}]
+									</span>
+								</c:if>
+								<c:if test="${freevo.commentCnt == 0}">
+									<span class="subject" onClick="goView(${freevo.idx})" style="cursor: pointer;">
+										<span style="color: navy; padding-left: ${freevo.depthno*10}px; font-size: smaller; font-weight: bold;">┗[답변글] </span>${freevo.subject}
+									</span>
+								</c:if>
 							</c:if>
 						</td>
 						
@@ -313,7 +346,6 @@
 		
 		<div style="width: 150px; float: left; margin-left: 10px;" align="left">
 			<span class="showFreeList" onClick="javascript:location.href='<%= request.getContextPath() %>/freeList.mr'" style="font-size: 10pt; font-family: arial black; color: black; cursor: pointer;">첫목록보기</span>&nbsp;
-			<span class="addFree" onClick="javascript:location.href='<%= request.getContextPath() %>/freeAdd.mr'" style="font-size: 10pt; font-family: arial black; text-decoration: none; color: black; cursor: pointer;">글쓰기</span>
 		</div>
 		<!-- ===================================== *** 글 검색용 폼 생성 *** ================================================== -->
 		<div style="width: 300px; float: right;">

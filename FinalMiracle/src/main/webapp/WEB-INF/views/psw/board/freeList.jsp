@@ -254,7 +254,7 @@
 				<tr style="border: 0px solid lightgray; border: none;">
 					<td colspan="2" style="padding-left: 20px;"> 
 						<br/>
-						총 게시글 '<span style="font-size: larger; color: orange;">${totalFreeListCnt}</span>' 개
+						총 게시글 '<span style="font-size: larger; color: orange;">${totalCount}</span>' 개
 					</td>
 				</tr>
 			</table>
@@ -286,6 +286,8 @@
 							
 							<!-- ======================= *** 자유게시판 목록에서 제목 클릭시 해당 게시글 상세 내용 보여주기 *** ============================ -->
 							<td style="border: 1px solid lightgray; border-left: none; border-right: none; padding-left: 10px;">
+							<!-- ======================================= *** 답변글이 없는 경우 *** ================================= -->
+							<c:if test="${freevo.depthno == 0}">	
 								<c:if test="${freevo.commentCnt > 0}">
 									<span class="subject" onClick="goView(${freevo.idx})">
 										<span style="font-family: Georgia;">${freevo.subject}</span>
@@ -299,6 +301,23 @@
 										<span style="font-family: Times;">${freevo.subject}</span>
 									</span>
 								</c:if>
+							</c:if>
+							<!-- ======================================= *** 답변글이 있는 경우 *** ================================== -->
+							<c:if test="${freevo.depthno > 0}">
+								<c:if test="${freevo.commentCnt > 0}">
+									<span class="subject" onClick="goView(${freevo.idx})">
+										<span style="color: navy; padding-left: ${freevo.depthno*10}px; font-size: smaller; font-weight: bold;">┗[답변글] </span>${freevo.subject}
+									</span>
+									<span style="color: red; font-weight: bold; font-style: italic; font-size: smaller; vertical-align: super;">
+										[${freevo.commentCnt}]
+									</span>
+								</c:if>
+								<c:if test="${freevo.commentCnt == 0}">
+									<span class="subject" onClick="goView(${freevo.idx})">
+										<span style="color: navy; padding-left: ${freevo.depthno*10}px; font-size: smaller; font-weight: bold;">┗[답변글] </span>${freevo.subject}
+									</span>
+								</c:if>
+							</c:if>
 							</td>
 							
 							<td style="border: 1px solid lightgray; border-left: none; border-right: none; text-align: center;">
@@ -355,6 +374,7 @@
 	<input type="hidden" name="sizePerPage" value="${sizePerPage}"/>
 	<input type="hidden" name="colname" value="${colname}"/>
 	<input type="hidden" name="search" value="${search}"/>
+	
 </form>
 
 
