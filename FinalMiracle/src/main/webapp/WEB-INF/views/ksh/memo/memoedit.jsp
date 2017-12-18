@@ -48,14 +48,33 @@
 		var folder = document.getElementById("folder").value;
 		
 		if(subject.trim() == "" || content.trim() == ""){
-			alert("모든 항목에 빈 칸 없이 넣어주세요.");
+			swal("수정 실패!", "모든 항목에 빈 칸 없이 넣어주세요.", "error");
 			return
 		} else {
-			if(confirm("메모를 수정하시겠습니까?")){
+			/* if(confirm("메모를 수정하시겠습니까?")){
 				var frm = document.EditFrm;
 				
 				frm.submit();
-			}
+			} */
+			
+			swal({
+			  title: "수정 여부",
+			  text: "메모를 수정하시겠습니까?",
+			  type: "warning",
+			  showCancelButton: true,
+			  confirmButtonClass: "btn-warning",
+			  confirmButtonText: "수정",
+			  cancelButtonText: "취소",
+			  closeOnConfirm: false,
+			  closeOnCancel: true
+			},
+			function(isConfirm) {
+			  if (isConfirm) {
+				var frm = document.EditFrm;
+					
+				frm.submit();
+			  }
+			});
 		}
 		
 		
@@ -71,8 +90,8 @@
 			<tr>
 				<th>분류선택</th>
 				<td>
-					<div style="width: 50%;">
-						<select name="folder" id="folder">
+					<div style="width: 25%;">
+						<select name="folder" id="folder" class="form-control">
 							<c:forEach var="memo" items="${memovo}" varStatus="status">
 								<option value="${memo.groups}">${memo.groups}(현재)</option>
 							</c:forEach>
@@ -90,9 +109,9 @@
 			<tr>
 				<th>제목명</th>
 				<td>
-					<div style="width: 30%;">
+					<div style="width: 100%;">
 						<c:forEach var="memo" items="${memovo}" varStatus="status">
-					  		<input type="text" name="subject" id="subject" class="form-control" style="width: 800px;" value="${memo.subject}" />
+					  		<input type="text" name="subject" id="subject" class="form-control" value="${memo.subject}" placeholder="제목을 입력하세요" />
 					  	</c:forEach>
 					</div> 
 				</td>

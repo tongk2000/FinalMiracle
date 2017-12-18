@@ -48,7 +48,7 @@
 		var search = $("#search").val();
 		
 		if(search.trim() == ""){
-			alert("검색어를 입력하세요");
+			swal("검색어를 입력하세요");
 			return;
 		} else {
 			frm.submit();
@@ -63,14 +63,35 @@
 	
 	function goDel(idx){
 		
-		if(confirm("투표를 삭제하시겠습니까?")){
+		/* if(confirm("투표를 삭제하시겠습니까?")){
 			var frm = document.idxFrm;
 			
 			frm.idx.value = idx;
 			
 			frm.action = "voteDel.mr";
 			frm.submit();
-		}
+		} */
+		
+		swal({
+		  title: "투표 삭제 여부",
+		  text: "투표를 삭제하시겠습니까?",
+		  icon: "warning",
+		  buttons: true,
+		  dangerMode: true,
+		})
+		.then((willDelete) => {
+		    if (willDelete) {
+		    	var frm = document.idxFrm;
+				
+				frm.idx.value = idx;
+				
+				frm.action = "voteDel.mr";
+				frm.submit();
+			}
+		  	else {
+		    	return;
+		  }
+		});
 		
 	}
 	
@@ -87,7 +108,7 @@
 		//alert(idx + commcontent);
 		
 		if(commcontent.trim() == ""){
-			alert("빈 칸은 입력할 수 없습니다.");
+			swal("빈 칸은 입력할 수 없습니다.");
 			return;
 		} else {
 			frm.voteidx.value = idx;
@@ -151,7 +172,7 @@
                 });
                 /* $("#chartModal").modal(); */
 			}, error: function(request, status, error){
-				alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+				swal("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
 			}
 		});
 	}
@@ -159,25 +180,29 @@
 	
 </script>
 
-<form id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/voteMyList.mr" method="get" enctype="multipart/form-data">
+<form class="form-inline" id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/voteMyList.mr" method="get" enctype="multipart/form-data">
 <div style="padding-left: 1%; padding-right: 1%; border: solid 0px red; width: 100%; height: 840px; overflow-y: auto;">
 	<h1>투표목록</h1>
 	
 	<div style="margin-top: 20px;">
-		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteList.mr'">진행중 투표</button>&nbsp;
+		<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteList.mr'">진행중 투표</button>&nbsp;
 		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteReadyList.mr'">시작전 투표</button>&nbsp;
 		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteEndList.mr'">종료된 투표</button>&nbsp;
-		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteMyList.mr'">나의 투표</button>&nbsp;
+		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteMyList.mr'">나의 투표</button>&nbsp; --%>
+		<a href="javascript:location.href='<%= request.getContextPath() %>/voteList.mr'" class="btn btn-primary">진행중 투표</a>&nbsp;
+		<a href="javascript:location.href='<%= request.getContextPath() %>/voteReadyList.mr'" class="btn btn-primary">시작전 투표</a>&nbsp;
+		<a href="javascript:location.href='<%= request.getContextPath() %>/voteEndList.mr'" class="btn btn-primary">종료된 투표</a>&nbsp;
+		<a href="javascript:location.href='<%= request.getContextPath() %>/voteMyList.mr'" class="btn btn-primary">나의 투표</a>&nbsp;
 		<br/>전체 <span style="color: red; font-weight: bold;">${totalCount}</span>&nbsp;
 		목록 수 : 
-		<select name="sizePerPage" id="sizePerPage">
+		<select name="sizePerPage" id="sizePerPage" class="form-control">
 			<option value="5">5</option>
 			<option value="10">10</option>
 			<option value="15">15</option>
 			<option value="20">20</option>
 		</select>
 		&nbsp;투표 상태 : 
-		<select name="votekind" id="votekind">
+		<select name="votekind" id="votekind" class="form-control">
 			<option value="ing">진행중</option>
 			<option value="ready">시작전</option>
 			<option value="end">종료</option>
@@ -232,27 +257,31 @@
 					</td>
 					<td>
 						<c:if test="${votekind eq 'ready'}">
-							<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteEdit.mr?idx=${votevo.IDX}'">투표수정</button>
+							<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteEdit.mr?idx=${votevo.IDX}'">투표수정</button> --%>
+							<a href="javascript:location.href='<%= request.getContextPath() %>/voteEdit.mr?idx=${votevo.IDX}'" class="btn btn-info">투표수정</a>&nbsp;
 							<br>
 						</c:if>
 						<c:if test="${votekind eq 'end'}">
-							<button type="button" data-toggle="modal" data-target="#chartModal" onclick="callChart('${votevo.IDX}')">결과보기</button>
+							<button class="btn btn-info" type="button" data-toggle="modal" data-target="#chartModal" onclick="callChart('${votevo.IDX}')">결과보기</button>
 							<br>
 						</c:if>
-							<button type="button" onClick="goDel('${votevo.IDX}');">투표삭제</button>&nbsp;
+							<%-- <button type="button" onClick="goDel('${votevo.IDX}');">투표삭제</button>&nbsp; --%>
+							<a href="javascript:goDel('${votevo.IDX}');" class="btn btn-danger">투표삭제</a>&nbsp;
 					</td>
 					<td>
-						<input type="text" id="commcontent${votevo.IDX}" name="commcontent${votevo.IDX}" size="35px;" />
-						<button type="button" onClick="goCommAdd('${votevo.IDX}');">등록</button>&nbsp;
+						<textarea id="commcontent${votevo.IDX}" name="commcontent${votevo.IDX}" class="form-control" style="width: 80%; resize: none;" placeholder="타인을 비방하는 댓글은 삼가해주시기 바랍니다."></textarea>
+						<%-- <button type="button" onClick="goCommAdd('${votevo.IDX}');">등록</button>&nbsp; --%>
+						<a href="javascript:goCommAdd('${votevo.IDX}');" class="btn btn-default">댓글등록</a>&nbsp;
 						<br/>
 						<c:forEach var="votecommvo" items="${voteCommList}" varStatus="status">
 							<c:set value="${votecommvo.FK_VOTE_IDX}" var="votecommidx" />
 							<c:if test="${voteidx eq votecommidx}">
 								<img src="<%= request.getContextPath() %>/resources/images/${votecommvo.IMG}" width="30px" height="30px">
-								${votecommvo.NAME}(${votecommvo.COMMDATE})<br/>${votecommvo.CONTENT}
+								${votecommvo.NAME}(${votecommvo.COMMDATE})<br/>${votecommvo.CONTENT}&nbsp;&nbsp;
 								<c:if test="${votecommvo.MEMIDX eq sessionScope.loginUser.idx}">
 									<%-- <button type="button" onClick="goCommAdd('${votevo.IDX}', '${votecommvo.IDX}');">수정</button>&nbsp; --%>
-									<button type="button" onClick="goCommDel('${votecommvo.COMMIDX}');">삭제</button>
+									<%-- <button type="button" onClick="goCommDel('${votecommvo.COMMIDX}');">삭제</button> --%>
+									<a href="javascript:goCommDel('${votecommvo.COMMIDX}');" class="btn btn-xs btn-danger">댓글삭제</a>&nbsp;
 								</c:if>
 								<br/>
 							</c:if>
@@ -275,21 +304,24 @@
 	<br/>
 
 	<!-- ==== 페이지바 ==== -->
-	<div align="center" style="width: 70%; margin-left: 50px;">
+	<div align="center" style="width: 100%;">
 		${pagebar}
 	</div>
 	
 	<!-- ==== 투표 검색창 ==== -->
-	<select name="colname" id="colname">
-		<option value="subject">제목</option>
-		<option value="content">내용</option>
-		<!-- <option value="name">글쓴이</option> -->
-	</select>
-	<input type="text" name="search" id="search" size="40" />
-	<button type="button" onclick="goSearch();">검색</button>
+	<div align="center" style="width: 100%;">
+		<div style="float: left;">
+			<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteAdd.mr'">투표작성</button> --%>
+			<a href="javascript:location.href='<%= request.getContextPath() %>/voteAdd.mr'" class="btn btn-success">투표작성</a>&nbsp;
+		</div>
 	
-	<div style="margin-top: 20px;">
-		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteAdd.mr'">투표작성</button>&nbsp;
+		<select name="colname" id="colname" class="form-control">
+			<option value="subject">제목</option>
+			<option value="content">내용</option>
+			<!-- <option value="name">글쓴이</option> -->
+		</select>
+		<input type="text" name="search" id="search" size="40" class="form-control" placeholder="검색할 단어를 입력해주세요" />
+		<a href="javascript:goSearch();" class="btn btn-default">검색</a>&nbsp;
 	</div>
 	
 

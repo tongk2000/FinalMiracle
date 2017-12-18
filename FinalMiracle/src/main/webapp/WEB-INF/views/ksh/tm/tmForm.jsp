@@ -96,16 +96,16 @@
 
 
 <body background="<%= request.getContextPath() %>/resources/images/loginbg.png">
-	<div class="content">
-		<div style="width: 60%; margin-top: 10%; margin-left: 20%; height: 500px; border-radius: 10px; background-color: #4F84C4;">
+	<div class="content" style="width: 100%; vertical-align: middle; margin-top: 15%;" align="center">
+		<div style="width: 600px; height: 400px; border-radius: 10px; background-color: #4F84C4; margin: 100px;" align="center">
 			<br/>
 			<h2 style="text-align: center;">
 				<span style="color: #FAE03C;">Miracle World</span>
 			</h2>
 			<p class="bg-primary">&nbsp;</p>
 
-			<form name="teamFrm" style="margin-left: 25%;">
-				<div class="mydiv" style="margin-left: 20%;" align="center">
+			<form name="teamFrm">
+				<div class="mydiv" align="center">
 					<span class="mydisplay myfont">팀장인 팀</span>
 					<span class="mydisplay myfont" style="margin-top: 30px;">팀원인 팀</span>
 				</div>
@@ -125,7 +125,7 @@
 					</select>
 				</div>
 				<br/><br/><br/><br/>
-				<div class="mydiv" style="margin-left: 20%;">
+				<div class="mydiv">
 					&nbsp;&nbsp;&nbsp;
 					<button class="btn btn-success" style="width: 100px; font-size: 14pt;" type="button" id="teamCreate" onclick="javascript:location.href='<%= request.getContextPath() %>/tmCreate.mr'">팀 생성</button>
 					<button class="btn btn-danger" style="width: 100px; font-size: 14pt;" type="button" id="logout" onclick="javascript:location.href='<%= request.getContextPath() %>/member_logout.mr'">로그아웃</button>
