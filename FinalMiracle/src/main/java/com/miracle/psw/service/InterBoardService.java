@@ -47,6 +47,8 @@ public interface InterBoardService {
 
 	int delFree(String idx) throws Throwable;  // 자유게시판 글 삭제 하기(update방식)
 
+	int getFreeListCnt();  // 자유게시판 활성화된 총 게시글 수 구하기
+
 	
 
 

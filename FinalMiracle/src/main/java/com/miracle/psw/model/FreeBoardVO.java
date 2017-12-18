@@ -18,9 +18,18 @@ public class FreeBoardVO {
 	private int status;             // 글삭제여부   1:사용가능한글, 0:삭제된글 
 	private int infoStatus;     	// 일반글: 0   공지사항: 1
 	
-	private int fk_teamwon_idx;	    // 팀원번호 참조값
+	private int fk_teamwon_idx;	    // tbl_teamwon 팀원번호 참조값
+	private int fk_team_idx;		// tbl_teamwon 팀번호 참조값
 	
-	private String img;
+	public int getFk_team_idx() {
+		return fk_team_idx;
+	}
+
+	public void setFk_team_idx(int fk_team_idx) {
+		this.fk_team_idx = fk_team_idx;
+	}
+
+	private String img;  // tbl_member 이미지 파일 참조용
 	
 	
 	public String getImg() {

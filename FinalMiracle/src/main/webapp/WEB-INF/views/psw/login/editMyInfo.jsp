@@ -277,7 +277,7 @@
 <!-- ====================================================== *** 회원번호가 있는 경우 *** ======================================= -->
 <c:if test="${not empty map}">
 
-	<div style="width: 100%; border: 3px dotted green;" align="left">
+	<div style="width: 100%; border: 1px dotted green;" align="left">
 		<form name="registerFrm" action="member_editEnd.mr" method="post">
 		
 	 	

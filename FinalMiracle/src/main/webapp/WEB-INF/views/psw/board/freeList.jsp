@@ -11,7 +11,6 @@
 
 <link href="<%=request.getContextPath() %>/resources/summernote/summernote.css" rel="stylesheet">
 
-
 <script src="<%=request.getContextPath() %>/resources/summernote/summernote.js"></script>
 <script src="<%=request.getContextPath() %>/resources/summernote/lang/summernote-ko-KR.js"></script>
 
@@ -237,7 +236,9 @@
 		<div style="width: 600px;">
 			<table>
 				<tr class="title above">
-					<td colspan="2" style="padding-left: 20px; font-weight: bold;">자유게시판입니다.</td>
+					<td colspan="2" style="padding-left: 20px; font-weight: bold;">
+						<span style="font-size: smaller; vertical-align: baseline; color: blue;">[${fk_team_idx} 팀] </span>자유게시판입니다.
+					</td>
 				</tr>
 				<tr class="title">
 				<td colspan="2" style="padding-left: 10px; border: 1px solid lightgray; border-left: none; border-right: none;">
@@ -253,6 +254,7 @@
 				<tr style="border: 0px solid lightgray; border: none;">
 					<td colspan="2" style="padding-left: 20px;"> 
 						<br/>
+						총 게시글 '<span style="font-size: larger; color: orange;">${totalFreeListCnt}</span>' 개
 					</td>
 				</tr>
 			</table>
@@ -277,6 +279,7 @@
 							</td>
 							<td  style="border: 1px solid lightgray; border-left: none; border-right: none; text-align: center;">
 								<span class="infoDetail" onClick="showUserInfo('${freevo.userid}')">
+									<%-- <img src="<%= request.getContextPath() %>/resources/images/${freevo.img}" style="width: 20px; height: 22px; vertical-align: middle; padding-top: 2px; padding-bottom: 2px;" align="middle"> --%>
 									<span style="font-size: 11pt; font-family: verdana; ">${freevo.userid} [${freevo.name}]</span>
 								</span>
 							</td>
