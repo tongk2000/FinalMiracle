@@ -54,7 +54,7 @@
 <body>
 	<form id="emailForm" name="emailForm" action="<%= request.getContextPath() %>/tmWriteEmailEnd.mr" method="post" enctype="multipart/form-data">
 		<div>
-			<div>
+			<div style="height: 50px;">
 				<div style="width: 300px; float: left;">
 					받는 이 : <input type="text" name="receiveEmail" id="receiveEmail" class="form-control" style="width: 300px;" value="${receiveEmail}" readonly="readonly" />
 				</div>
@@ -63,8 +63,8 @@
 				</div>
 			</div>
 			<br/>
-			<div style="width: 800px;">
-					<input type="text" name="subject" id="subject" class="form-control" style="width: 600px;" placeholder="메일제목을 입력해주세요" />
+			<div style="width: 100%;">
+					<input type="text" name="subject" id="subject" class="form-control" placeholder="메일제목을 입력해주세요" />
 			</div>
 			<br/>
 			<div>

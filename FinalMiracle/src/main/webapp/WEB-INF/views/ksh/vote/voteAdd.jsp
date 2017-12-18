@@ -20,9 +20,9 @@
 		var html = "";
 		
 		html += "<br/>";
-		html += "<input type='text' name='items' class='form-control' style='width: 300px;' />";
+		html += "<input type='text' name='items' class='form-control' style='width: 300px;' placeholder='1번 문항' />";
 		html += "<br/>";
-		html += "<input type='text' name='items' class='form-control' style='width: 300px;' />";
+		html += "<input type='text' name='items' class='form-control' style='width: 300px;' placeholder='2번 문항' />";
 		
 		$("#divbeginitems").append(html);
 		
@@ -46,12 +46,12 @@
 
 		$("#spinnerOqty").spinner({
 		spin: function( event, ui ) {
-  	        if( ui.value > 10 ) {
+  	        if( ui.value > 20 ) {
   	          $( this ).spinner( "value", 2 ); 
   	          return false;
   	        } 
   	        else if ( ui.value < 2 ) {
-  	          $( this ).spinner( "value", 10 );
+  	          $( this ).spinner( "value", 20 );
   	          return false;
   	        }
   	      }
@@ -70,9 +70,9 @@
 			}
 			else
 			{
-				for(var i=2; i<parseInt(spinnerOqtyVal); i++) {
+				for(var i=3; i<=parseInt(spinnerOqtyVal); i++) {
 					html += "<br/>";
-					html += "<input type='text' name='items' class='form-control' style='width: 300px;' />";
+					html += "<input type='text' name='items' class='form-control' style='width: 300px;' placeholder='"+i+"번 문항' />";
 				}
 				
 				$("#divitems").empty();
@@ -94,14 +94,33 @@
 		var datepicker2 = document.getElementById("datepicker2").value;
 		
 		if(subject.trim() == "" || content.trim() == "" || datepicker1.trim() == "" || datepicker2.trim() == ""){
-			alert("모든 항목에 빈 칸 없이 넣어주세요.");
+			//alert("모든 항목에 빈 칸 없이 넣어주세요.");
+			swal("작성 실패!", "모든 항목에 빈 칸 없이 넣어주세요.", "error");
 			return
 		} else {
-			if(confirm("투표를 추가하시겠습니까?")){
+			/* if(confirm("투표를 추가하시겠습니까?")){
 				var frm = document.addFrm;
 				
 				frm.submit();
-			}
+			} */
+			
+			swal({
+			  title: "투표 추가 여부",
+			  text: "투표를 추가하시겠습니까?",
+			  icon: "warning",
+			  buttons: true,
+			  dangerMode: true,
+			})
+			.then((willDelete) => {
+			    if (willDelete) {
+					var frm = document.addFrm;
+					
+					frm.submit();
+				}
+			  	else {
+			    	return;
+			  }
+			});
 		}
 		
 		
@@ -138,8 +157,8 @@
 			<tr>
 				<th>제목명</th>
 				<td>
-					<div style="width: 30%;">
-					  <input type="text" name="subject" id="subject" class="form-control" />
+					<div style="width: 100%;">
+					  <input type="text" name="subject" id="subject" class="form-control" placeholder="제목을 입력하세요" />
 					</div> 
 				</td>
 			</tr>
@@ -155,7 +174,7 @@
 				<th>시작날짜</th>
 				<td>
 					<div style="width: 50%;">
-						<input type="text" id="datepicker1" name="datepicker1" class="form-control" readonly="readonly">
+						<input type="text" id="datepicker1" name="datepicker1" class="form-control" readonly="readonly" placeholder="시작날짜를 입력하세요 (클릭)">
 					</div>
 				</td>
 			</tr>
@@ -163,7 +182,7 @@
 				<th>종료날짜</th>
 				<td>
 					<div style="width: 50%;">
-						<input type="text" id="datepicker2" name="datepicker2" class="form-control" readonly="readonly">
+						<input type="text" id="datepicker2" name="datepicker2" class="form-control" readonly="readonly" placeholder="종료날짜를 입력하세요 (클릭)">
 					</div>
 				</td>
 			</tr>

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -217,6 +218,235 @@ public class ChattingController {
 		
 		return "jsw/memberListNotMe.not";
 	}
+	@RequestMapping(value="/newRoom.mr", method={RequestMethod.GET})
+	public String newRoom(HttpServletRequest req, HttpServletResponse res) throws Throwable{
+		
+		HttpSession session = req.getSession();
+		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		
+		int idx = loginUser.getIdx();
+		
+		String roomname = req.getParameter("roomname");
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("roomname", roomname);
+		map.put("idx", idx);
+		
+		int n = service.newRoom(map);
+		
+		if(n==3){
+			String cridx = service.getCRidxNewRoom();
+			List<HashMap<String, Object>> chattingList = service.getChattingContent(cridx);
+			req.setAttribute("chattingList", chattingList);
+			
+			return "jsw/chattingContentAjax.not"; 
+		}
+		else{
+			String msg = "채팅방 생성에 실패하셨습니다";
+			String loc = "chatting.mr";
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "jsw/msg.not";
+			
+		}	
+
+	}
+	
+	@ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+	public String handleDataIntegrityViolationException(HttpServletRequest req){
+		 
+		String msg = "채팅방 생성에 실패하셨습니다!";
+		String ctxpath = req.getContextPath();
+		String loc = ctxpath+"/chatting.mr";
+		
+		req.setAttribute("msg", msg);
+		req.setAttribute("loc", loc);
+		
+		return "jsw/msg.not";
+	}
+	
+	
+	@RequestMapping(value="/newRoomNewMember.mr", method={RequestMethod.GET})
+	public String newRoomNewMember(HttpServletRequest req, HttpServletResponse res){
+		
+		String midx = req.getParameter("memberidx");
+		String cridx = service.getCRidxNewRoom();
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("cridx", cridx);
+		map.put("midx", midx);
+		
+		service.newRoomNewMember(map);
+		service.addMemberCnt(cridx);
+		
+		List<HashMap<String, Object>> chattingMember = service.getChattingMember(cridx);
+		
+		req.setAttribute("chattingMember", chattingMember);
+		
+		
+		return "jsw/chattingMemberList.not";
+	}
+	
+	
+	@RequestMapping(value="/addPersonStart.mr", method={RequestMethod.GET})
+	public String addPersonStart(HttpServletRequest req, HttpServletResponse res){
+		
+		String cridx = req.getParameter("cridx");
+		
+		List<HashMap<String, Object>> teamList = service.getAllTeam();
+		
+		req.setAttribute("teamList", teamList);
+		req.setAttribute("cridx", cridx);
+		
+		
+		return "jsw/addPersonStart.not";
+	}
+	
+	@RequestMapping(value="/addPersonEndchat.mr", method={RequestMethod.GET})
+	public String addPersonEndchat(HttpServletRequest req, HttpServletResponse res){
+		
+		String cridx = req.getParameter("cridx");
+		
+		List<HashMap<String, Object>> chattingList = service.getChattingContent(cridx);
+		req.setAttribute("chattingList", chattingList);
+		
+		
+		
+		
+		return "jsw/chattingContentAjax.not";
+	}
+	
+	@RequestMapping(value="/addPersonEndmember.mr", method={RequestMethod.GET})
+	public String addPersonEndmember(HttpServletRequest req, HttpServletResponse res){
+		
+		String cridx = req.getParameter("cridx");
+		String midx = req.getParameter("memberidx");
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("cridx", cridx);
+		map.put("midx", midx);
+		
+		service.newRoomNewMember(map);
+		service.addMemberCnt(cridx);
+		
+		List<HashMap<String, Object>> chattingMember = service.getChattingMember(cridx);
+		
+		req.setAttribute("chattingMember", chattingMember);
+		
+		
+		return "jsw/chattingMemberList.not";
+	}
+	
+	@RequestMapping(value="/outRoom.mr", method={RequestMethod.GET})
+	public String outRoom(HttpServletRequest req, HttpServletResponse res){
+		
+		HttpSession session = req.getSession();
+		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		
+		int idx = loginUser.getIdx();
+		String cridx = req.getParameter("cridx");
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("cridx", cridx);
+		map.put("idx", idx);
+		
+		service.outRoom(map);
+		service.outRoomCnt(cridx);
+		List<HashMap<String, Object>> roomList = service.getChatRoom(idx);
+		
+		req.setAttribute("roomList", roomList); 
+		
+		
+		return "jsw/chattingRoomAjax.not";
+	}
+	
+	//----------------------------------------------------------------------------//
+	
+	@RequestMapping(value="/getTeamwonNotChatMember.mr", method={RequestMethod.GET})
+	public String getTeamwonNotChatMember(HttpServletRequest req, HttpServletResponse res){
+		
+		String tidx = req.getParameter("tidx");
+		String cridx = req.getParameter("cridx");
+		String[] midxArr = service.getChattingRoomMember(cridx);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("tidx", tidx);
+		map.put("midxArr", midxArr);
+		
+		if(midxArr != null){
+			List<HashMap<String, Object>> teamwonList = service.getTeamwonNotChatMember(map);
+			
+			req.setAttribute("teamwonList", teamwonList);
+		}
+		
+		return "jsw/memberListNotMe.not";
+	}
+	
+	@RequestMapping(value="/getAllNotChatMember.mr", method={RequestMethod.GET})
+	public String getAllNotChatMember(HttpServletRequest req, HttpServletResponse res){
+		
+		String cridx = req.getParameter("cridx");
+		String[] midxArr = service.getChattingRoomMember(cridx);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("midxArr", midxArr);
+		
+		if(midxArr != null){
+			List<HashMap<String, Object>> teamwonList = service.getAllNotChatMember(map);
+			
+			req.setAttribute("teamwonList", teamwonList);
+		}
+		
+		return "jsw/memberListNotMe.not";
+	}
+	@RequestMapping(value="/getFindNotChatMember.mr", method={RequestMethod.GET})
+	public String getFindNotChatMember(HttpServletRequest req, HttpServletResponse res){
+		
+		String cridx = req.getParameter("cridx");
+		String[] midxArr = service.getChattingRoomMember(cridx);
+		
+		
+		
+		String subject = req.getParameter("subject");
+		String what = req.getParameter("what");
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("subject", subject);
+		map.put("what", what);
+		map.put("midxArr", midxArr);
+		
+		if(midxArr != null){
+			List<HashMap<String, Object>> teamwonList = service.getFindNotChatMember(map);
+			
+			req.setAttribute("teamwonList", teamwonList);
+		}
+		
+		return "jsw/memberListNotMe.not";
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
