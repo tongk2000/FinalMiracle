@@ -52,6 +52,7 @@
 <style>
 </style>
 
+<%--
 <div style="width:100%; height:500px;"> <!-- 전체 푸터 -->
 	<div style="width:50%; float: left;">
 		<!-- 회사정보 -->
@@ -65,3 +66,4 @@
 		</div>
 	</div>
 </div>
+--%>

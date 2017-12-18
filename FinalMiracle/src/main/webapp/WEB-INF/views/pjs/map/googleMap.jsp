@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<<<<<<< HEAD
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAk84OfDfwA7xmG8uiaFR0HcSXxrcuHfV4"></script>
@@ -277,9 +276,7 @@
 
 </body>
 </html>
-=======
 <div>뜨냐</div>
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle
 
 
 
