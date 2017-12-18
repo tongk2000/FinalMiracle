@@ -124,7 +124,7 @@
 		    from tbl_free F join tbl_teamwon T
 		    on F.fk_teamwon_idx = T.idx
 		    where F.status = 1
-		    and T.fk_team_idx = 2
+		    and T.fk_team_idx = #{fk_team_idx}
 		    and ${colname} like '%'|| #{search} ||'%'
 		    order by idx desc 
 		  )V
@@ -226,6 +226,13 @@
 		update tbl_freeComment set status = 0
 		where parentIdx = #{idx}
 	</update>
+	
+	<!-- ============== *** 자유게시판 총 게시글 수 구하기 *** ================== -->
+	<select id="getFreeListCnt" resultType="int">
+		select count(*)
+		from tbl_free
+		where status = 1
+	</select>
 	
 </mapper>
 

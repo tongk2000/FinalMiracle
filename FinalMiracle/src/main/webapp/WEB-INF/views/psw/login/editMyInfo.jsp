@@ -3,22 +3,9 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
-
 <meta charset="UTF-8">
 
-<style type="text/css">
-	.edit {display: inline-block;}
-	
-	.edit.img{border: 3px solid red;
-			  margin-top: 5%;}
-	
-	.edit.info{border: 2px solid green;}
-	
-	.error { color: red; padding-left: 10px; margin-bottom: 5px;}
-	
-	.bgcol {background-color: LightGray;}
-</style>
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 
 <script type="text/javascript">
 
@@ -241,11 +228,6 @@
     		}
     	});// end of $("#post2").blur() --------------------------------------------------------------------------------
     	
-    	// ======================================================  *** 아이디 중복체크 팝업창 띄우기 *** ==========================
-    	$("#idcheck").click(function(){  // 팝업창 띄우기
-    		var url = "member_idDuplicateCheck.mr";
-    		window.open(url,"idcheck", "left=500px, top=100px, width=300px, height=200px");
-    	});
 	});// end of $(document).ready()-------------------------------------------------------------------------------------
 
 	// =================================================================== *** JavaScript function *** ==================
@@ -294,125 +276,122 @@
 
 <!-- ====================================================== *** 회원번호가 있는 경우 *** ======================================= -->
 <c:if test="${not empty map}">
-	<div style="padding-left: 20px;">
-		<form name="registerFrm" action="member_editEnd.mr" method="post">
-			<input type="hidden" name="currentShowPageNo" value="${currentShowPageNo}"/>
-			<input type="hidden" name="sizePerPage" value="${sizePerPage}" />
-		
-			<div class="edit img" style="float: left;">
-				<img alt="프로필사진" src="<%= request.getContextPath() %>/resources/images/${sessionScope.loginUser.img}" style="height: 280px; width: 256px;">
-				<br/>
-				<a href="#">[대표 이미지 변경]</a>
-				<br/><br/>
-			</div>
-		
-			<div class="edit info" style="float: left;">
-				<table id="tblMemberRegister">
-					<tr>
-						<th colspan="2" id="th" style="text-align: center;">내 정보 수정 (<span style="font-size: 10pt; font-style: italic;"><span class="star">*</span>표시는 필수입력사항</span>)</th>
-					</tr>
-					<tr>
-						<td style="width: 25%; font-weight: bold;">성명&nbsp;<span class="star">*</span></td>
-						<td style="width: 75%; text-align: left;"><input type="text" name="name" id="name" value="${map.mvo.name}" class="requiredInfo" required />
-						                                          <input type="hidden" name="idx"  value="${map.mvo.idx}" /> 
-							<span class="error">성명은 필수입력 사항입니다.</span>
-						</td>
-					</tr>
-					<tr>
-						<td style="width: 25%; font-weight: bold;">아이디&nbsp;<span class="star">*</span></td>
-						<td style="width: 75%; text-align: left;">
-						    <input type="text" name="userid" id="userid" value="${map.mvo.userid}" class="requiredInfo" readonly />&nbsp;&nbsp;
-						    <span class="error">아이디는 필수입력 사항입니다.</span>
-						</td> 
-					</tr>
-					<!-- ============================================================ *** 암호변경 / 확인 *** ========================================== -->
-					<tr>
-						<td style="width: 25%; font-weight: bold;">비밀번호&nbsp;<span class="star">*</span></td>
-						<td style="width: 75%; text-align: left;">
-						    <input type="password" name="pwd" id="pwd" class="requiredInfo" required />
-							<span class="error">암호는 영문자,숫자,특수기호가 혼합된 8~15 글자로만 입력가능합니다.</span>
-						</td>
-					</tr>
-					<tr>
-						<td style="width: 25%; font-weight: bold;">비밀번호확인&nbsp;<span class="star">*</span></td>
-						<td style="width: 75%; text-align: left;">
-						    <input type="password" name="pwdcheck" id="pwdcheck" class="requiredInfo" required />
-							<span class="error">암호가 일치하지 않습니다.</span>
-						</td>
-					</tr>
-					<!-- ====================================================== *** 생년/월/일 추가 *** ================================================ -->
-					<tr>
-						<td style="width: 20%; font-weight: bold;">생년/월/일&nbsp;<span class="star">*</span></td>
-						<td style="width: 80%; text-align: left;">
-						   <input type="text" id="birth1" name="birth1" size="2" maxlength="2" value="${map.mdvo.birth1}" />&nbsp;/&nbsp;
-						   <input type="text" id="birth2" name="birth2" size="2" maxlength="2" value="${map.mdvo.birth2}" />&nbsp;/&nbsp;
-						   <input type="text" id="birth3" name="birth3" size="2" maxlength="2" value="${map.mdvo.birth3}" /> 
-						   <span class="error error_birth">생년월일 형식이 아닙니다.</span> 
-						</td>
-					</tr>
-					<!-- ================================================================ *** 이메일 *** =========================================== -->
-					<tr>
-						<td style="width: 25%; font-weight: bold;">이메일&nbsp;<span class="star">*</span></td>
-						<td style="width: 75%; text-align: left;">
-						    <input type="text" name="email" id="email" value="${map.mdvo.email}" class="requiredInfo" required />
-						    <span class="error">이메일 형식에 맞지 않습니다.</span>
-						</td>
-					</tr>
-					<!-- ================================================ *** hp1, hp2, hp3 *** ================================================== -->
-					<tr>
-						<td style="width: 25%; font-weight: bold;">연락처</td>
-						<td style="width: 75%; text-align: left;">
-						   <select name="hp1" id="hp1">
-								<option value="010" selected>010</option>
-								<option value="011">011</option>
-								<option value="016">016</option>
-							</select>&nbsp;-&nbsp;
-							
-						    <input type="text" name="hp2" id="hp2" value="${map.mdvo.hp2}" size="4" maxlength="4" />&nbsp;-&nbsp;
-						    <input type="text" name="hp3" id="hp3" value="${map.mdvo.hp3}" size="4" maxlength="4" />
-						    <span class="error error_hp">휴대폰 형식이 아닙니다.</span><br/>
-						</td>
-					</tr>
-					<!-- ===================================================== *** post1, post2 *** ============================================== -->
-					<tr>
-						<td style="width: 25%; font-weight: bold;">우편번호</td>
-						<td style="width: 75%; text-align: left;">
-						   <input type="text" name="post1" id="post1" value="${map.mdvo.post1}" size="4" maxlength="3" />-
-						   <input type="text" name="post2" id="post2" value="${map.mdvo.post2}" size="4" maxlength="3" />&nbsp;&nbsp;
-						   <!-- 우편번호 찾기 -->
-						    <a class="btn btn-xs btn-warning" onClick="openDaumPostnum();"><span style="color: #4F84C4;"><span class="glyphicon glyphicon-ok-circle"></span> 우편번호검색</span></a>  
-						   <span class="error error_post">우편번호 형식이 아닙니다.</span><br/>
-						</td>
-					</tr>
-					<!-- ===================================================== *** addr1, addr2 *** =============================================== -->
-					<tr>
-						<td style="width: 25%; font-weight: bold;">주소</td>
-						<td style="width: 75%; text-align: left;">
-						   <input type="text" name="addr1" id="addr1" value="${map.mdvo.addr1}" size="50" maxlength="100" /><br style="line-height: 200%"/>
-						   <input type="text" name="addr2" id="addr2" value="${map.mdvo.addr2}" size="50" maxlength="100" /><br/>
-						</td>
-					</tr>
-					<!-- ================================================================ *** 프로필 *** ============================================= -->
-					<tr>
-						<th colspan="2" style="text-align: center;">자기소개</th>
-					</tr>
-					<tr>
-						<td colspan="2" style="text-align: center; border: 1px solid orange;">
-							<textarea name="profile" class="long" style="width: 300px; height: 120px;">${map.mdvo.profile}</textarea>
-						</td>
-					</tr>
-					<!-- =================================================== *** 내정보 변경 버튼 *** ======================================================= -->
-					<tr style="border-left-style: hidden; border-right-style: hidden; border-bottom-style: hidden;">
-						<td colspan="2" style="height: 60px; text-align: center; vertical-align: middle;">
-							<a class="btn btn-sm btn-success" onClick="goEditEnd();"><span style="color: white;">내정보 변경</span></a>
-						</td>
-					</tr>
-				</table>
-			</div>
-		</form>
-	</div>
-	<!-- ======================================================================================================================= -->
 
+	<div style="width: 100%; border: 1px dotted green;" align="left">
+		<form name="registerFrm" action="member_editEnd.mr" method="post">
+		
+	 	
+			<fieldset>
+				<div style="border: 1px dotted pink; float: right;">
+					<img alt="프로필사진" src="<%= request.getContextPath() %>/resources/images/${sessionScope.loginUser.img}" style="height: 150px; width: 140px;">
+					<br/>
+					<a href="#">[대표 이미지 변경]</a>
+				</div>
+				
+				<div style="border: 1px dotted blue; width: 400px;">
+					<!-- 회원정보 수정 폼 부트스닙스 -->
+					<div class="form-group" align="left">
+					  <label class="col-sm-4 control-label" for="name">성명 &nbsp;<span class="star">*</span></label>  
+					  <div class="col-sm-4">
+					  	<input id="name" name="name" type="text" placeholder="name" class="form-control input-sm requiredInfo" value="${map.mvo.name}">
+					  	<input type="hidden" name="idx"  value="${map.mvo.idx}" />
+					  </div>
+					</div><br/>
+					
+					<div class="form-group" align="left">
+					  <label class="col-sm-4 control-label" for="userid">아이디 &nbsp;<span class="star">*</span></label>  
+					  <div class="col-sm-4">
+					  	<input id="userid" name="userid" type="text" class="form-control input-sm requiredInfo" value="${map.mvo.userid}" >  
+					  </div>
+					</div><br/>
+					
+					<div class="form-group">
+					  <label class="col-sm-4 control-label" for="pwd">비밀번호 &nbsp;<span class="star">*</span></label>
+					  <div style="vertical-align: top; height: 27px;" class="col-sm-7">
+					    <input id="pwd" name="pwd" type="password" placeholder="password" class="form-control input-sm requiredInfo" required >
+					  </div>
+					</div><br/>
+					<div class="form-group">
+					  <label class="col-sm-4 control-label" for="pwdcheck">비밀번호 확인 <span class="star">*</span></label>
+					  <div style="vertical-align: top; height: 27px;" class="col-sm-7">
+					    <input id="pwdcheck" name="pwdcheck" type="password" placeholder="password-check" class="form-control input-sm requiredInfo" required >
+					  </div>
+					</div><br/>
+					
+					<div class="form-inline form-group">
+					  <label class="form-inline col-sm-4 control-label" for="birth">생년월일 &nbsp;<span class="star">*</span></label>  
+					  <div class="form-inline col-sm">
+					  	<input style="vertical-align: top; height: 27px;" id="birth1" name="birth1" type="text" placeholder="YY" size="2" maxlength="2" class="form-inline form-control input-sm" value="${map.mdvo.birth1}"> / 
+					  	<input style="vertical-align: top; height: 27px;" id="birth2" name="birth2" type="text" placeholder="MM" size="2" maxlength="2" class="form-inline form-control input-sm" value="${map.mdvo.birth2}"> /
+					  	<input style="vertical-align: top; height: 27px;" id="birth3" name="birth3" type="text" placeholder="DD" size="2" maxlength="2" class="form-inline form-control input-sm" value="${map.mdvo.birth3}">
+					  </div>
+					</div><br/>
+					
+					<div class="form-group">
+					  <label class="col-sm-4 control-label" for="email">이메일 &nbsp;<span class="star">*</span></label>  
+					  <div class="col-sm-7">
+					  	<input style="vertical-align: top; height: 27px;" id="email" name="email" type="text" placeholder="이메일" class="form-control input-sm requiredInfo" value="${map.mdvo.email}">
+					  </div>
+					</div><br/>
+					
+					<div class="form-group form-inline">
+					  <label class="form-inline col-sm-4 control-label" for="hp">연락처 &nbsp;<span class="star">*</span></label>
+					  <div class="form-inline col-sm">
+					    <select id="hp1" name="hp1" class="form-control form-inline" style="height: 27px; font-size: 9pt; vertical-align: top;">
+					      <option value="010" selected>010</option>
+					      <option value="011">011</option>
+					      <option value="016">016</option>
+					    </select>
+					    <input style="vertical-align: top; height: 27px;" id="hp2" name="hp2" type="text" placeholder="Hp2" size="3" maxlength="3" class="form-inline form-control input-sm" value="${map.mdvo.hp2}"> /
+					  	<input style="vertical-align: top; height: 27px;" id="hp3" name="hp3" type="text" placeholder="Hp3" size="3" maxlength="3" class="form-inline form-control input-sm" value="${map.mdvo.hp3}">
+					  </div>
+					</div><br/>
+					
+					<div class="form-group form-inline">
+					  <label class="col-sm-4 control-label form-inline" for="post">우편번호</label>  
+					  <div class="form-inline col-sm">
+						  <input style="vertical-align: top; height: 27px;" id="post1" name="post1" type="text" placeholder="Post1" size="3" class="form-inline form-control input-sm" value="${map.mdvo.post1}"> - 
+						  <input style="vertical-align: top; height: 27px;" id="post2" name="post2" type="text" placeholder="Post2" size="3" class="form-inline form-control input-sm" value="${map.mdvo.post2}"> &nbsp;&nbsp;
+						  <!-- 우편번호 찾기 -->
+					      <a style="height: 25px; vertical-align: middle;" class="btn btn-xs btn-info form-inline" onClick="openDaumPostnum();">
+					      	<span style="color: white; font-variant: small-caps; font-size: 10pt; vertical-align: text-bottom;">우편번호검색</span>
+					      </a>
+					  </div>
+					</div><br/>
+					
+					<div class="form-group">
+					  <label class="col-sm-4 control-label" for="addr1">기본주소</label>  
+					  <div class="col-sm-8">
+					  	<input id="addr1" name="addr1" type="text" placeholder="기본주소" class="form-control input-sm" value="${map.mdvo.addr1}">  
+					  </div>
+					</div><br/>
+					<div class="form-group">
+					  <label class="col-sm-4 control-label" for="addr2">상세주소</label>  
+					  <div class="col-sm-8">
+					  	<input id="addr2" name="addr2" type="text" placeholder="상세주소" class="form-control input-sm" value="${map.mdvo.addr2}">  
+					  </div>
+					</div><br/>
+					
+					<div class="form-group">
+					  <label class="col-sm-4 control-label" for="profile">프로필</label>
+					  <div class="col-lg-8">                     
+					    <textarea class="form-control" id="profile" name="profile">${map.mdvo.profile}</textarea>
+					  </div>
+					</div>
+					
+					<br/><br/>
+					
+					<div align="center">
+						<a class="btn btn-sm btn-success" id="btnEdit" onClick="goEditEnd();"><span style="color: white;">내정보 변경</span></a>
+					</div>
+				</div>
+			</fieldset>
+	 				
+			
+			
+		</form>
+	</div> 
+	
 </c:if>
 
 

@@ -98,5 +98,11 @@ public class MemoService implements InterMemoService {
 		int n = dao.MemoDel(map);
 		return n;
 	}
+
+	@Override
+	public int MemoUpdateGroups(HashMap<String, String> map) {
+		int n = dao.MemoUpdateGroups(map);
+		return n;
+	}
 	
 }

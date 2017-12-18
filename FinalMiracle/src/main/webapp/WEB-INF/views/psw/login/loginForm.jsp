@@ -13,6 +13,25 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/BootStrapStudy/js/bootstrap.js"></script>
 
 <style type="text/css">
+	.modal.modal-center {
+	  text-align: center;
+	}
+	
+	@media screen and (min-width: 768px) { 
+	  .modal.modal-center:before {
+	    display: inline-block;
+	    vertical-align: middle;
+	    content: " ";
+	    height: 100%;
+	  }
+	}
+	
+	.modal-dialog.modal-center {
+	  display: inline-block;
+	  text-align: left;
+	  vertical-align: middle; 
+	}
+
 	a {
 		text-decoration: none;
 	}
@@ -20,7 +39,6 @@
 	.mydiv {
 		display: inline-block;
 		position: relative;
-		top: 30px;
 		line-height: 150%;
 	}
 	
@@ -132,7 +150,6 @@
 
     
     function func_Login(event) {
-    	
     	if(${sessionScope.loginUser != null}) {
 			 alert("이미 로그인 중입니다.");
 			 $("#userid").val(""); 
@@ -141,7 +158,6 @@
 			 event.preventDefault();
 			 return; 
 		 }
-		 
 		 var userid = $("#userid").val(); 
 		 var pwd = $("#pwd").val(); 
 		
@@ -152,7 +168,6 @@
 			 event.preventDefault();
 			 return;
 		 }
-		
 		 if(pwd.trim()=="") {
 			 alert("비밀번호를 입력하세요.");
 			 $("#pwd").val("");
@@ -162,9 +177,23 @@
 		 }
 		 document.loginFrm.action = "<%= request.getContextPath() %>/member_loginEnd.mr";
 		 document.loginFrm.method = "post";
-		 document.loginFrm.submit();
-		 
+		 document.loginFrm.submit(); 
     }  // end of function func_Login(event)----------------------------- 
+    
+	function showPwdCheck() {
+		$.ajax({
+			url: "member_pwdFind.mr",
+			type: "GET",
+			dataType: "HTML", 
+			success: function(data) {	
+				$("#pwdFind").html(data);
+				$("#passwdFind").modal();
+			}, // end of success: function()----------
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		}); // end of $.ajax()------------------------
+	}
 </script>
 
 
@@ -172,57 +201,63 @@
 
 
 <body background="<%= request.getContextPath() %>/resources/images/loginbg.png">
-	<div class="content">
-		<div style="width: 60%; margin-top: 10%; margin-left: 20%; height: 500px; border-radius: 10px; background-color: #4F84C4;">
-			<br />
-			<h2 style="text-align: center;">
-				<span style="color: #FAE03C;">Miracle World</span>
-			</h2>
-			<p class="bg-primary">&nbsp;</p>
 
-			<form name="loginFrm" style="margin-left: 25%;">
-				<div class="mydiv" style="margin-left: 15%;" align="center">
-					<span class="mydisplay myfont">아이디</span> <span
-						class="mydisplay myfont" style="margin-top: 30px;">암&nbsp;&nbsp;&nbsp;호</span>
-				</div>
-				<div class="mydiv" style="margin-left: 5%;">
-					<input class="mydisplay form-control" type="text" name="userid"	id="userid" size="20" />
-					<input class="mydisplay form-control" style="margin-top: 15px;" type="password" name="pwd" id="pwd" size="20" />
-				</div>
-				<br /><br />
-				<div class="mydiv" style="margin-left: 20%;">
-					<a data-toggle="modal" class="modalOpen" data-target="#userIdfind" data-dismiss="modal">
-						<span style="color: white;">ID 찾기</span>
-					</a> &nbsp;	
-					<a data-toggle="modal" class="modalOpen" data-target="#passwdFind" data-dismiss="modal">
-						<span style="color: white;">PW 찾기</span>
-					</a>
-					&nbsp;&nbsp;&nbsp;
-					<button class="btn btn-success" style="width: 100px; font-size: 14pt;" type="button" id="btnLOGIN">로그인</button>
-				</div>
-				<br/><br/>
-				<div class="mydiv" style="margin-left: 18%;">
-					아직 회원가입을 안하셨나요? &nbsp; 
-					<a href="<%= request.getContextPath() %>/member_register.mr" class="btn btn-primary">
-						<span class="glyphicon glyphicon-user"></span> 회원가입
-					</a>
-				</div>
-				<br/><br/>
-				<div class="mydiv" style="margin-left: 23%;">Welcome to ⓒ Miracle World ~ !!</div>
-			</form>
+	<div class="content" style="width: 100%; border: 2px dotted pink; vertical-align: middle; margin-top: 5%;" align="center">
+		<div style="width: 600px; height: 400px; border-radius: 10px; background-color: #4F84C4; margin: 100px;">
+			<div style="padding-top: 5px; padding-bottom: 5px;">
+				<h2 style="text-align: center;"><span style="color: #FAE03C; font-family: verdana;">Miracle World</span></h2>
+				<p class="bg-primary">&nbsp;</p>
+			</div>
+			
+			<div>
+				<form name="loginFrm">
+					<div class="mydiv" style="border: 0px solid yellow;">
+						<span class="mydisplay myfont" style="color: #DFCFBE; margin-top: 10px;">아이디</span>
+						<span class="mydisplay myfont" style="margin-top: 31px; color: #DFCFBE;">암&nbsp;&nbsp;&nbsp;호</span>
+					</div>
+					<div class="mydiv" style="margin-left: 10px; border: 0px solid yellow;">
+						<input class="mydisplay form-control" type="text" name="userid"	id="userid" placeholder="User-ID" size="15" />
+						<input class="mydisplay form-control" style="margin-top: 15px;" type="password" name="pwd" id="pwd" placeholder="PassWord" size="15" />
+					</div>
+					<br/>
+					<div class="mydiv" style="margin-top: 10px; margin-left: 5px;">
+						<a title="아이디찾기" data-toggle="modal" class="modalOpen" data-target="#userIdfind" data-dismiss="modal">
+							<span style="color: #DFCFBE; cursor: pointer;">ID 찾기</span>
+						</a> &nbsp;	
+						<a title="비밀번호찾기" data-toggle="modal" class="modalOpen" data-target="#passwdFind" data-dismiss="modal">
+							<span style="color: #DFCFBE; cursor: pointer;">PW 찾기</span>
+						</a>
+						&nbsp;&nbsp;&nbsp;
+						<button class="btn btn-sm btn-success" style="font-size: 11pt;" type="button" id="btnLOGIN">로그인</button>
+					</div>
+					<br/>
+					<div class="mydiv" style="margin-top: 20px;">
+						<span style="color: #DFCFBE;">아직 회원가입을 안하셨나요?</span> &nbsp; 
+						<a href="<%= request.getContextPath() %>/member_register.mr" class="btn btn-sm btn-primary">
+							<span class="glyphicon glyphicon-user"></span> 회원가입
+						</a>
+					</div>
+					<br/>
+					<div class="mydiv" style="margin-top: 30px; color: #DFCFBE;">Welcome to ⓒ Miracle World ~ !!</div>
+				</form>
+			</div>
 		</div>
+	</div>
+
+</body>
+
 
 
 		<%-- 아이디 찾기 Modal --%>
-		<div class="modal fade" id="userIdfind" role="dialog">
-			<div class="modal-dialog">
+		<div class="modal fade modal-center" id="userIdfind" role="dialog">
+			<div class="modal-dialog modal-center modal-sm">
 				<%-- Modal content --%>
 				<div class="modal-content" align="center">
 					<div class="modal-header">
 						<button type="button" class="close modalClose" data-dismiss="modal">&times;</button>
 						<h4 class="modal-title">아이디 찾기</h4>
 					</div>
-					<div class="modal-body" style="width: 100%; height: 400px;">
+					<div class="modal-body modal-sm" style="width: 100%; height: 100%;">
 						<div id="idFind">
 							<div>
 								<form name="idFindFrm">
@@ -253,17 +288,17 @@
 
 
 		<%-- 비밀번호 찾기 Modal --%>
-		<div class="modal fade" id="passwdFind" role="dialog">
-			<div class="modal-dialog">
+		<div class="modal fade modal-center" id="passwdFind" role="dialog">
+			<div class="modal-dialog modal-center modal-sm">
 				<%-- Modal content --%>
 				<div class="modal-content" align="center">
 					<div class="modal-header">
 						<button type="button" class="close myclose" data-dismiss="modal">&times;</button>
 						<h4 class="modal-title">비밀번호 찾기</h4>
 					</div>
-					<div class="modal-body" style="width: 100%; height: 400px;">
+					<div class="modal-body" style="width: 100%; height: 100%;">
 						<div id="pwdFind">
-							<iframe id="pwdFrame" style="border: none; width: 100%; height: 350px;" src="<%= request.getContextPath() %>/member_pwdFind.mr"></iframe>  
+							<iframe id="pwdFrame" style="border: none; width: 100%; height: 250px;" src="<%= request.getContextPath() %>/member_pwdFind.mr"></iframe>  
 						</div>
 					</div>
 					<div class="modal-footer">
@@ -273,7 +308,3 @@
 
 			</div>
 		</div>
-
-	</div>
-
-</body>

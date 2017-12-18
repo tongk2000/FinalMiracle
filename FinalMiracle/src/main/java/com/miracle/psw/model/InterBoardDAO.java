@@ -46,6 +46,9 @@ public interface InterBoardDAO {
 	int deleteContent(String idx);
 	int deleteComment(String idx);
 
+	// ===== *** 자유게시판 총 게시글 수 구하기 *** ========
+	int getFreeListCnt();
+
 	
 	
 

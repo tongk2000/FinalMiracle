@@ -3,6 +3,7 @@ package com.miracle.pjs.service;
 import java.util.HashMap;
 import java.util.List;
 
+import com.miracle.pjs.model.FileVO;
 import com.miracle.pjs.model.MapVO;
 import com.miracle.pjs.model.ReplyVO;
 
@@ -115,6 +116,17 @@ public interface PjsinterService {
 	HashMap<String, String> getUserTeam(HashMap<String, String> team);
 
 	String getMessage(HashMap<String, String> map); // 알람 ajax버전
+
+	
+	
+	
+	int setNoticeWriteWithFile(HashMap<String, String> team); // 공지사항 파일업로드
+
+	String getfilename(HashMap<String, Object> map); // 파일이 있는지 없는지
+
+	FileVO getViewWithNoAddCount(HashMap<String, String> map); // 파일다운
+
+	String getmemoReadCount(String string); // 메모 읽었는지 여부 반환
 
 	
 

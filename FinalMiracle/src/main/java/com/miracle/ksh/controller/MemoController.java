@@ -452,5 +452,97 @@ public class MemoController {
 		
 	}
 	
+	//선택된 메모들의 분류를 변경시켜보자
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	@RequestMapping(value="/memoUpdateFolder.mr", method={RequestMethod.POST})
+	public String memoUpdateFolder(HttpServletRequest req, HttpSession session){
+		
+		String upfolder = req.getParameter("upfolder");
+		String[] idxs = req.getParameterValues("chk_memo"); //선택된 메모 idx들
+		String gobackURL = req.getParameter("gobackURL");
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("upfolder", upfolder);
+		
+		int cnt = 0;
+		
+		for(int i = 0; i<idxs.length; i++){
+			int n = 0;
+			
+			map.put("idxs", idxs[i]);
+			n = service.MemoUpdateGroups(map); //메모를 휴지통으로 보내보자
+			
+			if(n == 1){
+				cnt++;
+			}
+		}
+		
+		if(cnt == idxs.length){
+			String msg = "선택된 메모들의 분류 변경이 완료되었습니다.";
+			String loc = gobackURL;
+			//"javascript:history.back()";
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		} else {
+			String msg = "선택된 메모들의 분류 변경에 실패하였습니다.";
+			String loc = gobackURL;
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		}	
+	}
+	
+	
+	//선택된 메모들의 분류를 변경시켜보자 (새 분류를 만들 경우)
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	@RequestMapping(value="/memoCreateFolder.mr", method={RequestMethod.POST})
+	public String memoCreateFolder(HttpServletRequest req, HttpSession session){
+		
+		String newfolder = req.getParameter("newfolder");
+		String[] idxs = req.getParameterValues("chk_memo"); //선택된 메모 idx들
+		String gobackURL = req.getParameter("gobackURL");
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("newfolder", newfolder);
+		
+		int cnt = 0;
+		
+		for(int i = 0; i<idxs.length; i++){
+			int n = 0;
+			
+			map.put("idxs", idxs[i]);
+			n = service.MemoUpdateGroups(map); //메모를 휴지통으로 보내보자
+			
+			if(n == 1){
+				cnt++;
+			}
+		}
+		
+		if(cnt == idxs.length){
+			String msg = "선택된 메모들의 분류 변경이 완료되었습니다.";
+			String loc = gobackURL;
+			//"javascript:history.back()";
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		} else {
+			String msg = "선택된 메모들의 분류 변경에 실패하였습니다.";
+			String loc = gobackURL;
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "ksh/msg.not";
+		}	
+		
+	}
+	
 	
 }

@@ -30,6 +30,46 @@
 		$("#period").change(function(){
 			goPeriod();
 		});
+		
+		$("#upfolder").change(function(){
+			
+			var folder = $("#upfolder").val();
+			var arr_chk = document.getElementsByName("chk_memo");
+			var chkbool = false;
+			var html = "";
+			
+			if(folder == "새분류"){
+				html += "<input id='newfolder' name='newfolder' style='width: 200px;' placeholder='추가할 분류를 입력하세요' />"
+				html += "<button type=\"button\" onClick=\"goNewFolder();\">확인</button>"
+				
+				$("#folderdiv").append(html);
+			} else if(folder == "") {
+				$("#folderdiv").empty();
+				
+				return;
+			}
+			else {
+				$("#folderdiv").empty();
+				
+				for(var i=0;i<arr_chk.length;i++){
+		            if(arr_chk[i].checked == true) {
+		                chkbool = true;
+		                break;
+		            }
+				}
+				
+				if(!chkbool){
+					alert("선택된 메모가 존재하지 않습니다.");
+					return false;
+				} else {
+					var frm = document.listFrm;
+					
+					frm.action = "<%= request.getContextPath() %>/memoUpdateFolder.mr";
+					frm.method = "post";
+					frm.submit();
+				}
+			}
+		});
 	
 	});
 	
@@ -75,11 +115,25 @@
 	}
 	
 	function goChkGarbage(){
-		var frm = document.listFrm;
+		var arr_chk = document.getElementsByName("chk_memo");
+		var chkbool = false;
+		var frm = document.listFrm;		
 		
-		frm.action = "<%= request.getContextPath() %>/memoChkGarbage.mr";
-		frm.method = "get";
-		frm.submit();
+		for(var i=0;i<arr_chk.length;i++){
+            if(arr_chk[i].checked == true) {
+                chkbool = true;
+                break;
+            }
+		}
+		
+		if(!chkbool){
+			alert("메모를 선택하지 않으셨습니다.");
+			return false;
+		} else {
+			frm.action = "<%= request.getContextPath() %>/memoChkGarbage.mr";
+			frm.method = "get";
+			frm.submit();
+		}
 	}
 	
 	function goRestore(idx){
@@ -93,11 +147,25 @@
 	}
 	
 	function goChkRestore(){
+		var arr_chk = document.getElementsByName("chk_memo");
+		var chkbool = false;
 		var frm = document.listFrm;
 		
-		frm.action = "<%= request.getContextPath() %>/memoChkRestore.mr";
-		frm.method = "get";
-		frm.submit();
+		for(var i=0;i<arr_chk.length;i++){
+            if(arr_chk[i].checked == true) {
+                chkbool = true;
+                break;
+            }
+		}
+		
+		if(!chkbool){
+			alert("메모를 선택하지 않으셨습니다.");
+			return false;
+		} else {
+			frm.action = "<%= request.getContextPath() %>/memoChkRestore.mr";
+			frm.method = "get";
+			frm.submit();
+		}
 	}
 	
 	
@@ -115,13 +183,27 @@
 	}
 	
 	function goChkDel(){
+		var arr_chk = document.getElementsByName("chk_memo");
+		var chkbool = false;
 		var frm = document.listFrm;
 		
 		if(confirm("선택된 메모들을 삭제하시겠습니까?")){
 			
-			frm.action = "<%= request.getContextPath() %>/memoChkDel.mr";
-			frm.method = "post";
-			frm.submit();
+			for(var i=0;i<arr_chk.length;i++){
+	            if(arr_chk[i].checked == true) {
+	                chkbool = true;
+	                break;
+	            }
+			}
+			
+			if(!chkbool){
+				alert("메모를 선택하지 않으셨습니다.");
+				return false;
+			} else {
+				frm.action = "<%= request.getContextPath() %>/memoChkDel.mr";
+				frm.method = "post";
+				frm.submit();
+			}
 		}
 	}
 	
@@ -146,6 +228,20 @@
 	    } else { // 한 개일 경우
 	        cbox.checked=listFrm.chk_Allmemo.checked;
 	    }
+	}
+	
+	function goNewFolder(){
+		var frm = document.listFrm;
+		var folder = $("#newfolder").val();
+		
+		if(folder == ""){
+			alert("새롭게 만드실 분류를 입력해주세요.");
+		} else {		
+			frm.action = "<%= request.getContextPath() %>/memoCreateFolder.mr";
+			frm.method = "post";
+			frm.submit();
+		}
+
 	}
 
 </script>
@@ -249,19 +345,33 @@
 		<option value="content">내용</option>
 		<!-- <option value="name">글쓴이</option> -->
 	</select>
-	<input type="text" name="search" id="search" size="40" />
+	<input type="text" name="search" id="search" size="40"/>
 	<button type="button" onclick="goSearch();">검색</button>
 	
-	<div style="margin-top: 20px;">
+	<div style="margin-top: 20px; width: 50%">
+		<div style="float: left;">
 		<c:if test="${groups ne '휴지통'}">
 			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoAdd.mr'">메모작성</button>&nbsp;
 			<button type="button" onClick="goChkGarbage();">선택휴지통</button>&nbsp;
+			<select name="upfolder" id="upfolder">
+				<option value="">이동할 분류 선택</option>
+				<option value="전체">전체</option>
+				<option value="중요">중요</option>
+				<c:forEach var="folder" items="${folderlist}" varStatus="status">
+					<option value="${folder}">${folder}</option>
+				</c:forEach>
+				<option value="새분류">새분류</option>
+			</select>
+			&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${groups eq '휴지통'}">
 			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoAdd.mr'">메모작성</button>&nbsp;
 			<button type="button" onClick="goChkRestore();">선택복구</button>&nbsp;
 			<button type="button" onClick="goChkDel();">선택삭제</button>&nbsp;
+			&nbsp;&nbsp;
 		</c:if>
+		</div>
+		<div id="folderdiv" style="float: left;"></div>
 	</div>
 	
 	<input type="hidden" name="gobackURL" value="${gobackURL}">

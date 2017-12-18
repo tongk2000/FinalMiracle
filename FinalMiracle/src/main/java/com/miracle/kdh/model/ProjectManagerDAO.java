@@ -167,9 +167,14 @@ public class ProjectManagerDAO {
 	
 	// 첨부파일의 정보를 입력해주기
 	public int insertFolderFile(Folder_FileVO ffvo) {
-		int result = sql.update("do.insertFolderFile", ffvo);
+		int result = sql.insert("do.insertFolderFile", ffvo);
 		return result;
 	} // end of int insertFolderFile(Folder_FileVO ffvo) --------------------------------------------------------------------
+	
+	// 첨부파일 삭제하기
+	public void deleteFolderFile(String serFilename) { 
+		sql.delete("do.deleteFolderFile", serFilename);
+	} // end of void deleteFolderFile(String serFilename) --------------------------------------------------------------------
 }
 
 
