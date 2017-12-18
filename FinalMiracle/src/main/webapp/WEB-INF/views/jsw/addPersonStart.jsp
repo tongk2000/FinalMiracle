@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>채팅방 만들기</title>
+<title></title>
 
 <style type="text/css">
 
@@ -16,17 +16,17 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		
-		
+		var cridx = ${cridx};
 		
 		$("#teamList").val("");
 		
 		$("#teamList").change(function() {
 			//alert($(this).val());
 			var idx = $(this).val();
-			var form_data = {tidx : idx}
+			var form_data = {tidx : idx
+							,cridx : cridx}
 			$.ajax({
-				url: "getTeamwonNotMe.mr",
+				url: "getTeamwonNotChatMember.mr",
 				data: form_data,
 				type: "get",		// 위의 url주소로 보내어질 요청대이터이다
 				dataType: "html",	// ajax 요청에의해 url주소(chattingRoomAjax.mr)로 리턴받는 데이터 타입이다
@@ -47,9 +47,10 @@
 		
 		$("#AllMember").click(function() {
 			$("#teamList").val("");
+			var cridx_data = {cridx : cridx}
 			$.ajax({
-				url: "getAllNotMe.mr",
-			//	data: form_data,
+				url: "getAllNotChatMember.mr",
+				data: cridx_data,
 				type: "get",		// 위의 url주소로 보내어질 요청대이터이다
 				dataType: "html",	// ajax 요청에의해 url주소(chattingRoomAjax.mr)로 리턴받는 데이터 타입이다
 				 					// 종류가 xml, json, html, script, text
@@ -78,9 +79,10 @@
 			var subject = $("#nameORid").val();
 			
 			var form_data = {subject : subject
-							,what : what};
+							,what : what
+							,cridx : cridx};
 			$.ajax({
-				url: "getFindNotMe.mr",
+				url: "getFindNotChatMember.mr",
 				data: form_data,
 				type: "get",		// 위의 url주소로 보내어질 요청대이터이다
 				dataType: "html",	// ajax 요청에의해 url주소(chattingRoomAjax.mr)로 리턴받는 데이터 타입이다
@@ -99,24 +101,17 @@
 			
 			
 		});
-		$("#newRoom").click(function() {
-		//	var inv = $('.inv').length;
-		//	alert(inv);
+		$("#inviteMember").click(function() {
 		var inv = $('.inv').length;
-		var roomname = $("#roomname").val().trim();
-		if(roomname.trim() == ""){
-			alert("채팅방 이름을 입력하셔야합니다");
-			$("#roomname").val("");
-			$("#roomname").focus();
-		}
-		else{
 			if(inv <= 0){
-				alert("채팅방은 대화상대가 있어야지 만들수 있습니다");
+				alert("초대할 인원을 선택해야합니다");
 			}
-			else
-				var form_data = {roomname : roomname};
+			else {
+		//		var cridx = ${cridx};
+		//		alert(cridx);
+				var form_data = {cridx : cridx};
 				$.ajax({
-					url: "newRoom.mr",
+					url: "addPersonEndchat.mr",
 					data: form_data,
 					type: "get",		// 위의 url주소로 보내어질 요청대이터이다
 					dataType: "html",	// ajax 요청에의해 url주소(chattingRoomAjax.mr)로 리턴받는 데이터 타입이다
@@ -124,9 +119,7 @@
 					success: function(data) { // success => url주소(chattingRoomAjax.mr)로 부터 받은 응답이 요청에 성공했다는 것을 말한다
 												// function(data) {}를 콜백함수라고 부르는데 성공한 다음에 실행할것들을 여기에 서술한다
 												// 그리고 data는 url주소(chattingRoomAjax.mr)로부터 리턴받은 데이터이다
-					//	$("#MemberList").empty(); // 해당요소 선택자 내용을 모두 비워서 새로운 데이터를 채울 준비를 한다
-					//	$("#memberinfo").empty();
-					//	$("#MemberList").html(data);
+
 						$("#chatMessage").empty();
 						$("#chatMessage").html(data);
 					
@@ -141,9 +134,11 @@
 					var id = document.getElementsByClassName('twon')[i].id;
 					var memberidx = $('#'+id).val();
 					
-					var midx_data = {memberidx : memberidx};
+					
+					var midx_data = {memberidx : memberidx
+									,cridx : cridx};
 					$.ajax({
-						url: "newRoomNewMember.mr",
+						url: "addPersonEndmember.mr",
 						data: midx_data,
 						type: "get",		// 위의 url주소로 보내어질 요청대이터이다
 						dataType: "html",	// ajax 요청에의해 url주소(chattingRoomAjax.mr)로 리턴받는 데이터 타입이다
@@ -161,48 +156,24 @@
 					});
 					
 					
-				});// end of each
-				
+				});// end of each			
 				
 				
 				$("#message").show();
 				$("#sendMessage").show();
-				alert("채팅방 만들기 성공");
+				alert("초대하였습니다");
 				getRoomList();
 		}
 		
-		
-		
-		
-		/* var form_data = {roomname : roomname};
-		$.ajax({
-				url: "newRoom.mr",
-				data: form_data,
-				type: "get",		// 위의 url주소로 보내어질 요청대이터이다
-				dataType: "html",	// ajax 요청에의해 url주소(chattingRoomAjax.mr)로 리턴받는 데이터 타입이다
-				 					// 종류가 xml, json, html, script, text
-				success: function(data) { // success => url주소(chattingRoomAjax.mr)로 부터 받은 응답이 요청에 성공했다는 것을 말한다
-											// function(data) {}를 콜백함수라고 부르는데 성공한 다음에 실행할것들을 여기에 서술한다
-											// 그리고 data는 url주소(chattingRoomAjax.mr)로부터 리턴받은 데이터이다
-					$("#MemberList").empty(); // 해당요소 선택자 내용을 모두 비워서 새로운 데이터를 채울 준비를 한다
-				//	$("#memberinfo").empty();
-					$("#MemberList").html(data);
-				},
-				error: function(request, status, error) {
-					alert("code: " + request.status + "\n"+"message: " + request.responseText + "\n" + "error: " + error);     
-				}
-			});
-		
-			$('.inv').each(function(i) {
-				var id = document.getElementsByClassName('twon')[i].id;
-				var memberidx = $('#'+id).val();
-			}); */
+
 
 	
 		});
 		
 		
 	});
+	
+
 
 	
 </script>
@@ -226,7 +197,7 @@
 		<input id="nameORid" type="text"/>&nbsp;<span id="serchMem">찾기</span>
 		</div>
 		<div id="MemberList" style="border: 1px solid teal; height : 400px; overflow: auto;"></div>
-		<div style="margin-left: 30px;"><input type="text" id="roomname" placeholder="채팅방 이름" />&nbsp;<span id="newRoom">방만들기</span></div>
+		<div style="float: right;"><span id="inviteMember">초대하기</span></div>
 	</div>
 	<form id="newRoomFrm">
 		<input type="hidden" name="invmemidx" />
