@@ -23,6 +23,26 @@ public interface InterChattingService {
 
 	List<HashMap<String, Object>> getFindNotMe(HashMap<String, Object> map);
 
+	int newRoom(HashMap<String, Object> map) throws Throwable;
+
+	String getCRidxNewRoom();
+
+	void newRoomNewMember(HashMap<String, Object> map);
+
+	void addMemberCnt(String cridx);
+
+	void outRoom(HashMap<String, Object> map);
+
+	void outRoomCnt(String cridx);
+
+	String[] getChattingRoomMember(String cridx);
+
+	List<HashMap<String, Object>> getTeamwonNotChatMember(HashMap<String, Object> map);
+
+	List<HashMap<String, Object>> getAllNotChatMember(HashMap<String, Object> map);
+
+	List<HashMap<String, Object>> getFindNotChatMember(HashMap<String, Object> map);
+
 	
 
 
