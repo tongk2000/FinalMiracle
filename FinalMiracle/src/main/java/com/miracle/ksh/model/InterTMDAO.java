@@ -67,4 +67,8 @@ public interface InterTMDAO {
 
 	String getMyEmail(int login_idx); //메일을 보내기 위한 자신의 이메일을 알아보자
 
+	int setTeamwonLeader(HashMap<String, String> tmMap); //팀 생성 시 팀원 테이블에 팀장의 정보를 넣어보자
+
+	int tmWithDrawCancel(HashMap<String, String> map); //탈퇴 요청한 것을 취소해보자
+
 }

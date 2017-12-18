@@ -7,11 +7,8 @@
 <c:if test="${not empty map.doList}"> <!-- 프로젝트 리스트가 있다면 -->
 	<c:forEach var="dvo" items="${map.doList}">
 		<tr id="${dvo.idx}"
-			<c:if test="${dvo.fk_folder_idx == 0}">
-				style="font-size:14pt; font-weight:bold;"
-			</c:if>
-			<c:if test="${dvo.fk_folder_idx != 0 and dvo.category == 1}">
-				style="font-size:12pt; font-weight:bold;"
+			<c:if test="${dvo.category == 1}">
+				style="font-size:11pt; font-weight:bold;"
 			</c:if>
 		class="element ${dvo.groupNo} ${dvo.depth} trLine">
 			<td>
@@ -41,22 +38,22 @@
 				</span>
 			</td>
 			
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>${dvo.ftCnt}</td>
+			<td>${dvo.ffCnt}</td>
+			<td>${dvo.fcCnt}</td>
 			
 			<c:if test="${dvo.status == 1}"> <!-- 미완료된 할일이라면 -->
 				<c:if test="${dvo.dayCnt == 0}"> <!-- 시작일 전이라면 -->
-					<td class="dateColor ${dvo.dayCnt}" style="background-color:lightgreen;">${dvo.startDate}</td>
-					<td class="dateColor ${dvo.dayCnt}" style="background-color:lightgreen;">${dvo.lastDate}</td>
+					<td class="dateColor ${dvo.dayCnt} startDateTd" style="background-color:lightgreen;">${dvo.startDate}</td>
+					<td class="dateColor ${dvo.dayCnt} lastDateTd" style="background-color:lightgreen;">${dvo.lastDate}</td>
 				</c:if>
 				<c:if test="${dvo.dayCnt == 1}"> <!-- 진행중이라면 -->
-					<td class="dateColor ${dvo.dayCnt}" style="background-color:green;">${dvo.startDate}</td>
-					<td class="dateColor ${dvo.dayCnt}" style="background-color:green;">${dvo.lastDate}</td>
+					<td class="dateColor ${dvo.dayCnt} startDateTd" style="background-color:green;">${dvo.startDate}</td>
+					<td class="dateColor ${dvo.dayCnt} lastDateTd" style="background-color:green;">${dvo.lastDate}</td>
 				</c:if>
 				<c:if test="${dvo.dayCnt == -1}"> <!-- 기한이 지났다면 -->
-					<td class="dateColor ${dvo.dayCnt}" style="background-color:red;">${dvo.startDate}</td>
-					<td class="dateColor ${dvo.dayCnt}" style="background-color:red;">${dvo.lastDate}</td>
+					<td class="dateColor ${dvo.dayCnt} startDateTd" style="background-color:red;">${dvo.startDate}</td>
+					<td class="dateColor ${dvo.dayCnt} lastDateTd" style="background-color:red;">${dvo.lastDate}</td>
 				</c:if>
 			</c:if>
 			<c:if test="${dvo.status == 0}"> <!-- 완료된 할일이라면 -->

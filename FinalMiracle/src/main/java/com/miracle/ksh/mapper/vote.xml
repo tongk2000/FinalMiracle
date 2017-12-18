@@ -52,7 +52,7 @@
 	
 	<insert id="VoteAdd" parameterType="java.util.HashMap">
 		insert into tbl_vote
-		values(seq_vote.nextval, #{idx}, #{subject}, #{content}, to_date(#{startdate}, 'yyyy-mm-dd'), to_date(#{enddate}, 'yyyy-mm-dd'), default)
+		values(seq_vote.nextval, #{fk_teamwon_idx}, #{subject}, #{content}, to_date(#{startdate}, 'yyyy-mm-dd'), to_date(#{enddate}, 'yyyy-mm-dd'), default)
 	</insert>
 	
 	

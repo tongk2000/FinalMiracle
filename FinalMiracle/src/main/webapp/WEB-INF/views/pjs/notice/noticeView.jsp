@@ -21,7 +21,6 @@ request.setCharacterEncoding("UTF-8");
 	}
 	div#displayList {
 		width:80%;
-		border : 1px solid black;
 		align:center;
 	}
 	.first {
@@ -45,7 +44,7 @@ request.setCharacterEncoding("UTF-8");
 <body>
 <c:set var="user" value="${map}" /> <!-- teamNum , userid , teamNum , status -->
 	<div style="border: 1px solid green; width:100%;">
-		<div style="border: 1px solid yellow;">
+		<div style="border: 1px solid yellow;" align="center">
 			<table style="border: 2px dotted red;">
 				<thead>
 					<tr>
@@ -67,16 +66,28 @@ request.setCharacterEncoding("UTF-8");
 						<td>내용 :</td>
 						<td><textarea name="content" id="content" class="summernote">${user.content}</textarea></td>
 					</tr>
+					<tr>
+						<td>첨부파일</td>   <!-- USERID, IMG, SUBJECT, CONTENT, STATUS, IDX, FILENAME, ORGFILENAME, FILESIZE, FK_IDX -->
+						<td>
+						    <a href="<%= request.getContextPath() %>/download.mr?nidx=${user.n_idx}&fidx=${user.idx}">${user.orgfilename}</a> 
+						</td>
+					</tr>
 				</tbody>
 			</table>
+			<div style="margin-left:200px;"  >
+					<button type="button" onClick="goback();">목록보기</button>
+			</div>
 			<c:if test="${sessionScope.teamInfo.teamwon_status == 2}">
-				<div style="float:left;" >
+				<div style="margin-left:410px; clear:both;"  >
+					<button type="button" onClick="">이글 수정하기</button>
+				</div>
+				<div style="margin-left:710px;"  >
 					<button type="button" onClick="goEdit();">수정글쓰기</button>
 				</div>
 			</c:if>
 			<br/>
 			<br/>
-			<div id="displayList" style="background-color:white; align:center;"> </div>
+			<div id="displayList" style="background-color:white; align:center;"></div>
 			<br/>
 			<div style="align:center;">댓글 :&nbsp;&nbsp;<input type="text" id="contents" name="contents"/> <button type="button" id="goClick">쓰기</button></div> <br/><br/>
 		</div>
@@ -89,13 +100,12 @@ request.setCharacterEncoding("UTF-8");
 	<!-- comment(ReplyVO), map(team_idx , userid) 받는다. -->
 	<script>
 		$(document).ready(function(){
-			alert("옴?");
-			alert("${user.status}");
 			getReply();
 			$("#goClick").click(function(){
 				var contents = $("#contents").val();
 				var nidx = "${nidx}";
-				goClick(nidx,contents);
+				var userid = "${sessionScope.loginUser.userid}";
+				goClick(nidx,contents, userid);
 			});
 			$('.summernote').summernote({
 		      height: 300,          // 기본 높이값
@@ -106,14 +116,13 @@ request.setCharacterEncoding("UTF-8");
 		    });
 		});
 		function getReply() {
-			var data_form = {"nidx":"${nidx}"};
+			var data_form = {"nidx":"${nidx}"}
 			$.ajax({
 				url:"getnoticeReplyList.mr",
 				type:"get",
 				data:data_form,
 				dataType:"html",
 				success:function(data) {
-					alert(data);
 					$("#displayList").html(data);
 				},
 				error:function() {
@@ -121,11 +130,11 @@ request.setCharacterEncoding("UTF-8");
 				}
 			});
 		}
-		function goClick(idx, contents) {
+		function goClick(idx, contents, userid) {
 			$.ajax({
 				url:"setnoticeReplyList.mr",
 				type:"post",
-				data:{"idx":idx,"contents":contents}
+				data:{"idx":idx,"contents":contents,"userid":userid}
 			});
 			getReply();				
 		}
@@ -137,6 +146,9 @@ request.setCharacterEncoding("UTF-8");
 			frm.action="<%=request.getContextPath()%>/noticeEditWrite.mr";
 			frm.method="get";
 			frm.submit();
+		}
+		function goback() {
+			location.href="<%=request.getContextPath()%>/${sessionScope.gobackURL}";
 		}
 	</script>
 </body>

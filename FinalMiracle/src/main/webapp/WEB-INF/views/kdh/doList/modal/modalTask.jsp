@@ -56,22 +56,7 @@
 							</td>
 						</tr>
 	
-						<tr>
-							<td class="infoClass">시작일</td>
-							<td class="infoData showInfo">${map.fvo.startDate}</td>
-							<td class="infoData hiddenEdit">
-								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="startDate" value="${map.fvo.startDate}" />
-							</td>
-						</tr>
-	
-						<tr>
-							<td class="infoClass">마감일</td>
-							<td class="infoData showInfo">${map.fvo.lastDate}</td>
-							<td class="infoData hiddenEdit">
-								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="lastDate" value="${map.fvo.lastDate}" />
-							</td>
-	
-						</tr>
+						<jsp:include page="includePage/modalDatePicker.jsp"/> <!-- 날짜페이지 따로 빼둠 -->
 	
 						<tr>
 							<td id="addTeamwon" class="infoClass">
@@ -114,15 +99,15 @@
 								</c:if>
 							</td>
 						</tr>
-						
-						<jsp:include page="modalFileList.jsp"/> <!-- 파일리스트는 공통이라 따로 뺌 -->
+						<jsp:include page="includePage/modalFileAttachList.jsp"/> <!-- 첨부 파일리스트는 공통이라 따로 뺌 -->
+						<jsp:include page="includePage/modalFileAddList.jsp"/> <!-- 파일 추가도 공통이라 따로 뺌 -->
 					</tbody>
 				</table>
 				folder_idx:<input type="text" name="idx" id="folder_idx" value="${map.fvo.idx}" /> <!-- 폴더번호 저장용 -->
 			</form>
 			<br/>
 			<div id="modalCommentPage">
-				<jsp:include page="modalCommentPage.jsp"/> <!-- 댓글리스트는 공통이라 따로 뺌 -->
+				<jsp:include page="includePage/modalCommentPage.jsp"/> <!-- 댓글리스트는 공통이라 따로 뺌 -->
 			</div>
 		</div>
 		<div class="modal-footer">

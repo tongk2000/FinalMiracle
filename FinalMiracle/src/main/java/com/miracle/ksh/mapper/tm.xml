@@ -357,5 +357,17 @@
 		on A.idx = B.fk_member_idx
 		where A.idx = #{login_idx}
 	</select>
+	
+	
+	<insert id="setTeamwonLeader" parameterType="HashMap">
+		insert into tbl_teamwon
+		values(seq_teamwon.nextval, (select max(idx) from tbl_team), #{fk_member_idx}, 2, sysdate, null);
+	</insert>
+	
+	
+	<update id="tmWithDrawCancel" parameterType="HashMap">
+		update tbl_teamwon set disdate = null
+		where idx = #{idx}
+	</update>
 
 </mapper>

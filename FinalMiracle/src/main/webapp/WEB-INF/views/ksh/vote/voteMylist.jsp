@@ -2,7 +2,6 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<script type="text/javascript" src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 <script src="<%= request.getContextPath() %>/resources/js/highcharts.js"></script>
 <script src="<%= request.getContextPath() %>/resources/js/modules/exporting.js"></script>    
 
@@ -36,7 +35,7 @@
 	});
 	
 	function searchKeep(){
-		<c:if test="${(colname != 'null' && not empty colname) && (search != 'null' && not empty search)}"> /* colname과 search가 비어있지 않다라면 */
+		<c:if test="${(colname != 'null' && not empty colname) && (search != 'null' && not empty search)}">
 			$("#colname").val("${colname}");//검색시 컬럼명을 유지시켜보자
 			$("#search").val("${search}");//검색어 대한 검색어를 유지시켜보자
 		</c:if>
@@ -125,7 +124,7 @@
 	                    }
 	                 
 	                    // draw chart
-	                    $('.modal-body').highcharts({
+	                    $('#chartbody').highcharts({
 	                    chart: {
 	                        type: "column"
 	                    },
@@ -218,14 +217,18 @@
 					<td>${votevo.STARTDATE}</td>
 					<td>${votevo.ENDDATE}</td>
 					<td>
+						<c:set value="0" var="votesum" />
 						<c:forEach var="voteitemvo" items="${voteItemList}" varStatus="status">
 							<c:set value="${voteitemvo.fk_vote_idx}" var="voteitemidx" />
 							<c:if test="${voteidx eq voteitemidx}">
 								＊ ${voteitemvo.item} : ${voteitemvo.votenum}표
 								<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteChoice.mr'">선택</button> --%>
 								<br>
+								<c:set var="votesum" value="${votesum + voteitemvo.votenum}" />
 							</c:if>
 						</c:forEach>
+						<br/>
+						참여한 인원 : <c:out value="${votesum}"/>명
 					</td>
 					<td>
 						<c:if test="${votekind eq 'ready'}">
@@ -319,8 +322,7 @@
 	      <button type="button" class="close" data-dismiss="modal">&times;</button>
 	      <h4 class="modal-title">투표 결과</h4>
 	    </div>
-	    <div class="modal-body" align="center">
-	      <p>CHART</p>
+	    <div class="modal-body" id="chartbody" align="center">
 	    </div>
 	    <div class="modal-footer">
 	      <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>

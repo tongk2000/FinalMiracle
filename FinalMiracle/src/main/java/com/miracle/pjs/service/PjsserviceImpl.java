@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.miracle.pjs.model.FileVO;
 import com.miracle.pjs.model.MapVO;
 import com.miracle.pjs.model.PjsinterDAO;
 import com.miracle.pjs.model.ReplyVO;
@@ -409,6 +410,34 @@ public class PjsserviceImpl implements PjsinterService {
 		// 알람 ajax버전
 		String num = dao.getMessage(map);
 		return num;
+	}
+	
+	
+	@Override // 공지사항 파일 업로드
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int setNoticeWriteWithFile(HashMap<String, String> team) {
+		// TODO Auto-generated method stub
+		int n = dao.setNoticeWrite(team);
+		int m = dao.setNoticeWriteWithFile(team);
+		return (n*m);
+	}
+	@Override
+	public String getfilename(HashMap<String, Object> map) {
+		// TODO 공지사항글에 파일이 있는지 없는지
+		String file = dao.getfilename(map);
+		return file;
+	}
+	@Override
+	public FileVO getViewWithNoAddCount(HashMap<String, String> map) {
+		// 파일 다운로드
+		FileVO vo = dao.getViewWithNoAddCount(map);
+		return vo;
+	}
+	@Override
+	public String getmemoReadCount(String string) {
+		// 메모 읽었는지 여부 반환
+		String memo = dao.getmemoReadCount(string);
+		return memo;
 	}
 	
 	

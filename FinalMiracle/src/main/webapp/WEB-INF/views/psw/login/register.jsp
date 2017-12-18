@@ -574,7 +574,7 @@ th#th {
 							</a> &nbsp;&nbsp; 
 							<a class="btn btn-sm btn-danger" href="<%=request.getContextPath()%>/member_login.mr">
 								<span style="color: white; font-size: 14pt;">
-								<span class="glyphicon glyphicon-remove"></span> 로그인화면으로 </span>
+								<span class="glyphicon glyphicon-remove"></span> 돌아가기 </span>
 							</a>
 							<br /><br />
 						</td>

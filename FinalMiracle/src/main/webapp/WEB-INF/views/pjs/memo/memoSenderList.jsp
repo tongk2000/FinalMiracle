@@ -115,7 +115,7 @@ request.setCharacterEncoding("UTF-8");
 									<td onClick="goView('${sender.idx}', '${userTeam.teamNum}');">${sender.subject}</td>
 									<td>${sender.names}</td>
 									<td>${sender.writedate}</td>
-									<td>${sender.readcount}</td>
+									<td>${sender.read}</td>
 								</tr>
 							</c:forEach>
 						</c:if>	

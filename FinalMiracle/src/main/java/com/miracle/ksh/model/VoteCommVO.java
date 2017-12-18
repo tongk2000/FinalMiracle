@@ -5,19 +5,22 @@ public class VoteCommVO {
 	private int idx;
 	private int fk_vote_idx;
 	private int fk_teamwon_idx;
-	private String Content;
+	private String content;
 	private int status; //상태값 0-삭제됨 1-존재함
+	private String commdate;
 	
 	
 	public VoteCommVO() {	}
 
 
-	public VoteCommVO(int idx, int fk_vote_idx, int fk_teamwon_idx, String content, int status) {
+	public VoteCommVO(int idx, int fk_vote_idx, int fk_teamwon_idx, String content, int status, String commdate) {
+		super();
 		this.idx = idx;
 		this.fk_vote_idx = fk_vote_idx;
 		this.fk_teamwon_idx = fk_teamwon_idx;
-		Content = content;
+		this.content = content;
 		this.status = status;
+		this.commdate = commdate;
 	}
 
 
@@ -52,12 +55,12 @@ public class VoteCommVO {
 
 
 	public String getContent() {
-		return Content;
+		return content;
 	}
 
 
 	public void setContent(String content) {
-		Content = content;
+		this.content = content;
 	}
 
 
@@ -69,9 +72,18 @@ public class VoteCommVO {
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	
-	
-	
-	
 
+
+	public String getCommdate() {
+		return commdate;
+	}
+
+
+	public void setCommdate(String commdate) {
+		this.commdate = commdate;
+	}
+	
+	
+	
+	
 }

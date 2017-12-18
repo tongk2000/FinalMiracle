@@ -155,7 +155,7 @@
 				<th>시작날짜</th>
 				<td>
 					<div style="width: 50%;">
-						<input type="text" id="datepicker1" name="datepicker1" readonly="readonly">
+						<input type="text" id="datepicker1" name="datepicker1" class="form-control" readonly="readonly">
 					</div>
 				</td>
 			</tr>
@@ -163,7 +163,7 @@
 				<th>종료날짜</th>
 				<td>
 					<div style="width: 50%;">
-						<input type="text" id="datepicker2" name="datepicker2" readonly="readonly">
+						<input type="text" id="datepicker2" name="datepicker2" class="form-control" readonly="readonly">
 					</div>
 				</td>
 			</tr>
