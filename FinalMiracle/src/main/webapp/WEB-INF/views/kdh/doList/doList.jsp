@@ -123,7 +123,7 @@
 	} // end of window.onload = function() ----------------------------------------------------------------------------
 	
 	$(document).ready(function(){
-		var changeFlag = false; // 모달창에서 변경된 값이 있는지 체크하는 변수
+		changeFlag = false; // 모달창에서 변경된 값이 있는지 체크하는 전역 변수
 		$("#folderRcm").hide();
 		$("#taskRcm").hide();
 		
@@ -284,8 +284,12 @@
 			}
 		}); // end of $(document).on("keyup", ".hiddenEditInput", function() --------------------------------------------------------------------------
 		
-		// 요소 모달창의 정보를 수정하기
+		// 요소 모달창의 정보 수정하기
 		$(document).on("click", ".modalEdit", function(){
+			var bool = confirm("정말 수정하시겠습니까?");
+			if(!bool) {
+				return false;
+			}
 			$("#modalInfoFrm").ajaxForm({
 				url:"do_goModalEdit.mr",
 				dataType:"json",
@@ -499,8 +503,9 @@
 				
 		// 팀원 표시창에서 특정 아이디 클릭시 담당자 리스트에 추가해주고 팀원 표시창에서는 빼기
 		$(document).on("click", ".selectTeamwon", function(){
+			changeFlag = true;
 			var userid = $(this).text();
-			var idx = $("#id"+userid).val();			
+			var idx = $("#id"+userid).val();
 			var html = '<span id="folderTeamwon'+idx+'" class="pointer" onclick="deleteFolderTeamwon('+idx+')">'
 					 + '	<span id="added'+userid+'">'+userid+'</span>'
 					 + '    <input type="hidden" name="folder_teamwonIdxArr" value="'+idx+'">'
@@ -533,7 +538,7 @@
 			}
 		}); // end of $(document).on("keydown", function(e) ----------------------------------------------------------------------
 		// 팀원 추가, 삭제 끝 -------------------------------------------------------------------------------------------------------------
-				
+		
 	}); // end of $(document).ready(function() ---------------------------------------------------------------------------------------------------------
 			
 	
@@ -600,7 +605,7 @@
 		var term = $("#term").val();
 		var page = $("#page").val();
 		
-		window.open("do_addDownElement.mr?upIdx="+upIdx+"&term="+term+"&page="+page, "subwinpop", "left=100px, top=100px, width=400px, height=350px");
+		window.open("do_addDownElement.mr?upIdx="+upIdx+"&term="+term+"&page="+page, "subwinpop", "left=100px, top=100px, width=700px, height=500px");
 	} // end of function addDownElement() -----------------------------------------------------------------------------------------------------------------------------
 	// 하위 요소 추가되었을때 살짝 깜빡여 주기
 	function addLine(id) {
@@ -647,7 +652,7 @@
 			dataType:"html",
 			success:function(data){
 				$("#modalElementInfo").html(data);
-				$("#modalElementInfo").modal();
+				$("#modalElementInfo").modal({backdrop:'static'});
 			}, error:function(request, status, error){
 	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 			}
@@ -663,7 +668,7 @@
 			dataType:"html",
 			success:function(data){
 				$("#modalElementInfo").html(data);
-				$("#modalElementInfo").modal();
+				$("#modalElementInfo").modal({backdrop:'static'});
 			}, error:function(request, status, error){
 	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 			}
@@ -803,7 +808,9 @@
 		        console.log(thrownError);
 		    }
 		});
-	}	
+	} // end of function myElementOn() -------------------------------------------------------------------------------------------------------------------------
+	
+	
 	// 내가 속한 요소에 css 입히기 해제
 	function myElementOff() {
 		$("tr").removeClass("myElement");
@@ -811,11 +818,7 @@
 		$("#myDoing").text("");
 		$("#myLapse").text("");
 		$("#myComplete").text("");
-	}
-	
-	function minusFileInput(e) {
-		alert($(e.target).val());
-	}
+	} // end of function myElementOff() ---------------------------------------------------------------------------------------------------------------------------
 </script>
 
 <div class="container" style="width:100%; float:left">

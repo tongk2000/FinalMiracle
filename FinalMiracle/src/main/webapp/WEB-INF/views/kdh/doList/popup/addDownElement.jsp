@@ -13,6 +13,7 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/BootStrapStudy/js/bootstrap.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/resources/jqueryuijs/jquery-ui.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery.form.min.js"></script> <!-- 파일까지 업로드 가능한 jquery form 플러그인 -->
 </head>
 
 <style type="text/css">
@@ -27,7 +28,16 @@
 
 <script type="text/javascript">
  	$(document).ready(function(){
-		
+ 		// datePicker 설정
+ 		var $opener = $(".selectedLine", opener.document);
+		var startDate = new Date( $opener.find(".startDateTd").text() );
+		var lastDate = new Date ( $opener.find(".lastDateTd").text() );
+		$("#startDate, #lastDate").datepicker({
+			dateFormat: 'yy-mm-dd',
+			minDate:startDate,
+			maxDate:lastDate
+		}); // end of $("#startDate, #lastDate").datepicker({ ---------------------------------------------------------
+ 		
 		// 담당 추가 버튼을 누르면 팀원 표시창 출력해주기
 		$("#btn_add").click(function(e){
 			if($(e.target).hasClass("selectTeamwon")) { // 만약 클릭한것이 팀원 표시창의 팀원이라면
@@ -124,7 +134,6 @@
 	function addDownElement() {
 		var frm = document.addDownElementFrm;
 		frm.action = "do_addDownElementEnd.mr";
-		frm.method = "post";
 		frm.submit();
 	} // end of function addDownElement() ---------------------------------------------------------------------------------------------------
 	
@@ -136,10 +145,10 @@
 	} // end of function cancel() ------------------------------------------------------------------------------------------------------------
 </script>
 <body>
-	<form name="addDownElementFrm">
-		<table style="width:400px;">
-			<tr style="width:400px;">
-				<td style="width:100px;">상위요소</td> <td style="width:300px;">${map.subject}</td>
+	<form name="addDownElementFrm" id="modalInfoFrm" enctype="multipart/form-data" method="post">
+		<table style="width:700px;">
+			<tr style="width:700px;">
+				<td style="width:150px;">상위요소</td> <td style="width:550px;">${map.subject}</td>
 			</tr>
 			<tr>
 				<td>요소</td>
@@ -167,14 +176,21 @@
 				</td>
 			</tr>
 			<tr>
-				<td>시작일</td> <td><input type="text" name="startDate"/></td>
+				<td>시작일</td> 
+				<td>
+					<input type="text" readonly id="startDate" name="startDate"/>
+				</td>
 			</tr>
 			<tr>
-				<td>마감일</td> <td><input type="text" name="lastDate"/></td>
+				<td>마감일</td> 
+				<td>
+					<input type="text" readonly id="lastDate" name="lastDate"/>
+				</td>
 			</tr>
 			<tr>
 				<td>중요도</td> <td><input type="text" name="importance"/></td>
 			</tr>
+			<jsp:include page="../modal/includePage/modalFileAddList.jsp"/> <!-- 파일 추가도 공통이라 따로 뺌 -->
 		</table>
 		
 		<p id="hiddenInfo">

@@ -149,6 +149,13 @@ public class BoardDAO implements InterBoardDAO {
 		int n = sqlsession.update("board_psw.deleteComment", idx);
 		return n;
 	}
+
+	// ================ *** 자유게시판 총 게시글 수 구하기 *** ===========
+	@Override
+	public int getFreeListCnt() {
+		int cnt = sqlsession.selectOne("board_psw.getFreeListCnt");
+		return cnt;
+	}
 	
 	
 

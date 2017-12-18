@@ -104,7 +104,7 @@
 				<tr>
 					<th>글제목</th>
 					<td>
-						<input type="text" name="subject" class="long" />
+						<input type="text" name="subject" id="subject" class="long" />
 					</td>
 				</tr>
 				

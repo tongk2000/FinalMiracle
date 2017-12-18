@@ -18,6 +18,9 @@
 		       where status in (1, 0) and idx != F.idx
 		       start with idx = F.idx
 		       connect by prior idx = fk_folder_idx) as downCnt
+		     , (select count(*) from tbl_folder_teamwon where fk_folder_idx = F.idx) as ftCnt
+		     , (select count(*) from tbl_folder_comment where fk_folder_idx = F.idx) as fcCnt
+		     , (select count(*) from tbl_folder_file where fk_folder_idx = F.idx) as ffCnt
 		from tbl_folder F
 		where status in (0, 1) and fk_teamwon_idx in (select idx from tbl_teamwon where fk_team_idx = #{team_idx})
 		start with fk_folder_idx = 0
@@ -39,6 +42,9 @@
 		       where status in (1, 0) and idx != F.idx
 		       start with idx = F.idx
 		       connect by prior idx = fk_folder_idx) as downCnt
+		     , (select count(*) from tbl_folder_teamwon where fk_folder_idx = F.idx) as ftCnt
+		     , (select count(*) from tbl_folder_comment where fk_folder_idx = F.idx) as fcCnt
+		     , (select count(*) from tbl_folder_file where fk_folder_idx = F.idx) as ffCnt
 		from tbl_folder F
 		where idx = (select max(idx) from tbl_folder)
 	</select>
@@ -75,6 +81,7 @@
 		     , (select userid from view_teamwonWithUserid where idx = fk_teamwon_idx) as userid
 		from tbl_folder_file
 		where fk_folder_idx = #{idx}
+		order by 1
 	</select>
 	
 	
@@ -155,14 +162,8 @@
 		select seq_folder_teamwon.nextval, V.*
 		from (
 			<foreach collection="teamwonIdxArr" index="i" separator="UNION ALL">
-				<if test="teamwon_idx == teamwonIdxArr[i]"> <!-- 폴더 만든사람하고 같다면 -->
-					select (select max(idx) from tbl_folder), ${teamwonIdxArr[i]}, 0, 2
-					from dual
-				</if>
-				<if test="teamwon_idx != teamwonIdxArr[i]"> <!-- 폴더 만든사람하고 틀리다면 -->
-					select (select max(idx) from tbl_folder), ${teamwonIdxArr[i]}, 0, 1
-					from dual
-				</if>
+				select (select max(idx) from tbl_folder), ${teamwonIdxArr[i]}, 0, 1
+				from dual
 			</foreach>
 		)V
 	</insert>
@@ -324,10 +325,17 @@
 		from dual
 	</select>
 	
-	<update id="insertFolderFile" parameterType="com.miracle.kdh.model.Folder_FileVO">
+	<!-- 첨부파일의 정보를 입력해주기 -->
+	<insert id="insertFolderFile" parameterType="com.miracle.kdh.model.Folder_FileVO">
 		insert into tbl_folder_file
 		values(seq_folder_file.nextval, #{fk_folder_idx}, #{fk_teamwon_idx}, #{serFilename}, #{orgFilename}, #{filesize})
-	</update>
+	</insert>
+	
+	<!-- 첨부파일 삭제하기 -->
+	<delete id="deleteFolderFile">
+		delete from tbl_folder_file
+		where serFilename = #{serFilename}
+	</delete>
 </mapper>
 
 

@@ -3,7 +3,6 @@ package com.miracle.psw.service;
 import java.util.HashMap;
 import java.util.List;
 
-import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -179,6 +178,13 @@ public class BoardService implements InterBoardService {
 		}
 		
 		return n;
+	}
+
+	// ========================= *** 자유게시판 활성화된 게시글 총 갯수 알아오기 *** =============
+	@Override
+	public int getFreeListCnt() {
+		int cnt = dao.getFreeListCnt();
+		return cnt;
 	}
 
 	

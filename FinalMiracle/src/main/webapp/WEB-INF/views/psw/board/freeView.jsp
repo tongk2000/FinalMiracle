@@ -139,7 +139,9 @@
 			<table id="table" style="width: 500px; border: 1px solid dimgray; border-left: none; border-right: none;">
 				<!-- ============================= *** 자유게시판 소개 *** =================================== -->
 				<tr class="title above">
-					<td colspan="2" style="padding-left: 20px; font-weight: bold; font-size: 10pt;">자유게시판입니다.</td>
+					<td colspan="2" style="padding-left: 20px; font-weight: bold; font-size: 10pt;">
+						<span style="vertical-align: baseline; color: blue; font-size: smaller;">[${fk_team_idx}팀]</span> 자유게시판입니다.
+					</td>
 				</tr>
 				<tr class="title">
 				<td colspan="2" style="padding-left: 10px; font-size: 10pt;">
@@ -232,7 +234,7 @@
 					<c:forEach var="commentvo" items="${freeCommentList}" >
 						<tr id="comment${commentvo.idx}">
 							<td style="border: 0px solid lightgray; border-left: none; border-right: none; width: 3%;">
-								<img src="<%= request.getContextPath() %>/resources/images/${commentvo.img}" style="width: 30px; height: 25px; vertical-align: middle; padding-top: 2px; padding-bottom: 2px;" align="middle">
+								<img src="<%= request.getContextPath() %>/resources/images/${commentvo.img}" style="width: 28px; height: 30px; vertical-align: middle; padding-top: 2px; padding-bottom: 2px;" align="middle">
 							</td>
 							<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 12%; padding-left: 10px;">
 								<span class="repleInfo" onClick="showUserInfo('${commentvo.userid}')" style="font-size: 9pt;">
@@ -256,14 +258,17 @@
 
 	<!-- ==================================== *** 자유게시판 목록 *** ============================================ -->
 	<div style="border: 1px solid blue; width: 650px; padding-top: 10px;">
+		<div align="left" style="margin-left: 20px;">
+		총 게시글 '<span style="font-size: larger; color: orange;">${totalFreeListCnt}'</span> 개
+		</div>
 		<table style="width: 650px; border: 1px solid dimgray; border-left: none; border-right: none;">
 			<thead>
-				<tr>
-					<th style="text-align: center;">글번호</th>
-					<th style="text-align: center;">작성자</th>
-					<th style="text-align: center;">글제목</th>
-					<th style="text-align: center;">조회수</th>
-					<th style="text-align: center;">등록일자</th>
+				<tr style="background-color: silver;">
+					<th style="text-align: center; padding: 2px;">글번호</th>
+					<th style="text-align: center; padding: 2px;">작성자</th>
+					<th style="text-align: center; padding: 2px;">글제목</th>
+					<th style="text-align: center; padding: 2px;">조회수</th>
+					<th style="text-align: center; padding: 2px;">등록일자</th>
 				</tr>
 			</thead>
 			<tbody>
