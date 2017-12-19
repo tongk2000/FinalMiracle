@@ -13,6 +13,7 @@
 
 %>
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 <style type="text/css">
 
@@ -63,6 +64,8 @@
 %>
 >>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 >>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
+=======
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 
 <style type="text/css">
 
@@ -76,8 +79,8 @@
 
 <div class="side-info">
       
-<<<<<<< HEAD
 
+<<<<<<< HEAD
 =======
 =======
 <script type="text/javascript">
@@ -101,7 +104,10 @@
 <<<<<<< HEAD
 >>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 >>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
+=======
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
     <ul style="list-style-type: none; margin: 0px; padding: 0px;">
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 <<<<<<< HEAD
@@ -113,6 +119,8 @@
 >>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 >>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 >>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
+=======
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
       <li><a href="<%= request.getContextPath() %>/doList.mr" title="일정관리"><img src="<%= request.getContextPath() %>/resources/images/icon/01.png" style="width:50px; heigth:50px;" /></a></li>
       <li><a href="<%-- <%=serverName%> --%><%= request.getContextPath() %>/chatting.mr" title="채팅"><img src="<%= request.getContextPath() %>/resources/images/icon/02.png" style="width:50px; heigth:50px;" /></a></li>
       <li><a href="<%= request.getContextPath() %>/commute.mr" title="출퇴근"><img src="<%= request.getContextPath() %>/resources/images/icon/03.png" style="width:50px; heigth:50px;" /></a></li>
@@ -121,29 +129,29 @@
       <li><a href="<%= request.getContextPath() %>/mindList.mr" title="마음의소리"><img src="<%= request.getContextPath() %>/resources/images/icon/06.png" style="width:50px; heigth:50px;" /></a></li>
       <li><a href="<%= request.getContextPath() %>/freeList.mr" title="자유게시판"><img src="<%= request.getContextPath() %>/resources/images/icon/07.png" style="width:50px; heigth:50px;" /></a></li>
       <li><a href="<%= request.getContextPath() %>/voteList.mr" title="투표게시판"><img src="<%= request.getContextPath() %>/resources/images/icon/08.png" style="width:50px; heigth:50px;" /></a></li>
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
       <li><a href="<%= request.getContextPath() %>/tmList.mr" title="팀원관리"><img src="<%= request.getContextPath() %>/resources/images/icon/09.png" style="width:50px; heigth:50px;" /></a></li>
+<<<<<<< HEAD
 <<<<<<< HEAD
       <li><a href="<%= request.getContextPath() %>/memoList.mr" title="메모"><img src="<%= request.getContextPath() %>/resources/images/icon/10.png" style="width:50px; heigth:50px;" /></a></li>
       <li><a href="<%= request.getContextPath() %>/memoreceiver.mr" title="쪽지"  ><img src="<%= request.getContextPath() %>/resources/images/icon/11.png" style="width:50px; heigth:50px;" id="alarm"/></a></li>
 =======
 <<<<<<< HEAD
+=======
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
       <%-- <li><a href="<%= request.getContextPath() %>/memoList.mr" title="메모"><img src="<%= request.getContextPath() %>/resources/images/icon/10.png" style="width:50px; heigth:50px;" /></a></li>
       <li><a href="<%= request.getContextPath() %>/memoreceiver.mr" title="쪽지"  ><img src="<%= request.getContextPath() %>/resources/images/icon/11.png" style="width:50px; heigth:50px;" id="alarm"/></a></li> --%>
+<<<<<<< HEAD
 =======
       <li><a href="<%= request.getContextPath() %>/memoList.mr" title="메모"><img src="<%= request.getContextPath() %>/resources/images/icon/10.png" style="width:50px; heigth:50px;" /></a></li>
       <li><a href="<%= request.getContextPath() %>/memoreceiver.mr" title="쪽지" ><img src="<%= request.getContextPath() %>/resources/images/icon/11.png" style="width:50px; heigth:50px;" id="alarm" /></a></li>
 >>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 >>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
+=======
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
       <li style="margin-left:20px;"><a href="<%= request.getContextPath() %>/googleMap.mr" title="회사소개">회사</a></li>
       <li><a href="<%= request.getContextPath() %>/memoList.mr" title="메모"><img src="<%= request.getContextPath() %>/resources/images/icon/10.png" style="width:40px; heigth:40px; margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"/></a></li>
       <li><a href="<%= request.getContextPath() %>/memoreceiver.mr" title="쪽지"><img src="<%= request.getContextPath() %>/resources/images/icon/11.png" style="width:50px; heigth:50px;" /></a></li>
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 <<<<<<< HEAD
@@ -161,5 +169,8 @@
 >>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 >>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 >>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
+=======
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
     </ul>
+    
 </div>

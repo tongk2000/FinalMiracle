@@ -1,11 +1,9 @@
-<<<<<<< HEAD
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-=======
-<%@ page language="java" contentType="text/html; charset=UTF-8"
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
     pageEncoding="UTF-8"%>
-<<<<<<< HEAD
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<<<<<<< HEAD
 =======
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <<<<<<< HEAD
@@ -83,4 +81,6 @@
 >>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 >>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 >>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
+=======
 >>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
