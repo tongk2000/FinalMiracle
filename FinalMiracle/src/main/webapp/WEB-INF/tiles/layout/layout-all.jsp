@@ -47,7 +47,7 @@
 		background-color:#1f5c87 !important;
 	}
 	#sideInfo {
-		width:40px !important;
+		width:50px !important;
 		background-color:#1f5c87 !important;
 	}
 	#content {
@@ -60,7 +60,7 @@
 	<table class="miracleLayout" id="layoutTable">
 		<tr class="miracleLayout" id="firstMiracleLine">
 			<td id="toggleSidebar" class="miracleLayout">
-				<a href="<%= request.getContextPath() %>/doList.mr" title="메인 페이지">
+				<a title="메뉴상세">
 					<img src="<%= request.getContextPath() %>/resources/images/icon/00.png" style="width:50px; heigth:50px; background-color:#4882ab;" />
 				</a>
 			</td>
@@ -78,6 +78,4 @@
 		</tr>
 	</table>
 </body>
-
-
 </html>
