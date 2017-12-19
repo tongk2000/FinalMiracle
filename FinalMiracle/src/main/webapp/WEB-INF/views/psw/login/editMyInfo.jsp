@@ -342,8 +342,8 @@
 					      <option value="011">011</option>
 					      <option value="016">016</option>
 					    </select>
-					    <input style="vertical-align: top; height: 27px;" id="hp2" name="hp2" type="text" placeholder="Hp2" size="3" maxlength="3" class="form-inline form-control input-sm" value="${map.mdvo.hp2}"> /
-					  	<input style="vertical-align: top; height: 27px;" id="hp3" name="hp3" type="text" placeholder="Hp3" size="3" maxlength="3" class="form-inline form-control input-sm" value="${map.mdvo.hp3}">
+					    <input style="vertical-align: top; height: 27px;" id="hp2" name="hp2" type="text" placeholder="Hp2" size="3" maxlength="4" class="form-inline form-control input-sm" value="${map.mdvo.hp2}"> /
+					  	<input style="vertical-align: top; height: 27px;" id="hp3" name="hp3" type="text" placeholder="Hp3" size="3" maxlength="4" class="form-inline form-control input-sm" value="${map.mdvo.hp3}">
 					  </div>
 					</div><br/>
 					

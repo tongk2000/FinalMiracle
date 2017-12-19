@@ -19,11 +19,13 @@ public interface InterBoardDAO {
 	List<FreeBoardVO> freeList();
 
 	int freeAdd(FreeBoardVO freevo);  // 자유게시판 글쓰기
+	int getGroupMaxno(); // 자유게시판 원글쓰기 확인을 위한 groupno 확인
 
-	FreeBoardVO getView(String idx);  // 자유게시판 선택한 게시글 1개 보여주기
+	FreeBoardVO getView(String idx);  // 자유게시판 선택한 게시글 1개 보여주기	
 
 	void setAddReadCnt(String idx);  // 다른 사용자가 글 조회시 readCnt 1 증가 시키기
 	
+	// =================================== *** 검색 유/무에 따른 자유게시판 목록 보여주기 *** =========================
 	List<FreeBoardVO> freeListWithNoSearch(HashMap<String, String> map);
 	List<FreeBoardVO> freeListWithSearch(HashMap<String, String> map);
 
@@ -46,8 +48,11 @@ public interface InterBoardDAO {
 	int deleteContent(String idx);
 	int deleteComment(String idx);
 
-	// ===== *** 자유게시판 총 게시글 수 구하기 *** ========
-	int getFreeListCnt();
+	
+
+
+
+
 
 	
 	

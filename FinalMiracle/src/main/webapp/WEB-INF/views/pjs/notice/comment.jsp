@@ -24,31 +24,56 @@ request.setCharacterEncoding("UTF-8");
 	}
 	.noticewrite {
 		background-color:lightgray;
+		text-align:center;
 	}
 	.noticenone {
 		background-color:white; border:0px;
 	}
 	.pjstdstyle {
 		border:0px;
+		text-align:center;
 	}
 </style>
+<script type="text/javascript">
+	window.onload = function() {
+	 alert("여기 오냐?");
+	}
+	function gourl(pageNo) {
+		alert(pageNo);
+		data_form = {"idx":"${idx}",
+				     "currentShowPageNo":pageNo
+				     };
+		$.ajax({ 
+			url:"getnoticeReplyListajax.mr",
+			type:"get",
+			data:data_form,
+			dataType:"html",
+			success:function(data) {
+				$("#displayList").html(data);
+			},
+			error:function() {
+				alert("getReply 실패");
+			}
+		});
+	}
+</script>
 <table style="width:800px; border:0px; text-align:center;" class="noticetable">
 	<thead style="">
 		<tr class="noticetable" style="border-bottom:0px; text-align:center;">
-			<th class="noticenone"></th>
+			<th class="noticewrite"></th>
 			<th class="noticewrite">작성자</th>
 			<th class="noticewrite">댓글</th>
 			<th class="noticewrite">작성일</th>
 		</tr>
 	</thead>
 	<tbody>
-		<c:if test="${empty comment}" >
+		<c:if test="${pvo == null}" >
 				<tr style="border:0px white;">
 					<td colspan="4" style="text-align:center; border:0px white;">댓글이 없습니다.</td>
 				</tr>
 		</c:if>
-		<c:if test="${not empty comment}" >
-			<c:forEach var="reply" items="${comment}">
+		<c:if test="${pvo != null}" >
+			<c:forEach var="reply" items="${pvo.comment}">
 				<tr class="lastComment">
 					<td class="noticenone pjstdstyle"><img src="<%=request.getContextPath() %>/resources/images/${reply.img}" ></td>
 					<td class="pjstdstyle">${reply.sesid}</td>
@@ -59,3 +84,11 @@ request.setCharacterEncoding("UTF-8");
 		</c:if>
 	</tbody>
 </table>
+
+<%-- <form name="page">
+	<input type="hidden" name="sizePerPage" value="${pvo.sizePerPage}" />
+	<input type="hidden" name="blockSize" value="${pvo.blockSize}" />
+</form> --%>
+<div align="center">
+	${pvo.pagebar}
+</div>

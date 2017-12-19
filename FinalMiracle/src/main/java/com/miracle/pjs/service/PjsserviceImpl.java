@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.miracle.pjs.model.FileVO;
 import com.miracle.pjs.model.MapVO;
+import com.miracle.pjs.model.MindFileVO;
+import com.miracle.pjs.model.NoticeFileVO;
 import com.miracle.pjs.model.PjsinterDAO;
 import com.miracle.pjs.model.ReplyVO;
 import com.miracle.pjs.util.MyUtil;
@@ -81,15 +83,15 @@ public class PjsserviceImpl implements PjsinterService {
 		return n;
 	}*//* ================================================================================================================================================== */
 	@Override
-	public int delNoticeIdx(HashMap<String, String[]> paramap) {
+	public int delNoticeIdx(HashMap<String, String> paramap, String[] idxArr) {
 		// 공지사항 게시물을 지우는 메소드
-		int n = dao.delNoticeIdx(paramap);
+		int n = dao.delNoticeIdx(paramap, idxArr);
 		return n;
 	}/* ================================================================================================================================================== */
 	@Override
-	public List<ReplyVO> getComment(String idx) {
+	public List<ReplyVO> getComment(HashMap<String, Object> map) {
 		// 게시물을 볼 때 그 글의 리플을 보는 메소드
-		List<ReplyVO> list = dao.getComment(idx);
+		List<ReplyVO> list = dao.getComment(map);
 		return list;
 	}/* ================================================================================================================================================== */
 	@Override
@@ -201,12 +203,12 @@ public class PjsserviceImpl implements PjsinterService {
 		HashMap<String, String> map = dao.getMindIdxTeam(view);
 		return map;
 	}
-	@Override
+	/*@Override
 	public int setMindWrite(HashMap<String, String> team) {
 		// 마음의 소리 글쓰기
 		int n = dao.setMindWrite(team);
 		return n;
-	}
+	}*/
 	@Override
 	public HashMap<String, String> getMindDepth(String nidx) {
 		// depth와 groupno가져오는 메소드
@@ -226,9 +228,9 @@ public class PjsserviceImpl implements PjsinterService {
 		return n;
 	}
 	@Override
-	public int delMindIdx(HashMap<String,String[]> paramap) {
+	public int delMindIdx(HashMap<String,String> paramap , String[] idxArr) {
 		// 마음의 소리 다중 행 삭제
-		int n = dao.delMindIdx(paramap);
+		int n = dao.delMindIdx(paramap,idxArr);
 		return n;
 	}
 	
@@ -241,9 +243,9 @@ public class PjsserviceImpl implements PjsinterService {
 // === *** 구글맵  *** === //	
 //==========================================================================================================================================================//	
 	@Override
-	public List<MapVO> getMap() {
+	public List<MapVO> getMap(HashMap<String, String> map) {
 		// 구글맵 테이블의 모든 정보를 가져온다.
-		List<MapVO> list = dao.getMap();
+		List<MapVO> list = dao.getMap(map);
 		return list;
 	}/* ================================================================================================================================================== */
 	@Override
@@ -422,14 +424,15 @@ public class PjsserviceImpl implements PjsinterService {
 		return (n*m);
 	}
 	@Override
-	public String getfilename(HashMap<String, Object> map) {
+	public String getfilenamelist(HashMap<String, Object> map) {
 		// TODO 공지사항글에 파일이 있는지 없는지
-		String file = dao.getfilename(map);
+		String file = dao.getfilenamelist(map);
 		return file;
 	}
 	@Override
 	public FileVO getViewWithNoAddCount(HashMap<String, String> map) {
 		// 파일 다운로드
+		
 		FileVO vo = dao.getViewWithNoAddCount(map);
 		return vo;
 	}
@@ -438,6 +441,64 @@ public class PjsserviceImpl implements PjsinterService {
 		// 메모 읽었는지 여부 반환
 		String memo = dao.getmemoReadCount(string);
 		return memo;
+	}
+	@Override
+	public NoticeFileVO getfilename(String nidx) {
+		// 뷰에 보여줄 파일 가져오기
+		NoticeFileVO file = dao.getfilename(nidx);
+		return file;
+	}
+	@Override
+	public int setUpdateWrite(HashMap<String, String> team) {
+		// 공지사항 수정하기
+		int n = dao.setUpdateWrite(team);
+		return n;
+	}
+	@Override
+	public int setMindWrite(HashMap<String, String> team) {
+		// 마음의 소리 글쓰기
+		int n= dao.setMindWrite(team);
+		return n;
+	}
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int setMindWriteWithFile(HashMap<String, String> team) {
+		// 마음의 소리 글쓰기 파일첨부
+		int m=dao.setMindWrite(team);
+		String a = dao.getMindWrite(team);
+		team.put("idx", a);
+		int n=dao.setMindWriteWithFile(team);
+		return (m*n);
+	}
+	@Override
+	public int getReplyCount(HashMap<String, Object> map) {
+		// 리플 글 총 수
+		int n = dao.getReplyCount(map);
+		return n;
+	}
+	@Override
+	public int setMindViewEdit(HashMap<String, String> team) {
+		// 글 수정
+		int n = dao.setMindViewEdit(team);
+		return n;
+	}
+	@Override
+	public String getMindfilenamelist(HashMap<String, String> map) {
+		// 마음의 소리에 파일이 있는지 없는지 반환
+		String n = dao.getMindfilenamelist(map);
+		return n;
+	}
+	@Override
+	public MindFileVO getMindfilename(String idx) {
+		// 마음의 소리에 파일vo를 반환
+		MindFileVO vo = dao.getMindfilename(idx);
+		return vo;
+	}
+	@Override
+	public FileVO getmindViewWithNoAddCount(HashMap<String, String> map) {
+		// 마음의 소리 파일 가져오기
+		FileVO vo = dao.getmindViewWithNoAddCount(map);
+		return vo;
 	}
 	
 	

@@ -15,7 +15,7 @@ request.setCharacterEncoding("UTF-8");
 <meta charset="UTF-8">
 <title>공지사항 글</title>
 <style>
-	/* .imgs {
+	.imgs {
 		width:50px;
 		heigth:50px;
 	}
@@ -37,15 +37,15 @@ request.setCharacterEncoding("UTF-8");
 	}
 	th {
 		background-color:Orange;
-	} */
+	}
+	
 </style>
 </head>
-
 <body>
 <c:set var="user" value="${map}" /> <!-- teamNum , userid , teamNum , status -->
-		<div align="center" style="width:700px; float:right;" >
-		<div style="border: 1px solid yellow; width:500px;" align="center">
-			<div style=" border:3px solid Orange; width:500px;"> 
+	<div style="border: 1px solid green; width:100%;">
+		<div style="border: 1px solid yellow;" align="center">
+			<div style=" border:3px solid Orange; heigth:100px; border-left:none; border-right:none;  width:800px; " align="center"> 
 			 <span style="color:Orange"> 공지사항 글 </span><br/>
 			 <span style="color:lightblue;">팀 프로젝트 중요사항 입니다.</span>
 			</div><br/>
@@ -58,18 +58,18 @@ request.setCharacterEncoding("UTF-8");
 				</thead>
 				<tbody>
 					<tr>
-						<td width="10%">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" > &nbsp;&nbsp; ${user.userid}<input type="hidden" name="fk_userid" value="${user.userid}"></td>
+						<td width="12%">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="imgs"> &nbsp;&nbsp; ${user.userid}<input type="hidden" name="userid" value="${user.userid}"></td>
 					</tr>
 					<tr>
-						<td width="10%" >팀정보 : </td><td style="padding-left:12px;">${user.team_idx} 팀</td>
+						<td width="12%" >팀정보 : </td><td style="padding-left:12px;">${user.team_idx} 팀<input type="hidden" name="idx" value="${nidx}"/></td>
 					</tr>
 					<tr>
-						<td width="10%">제목 :</td>
-						<td><input type="text" value="${user.subject}" name="subject" readonly /></td>
+						<td width="12%">제목 :</td>
+						<td><input type="text" value="${user.subject}" name="subject" /></td>
 					</tr>
 					<tr style="min-height: 200px;" >
 						<td>내용 :</td>
-						<td id="edit1"><div style="width:500px; height:500px;" >${user.content}</div></td>
+						<td id="edit"><textarea name="content" id="content" class="summernote">${user.content}</textarea></td>
 					</tr>
 					<tr>
 						<td>첨부파일</td>   <!-- USERID, IMG, SUBJECT, CONTENT, STATUS, IDX, FILENAME, ORGFILENAME, FILESIZE, FK_IDX -->
@@ -80,26 +80,26 @@ request.setCharacterEncoding("UTF-8");
 				</tbody>
 			</table>
 			</form>
-			<div   > <!-- style="display:inline; margin-left:40px;" -->
+			<div style="display:inline; margin-left:40px;"  >
 					<button type="button" onClick="goback();">목록보기</button>
 			</div>
-			<c:if test="${sessionScope.teamInfo.teamwon_status == 2}">
-				<div   ><!-- style="margin-left:80px; display:inline;" -->
-					<button type="button" onClick="goEdit();">수정글쓰기</button>
+			<div style="margin-left:80px; display:inline;"  >
+					<button type="button" onClick="goEdit();">완료</button>
 				</div>
-			</c:if>
 			<br/>
 			<br/>
-			<div id="displayList" ></div> <!-- style="background-color:white; align:center;" -->
+			<div id="displayList" style="background-color:white; align:center;"></div>
 			<br/>
 			<div style="align:center;">댓글 :&nbsp;&nbsp;<input type="text" id="contents" name="contents"/> <button type="button" id="goClick">쓰기</button></div> <br/><br/>
+		</div>
 	</div>
-	</div>
-	<form name="edit">
+	<!-- <form name="edit">
 		<input type="hidden" name="nidx">
 		<input type="hidden" name="userid">
 		<input type="hidden" name="teamNum">
-	</form>
+		<input type="hidden" name="subject">
+		<input type="hidden" name="content">
+	</form> -->
 	<!-- comment(ReplyVO), map(team_idx , userid) 받는다. -->
 	<script>
 		$(document).ready(function(){
@@ -118,8 +118,8 @@ request.setCharacterEncoding("UTF-8");
 		      lang: 'ko-KR'         // 한국어 지정(기본값은 en-US)
 		    });
 		});
-		function getReply() {
-			var data_form = {"nidx":"${nidx}"};
+	    function getReply() {
+			var data_form = {"nidx":"${nidx}"}
 			$.ajax({
 				url:"getnoticeReplyList.mr",
 				type:"get",
@@ -139,21 +139,23 @@ request.setCharacterEncoding("UTF-8");
 				type:"post",
 				data:{"idx":idx,"contents":contents,"userid":userid}
 			});
-			getReply();
+			getReply();				
 		}
-		<%-- function goEdit() {
-			var frm = document.edit;
-			frm.nidx.value="${nidx}";
-			frm.userid.value="${sessionScope.loginUser.userid}";
+		function goEdit() {
+			var frm = document.editform;
+			/*frm.nidx.value="${nidx}";
+			frm.userid.value="${user.userid}";
 			frm.teamNum.value="${user.team_idx}";
-			frm.action="<%=request.getContextPath()%>/noticeEditWrite.mr";
-			frm.method="get";
+			frm.subject.value="";
+			frm.content.value=""; */
+			frm.action="<%=request.getContextPath()%>/noticeViewEditEnd.mr";
+			frm.method="post";
 			frm.submit();
-		} --%>
+		}
 		function goback() {
 			location.href="<%=request.getContextPath()%>/${sessionScope.gobackURL}";
 		}
-		 function ajaxedit(content) {
+		/* function ajaxedit(content) {
 			var form_data={content:content};
 			
 			$.ajax({
@@ -166,13 +168,13 @@ request.setCharacterEncoding("UTF-8");
 					$("#goedit").hide();
 					var html =	"<button type='button' onClick='edit();'>완료</button>";
 					$("#goedit").html(html).show();
-					$("#edit1").html(data);
+					$("#edit").html(data);
 				},
 				error:function () {
 					alert("에러");
 				}
 			})
-		} 
+		} */
 	</script>
 </body>
 </html>

@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.miracle.pjs.model.FileVO;
 import com.miracle.pjs.model.MapVO;
+import com.miracle.pjs.model.MindFileVO;
+import com.miracle.pjs.model.NoticeFileVO;
 import com.miracle.pjs.model.ReplyVO;
 
 public interface PjsinterService {
@@ -24,9 +26,9 @@ public interface PjsinterService {
 	
 	// int delNoticeIdx(List<String> list); // 공지사항 게시판을 지우는 메소드
 	// int delNoticeIdx(HashMap<String,String> paramap); // 공지사항 게시판을 지우는 메소드
-	int delNoticeIdx(HashMap<String, String[]> paramap); // 공지사항 게시판을 지우는 메소드
+	int delNoticeIdx(HashMap<String, String> paramap, String[] idxArr); // 공지사항 게시판을 지우는 메소드
 	
-	List<ReplyVO> getComment(String idx); // 게시글의 코멘트를 달기위한 메소드
+	List<ReplyVO> getComment(HashMap<String, Object> map); // 게시글의 코멘트를 달기위한 메소드
 	
 	int setComment(HashMap<String, String> map); // 공지사항 게시물에 댓글달기
 	
@@ -49,7 +51,7 @@ public interface PjsinterService {
 	
 	HashMap<String, String> getMindIdxTeam(HashMap<String, String> view); // 마음의 소리 글보기
 	
-	int setMindWrite(HashMap<String, String> team); // 마음의 소리 글 쓰기
+	//int setMindWrite(HashMap<String, String> team); // 마음의 소리 글 쓰기
 	
 	HashMap<String, String> getMindDepth(String nidx); // 수정글의 depth, groupno 구해오는 메소드
 	
@@ -57,12 +59,12 @@ public interface PjsinterService {
 	
 	int updateMindCheckNum(String nidx); // 대기, 확인, 답변 변경해주는 메소드
 	
-	int delMindIdx(HashMap<String,String[]> paramap); // 마음의 소리 다중 삭제
+	int delMindIdx(HashMap<String,String> paramap, String[] idxArr); // 마음의 소리 다중 삭제
 	
 //==========================================================================================================================================================//	
 	
 	// === *** 구글맵 *** === //
-	List<MapVO> getMap(); // 맵 테이블의 전체값을 가져온다!
+	List<MapVO> getMap(HashMap<String, String> map); // 맵 테이블의 전체값을 가져온다!
 	
 	List<MapVO> getMapWithSearch(HashMap<String, String> map); // 검색어를 동반한 지도리스트
 	
@@ -122,11 +124,30 @@ public interface PjsinterService {
 	
 	int setNoticeWriteWithFile(HashMap<String, String> team); // 공지사항 파일업로드
 
-	String getfilename(HashMap<String, Object> map); // 파일이 있는지 없는지
+	String getfilenamelist(HashMap<String, Object> map); // 파일이 있는지 없는지
 
 	FileVO getViewWithNoAddCount(HashMap<String, String> map); // 파일다운
 
 	String getmemoReadCount(String string); // 메모 읽었는지 여부 반환
+
+	NoticeFileVO getfilename(String nidx); // 뷰에 뿌려줄 파일가졍오기
+
+	int setUpdateWrite(HashMap<String, String> team); // 공지사항 수정하기
+
+	int setMindWrite(HashMap<String, String> team); // 마음의 소리 글쓰기
+
+	int setMindWriteWithFile(HashMap<String, String> team); // 마음의 소리 글쓰기 파일첨부
+
+	int getReplyCount(HashMap<String, Object> map); // 리플글 총 수
+
+	int setMindViewEdit(HashMap<String, String> team); // 글 수정
+
+	String getMindfilenamelist(HashMap<String, String> map); // 마음의 소리에 파일이 있는지 없는지 반환
+
+	MindFileVO getMindfilename(String idx); // 마음의 소리에 파일vo를 반환
+
+	FileVO getmindViewWithNoAddCount(HashMap<String, String> map); // 마음의 소리 파일가져오기
+
 
 	
 
