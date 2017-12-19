@@ -70,6 +70,17 @@
 	.selectedLine {
 		background-color:lightgray;
 	}
+	.moveLine {
+		background-color:lightgray;
+	}
+	.moveToLine {
+		background-color:yellow;
+		cursor:pointer;
+	}
+	.copyToLine {
+		background-color:lightblue;
+		cursor:pointer;
+	}
 	.completeLine {
 		border:none !important;
 		background-color:skyblue !important;
@@ -96,11 +107,61 @@
 	}
 	
 	.myElement {
-		background-color:#ffff99;
+		background-color:#ffffcc;
+	}
+	.teamwonElement {
+		background-color:#ffccff;
+	}
+	.searchElement {
+		background-color:#ccffff;
+	}
+	
+	.myAndTeamwonElement {
+		background: linear-gradient(45deg,
+								    hsl(60, 100%, 95%) 25%
+								  , hsl(300, 100%, 95%) 0, hsl(300, 100%, 95%) 50%
+								  ,	hsl(60, 100%, 95%) 0, hsl(60, 100%, 95%) 75%
+								  , hsl(300, 100%, 95%) 0);
+	    -webkit-background-size:30px 30px;
+	    background-size:30px 30px;
+	}
+	.myAndSearchElement {
+		background: linear-gradient(45deg,
+								    hsl(60, 100%, 95%) 25%
+								  , hsl(180, 100%, 95%) 0, hsl(180, 100%, 95%) 50%
+								  , hsl(60, 100%, 95%) 0, hsl(60, 100%, 95%) 75%
+								  , hsl(180, 100%, 95%) 0);
+	    -webkit-background-size:30px 30px;
+	    background-size:30px 30px;
+	}
+	.teamwonAndSearchElement {
+		background: linear-gradient(45deg,
+								    hsl(300, 100%, 95%) 25%
+								  , hsl(180, 100%, 95%) 0, hsl(180, 100%, 95%) 50%
+								  , hsl(300, 100%, 95%) 0, hsl(300, 100%, 95%) 75%
+								  , hsl(180, 100%, 95%) 0);
+	    -webkit-background-size:30px 30px;
+	    background-size:30px 30px;
+	}
+	.myAndTeamwonAndSearchElement {
+		background: linear-gradient(90deg,
+								    hsl(60, 100%, 95%) 33%
+								  , hsl(300, 100%, 98%) 0, hsl(300, 100%, 98%) 66%
+								  , hsl(180, 100%, 95%) 0);
+	    -webkit-background-size:50px 50px;
+	    background-size:50px 50px;
 	}
 	
 	.seperatorLine {
 		border-right:3px solid black;
+	}
+	
+	#teamwonList{
+		float:left;
+		z-index:1000;
+		position: absolute;
+		background-color:white;
+		border:1px solid black;
 	}
 </style>
 
@@ -126,39 +187,46 @@
 		changeFlag = false; // 모달창에서 변경된 값이 있는지 체크하는 전역 변수
 		$("#folderRcm").hide();
 		$("#taskRcm").hide();
-		
+				
 		// 폴더 모달창 띄우기(값만 가지고 함수로 이동하게됨)
 		$(document).on("click", ".modalFolder", function(){
-			var frm = {"idx":$(this).parents(".element").attr("id")};
-		 	selectFolderInfo(frm);
+			var idx = $(this).parents(".element").attr("id").replace("subject","");
+		 	selectFolderInfo(idx);
 		 	return false; // 폴더 접고펴기가 실행되지 않도록 설정해둠
 		}); // end of $(".modalFolder").click(function() ------------------------------------------------------------------------
 		
 		// 할일 모달창 띄우기(값만 가지고 함수로 이동하게됨)
 		$(document).on("click", ".modalTask", function(){
-		 	var frm = {"idx":$(this).attr("id").replace("subject","")};
-		 	selectTaskInfo(frm);
+		 	var idx = $(this).parents(".element").attr("id").replace("subject","");
+		 	selectTaskInfo(idx);
 		 	return false;
 		}); // end of $(".modalFolder").click(function() ------------------------------------------------------------------------
 		
 		// 폴더 모달창 띄우기(우클릭 메뉴)
 		$(document).on("click", "#modalFolderRcm", function(){
-			var frm = {"idx":$(".selectedLine").attr("id").replace("subject","")};
-			selectFolderInfo(frm);
+			var idx = $(".selectedLine").attr("id").replace("subject","");
+			selectFolderInfo(idx);
 		});
 		
 		// 할일 모달창 띄우기(우클릭 메뉴)
 		$(document).on("click", "#modalTaskRcm", function(){
-			var frm = {"idx":$(".selectedLine").attr("id").replace("subject","")};
-			selectTaskInfo(frm);
+			var idx = $(".selectedLine").attr("id").replace("subject","");
+			selectTaskInfo(idx);
 		});
 		
-		// 선택한 폴더 접고 펴기
+		// 요소를 선택했을때 접고 펴기(혹은 이동중일때는 이동 함수로 값 보내주기)
 		$(document).on("click", ".element", function(){
 			var $this = $(this);
-			var idx = $this.attr("id");
 			var depth = parseInt(getThirdClass($this)); // 클릭한 요소의 깊이 구하기
 			var groupNo = getSecondClass($this);
+			
+			if( $(this).hasClass("moveToLine") ){ // 이동중일때는 이동 함수로 값 보내주고 끝냄
+				var fk_folder_idx = $(this).attr("id").replace("subject","");
+				var subject = $(this).find(".subject").text();
+				elementMoveEnd(fk_folder_idx, depth, groupNo, subject);
+				return false;
+			}
+			
 			var foldingFlag = 0;
 			while(1==1) {
 				if($this.next().attr("id") == undefined) { // 다음 요소가 없을때 undefined 오류 막기 위함
@@ -195,7 +263,6 @@
 			} else if(foldingFlag == 2) { // 하위 요소가 show 되었다면.
 				$(this).find(".foldingIcon").text("▼");
 			}
-			
 		}); // end of $(".element").click(function() -----------------------------------------------------------------------------------------------
 		
 				
@@ -216,9 +283,18 @@
 		    var classname = getFirstClass($(this));
 		    
 		    var subject = $(this).find(".subject").text();
-		    $(".rcmSubject").text("["+subject+"] 메뉴");
+		    $(".rcmSubject").text("["+subject+"] 메뉴(닫기:esc)");
 		    		    
 		    if($(this).find(".modalFolder").hasClass("modalFolder")) { // 폴더 우클릭이라면
+		    	$("#downElementFoldingRcm").show();
+		    	var foldingIcon = $(this).find(".foldingIcon").text();
+		    	if(foldingIcon.trim() == "▶") {
+		    		$("#downElementFoldingRcm").text("하위요소 전체 펴기");
+		    	} else if(foldingIcon.trim() == "▼") {
+		    		$("#downElementFoldingRcm").text("하위요소 전체 접기");
+		    	} else if(foldingIcon.trim() == "▷") {
+		    		$("#downElementFoldingRcm").hide();
+		    	}
 		    	$("#folderRcm").css({top:event.pageY+"px", left:event.pageX+"px"}).show();
 		    } else if($(this).find(".modalTask").hasClass("modalTask")) { // 할일 우클릭이라면
 		    	var bool = $(this).find(".status").is(":checked");
@@ -282,7 +358,14 @@
 			if(event.keyCode == 13) {
 				$(".modalEdit").trigger("click");
 			}
-		}); // end of $(document).on("keyup", ".hiddenEditInput", function() --------------------------------------------------------------------------
+		}); // end of $(document).on("keyup", ".hiddenEditInput", function() --------------------------------------------------------------------------	
+		// 모달창에서 정보 수정하는 select 태그는 따로 처리함
+		$(document).on("change", ".hiddenEditInputSelector", function(event){
+			changeFlag = true;
+			$(this).parents("tr").find(".showInfo").html($(this).val());
+			$(this).parents(".hiddenEdit").hide();
+			$(this).parents("tr").find(".showInfo").show();
+		}); // end of $(document).on("change", ".hiddenEditInput", function() --------------------------------------------------------------------------
 		
 		// 요소 모달창의 정보 수정하기
 		$(document).on("click", ".modalEdit", function(){
@@ -392,9 +475,15 @@
 			$("#taskRcm").hide();
 		}); // end of $(document).on("click", "#statusRcm", function() ------------------------------------------------------------------------------
 				
-		// 페이지 전체에서 esc 키를 누르면 모달창을 닫기
+		// 페이지 전체에서 esc 키를 누르면 모달창을 닫거나 이동하는 css 없애주기
 		$(document).on("keydown", function(){
 			var modalFlag = $('.modal').is(':visible');
+			var folderRcmFlag = $("#folderRcm").is(':visible');
+			var taskRcmFlag = $("#taskRcm").is(':visible');
+			
+			if(!modalFlag && !folderRcmFlag && !taskRcmFlag) { // 모달창, 우클릭 메뉴창이 열려 있는 상태가 아니라면
+				delMoveCss(); // 이동 css 삭제~
+			}
 			
 			if(event.keyCode == 27) {
 				$("#folderRcm").hide();
@@ -472,7 +561,7 @@
 						$.each(data, function(entryIndex, entry){
 							var userid = $("#added"+entry.userid).text();
 							if(entry.userid != userid) { // 이미 선택했던 팀원이 아니라면 */
-								html += "<tr><td class='selectTeamwon pointer' style='border:1px solid black;'>"+entry.userid
+								html += "<tr class='trLine'><td class='selectTeamwon pointer' style='border:1px solid black;'>"+entry.userid
 								html += "<input type='hidden' id='id"+entry.userid+"' value='"+entry.idx+"'></td></tr>";
 								cnt++;
 							}
@@ -524,7 +613,8 @@
 		$(document).on("mousedown", function(e){
 			var bool1 = $(e.target).hasClass("selectTeamwon");
 			var bool2 = $(e.target).attr("id") == "btn_add";
-			if(!bool1 && !bool2) { // 클릭 대상이 팀원 선택창이나 추가 버튼이 아니라면
+			var bool3 = $(e.target).hasClass("teamwonElementOn");
+			if(!bool1 && !bool2 && !bool3) { // 클릭 대상이 팀원 선택창이나 추가 버튼이 아니라면
 				$("#teamwonList").remove();
 				$("#btn_add").text("[추가▷]");
 			}
@@ -540,7 +630,6 @@
 		// 팀원 추가, 삭제 끝 -------------------------------------------------------------------------------------------------------------
 		
 	}); // end of $(document).ready(function() ---------------------------------------------------------------------------------------------------------
-			
 	
 	// 선택한 요소를 삭제해주는 함수
 	function delElement(idx, fk_folder_idx) {
@@ -604,10 +693,16 @@
 		var upIdx = $(".selectedLine").attr("id");
 		var term = $("#term").val();
 		var page = $("#page").val();
-		
 		window.open("do_addDownElement.mr?upIdx="+upIdx+"&term="+term+"&page="+page, "subwinpop", "left=100px, top=100px, width=700px, height=500px");
 	} // end of function addDownElement() -----------------------------------------------------------------------------------------------------------------------------
-	// 하위 요소 추가되었을때 살짝 깜빡여 주기
+	// 최상위 요소 추가
+	function addUpElement() {
+		var upIdx = $(".selectedLine").attr("id");
+		var term = $("#term").val();
+		var page = $("#page").val();
+		window.open("do_addDownElement.mr?upIdx="+0+"&term="+term+"&page="+page, "subwinpop", "left=100px, top=100px, width=700px, height=500px");
+	} // end of function addDownElement() -----------------------------------------------------------------------------------------------------------------------------
+	// 요소 추가되었을때 살짝 깜빡여 주기
 	function addLine(id) {
 		$("#"+id).addClass("addLine");
 		setTimeout(function(){
@@ -615,6 +710,40 @@
 		},1000);
 	} // end of function addLine(id) ---------------------------------------------------------------------------------------------------------------------------------
 	
+	// 선택 요소의 아래 요소들 전부 펴고 닫기
+	function downElementFolding() {
+		$this = $(".selectedLine");
+		var bool = $this.next().is(":visible"); // 선택 요소의 바로 다음 요소의 show, hide 상태를 저장한다.
+		var depth = parseInt(getThirdClass($this)); // 선택 요소의 깊이 구하기
+		while(1==1) {
+			if($this.next().attr("id") == undefined) { // 다음 요소가 없을때 undefined 오류 막기 위함
+				break;
+			}
+			var $this2 = $this.next();
+			var depth2 = parseInt(getThirdClass($this2)); // 다음 요소의 깊이 구하기
+			
+			if(depth < depth2) { // 선택 요소의 하위요소는 전부 show 나 hide 상태로 변경해줄 생각임
+				if(bool) { // 선택 요소의 다음 요소가 show 상태라면
+					$this2.hide(); // 하위요소 전부 다 숨김
+					$(".selectedLine").find(".foldingIcon").text("▶");
+					$("#downElementFoldingRcm").text("하위요소 전체 펴기");
+					if( $this2.find(".foldingIcon").text().trim() == "▼" ) {
+						$this2.find(".foldingIcon").text("▶");
+					}
+				} else { // 선택 요소의 다음 요소가 hide 상태라면
+					$this2.show(); // 하위요소 전부 다 보여줌
+					$(".selectedLine").find(".foldingIcon").text("▼");
+					$("#downElementFoldingRcm").text("하위요소 전체 접기");
+					if( $this2.find(".foldingIcon").text().trim() == "▶" ) {
+						$this2.find(".foldingIcon").text("▼");
+					}
+				}
+			} else { // 상위요소와 깊이가 같은 요소가 나오면 break
+				break;
+			}
+			$this = $this2; // 다음의 다음 요소를 찾기 위함
+		} // end if while -------------------------------------------------------------------------------------------------
+	}
 	
 	// 첫번째 클래스 구해주는 함수
 	function getFirstClass($this) {
@@ -645,7 +774,8 @@
 	} // end of function getThirdClass($this) ------------------------------------------------------------------------------------------------------------------------
 	
 	// 폴더 모달창 띄우기
-	function selectFolderInfo(frm) {
+	function selectFolderInfo(idx) {
+		var frm = {"idx":idx};
 		$.ajax({
 			url:"do_getSelectFolderInfo.mr",
 			data:frm,
@@ -661,7 +791,8 @@
 	
 
 	// 할일 모달창 띄우기
-	function selectTaskInfo(frm) {
+	function selectTaskInfo(idx) {
+		var frm = {"idx":idx};
 		$.ajax({
 			url:"do_getSelectTaskInfo.mr",
 			data:frm,
@@ -780,6 +911,7 @@
 		});		
 	} // end of function addComment() ----------------------------------------------------------------------------------------------------------------------
 	
+	
 	// 내가 속한 요소에 css 입히기
 	function myElementOn() {
 		$.ajax({
@@ -789,9 +921,20 @@
 				var $root = $(data).find(":root")
 				var idxArr = $root.find("idx");
 				idxArr.each(function(){
-					var idx = $(this).text();
-					$("#"+idx).addClass("myElement");
-				});
+					$this = $("#"+$(this).text());
+					if ($this.hasClass("teamwonElement")) {
+						$this.removeClass("teamwonElement");
+						$this.addClass("myAndTeamwonElement");
+					} else if ($this.hasClass("searchElement")) {
+						$this.removeClass("searchElement");
+						$this.addClass("myAndSearchElement");
+					} else if ($this.hasClass("teamwonAndSearchElement")) {
+						$this.removeClass("teamwonAndSearchElement");
+						$this.addClass("myAndTeamwonAndSearchElement");
+					} else {
+						$this.addClass("myElement");
+					}
+				});				
 				
 				var before = $root.find("before").text();
 				var doing = $root.find("doing").text();
@@ -809,26 +952,400 @@
 		    }
 		});
 	} // end of function myElementOn() -------------------------------------------------------------------------------------------------------------------------
-	
-	
-	// 내가 속한 요소에 css 입히기 해제
+	// 내가 속한 요소에 css 해제
 	function myElementOff() {
-		$("tr").removeClass("myElement");
+		$(".element").each(function() {
+			if ($(this).hasClass("myAndTeamwonElement")) {
+				$(this).removeClass("myAndTeamwonElement");
+				$(this).addClass("teamwonElement");
+			} else if ($(this).hasClass("myAndSearchElement")) {
+				$(this).removeClass("myAndSearchElement");
+				$(this).addClass("searchElement");
+			} else if ($(this).hasClass("myAndTeamwonAndSearchElement")) {
+				$(this).removeClass("myAndTeamwonAndSearchElement");
+				$(this).addClass("teamwonAndSearchElement");
+			} else if ($(this).hasClass("myElement")) {
+				$(this).removeClass("myElement");
+			}
+		});
 		$("#myBefore").text("");
 		$("#myDoing").text("");
 		$("#myLapse").text("");
 		$("#myComplete").text("");
 	} // end of function myElementOff() ---------------------------------------------------------------------------------------------------------------------------
+	
+	// 팀원요소 볼때 팀원리스트 띄워주기
+	function teamwonListView() {
+		var bool = $("#teamwonList").is(":visible");
+		if(!bool) { // 팀원 표시창이 떠 있지 않다면
+			var frm = {"team_idx":$("#team_idx").val()};
+			$.ajax({
+				url:"do_getTeamwonList.mr",
+				data:frm,
+				type:"post",
+				dataType:"JSON",
+				success:function(data){
+					var html = "<div id='teamwonList'><table>";
+					$.each(data, function(entryIndex, entry){
+						var userid = "${sessionScope.loginUser.userid}";
+						if(entry.userid != userid) { // 현재 로그인한 팀원(한마디로 본인)이 아니라면
+							html += "<tr class='trLine'><td class='pointer teamwonElementOn' onclick='teamwonElementOn(this)' style='border:1px solid black;'>"+entry.userid
+							html += "<input type='hidden' id='"+entry.userid+"' value='"+entry.idx+"'></td></tr>";
+						}
+					});
+					html += "</table></div>";
+					
+					$("#firstHeaderLine").append(html);
+					
+					var left = $("#teamwonListView").offset().left;
+					var top = $("#teamwonListView").offset().top;
+					top = top + ($("#teamwonListView").height());
+					$("#teamwonList").css({"left":left, "top":top}); // 팀원 표시창의 절대 위치를 넣어줌
+					
+				}, error:function(){
+					alert("알 수 없는 오류입니다.\n관리자에게 문의하세요.");
+				}
+			});
+		}
+	} // end of function teamwonListView() -----------------------------------------------------------------------------------
+	// 팀원이 속한 요소에 css 입히기
+	function teamwonElementOn(element) {
+		teamwonElementOff();
+		var userid = $(element).text();
+		var idx = $("#"+userid).val();
+		var frm = {"fk_teamwon_idx":idx};
+		$("#teamwonList").remove();
+		$.ajax({
+			url:"do_getTeamwonElement.mr",
+			data:frm,
+			dataType:"xml",
+			success:function(data){
+				var $root = $(data).find(":root")
+				var idxArr = $root.find("idx");
+				idxArr.each(function(){
+					$this = $("#"+$(this).text());
+					if ($this.hasClass("myElement")) {
+						$this.removeClass("myElement");
+						$this.addClass("myAndTeamwonElement");
+					} else if ($this.hasClass("searchElement")) {
+						$this.removeClass("searchElement");
+						$this.addClass("teamwonAndSearchElement");
+					} else if ($this.hasClass("myAndSearchElement")) {
+						$this.removeClass("myAndSearchElement");
+						$this.addClass("myAndTeamwonAndSearchElement");
+					} else {
+						$this.addClass("teamwonElement");
+					}
+				});				
+				
+				var before = $root.find("before").text();
+				var doing = $root.find("doing").text();
+				var lapse = $root.find("lapse").text();
+				var complete = $root.find("complete").text();
+				
+				$("#teamwonBefore").text("("+before+"건)");
+				$("#teamwonDoing").text("("+doing+"건)");
+				$("#teamwonLapse").text("("+lapse+"건)");
+				$("#teamwonComplete").text("("+complete+"건)");
+				
+			}, error: function (xhr, ajaxOptions, thrownError) {
+		        console.log(xhr.status);
+		        console.log(thrownError);
+		    }
+		});
+	} // end of function myElementOn() -------------------------------------------------------------------------------------------------------------------------
+	// 팀원이 속한 요소에 css 해제
+	function teamwonElementOff() {
+		$(".element").each(function() {
+			if ($(this).hasClass("myAndTeamwonElement")) {
+				$(this).removeClass("myAndTeamwonElement");
+				$(this).addClass("myElement");
+			} else if ($(this).hasClass("teamwonAndSearchElement")) {
+				$(this).removeClass("teamwonAndSearchElement");
+				$(this).addClass("searchElement");
+			} else if ($(this).hasClass("myAndTeamwonAndSearchElement")) {
+				$(this).removeClass("myAndTeamwonAndSearchElement");
+				$(this).addClass("myAndSearchElement");
+			} else {
+				$(this).removeClass("teamwonElement");
+			}
+		});
+		$("#teamwonBefore").text("");
+		$("#teamwonDoing").text("");
+		$("#teamwonLapse").text("");
+		$("#teamwonComplete").text("");
+	} // end of function myElementOff() ---------------------------------------------------------------------------------------------------------------------------
+	
+	// 검색한 요소에 css 입히기
+	function serchElementOn(searchWord) {
+		// 일단 다 지우고
+		$(".element").each(function() {
+			if ($(this).hasClass("myAndSearchElement")) {
+				$(this).removeClass("myAndSearchElement");
+				$(this).addClass("myElement");
+			} else if ($(this).hasClass("teamwonAndSearchElement")) {
+				$(this).removeClass("teamwonAndSearchElement");
+				$(this).addClass("teamwonElement");
+			} else if ($(this).hasClass("myAndTeamwonAndSearchElement")) {
+				$(this).removeClass("myAndTeamwonAndSearchElement");
+				$(this).addClass("myAndTeamwonElement");
+			} else if ($(this).hasClass("searchElement")) {
+				$(this).removeClass("searchElement");
+			} 
+		});
+		$("#searchBefore").text("");
+		$("#searchDoing").text("");
+		$("#searchLapse").text("");
+		$("#searchComplete").text("");
+		
+		if(searchWord == "") { // 검색어가 비었다면 멈춤
+			return false;
+		}
+		var frm = {"searchWord":searchWord};
+		$.ajax({
+			url:"do_getSearchElement.mr",
+			data:frm,
+			dataType:"xml",
+			success:function(data){
+				var $root = $(data).find(":root")
+				var idxArr = $root.find("idx");
+				idxArr.each(function(){
+					$this = $("#"+$(this).text());
+					if ($this.hasClass("myElement")) {
+						$this.removeClass("myElement");
+						$this.addClass("myAndSearchElement");
+					} else if ($this.hasClass("teamwonElement")) {
+						$this.removeClass("teamwonElement");
+						$this.addClass("teamwonAndSearchElement");
+					} else if ($this.hasClass("myAndTeamwonElement")){
+						$this.removeClass("myAndTeamwonElement");
+						$this.addClass("myAndTeamwonAndSearchElement");
+					} else {
+						$this.addClass("searchElement");
+					}
+				});
+				
+				var before = $root.find("before").text();
+				var doing = $root.find("doing").text();
+				var lapse = $root.find("lapse").text();
+				var complete = $root.find("complete").text();
+				
+				$("#searchBefore").text("("+before+"건)");
+				$("#searchDoing").text("("+doing+"건)");
+				$("#searchLapse").text("("+lapse+"건)");
+				$("#searchComplete").text("("+complete+"건)");
+				
+			}, error: function (xhr, ajaxOptions, thrownError) {
+		        console.log(xhr.status);
+		        console.log(thrownError);
+		    }
+		});
+	} // end of function elementSerch() ---------------------------------------------------------------------------------------------------------------
+
+	
+	// 상위요소를 변경하기 전이나 esc 눌렀을때 기존에 입힌 css 지워주기
+	function delMoveCss() {
+		$("#moveHeader").remove();
+		$(".element").each(function(){
+			$(this).removeClass("moveLine");
+			$(this).removeClass("moveToLine");
+		});
+	} // end of function delMoveCss() ------------------------------------------------------------------------------------------------------------------------------
+	// 상위요소 변경하는(요소 이동) css 띄우기
+	function elementMove() {
+		delMoveCss();
+		$this = $(".selectedLine");
+		$this.addClass("moveLine");
+		var depth = parseInt(getThirdClass($this)); // 클릭한 요소의 깊이 구하기
+		while(1==1) {
+			if($this.next().attr("id") == undefined) { // 다음 요소가 없을때 undefined 오류 막기 위함
+				break;
+			}
+			var $this2 = $this.next();
+			var depth2 = parseInt(getThirdClass($this2)); // 다음 요소의 깊이 구하기
+			
+			if(depth < depth2) { // 클릭한 요소의 깊이보다 다음 요소의 깊이가 1 크다면 (클릭했을때 +1 깊이만 표시되도록 하기 위해서 구분함)
+				$this2.addClass("moveLine");
+			} else { // 클릭한것과 깊이가 같은 요소가 나오면 break
+				break;
+			}
+			$this = $this2; // 다음의 다음 요소를 찾기 위함
+		}
+		$("#folderRcm").hide(); // 메뉴 숨겨주고
+		$("#taskRcm").hide();
+		
+		$("#headerLine").after("<tr id='moveHeader'><th colspan='100' style='text-align:center; background-color:yellow;'>이동될 요소를 선택하세요(취소:esc)</th></tr>");
+		// 제목줄 밑에 선택하라고 띄워주고
+		
+		$(".element").each(function(){
+			if( !($(this).hasClass("moveLine")) && $(this).find(".category").val() == 1) { // 폴더 요소라면
+				$(this).addClass("moveToLine"); // 이동할 수 있도록 노란줄 표시
+			}
+		});
+		$("#allOpen").trigger("click"); // 그리고 전체 요소를 펴준다.
+	} // end of function elementMove() --------------------------------------------------------------------------------------------------------------------------------
+	// 상위요소 변경하기(요소 이동)
+	function elementMoveEnd(fk_folder_idx, movoToDepth, groupNo, subject) {
+		var bool = confirm("정말 ["+subject+"] 폴더로 이동하시겠습니까?");
+		if(!bool) {
+			return false;
+		}
+		
+		$this = $(".moveLine").first();
+		var idx = $this.attr("id");
+		var term = $("#term").val();
+		var page = $("#page").val();
+		var moveDepth = parseInt(getThirdClass($this));
+		var depth = parseInt(movoToDepth) - moveDepth + 1; // 원래 요소와 변경되는 요소의 깊이 차이를 구함
+		
+		var frm = document.createElement("form");
+		frm.setAttribute("action","do_elementMove.mr");
+		frm.setAttribute("mothod","post");
+		
+		var idx_frm = document.createElement("input");
+		idx_frm.setAttribute("name","idx");
+		idx_frm.setAttribute("value",idx);
+		
+		var fk_idx_frm = document.createElement("input");
+		fk_idx_frm.setAttribute("name","fk_folder_idx");
+		fk_idx_frm.setAttribute("value",fk_folder_idx);
+		
+		var groupNo_frm = document.createElement("input");
+		groupNo_frm.setAttribute("name","groupNo");
+		groupNo_frm.setAttribute("value",groupNo);
+		
+		var depth_frm = document.createElement("input");
+		depth_frm.setAttribute("name","depth");
+		depth_frm.setAttribute("value",depth);
+		
+		var term_frm = document.createElement("input");
+		term_frm.setAttribute("name","term");
+		term_frm.setAttribute("value",term);
+		
+		var page_frm = document.createElement("input");
+		page_frm.setAttribute("name","page");
+		page_frm.setAttribute("value",page);
+		
+		frm.appendChild(idx_frm);
+		frm.appendChild(fk_idx_frm);
+		frm.appendChild(groupNo_frm);
+		frm.appendChild(depth_frm);
+		frm.appendChild(term_frm);
+		frm.appendChild(page_frm);
+		
+		document.body.appendChild(frm);
+		frm.submit();
+	}
+	
+	// 상위요소를 변경하기 전이나 esc 눌렀을때 기존에 입힌 css 지워주기
+	function delMoveCss() {
+		$("#moveHeader").remove();
+		$(".element").each(function(){
+			$(this).removeClass("moveLine");
+			$(this).removeClass("moveToLine");
+		});
+	} // end of function delMoveCss() ------------------------------------------------------------------------------------------------------------------------------
+	// 상위요소 변경하는(요소 이동) css 띄우기
+	function elementMove() {
+		delMoveCss();
+		$this = $(".selectedLine");
+		$this.addClass("moveLine");
+		var depth = parseInt(getThirdClass($this)); // 클릭한 요소의 깊이 구하기
+		while(1==1) {
+			if($this.next().attr("id") == undefined) { // 다음 요소가 없을때 undefined 오류 막기 위함
+				break;
+			}
+			var $this2 = $this.next();
+			var depth2 = parseInt(getThirdClass($this2)); // 다음 요소의 깊이 구하기
+			
+			if(depth < depth2) { // 클릭한 요소의 깊이보다 다음 요소의 깊이가 1 크다면 (클릭했을때 +1 깊이만 표시되도록 하기 위해서 구분함)
+				$this2.addClass("moveLine");
+			} else { // 클릭한것과 깊이가 같은 요소가 나오면 break
+				break;
+			}
+			$this = $this2; // 다음의 다음 요소를 찾기 위함
+		}
+		$("#folderRcm").hide(); // 메뉴 숨겨주고
+		$("#taskRcm").hide();
+		
+		$("#headerLine").after("<tr id='moveHeader'><th colspan='100' style='text-align:center; background-color:yellow;'>이동될 요소를 선택하세요(취소:esc)</th></tr>");
+		// 제목줄 밑에 선택하라고 띄워주고
+		
+		$(".element").each(function(){
+			if( !($(this).hasClass("moveLine")) && $(this).find(".category").val() == 1) { // 폴더 요소라면
+				$(this).addClass("moveToLine"); // 이동할 수 있도록 노란줄 표시
+			}
+		});
+		$("#allOpen").trigger("click"); // 그리고 전체 요소를 펴준다.
+	} // end of function elementMove() --------------------------------------------------------------------------------------------------------------------------------
+	// 상위요소 변경하기(요소 이동)
+	function elementMoveEnd(fk_folder_idx, movoToDepth, groupNo, subject) {
+		var bool = confirm("정말 ["+subject+"] 폴더로 이동하시겠습니까?");
+		if(!bool) {
+			return false;
+		}
+		
+		$this = $(".moveLine").first();
+		var idx = $this.attr("id");
+		var term = $("#term").val();
+		var page = $("#page").val();
+		var moveDepth = parseInt(getThirdClass($this));
+		var depth = parseInt(movoToDepth) - moveDepth + 1; // 원래 요소와 변경되는 요소의 깊이 차이를 구함
+		
+		var frm = document.createElement("form");
+		frm.setAttribute("action","do_elementMove.mr");
+		frm.setAttribute("mothod","post");
+		
+		var idx_frm = document.createElement("input");
+		idx_frm.setAttribute("name","idx");
+		idx_frm.setAttribute("value",idx);
+		
+		var fk_idx_frm = document.createElement("input");
+		fk_idx_frm.setAttribute("name","fk_folder_idx");
+		fk_idx_frm.setAttribute("value",fk_folder_idx);
+		
+		var groupNo_frm = document.createElement("input");
+		groupNo_frm.setAttribute("name","groupNo");
+		groupNo_frm.setAttribute("value",groupNo);
+		
+		var depth_frm = document.createElement("input");
+		depth_frm.setAttribute("name","depth");
+		depth_frm.setAttribute("value",depth);
+		
+		var term_frm = document.createElement("input");
+		term_frm.setAttribute("name","term");
+		term_frm.setAttribute("value",term);
+		
+		var page_frm = document.createElement("input");
+		page_frm.setAttribute("name","page");
+		page_frm.setAttribute("value",page);
+		
+		frm.appendChild(idx_frm);
+		frm.appendChild(fk_idx_frm);
+		frm.appendChild(groupNo_frm);
+		frm.appendChild(depth_frm);
+		frm.appendChild(term_frm);
+		frm.appendChild(page_frm);
+		
+		document.body.appendChild(frm);
+		frm.submit();
+	}
 </script>
 
 <div class="container" style="width:100%; float:left">
 	<table style="width:100%; border:1px solid black;">
 		<thead>
-			<tr>
+			<tr id="firstHeaderLine">
 				<th colspan="7" class="seperatorLine" style="width:65%;">
 					<span id="allClose" class="pointer" style="margin-left:20px;">[ 전체접기</span>  ||  <span id="allOpen" class="pointer">전체펴기</span> ]
 					&nbsp;&nbsp;&nbsp;&nbsp;
+					[ <span class="pointer" onclick="addUpElement()">최상위 폴더 만들기</span> ]
+					&nbsp;&nbsp;&nbsp;&nbsp;
 					[ <span class="pointer" onclick="myElementOn()">내할일표시</span>  ||  <span class="pointer" onclick="myElementOff()">해제</span> ]
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					[ <span class="pointer" id="teamwonListView" onclick="teamwonListView()">팀원표시</span>  ||  <span class="pointer" onclick="teamwonElementOff()">해제</span> ]
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<span style="float:right;">프로젝트 검색:<input type="text" onkeyup="serchElementOn(this.value)"/></span>
 				</th>
 				<th colspan="${map.pageDateList.size()}" style="text-align:center; width:35%;"></th>
 			</tr>
@@ -836,13 +1353,29 @@
 			<tr>
 				<th colspan="7" class="seperatorLine">
 					<div style="margin-left:20px; border-left:10px solid lightgreen; height:10px; display:inline;"></div>
-					진행전(${map.periodCntMap.before}건<span id="myBefore" style="color:#ffff99;"></span>)
+					진행전(${map.periodCntMap.before}건
+						<span id="myBefore" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
+						<span id="teamwonBefore" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
+						<span id="searchBefore" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
+					)
 					<div style="margin-left:10px; border-left:10px solid green; height:10px; display:inline;"></div>
-					진행중(${map.periodCntMap.doing}건<span id="myDoing" style="color:#ffff99;"></span>)
+					진행중(${map.periodCntMap.doing}건
+						<span id="myDoing" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
+						<span id="teamwonDoing" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
+						<span id="searchDoing" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
+					)
 					<div style="margin-left:10px; border-left:10px solid red; height:10px; display:inline;"></div>
-					기한경과(${map.periodCntMap.lapse}건<span id="myLapse" style="color:#ffff99;"></span>)
+					기한경과(${map.periodCntMap.lapse}건
+						<span id="myLapse" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
+						<span id="teamwonLapse" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
+						<span id="searchLapse" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
+					)
 					<div style="margin-left:10px; border-left:10px solid gray; height:10px; display:inline;"></div>
-					완료(${map.periodCntMap.complete}건<span id="myComplete" style="color:#ffff99;"></span>)
+					완료(${map.periodCntMap.complete}건
+						<span id="myComplete" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
+						<span id="teamwonComplete" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
+						<span id="searchComplete" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
+					)
 				</th>
 				<th colspan="${map.pageDateList.size()}" style="text-align:center;">
 					<form name="pageDateFrm" method="get" action="do_changePageDate.mr">
@@ -850,7 +1383,7 @@
 						<span class="pointer" onclick="beforeDate()">◁</span>
 						<select id="term" name="term" onchange="changePageDate()">
 							<option value="7">주간</option>
-							<option value="30" 
+							<option value="30"
 								<c:if test="${term == 30}">selected</c:if>
 							>월간</option>
 						</select>
@@ -862,7 +1395,7 @@
 				</th>
 			</tr>
 			
-			<tr>
+			<tr id="headerLine">
 				<th>제목</th>
 				<th>담당</th>
 				<th>파일</th>
@@ -899,13 +1432,22 @@
 			<th class="rcmSubject"></th>
 		</tr>
 		<tr class="trLine">
-			<td class="rcm" id="addFolderRcm" onclick="addDownElement()">하위요소추가</td>
+			<td class="rcm pointer" id="addFolderRcm" onclick="addDownElement()">하위요소추가</td>
 		</tr>
 		<tr class="trLine">
-			<td class="rcm" id="modalFolderRcm">조회/수정</td>
+			<td class="rcm pointer" id="downElementFoldingRcm" onclick="downElementFolding()">하위요소 전체 펴기</td>
 		</tr>
 		<tr class="trLine">
-			<td class="rcm" id="deleteRcm">삭제</td>
+			<td class="rcm pointer" id="modalFolderRcm">조회/수정</td>
+		</tr>
+		<tr class="trLine">
+			<td class="rcm pointer" id="moveRcm" onclick="elementMove()">이동</td>
+		</tr>
+		<tr class="trLine">
+			<td class="rcm pointer" id="copyRcm" onclick="elementCopy()">복사</td>
+		</tr>
+		<tr class="trLine">
+			<td class="rcm pointer" id="deleteRcm">삭제</td>
 		</tr>
 	</table>
 </div>
@@ -917,13 +1459,19 @@
 			<th class="rcmSubject"></th>
 		</tr>
 		<tr class="trLine">
-			<td class="rcm" id="statusRcm">완료처리</td>
+			<td class="rcm pointer" id="statusRcm">완료처리</td>
 		</tr>
 		<tr class="trLine">
-			<td class="rcm" id="modalTaskRcm">조회/수정</td>
+			<td class="rcm pointer" id="modalTaskRcm">조회/수정</td>
 		</tr>
 		<tr class="trLine">
-			<td class="rcm" id="deleteRcm">삭제</td>
+			<td class="rcm pointer" id="moveRcm" onclick="elementMove()">이동</td>
+		</tr>
+		<tr class="trLine">
+			<td class="rcm pointer" id="copyRcm" onclick="elementCopy()">복사</td>
+		</tr>
+		<tr class="trLine">
+			<td class="rcm pointer" id="deleteRcm">삭제</td>
 		</tr>
 	</table>
 </div>

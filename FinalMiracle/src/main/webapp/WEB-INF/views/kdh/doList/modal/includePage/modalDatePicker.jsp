@@ -17,20 +17,35 @@
 			monthNamesShort:['1','2','3','4','5','6','7','8','9','10','11','12']
 		});
 		
+		// 시작일이 마감일보다 크지 않도록 하기
+		$("#startDate").change(function(){
+			var startDate = $("#startDate").val();
+			var lastDate = $("#lastDate").val();
+			if(startDate > lastDate) {
+				$("#lastDate").val(startDate);
+			}
+		}); // end of $("#startDate").change(function() ------------------------------------------------------------------------
+		$("#lastDate").change(function(){
+			var startDate = $("#startDate").val();
+			var lastDate = $("#lastDate").val();
+			if(startDate > lastDate) {
+				$("#startDate").val(lastDate);
+			}
+		}); // end of $("#lastDate").change(function() -----------------------------------------------------------------------
 	});
 </script>
 
 <tr class="trLine">
 	<td class="infoClass">시작일</td>
 	<td class="infoData">
-		<input type="text" readonly id="startDate" name="startDate" style="border:none;" value="${map.fvo.startDate}"/>
+		<input type="text" readonly id="startDate" name="startDate" class="pointer" style="border:none;" value="${map.fvo.startDate}"/>
 	</td>
 </tr>
 
 <tr class="trLine">
 	<td class="infoClass">마감일</td>
 	<td class="infoData">
-		<input type="text" readonly id="lastDate" name="lastDate" style="border:none;" value="${map.fvo.lastDate}"/>
+		<input type="text" readonly id="lastDate" name="lastDate" class="pointer" style="border:none;" value="${map.fvo.lastDate}"/>
 	</td>
 </tr>
 
