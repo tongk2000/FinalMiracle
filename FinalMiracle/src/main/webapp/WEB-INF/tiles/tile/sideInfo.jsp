@@ -12,10 +12,6 @@
    String serverName = "http://"+serverIP+":"+portnumber;
 
 %>
-<<<<<<< HEAD
-
-=======
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 <style type="text/css">
 
 </style>
