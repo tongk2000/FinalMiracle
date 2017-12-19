@@ -89,6 +89,7 @@ public class BoardController {
 			totalCount = service.getTotalCountWithNoSearch(map);
 		}
 		totalPage = (int)Math.ceil((double)totalCount/sizePerPage);
+		req.setAttribute("totalCount", totalCount);
 		
 		String pagebar = "";
 		
