@@ -67,26 +67,27 @@ request.setCharacterEncoding("UTF-8");
 					</tr>
 					<tr style="min-height: 200px;">
 						<td>내용 :</td>
-						<td height="200px"><textarea name="content" id="content" class="summernote">${user.content}</textarea></td>
+						<td height="200px"><div style="width:700px; height:500px;">${user.content}</div></td>
 					</tr>
 					<tr>
-					   <th>파일첨부</th>
-					   <td><input type="file" name="attach" /></td>
+					    <td>첨부파일</td>   <!-- USERID, IMG, SUBJECT, CONTENT, STATUS, IDX, FILENAME, ORGFILENAME, FILESIZE, FK_IDX -->
+						<td>
+						    <a href="<%= request.getContextPath() %>/minddownload.mr?nidx=${user.didx}&fidx=${file.idx}">${file.orgFilename}</a> 
+						</td>
 					</tr>
 				</tbody>
 			</table>
 			<c:if test="${sessionScope.teamInfo.teamwon_status == 2}">
 				<div style="float:left;" >
 					<button type="button" onClick="goEdit();">답변글쓰기</button>
-				</div>
+				</div> 
 			</c:if>
-			<div  >
+			<div >
 					<button type="button" onClick="goback();">목록보기</button>
 			</div>
-			
 			<br/>
 			<br/>
-			<div id="displayList" style="background-color:white; align:center;"> </div>
+				<div id="displayList" style="background-color:white; align:center;"> </div>
 			<br/>
 		</div>
 	</div>

@@ -8,9 +8,11 @@
 <meta charset="UTF-8">
 <title>Miracle_로그인</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.css">
-<script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath() %>/resources/BootStrapStudy/js/bootstrap.js"></script>
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/BootStrapStudy/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+<script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/jquery-2.0.0.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/resources/BootStrapStudy/js/bootstrap.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 
 <style type="text/css">
 	a {
@@ -94,7 +96,7 @@
 				success:function(data){
 					$("#useridFind").text(data.userid);
 				}, error:function(){
-					alert("시스템오류. 관리자에게 문의하세요.");
+					swal("시스템오류. 관리자에게 문의하세요.");
 				}
 			});
 		});
@@ -134,7 +136,7 @@
     function func_Login(event) {
     	
     	if(${sessionScope.loginUser != null}) {
-			 alert("이미 로그인 중입니다.");
+			 swal("이미 로그인 중입니다.");
 			 $("#userid").val(""); 
 			 $("#pwd").val("");
 			 $("#userid").focus();
@@ -146,7 +148,7 @@
 		 var pwd = $("#pwd").val(); 
 		
 		 if(userid.trim()=="") {
-		 	 alert("아이디를 입력하세요.");
+		 	 swal("아이디를 입력하세요.");
 			 $("#userid").val(""); 
 			 $("#userid").focus();
 			 event.preventDefault();
@@ -154,7 +156,7 @@
 		 }
 		
 		 if(pwd.trim()=="") {
-			 alert("비밀번호를 입력하세요.");
+			 swal("비밀번호를 입력하세요.");
 			 $("#pwd").val("");
 			 $("#pwd").focus();
 			 event.preventDefault();

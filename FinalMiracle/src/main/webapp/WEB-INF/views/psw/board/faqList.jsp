@@ -146,13 +146,13 @@
 
 <body>
 
-<div style="width: 100%; border: 3px dotted pink; padding-top: 10px;" align="center">
-	<div style="border: 1px solid orange; width: 800px;">
+<div style="width: 100%; border: 0px dotted pink; padding-top: 10px;" align="center">
+	<div style="border: 0px solid orange; width: 800px;">
 		<!-- ============================= *** 자유게시판 소개 *** =================================== -->
-		<div style="width: 800px; border: 1px dotted maroon;" align="left">
+		<div style="width: 800px; border: 0px dotted maroon;" align="left">
 			<table>
-				<tr class="title above">
-					<td colspan="2" style="background-color: lightblue; padding-left: 20px; font-weight: bold; font-size: 11pt;">자주 묻는 질문(FAQ) 게시판입니다.</td>
+				<tr class="title above"">
+					<td colspan="2" style="background-color: lightblue; padding-left: 20px; padding: 5px; font-weight: bold; font-size: 11pt;">자주 묻는 질문(FAQ) 게시판입니다.</td>
 				</tr>
 				<tr class="title">
 				<td colspan="2" style="padding-left: 10px; padding-right: 10px; padding-top: 5px; border: 1px solid lightgray; border-left: none; border-right: none; font-size: 9pt;">
@@ -169,7 +169,7 @@
 			</table>
 		</div>
 		
-		<div style="border: 1px dotted blue; width: 800px; padding-top: 10px;">
+		<div style="border: 0px dotted blue; width: 800px; padding-top: 10px;">
 			<!-- ========================================= *** Category 분류 항목 *** ================================= -->
 			<div style="width: 800px; padding-bottom: 10px;"> 
 				<div class="category" style="clear: both;">
@@ -187,7 +187,7 @@
 			</div>
 			
 			<!-- ========================================== *** accordion FAQ 게시판 목록 *** ============================== -->
-			<div style="border: 1px dashed green; width: 700px;" align="left">
+			<div style="border: 0px dashed green; width: 700px;" align="left">
 				<div style="width: 700px;">
 					<dl>
 						<c:forEach var="faq" items="${faqList}" varStatus="status">

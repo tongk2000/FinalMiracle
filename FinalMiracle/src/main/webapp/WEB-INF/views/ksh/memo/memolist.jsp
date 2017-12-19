@@ -59,7 +59,7 @@
 				}
 				
 				if(!chkbool){
-					alert("선택된 메모가 존재하지 않습니다.");
+					swal("메모를 선택하지 않으셨습니다.", "", "info");
 					return false;
 				} else {
 					var frm = document.listFrm;
@@ -127,7 +127,7 @@
 		}
 		
 		if(!chkbool){
-			alert("메모를 선택하지 않으셨습니다.");
+			swal("메모를 선택하지 않으셨습니다.", "", "info");
 			return false;
 		} else {
 			frm.action = "<%= request.getContextPath() %>/memoChkGarbage.mr";
@@ -159,7 +159,7 @@
 		}
 		
 		if(!chkbool){
-			alert("메모를 선택하지 않으셨습니다.");
+			swal("메모를 선택하지 않으셨습니다.", "", "info");
 			return false;
 		} else {
 			frm.action = "<%= request.getContextPath() %>/memoChkRestore.mr";
@@ -172,13 +172,34 @@
 	function goDel(idx){
 		var frm = document.idxFrm;
 		
-		if(confirm("메모를 삭제하시겠습니까?")){
+		<%-- if(confirm("메모를 삭제하시겠습니까?")){
 			frm.idx.value = idx;
 			
 			frm.action = "<%= request.getContextPath() %>/memoDel.mr";
 			frm.method = "post";
 			frm.submit();
-		}
+		} --%>
+		
+		swal({
+		  title: "삭제 여부",
+		  text: "메모를 삭제하시겠습니까?",
+		  type: "warning",
+		  showCancelButton: true,
+		  confirmButtonClass: "btn-danger",
+		  confirmButtonText: "삭제",
+		  cancelButtonText: "취소",
+		  closeOnConfirm: false,
+		  closeOnCancel: true
+		},
+		function(isConfirm) {
+		  if (isConfirm) {
+		    frm.idx.value = idx;
+			
+			frm.action = "<%= request.getContextPath() %>/memoDel.mr";
+			frm.method = "post";
+			frm.submit();
+		  }
+		});
 
 	}
 	
@@ -187,7 +208,7 @@
 		var chkbool = false;
 		var frm = document.listFrm;
 		
-		if(confirm("선택된 메모들을 삭제하시겠습니까?")){
+		<%-- if(confirm("선택된 메모들을 삭제하시겠습니까?")){
 			
 			for(var i=0;i<arr_chk.length;i++){
 	            if(arr_chk[i].checked == true) {
@@ -197,14 +218,45 @@
 			}
 			
 			if(!chkbool){
-				alert("메모를 선택하지 않으셨습니다.");
+				swal("메모를 선택하지 않으셨습니다.", "", "info");
 				return false;
 			} else {
 				frm.action = "<%= request.getContextPath() %>/memoChkDel.mr";
 				frm.method = "post";
 				frm.submit();
 			}
-		}
+		} --%>
+		
+		swal({
+		  title: "선택 삭제 여부",
+		  text: "선택된 메모들을 삭제하시겠습니까?",
+		  type: "warning",
+		  showCancelButton: true,
+		  confirmButtonClass: "btn-danger",
+		  confirmButtonText: "삭제",
+		  cancelButtonText: "취소",
+		  closeOnConfirm: false,
+		  closeOnCancel: true
+		},
+		function(isConfirm) {
+		  if (isConfirm) {
+		    for(var i=0;i<arr_chk.length;i++){
+	            if(arr_chk[i].checked == true) {
+	                chkbool = true;
+	                break;
+	            }
+			}
+			
+			if(!chkbool){
+				swal("메모를 선택하지 않으셨습니다.", "", "info");
+				return false;
+			} else {
+				frm.action = "<%= request.getContextPath() %>/memoChkDel.mr";
+				frm.method = "post";
+				frm.submit();
+			}
+		  }
+		});
 	}
 	
 	function goSearch(){
@@ -212,7 +264,7 @@
 		var search = $("#search").val();
 		
 		if(search.trim() == ""){
-			alert("검색어를 입력하세요");
+			swal("검색어를 입력하세요");
 			return;
 		} else {
 			frm.submit();
@@ -235,7 +287,7 @@
 		var folder = $("#newfolder").val();
 		
 		if(folder == ""){
-			alert("새롭게 만드실 분류를 입력해주세요.");
+			swal("새롭게 만드실 분류를 입력해주세요.", "", "info");
 		} else {		
 			frm.action = "<%= request.getContextPath() %>/memoCreateFolder.mr";
 			frm.method = "post";
@@ -247,27 +299,31 @@
 </script>
 
 
-<form id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/memoList.mr" method="get" enctype="multipart/form-data">
+<form class="form-inline" id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/memoList.mr" method="get" enctype="multipart/form-data">
 <div style="padding-left: 1%; padding-right: 1%; border: solid 0px red; width: 100%; height: 840px; overflow-y: auto;">
 	<h1>메모목록</h1>
 	
 	<div style="margin-top: 20px;">
-		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=전체'">전체</button>&nbsp;
-		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=중요'">중요</button>&nbsp;
+		<a href="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=전체'" class="btn btn-primary">전체</a>&nbsp;
+		<a href="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=중요'" class="btn btn-primary">중요</a>&nbsp;
+		<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=전체'">전체</button>&nbsp;
+		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=중요'">중요</button>&nbsp; --%>
 		<c:forEach var="folder" items="${folderlist}" varStatus="status">
-			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=${folder}'">${folder}</button>&nbsp;
+			<a href="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=${folder}'" class="btn btn-primary">${folder}</a>&nbsp;
+			<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=${folder}'">${folder}</button>&nbsp; --%>
 		</c:forEach>
-		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=휴지통'">휴지통</button>&nbsp;
+		<a href="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=휴지통'" class="btn btn-primary">휴지통</a>&nbsp;
+		<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=휴지통'">휴지통</button>&nbsp; --%>
 		<br/>전체 <span style="color: red; font-weight: bold;">${totalCount}</span>&nbsp;
 		목록 수 : 
-		<select name="sizePerPage" id="sizePerPage">
+		<select name="sizePerPage" id="sizePerPage" class="form-control">
 			<option value="5">5</option>
 			<option value="10">10</option>
 			<option value="15">15</option>
 			<option value="20">20</option>
 		</select>
 		작성기간 : 
-		<select name="period" id="period">
+		<select name="period" id="period" class="form-control">
 			<option value="-1">전체</option>
 			<option value="7">일주일</option>
 			<option value="30">1개월</option>
@@ -288,9 +344,9 @@
 				<th style="width: 10%;">제목</th>
 				<th style="width: 25%">내용</th>
 				<th style="width: 5%;">분류</th>
-				<th style="width: 15%;">작성일</th>
-				<th style="width: 15%;">최종수정일</th>
-				<th style="width: 10%;">비고</th>
+				<th style="width: 13%;">작성일</th>
+				<th style="width: 13%;">최종수정일</th>
+				<th style="width: 14%;">비고</th>
 			</tr>
 		</thead>
 		
@@ -310,12 +366,16 @@
 					<td>${memovo.editdate}</td>
 					<td>
 						<c:if test="${memovo.groups ne '휴지통'}">
-							<button type="button" onClick="goEdit('${memovo.idx}');">메모수정</button>&nbsp;
-							<button type="button" onClick="goGarbage('${memovo.idx}');">휴지통</button>&nbsp;
+							<%-- <button type="button" onClick="goEdit('${memovo.idx}');">메모수정</button>&nbsp;
+							<button type="button" onClick="goGarbage('${memovo.idx}');">휴지통</button>&nbsp; --%>
+							<a href="javascript:goEdit('${memovo.idx}');" class="btn btn-info">메모수정</a>&nbsp;
+							<a href="javascript:goGarbage('${memovo.idx}');" class="btn btn-warning">휴지통</a>&nbsp;
 						</c:if>
 						<c:if test="${memovo.groups eq '휴지통'}">
-							<button type="button" onClick="goRestore('${memovo.idx}');">메모복구</button>&nbsp;
-							<button type="button" onClick="goDel('${memovo.idx}');">메모삭제</button>&nbsp;
+							<%-- <button type="button" onClick="goRestore('${memovo.idx}');">메모복구</button>&nbsp;
+							<button type="button" onClick="goDel('${memovo.idx}');">메모삭제</button>&nbsp; --%>
+							<a href="javascript:goRestore('${memovo.idx}');" class="btn btn-success">메모복구</a>&nbsp;
+							<a href="javascript:goDel('${memovo.idx}');" class="btn btn-danger">메모삭제</a>&nbsp;
 						</c:if>
 					</td>
 				</tr>
@@ -335,25 +395,30 @@
 	<br/>
 
 	<!-- ==== 페이지바 ==== -->
-	<div align="center" style="width: 70%; margin-left: 50px;">
+	<div align="center" style="width: 100%;">
 		${pagebar}
 	</div>
 	
 	<!-- ==== 투표 검색창 ==== -->
-	<select name="colname" id="colname">
-		<option value="subject">제목</option>
-		<option value="content">내용</option>
-		<!-- <option value="name">글쓴이</option> -->
-	</select>
-	<input type="text" name="search" id="search" size="40"/>
-	<button type="button" onclick="goSearch();">검색</button>
+	<div align="center" style="width: 100%;">
+		<select name="colname" id="colname" class="form-control">
+			<option value="subject">제목</option>
+			<option value="content">내용</option>
+			<!-- <option value="name">글쓴이</option> -->
+		</select>
+		<input type="text" name="search" id="search" size="40" class="form-control" placeholder="검색할 단어를 입력해주세요" />
+		<!-- <button type="button" onclick="goSearch();">검색</button> -->
+		<a href="javascript:goSearch();" class="btn btn-default">검색</a>&nbsp;
+	</div>
 	
-	<div style="margin-top: 20px; width: 50%">
-		<div style="float: left;">
+	<div align="center" style="width: 100%; margin-top: 20px;">
+		<div>
 		<c:if test="${groups ne '휴지통'}">
-			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoAdd.mr'">메모작성</button>&nbsp;
-			<button type="button" onClick="goChkGarbage();">선택휴지통</button>&nbsp;
-			<select name="upfolder" id="upfolder">
+			<a href="javascript:location.href='<%= request.getContextPath() %>/memoAdd.mr'" class="btn btn-success">메모작성</a>&nbsp;
+			<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoAdd.mr'">메모작성</button>&nbsp; --%>
+			<a href="javascript:goChkGarbage();" class="btn btn-warning">선택휴지통</a>&nbsp;
+			<!-- <button type="button" onClick="goChkGarbage();">선택휴지통</button>&nbsp; -->
+			<select name="upfolder" id="upfolder" class="form-control">
 				<option value="">이동할 분류 선택</option>
 				<option value="전체">전체</option>
 				<option value="중요">중요</option>
@@ -365,9 +430,12 @@
 			&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${groups eq '휴지통'}">
-			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoAdd.mr'">메모작성</button>&nbsp;
+			<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoAdd.mr'">메모작성</button>&nbsp;
 			<button type="button" onClick="goChkRestore();">선택복구</button>&nbsp;
-			<button type="button" onClick="goChkDel();">선택삭제</button>&nbsp;
+			<button type="button" onClick="goChkDel();">선택삭제</button>&nbsp; --%>
+			<a href="javascript:location.href='<%= request.getContextPath() %>/memoAdd.mr'" class="btn btn-success">메모작성</a>&nbsp;
+			<a href="javascript:goChkRestore();" class="btn btn-success">메모복구</a>&nbsp;
+			<a href="javascript:goChkDel();" class="btn btn-danger">메모삭제</a>&nbsp;
 			&nbsp;&nbsp;
 		</c:if>
 		</div>

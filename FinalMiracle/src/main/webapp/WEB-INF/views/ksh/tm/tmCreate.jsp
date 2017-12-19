@@ -7,12 +7,11 @@
 <meta charset="UTF-8">
 <title>Miracle_회원가입</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type="text/css"
-	href="<%=request.getContextPath()%>/resources/BootStrapStudy/css/bootstrap.css">
-<script type="text/javascript"
-	src="<%=request.getContextPath()%>/resources/js/jquery-2.0.0.js"></script>
-<script type="text/javascript"
-	src="<%=request.getContextPath()%>/resources/BootStrapStudy/js/bootstrap.js"></script>
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/BootStrapStudy/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+<script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/jquery-2.0.0.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/resources/BootStrapStudy/js/bootstrap.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 
@@ -292,7 +291,7 @@ th#th {
 		});
 
 		if (flagBool) {
-			alert("필수입력란은 모두 입력하셔야 합니다.");
+			swal("필수입력란은 모두 입력하셔야 합니다.", '', 'info');
 			event.preventDefault();
 		} else {
 			var frm = document.createFrm;
@@ -322,7 +321,7 @@ th#th {
 		if(filetype=='jpg' || filetype=='gif' || filetype=='png' || filetype=='jpeg' || filetype=='bmp') {
 			// 정상적인 이미지 확장자 파일일 경우 ...
 		} else {
-			alert('이미지 파일만 선택할 수 있습니다.');
+			swal('이미지 파일만 선택할 수 있습니다.', '', 'info');
 			parentObj = obj.parentNode
 			node = parentObj.replaceChild(obj.cloneNode(true),obj);
 			return false;
@@ -342,7 +341,7 @@ th#th {
 
 
 <body background="<%= request.getContextPath() %>/resources/images/loginbg.png">
-	<div class="content" align="center">
+	<div class="content" style="width: 38%; vertical-align: middle; margin-top: 15%; margin-left: 30%;" align="center">
 		<form name="createFrm" enctype="multipart/form-data">
 			<table id="tblMemberRegister" style="margin-bottom: 30px;">
 				<thead>
@@ -355,47 +354,50 @@ th#th {
 				</thead>
 				<tbody>
 					<tr>
-						<td style="width: 20%; font-weight: bold;">팀명&nbsp;<span class="star">*</span></td>
-						<td style="width: 80%; text-align: left;">
-							<div style="float: left; width: 30%">
+						<td style="width: 35%; font-weight: bold;">팀명&nbsp;<span class="star">*</span></td>
+						<td style="width: 65%; text-align: left;">
+							<div style="float: left;">
 								<input type="text" id="name" name="name" class="form-control requiredInfo" maxlength="20" required />
 								<span class="error">팀 명은 필수입력 사항입니다.</span>
 							</div>
 						</td>
 					</tr>
 					<tr>
-						<td style="width: 20%; font-weight: bold;">연락처</td>
-						<td style="width: 80%; text-align: left;">
-							<div style="float: left; width: 15%">
-								<select id="hp1" name="hp1" class="form-control" style="width: 90%;">
+						<td style="width: 35%; font-weight: bold;">연락처</td>
+						<td style="width: 65%; text-align: left;">
+							<div style="float: left; width: 20%">
+								<select id="hp1" name="hp1" class="form-control">
 									<option value="010" selected>010</option>
 								</select>
 								
 							</div>
-							<div style="float: left; width: 2%" align="center">
-								-&nbsp;&nbsp;&nbsp;
+							<div style="float: left; width: 4%" align="center">
+								-
 							</div>
-							<div style="float: left; width: 15%">
-								<input type="text" id="hp2" name="hp2" size="4" maxlength="4" class="form-control" style="width: 90%" />
+							<div style="float: left; width: 20%">
+								<input type="text" id="hp2" name="hp2" size="4" maxlength="4" class="form-control" />
 							</div>
-							<div style="float: left; width: 2%" align="center">
-								-&nbsp;&nbsp;&nbsp;
+							<div style="float: left; width: 4%" align="center">
+								-
 							</div>
-							<div style="float: left; width: 15%">
-								<input type="text" id="hp3" name="hp3" size="4" maxlength="4" class="form-control" style="width: 90%" /> 
+							<div style="float: left; width: 20%">
+								<input type="text" id="hp3" name="hp3" size="4" maxlength="4" class="form-control" /> 
 							</div>
-							<span class="error error_hp">연락처 형식이 아닙니다.</span>
+							<br/>
+							<div style="float: left;">
+								<span class="error error_hp">연락처 형식이 아닙니다.</span>
+							</div>
 						</td>
 					</tr>
 					<tr>
-						<td style="width: 20%; font-weight: bold;">이미지(로고)</td>
-						<td>
+						<td style="width: 35%; font-weight: bold;">이미지(로고)</td>
+						<td style="width: 65%; text-align: left;">
 							<input type="file" name="attach" class="form-control" style="width: 50%;" onchange="fileCheck(this)" accept="image/gif, image/jpg, image/jpeg, image/png" />
 						</td>
 					</tr>
 					<tr>
-						<td style="width: 20%; font-weight: bold;">우편번호</td>
-						<td style="width: 80%; text-align: left;">
+						<td style="width: 35%; font-weight: bold;">우편번호</td>
+						<td style="width: 65%; text-align: left;">
 							<div style="float: left; width: 15%">
 								<input type="text" id="post1" name="post1" size="4" maxlength="3" class="form-control" />
 							</div>
@@ -414,21 +416,22 @@ th#th {
 									<span style="color: #4F84C4;"><span class="glyphicon glyphicon-ok-circle"></span> 우편번호검색</span>
 								</a> 
 							</div>
-							<div style="float: left; width: 15%">
-								<span class="error error_post">우편번호 형식이 아닙니다.</span>
+							<br/>
+							<div style="float: left;">
+								<span class="error error_post"><br/>우편번호 형식이 아닙니다.</span>
 							</div>
 						</td>	
 					</tr>
 					<tr>
-						<td style="width: 20%; font-weight: bold;">주소</td>
-						<td style="width: 80%; text-align: left;">
-							<input type="text" id="addr1" name="addr1" size="60" maxlength="150" class="form-control" />
-							<input type="text" id="addr2" name="addr2" size="60" maxlength="150" class="form-control" />
+						<td style="width: 35%; font-weight: bold; vertical-align: top"><br/>주소</td>
+						<td style="width: 65%; text-align: left;">
+							<input type="text" id="addr1" name="addr1" size="50" maxlength="150" class="form-control" style="width: 70%" />
+							<input type="text" id="addr2" name="addr2" size="50" maxlength="150" class="form-control" style="width: 70%" />
 						<br/><br/>
 						</td>
 					</tr>
 					<tr>
-						<td colspan="2" style="text-align: center; vertical-align: middle;">
+						<td colspan="2" style="text-align: center; vertical-align: middle; height: 10%;">
 							<a class="btn btn-sm btn-success" onClick="goRegister(event);">
 								<span style="color: white; font-size: 14pt;"><span class="glyphicon glyphicon-check"></span> 팀 생성 </span>
 							</a> &nbsp;&nbsp; 

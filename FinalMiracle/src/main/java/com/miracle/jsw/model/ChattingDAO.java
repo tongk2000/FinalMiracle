@@ -73,6 +73,89 @@ public class ChattingDAO implements InterChattingDAO {
 		return list;
 	}
 
+	@Override
+	public int newRoom(HashMap<String, Object> map) {
+		int n = sqlsession.insert("chatting.newRoom", map);
+		return n;
+	}
+
+	@Override
+	public int newRoomMember(HashMap<String, Object> map) {
+		int n = sqlsession.insert("chatting.newRoomMember", map);
+		return n;
+	}
+
+	@Override
+	public String getCRidxNewRoom() {
+		String n = sqlsession.selectOne("chatting.getCRidxNewRoom");
+		return n;
+	}
+
+	@Override
+	public void newRoomNewMember(HashMap<String, Object> map) {
+		sqlsession.insert("chatting.newRoomNewMember", map);
+		
+	}
+
+	@Override
+	public int addMemberCount(HashMap<String, Object> map) {
+		int n = sqlsession.update("chatting.addMemberCount", map);
+		return n;
+	}
+
+	@Override
+	public void addMemberCnt(String cridx) {
+		sqlsession.update("chatting.addMemberCnt", cridx);
+		
+	}
+
+	@Override
+	public void outRoom(HashMap<String, Object> map) {
+		sqlsession.update("chatting.outRoom", map);
+		
+	}
+
+	@Override
+	public void outRoomCnt(String cridx) {
+		sqlsession.update("chatting.outRoomCnt", cridx);
+		
+	}
+
+	@Override
+	public String[] getChattingRoomMember(String cridx) {
+		List<String> list = sqlsession.selectList("chatting.getChattingRoomMember", cridx);
+		
+		String[] strArr = null;
+		
+		if (list != null && list.size() > 0) {
+		    strArr = new String[list.size()];
+	
+			for(int i=0; i<list.size(); i++) {
+				strArr[i] = list.get(i);
+			}	
+		}
+		
+		return strArr;
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getTeamwonNotChatMember(HashMap<String, Object> map) {
+		List<HashMap<String, Object>> list = sqlsession.selectList("chatting.getTeamwonNotChatMember", map);
+		return list;
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getAllNotChatMember(HashMap<String, Object> map) {
+		List<HashMap<String, Object>> list = sqlsession.selectList("chatting.getAllNotChatMember", map);
+		return list;
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getFindNotChatMember(HashMap<String, Object> map) {
+		List<HashMap<String, Object>> list = sqlsession.selectList("chatting.getFindNotChatMember", map);
+		return list;
+	}
+
 
 	
 

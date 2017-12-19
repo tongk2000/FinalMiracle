@@ -5,7 +5,7 @@
 
 <script type="text/javascript">
 	alert("${msg}");
-	location.href="<%= request.getContextPath() %>/freeView.mr?idx=${idx}&gobackURL=${gobackURL}";       
+	location.href="<%= request.getContextPath() %>/freeView.mr?idx=${idx}&currentShowPageNo=${currentShowPageNo}&sizePerPage=${sizePerPage}&colname=${colname}&search=${search}";       
 	// 댓글쓰기를 한 원글 페이지로 이동
 </script>
 

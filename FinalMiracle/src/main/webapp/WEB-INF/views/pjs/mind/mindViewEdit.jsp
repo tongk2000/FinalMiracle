@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="UTF-8"%>
 <%
-	request.setCharacterEncoding("UTF-8");
+request.setCharacterEncoding("UTF-8");
 %>    
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/resources/jqueryuicss/jquery-ui.css" />
@@ -43,11 +43,12 @@
 					</tr>
 					<tr>
 						<td width="12%">제목 : </td>
-						<td><input id="subject" type="text" name="subject"/><input type="hidden" name="idx"></td>
+						<td><input id="subject" type="text" name="subject" value="${user.subject}"/><input type="hidden" name="nidx" value="${user.nidx}"></td>
 					</tr>
 					<tr style="min-height: 200px;">
 						<td>내용 :</td>
-						<td height="200px"><textarea name="content" id="content" class="summernote"></textarea><input type="hidden" name="chkid"></td>
+						<td height="200px"><textarea name="content" id="content" class="summernote">${user.content}</textarea>
+						<input type="hidden" name="chkid"><input type="hidden" name="idx" value="${didx}"></td>
 					</tr>
 					<tr>
 					   <td>파일첨부</td>
@@ -65,26 +66,26 @@
 	</form> -->
 	<script>
 		function writeEnd() {
-			var frm = document.end; // nidx, subject, content ,userid, teanNum
+			var frm = document.end; 
+			alert("오니");// nidx, subject, content ,userid, teanNum
 			/* var subject = $("#subject").val();
-			var content = $("#content").val(); */
-			
-			var idx = "${idx}";  // 수정글의 idx
-			//frm.nidx.value = "${nidx}"; 
-			if(idx == null || idx=="") { // 일반글쓰기 //if(nidx == null || nidx=="") {
+			var content = $("#content").val();
+			var nidx = "${nidx}"; //? 뭐냐?
+			var idx = "${didx}"; 
+			frm.nidx.value = nidx;
+			if(nidx == null || nidx=="") { // 일반글쓰기
 				frm.userid.value = "${user.userid}";
 			}
-			if(idx!=null && idx!=""){ // 답변글쓰기 // if(nidx!=null && nidx!=""){
+			if(nidx!=null && nidx!=""){ // 답변글쓰기
 				frm.userid.value = "${sessionScope.loginUser.userid}";
 				frm.chkid.value = "${chkid}";
-			}
+			} */
 			/* frm.teamNum.value = "${user.teamNum}";
 			frm.subject.value = subject;
 			frm.content.value = content;
 			frm.attach.value = $("#attach").val(); */
-			//frm.idx.value="${idx}";
-			alert(idx);
-			frm.action="<%=request.getContextPath()%>/mindWriteEnd.mr";
+			
+			frm.action="<%=request.getContextPath()%>/mindViewEditEnd.mr";
 			frm.method="post";
 			frm.submit();
 		}

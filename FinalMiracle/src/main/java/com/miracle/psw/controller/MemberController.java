@@ -10,7 +10,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -209,7 +208,7 @@ public class MemberController {
 	@RequestMapping(value="/member_registerEnd.mr")
 	public String registerEnd(HttpServletRequest req, MemberVO mvo, MemberDetailVO mdvo) throws Throwable {
 		int n = service.registerMember(mvo, mdvo); 
-
+		
 		if(n == 2) {
 			String msg = "Miracle World 의 가족이 되신걸 환영합니다.";
 			String loc = "member_login.mr";
@@ -219,17 +218,6 @@ public class MemberController {
 		return "psw/msg.not";
 	}  // end of public String registerEnd(HttpServletRequest req, MemberVO mvo, MemberDetailVO mdvo) -----------------------
 	
-	// =============================================================================== *** 예외처리 핸들러 *** ====================
-	@ExceptionHandler(java.sql.SQLIntegrityConstraintViolationException.class)
-	public String SQLIntegrityConstraintViolationException(HttpServletRequest req) {
-		String msg = "아이디 제약조건 위반입니다.";
-		String ctxpath = req.getContextPath();
-		String loc = ctxpath + "/member_registerEnd.mr";
-		req.setAttribute("msg", msg);
-		req.setAttribute("loc", loc);
-		
-		return "psw/msg.not";
-	}
 
 	// ====================================================== *** 회원정보 수정하기 페이지로 이동 *** ===================================
 	@RequestMapping(value = "/member_edit.mr", method={RequestMethod.GET})
