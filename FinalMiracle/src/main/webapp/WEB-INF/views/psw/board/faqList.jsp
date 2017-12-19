@@ -147,16 +147,16 @@
 <body>
 
 <div style="width: 100%; border: 0px dotted pink; padding-top: 10px;" align="center">
-	<div style="border: 0px solid orange; width: 800px;">
+	<div style="border: 3px solid orange; width: 800px;">
 		<!-- ============================= *** 자유게시판 소개 *** =================================== -->
 		<div style="width: 800px; border: 0px dotted maroon;" align="left">
 			<table>
 				<tr class="title above"">
-					<td colspan="2" style="background-color: lightblue; padding-left: 20px; padding: 5px; font-weight: bold; font-size: 11pt;">자주 묻는 질문(FAQ) 게시판입니다.</td>
+					<td colspan="2" style="background-color: lightblue; padding: 5px; font-weight: bold; font-size: 11pt;">자주 묻는 질문(FAQ) 게시판입니다.</td>
 				</tr>
 				<tr class="title">
 				<td colspan="2" style="padding-left: 10px; padding-right: 10px; padding-top: 5px; border: 1px solid lightgray; border-left: none; border-right: none; font-size: 9pt;">
-					카테고리별 분류 검색과 Q(제목) A(내용) 검색기능을 이용 가능합니다. Question 클릭시 Answer 내용을 열람할 수 있습니다.<br/><br/>
+					카테고리별 분류 검색과 Q(제목) A(내용) 검색기능을 이용 가능합니다. Question 클릭시 Answer 내용을 열람할 수 있습니다.<br/>
 					공지사항은 <a href="<%= request.getContextPath() %>/noticeList.mr">공지사항게시판</a> 
 					자유게시물 등록을 원하시는 회원님은 <a href="<%= request.getContextPath() %>/freeList.mr">자유게시판</a> 기능을 이용해주시기 바랍니다.
 				</td>
@@ -171,9 +171,9 @@
 		
 		<div style="border: 0px dotted blue; width: 800px; padding-top: 10px;">
 			<!-- ========================================= *** Category 분류 항목 *** ================================= -->
-			<div style="width: 800px; padding-bottom: 10px;"> 
-				<div class="category" style="clear: both;">
-					<a onClick="goCategory(0);">[기타문의]</a>
+			<div style="width: 800px; padding-bottom: 10px; margin-top: 30px;" align="left"> 
+				<div class="category" style="margin-left: 5%;">
+					<a onClick="goCategory(0)">[기타문의]</a>
 				</div>
 				<div class="category" style="margin-left:10%;">
 					<a onClick="goCategory(1)">[회원관련]</a>
@@ -187,7 +187,7 @@
 			</div>
 			
 			<!-- ========================================== *** accordion FAQ 게시판 목록 *** ============================== -->
-			<div style="border: 0px dashed green; width: 700px;" align="left">
+			<div style="border: 0px dashed green; width: 800px;" align="left">
 				<div style="width: 700px;">
 					<dl>
 						<c:forEach var="faq" items="${faqList}" varStatus="status">
@@ -201,7 +201,7 @@
 					</dl>
 				</div>
 				<!-- =================== *** 검색 박스  *** =========================== -->
-				<div style="float: right; margin-right: 10px;">
+				<div style="float: right; margin-right: 100px;">
 					<form name="searchFrm" action="<%= request.getContextPath() %>/faqList.mr" method="get">
 						<select name="colname" id="colname" style="vertical-align: middle; height: 22px;">
 							<option value="subject">제목</option>

@@ -15,6 +15,11 @@
 <script src="<%=request.getContextPath() %>/resources/summernote/lang/summernote-ko-KR.js"></script>
 
 <style type="text/css">
+	td {
+		font-size: 10pt;
+		font-family: verdana;
+	}
+	
 	.modal.modal-center {
 	  text-align: center;
 	}
@@ -35,20 +40,20 @@
 	.subjectStyle {
 		color: black;
 		font-weight: bold;
-		font-size: 11pt;
+		font-size: 10pt;
 		cursor: pointer;
 	}
 	.infoStyle {
 		color: #034F84;
 		font-weight: bold;
-		font-size: 11pt;
+		font-size: 10pt;
 		cursor: pointer;
 	}
 	.addStyle {
 		color: #034F84;
 		font-weight: bold;
 		font-style: italic;
-		font-size: 12pt;
+		font-size: 11pt;
 		cursor: pointer;
 	}
 	.searchListStyle {
@@ -240,7 +245,7 @@
 					</td>
 				</tr>
 				<!-- ============================= *** 공 백 *** ================================ -->
-				<tr style="border: 0px solid lightgray; border: none;">
+				<tr style="border: 0px solid lightgray;">
 					<td colspan="2" style="padding-left: 20px;"> 
 						<br/>
 						<c:if test="${search eq null || empty search}">
@@ -258,11 +263,11 @@
 			<table style="width: 800px; border: 1px solid dimgray; border-left: none; border-right: none;">
 				<thead>
 					<tr style="background-color: silver;">
-						<th style="text-align: center;">글번호</th>
-						<th style="text-align: center;">작성자</th>
-						<th style="text-align: center;">글제목</th>
-						<th style="text-align: center;">조회수</th>
-						<th style="text-align: center;">등록일자</th>
+						<th style="text-align: center; padding: 2px;">글번호</th>
+						<th style="text-align: center; padding: 2px;">작성자</th>
+						<th style="text-align: center; padding: 2px;">글제목</th>
+						<th style="text-align: center; padding: 2px;">조회수</th>
+						<th style="text-align: center; padding: 2px;">등록일자</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -271,10 +276,9 @@
 							<td style="border: 1px solid lightgray; border-left: none; border-right: none; text-align: center;">
 								${freevo.idx}
 							</td>
-							<td  style="border: 1px solid lightgray; border-left: none; border-right: none; text-align: center;">
+							<td  style="border: 1px solid lightgray; border-left: none; border-right: none; margin-left: 20px;">
 								<span class="infoDetail" onClick="showUserInfo('${freevo.userid}')">
-									<%-- <img src="<%= request.getContextPath() %>/resources/images/${freevo.img}" style="width: 20px; height: 22px; vertical-align: middle; padding-top: 2px; padding-bottom: 2px;" align="middle"> --%>
-									<span style="font-size: 11pt; font-family: verdana; ">${freevo.userid} [${freevo.name}]</span>
+									<span style="cursor: pointer;">${freevo.userid} [${freevo.name}]</span>
 								</span>
 							</td>
 							
@@ -300,7 +304,7 @@
 							<c:if test="${freevo.depthno > 0}">
 								<c:if test="${freevo.commentCnt > 0}">
 									<span class="subject" onClick="goView(${freevo.idx})">
-										<span style="color: navy; padding-left: ${freevo.depthno*10}px; font-size: smaller; font-weight: bold;">┗[답변글] </span>${freevo.subject}
+										<span style="color: navy; padding-left: ${freevo.depthno*20}px; font-size: smaller; font-weight: bold;">┗[답변글] </span>${freevo.subject}
 									</span>
 									<span style="color: red; font-weight: bold; font-style: italic; font-size: smaller; vertical-align: super;">
 										[${freevo.commentCnt}]
@@ -308,7 +312,7 @@
 								</c:if>
 								<c:if test="${freevo.commentCnt == 0}">
 									<span class="subject" onClick="goView(${freevo.idx})">
-										<span style="color: navy; padding-left: ${freevo.depthno*10}px; font-size: smaller; font-weight: bold;">┗[답변글] </span>${freevo.subject}
+										<span style="color: navy; padding-left: ${freevo.depthno*20}px; font-size: smaller; font-weight: bold;">┗[답변글] </span>${freevo.subject}
 									</span>
 								</c:if>
 							</c:if>

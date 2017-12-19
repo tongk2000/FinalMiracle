@@ -223,6 +223,7 @@
 		from tbl_freeComment C join tbl_member M
 		on C.userid = M.userid
 		where parentIdx = #{idx}
+		order by C.idx asc
 	</select>
 	
 	<!-- 자유게시판 목록에서 선택한 유저정보 보여주기 -->

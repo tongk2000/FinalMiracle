@@ -12,19 +12,23 @@
 	.above {
 		background-color: lightblue;
 	}
+	td {
+		font-size: 10pt;
+		font-family: verdana;
+	}
 	
 	.infoStyle {
 		color: #034F84;
 		font-style: italic;
 		text-decoration: underline;
-		font-size: 11pt;
+		font-size: 10pt;
 		cursor: pointer;
 	}
 	.subjectInfoStyle {
 		color: #4F84C4;
 		font-style: italic;
 		text-decoration: underline;
-		font-size: 11pt;
+		font-size: 10pt;
 		cursor: pointer;
 	}
 	
@@ -45,7 +49,7 @@
 	
 	.hoverBeforeNextStyleCss {
 		font-style: italic;
-		font-size: 12pt;
+		font-size: 11pt;
 		font-weight: bold;
 		cursor: pointer;
 	}
@@ -199,9 +203,9 @@
 						<span style="font-size: 10pt; font-weight: bold;">현재 글번호 : </span>${freevo.idx} &nbsp;&nbsp;&nbsp;
 						<c:if test="${freevo.next_idx ne 0}">
 							<span class="beforeNextStyle" style="font-size: 9pt; color: #578CA9; cursor: pointer;" onClick="javascript:location.href='<%= request.getContextPath() %>/freeView.mr?idx=${freevo.next_idx}&currentShowPageNo=${currentShowPageNo}&sizePerPage=${sizePerPage}&colname=${colname}&search=${search}'">다음글 ≫</span>
-						</c:if>		 
+						</c:if>
 						<c:if test="${freevo.next_idx eq 0}">	
-						</c:if>	
+						</c:if>
 									
 						<br/>
 					</td>
@@ -329,7 +333,7 @@
 			<tbody>
 				<c:forEach var="fvo" items="${freeList}" varStatus="status">
 					<c:if test="${freevo.idx == fvo.idx}">
-						<tr class="freeListRow" style="background-color:lightgray; color:navy; font-family: sans-serif; font-weight: bold;">
+						<tr class="freeListRow" style="background-color:lightgray; color: #034F84; font-family: verdana; font-weight: bold;">
 					</c:if>
 					<c:if test="${freevo.idx != fvo.idx}">
 						<tr class="freeListRow">
@@ -337,9 +341,9 @@
 						<td style="border: 1px solid lightgray; border-left: none; border-right: none; text-align: center;">
 							${fvo.idx}
 						</td>
-						<td  style="border: 1px solid lightgray; border-left: none; border-right: none; text-align: center;">
+						<td  style="border: 1px solid lightgray; border-left: none; border-right: none; margin-left: 30px;">
 							<span class="infoDetail" onClick="showUserInfo('${fvo.userid}')">
-								<span style="font-size: 11pt; font-family: verdana; cursor: pointer; ">${fvo.userid} [${fvo.name}]</span>
+								<span style="font-size: 10pt; font-family: verdana; cursor: pointer; ">${fvo.userid} [${fvo.name}]</span>
 							</span>
 						</td>
 						
@@ -364,7 +368,7 @@
 							<c:if test="${fvo.depthno > 0}">
 								<c:if test="${fvo.commentCnt > 0}">
 									<span class="subject" onClick="goView(${fvo.idx})" style="cursor: pointer;">
-										<span style="color: navy; padding-left: ${fvo.depthno*10}px; font-size: smaller; font-weight: bold;">┗[답변글] </span>${fvo.subject}
+										<span style="color: navy; padding-left: ${fvo.depthno*20}px; font-size: smaller; font-weight: bold;">┗[답변글] </span>${fvo.subject}
 									</span>
 									<span style="color: red; font-weight: bold; font-style: italic; font-size: smaller; vertical-align: super;">
 										[${fvo.commentCnt}]
@@ -372,7 +376,7 @@
 								</c:if>
 								<c:if test="${fvo.commentCnt == 0}">
 									<span class="subject" onClick="goView(${fvo.idx})" style="cursor: pointer;">
-										<span style="color: navy; padding-left: ${fvo.depthno*10}px; font-size: smaller; font-weight: bold;">┗[답변글] </span>${fvo.subject}
+										<span style="color: navy; padding-left: ${fvo.depthno*20}px; font-size: smaller; font-weight: bold;">┗[답변글] </span>${fvo.subject}
 									</span>
 								</c:if>
 							</c:if>
