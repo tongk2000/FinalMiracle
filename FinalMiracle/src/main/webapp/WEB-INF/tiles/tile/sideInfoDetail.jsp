@@ -63,22 +63,25 @@
 	<li>
 		<a href="<%= request.getContextPath() %>/freeList.mr" title="자유게시판">
 			<img src="<%= request.getContextPath() %>/resources/images/icon/07.png" style="width:50px; heigth:50px;" />
-			자유게시판
+			<span>자유게시판</span>
 		</a>
 	</li>
 	<li>
 		<a href="<%= request.getContextPath() %>/voteList.mr" title="투표게시판">
-			<img src="<%= request.getContextPath() %>/resources/images/icon/08.png" style="width:50px; heigth:50px;" />투표게시판
+			<img src="<%= request.getContextPath() %>/resources/images/icon/08.png" style="width:50px; heigth:50px;" />
+			<span>투표게시판</span>
 		</a>
 	</li>
 	<li>
 		<a href="<%= request.getContextPath() %>/tmList.mr" title="팀원관리">
-			<img src="<%= request.getContextPath() %>/resources/images/icon/09.png" style="width:50px; heigth:50px;" />팀원관리
+			<img src="<%= request.getContextPath() %>/resources/images/icon/09.png" style="width:50px; heigth:50px;" />
+			<span>팀원관리</span>
 		</a>
 	</li>
 	<li style="margin-left:20px;">
-		<a href="<%= request.getContextPath() %>/googleMap.mr" title="회사소개">회사소개
-			회사
+		<a href="<%= request.getContextPath() %>/googleMap.mr" title="회사소개">
+			<span style="width:50px; heigth:50px;"></span>
+			<span>회사소개</span>
 		</a>
 	</li>
 	<li>
