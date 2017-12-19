@@ -13,23 +13,29 @@ request.setCharacterEncoding("UTF-8");
 		height:25px;
 	}
 	table {
-		border:1px solid blue;
+		border-top:1px solid blue;
 		padding:5px;
+		border-radius:50px;
 	}
 	tr {
-		border:1px solid yellow;
+		border-bottom:1px solid yellow;
 		padding:5px;
 	}
 	th, td {
 		border:1px solid black;
 		padding:5px;
+		font-family:verdana;
 	}
 	.selectLine {
-    	background-color:gray;
+    	background-color:#eaeaea;
     }
     .grayColor {
-    	background-color:gray;
+    	background-color:#eaeaea;
     	cursor: pointer;
+    }
+    th{
+    	font-size:12pt;
+    	background-color:#337ab7;
     }
 </style>
 <script>

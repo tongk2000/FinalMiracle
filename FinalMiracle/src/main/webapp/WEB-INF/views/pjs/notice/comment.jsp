@@ -18,10 +18,10 @@ request.setCharacterEncoding("UTF-8");
 </c:if>	 
 --%>
 <style>
-	img {
+	/* img {
 		width:25px;
 		height:25px;
-	}
+	} */
 	.noticewrite {
 		background-color:lightgray;
 		text-align:center;
@@ -75,7 +75,7 @@ request.setCharacterEncoding("UTF-8");
 		<c:if test="${pvo != null}" >
 			<c:forEach var="reply" items="${pvo.comment}">
 				<tr class="lastComment">
-					<td class="noticenone pjstdstyle"><img src="<%=request.getContextPath() %>/resources/images/${reply.img}" ></td>
+					<td class="noticenone pjstdstyle"><img src="<%=request.getContextPath() %>/resources/images/${reply.img}" style="width:30px; heigth:30px;"></td>
 					<td class="pjstdstyle">${reply.sesid}</td>
 					<td class="pjstdstyle" style="text-align:left; padding-left:20px;">${reply.reply_content}</td>
 					<td class="pjstdstyle">${reply.regday}</td>

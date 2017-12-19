@@ -15,10 +15,10 @@
 <meta charset="UTF-8">
 <title>마음의 소리 글</title>
 <style>
-	img {
+	/* img {
 		width:25px;
 		height:25px;
-	}
+	} */
 	
 </style>
 </head>

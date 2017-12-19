@@ -631,9 +631,9 @@ public class GeniousPjsController {
 		view.put("teamidx", teamidx);
 		HashMap<String, String> map =  service.getMindIdxTeam(view); 
 		MindFileVO file = service.getMindfilename(idx);
-		System.out.println("file================="+file.getFileName()+" "+file.getOrgFilename()+ " "+file.getIdx());
 		// team_idx, userid, img, subject, content status 받는다.
-		req.setAttribute("file", file);
+		if(file != null) 
+			req.setAttribute("file", file);
 		req.setAttribute("map", map);
 		req.setAttribute("didx",idx);
 		return "pjs/mind/mindView.all";
@@ -889,6 +889,7 @@ public class GeniousPjsController {
 		System.out.println("=================msg============"+msg);
 		req.setAttribute("msg", msg);
 		req.setAttribute("loc", loc);
+		System.out.println("loc================================="+loc);
 		return "pjs/error.not";
 	}/* ================================================================================================================================================== */
 /*=======================================================================================================================================================*/	
@@ -912,8 +913,8 @@ public class GeniousPjsController {
 	@RequestMapping(value="googleMap.mr", method={RequestMethod.GET})
 	public String googleMap(HttpServletRequest req, HttpSession session) {
 		@SuppressWarnings("unchecked")
-		HashMap<String, String> map1 = (HashMap<String,String>)session.getAttribute("teaminfo");
-		String team_idx = map1.get("team_idx");
+		HashMap<String, String> teamInfo = (HashMap<String, String>)session.getAttribute("teamInfo");
+		String team_idx = teamInfo.get("team_idx");
 		String choice = req.getParameter("choice");
 		String searchString = req.getParameter("searchString");
 		if(!(choice==null||searchString==null||!"0".equals(choice))) {
@@ -928,12 +929,11 @@ public class GeniousPjsController {
 			req.setAttribute("searchString", searchString);	
 		}
 		else {
-			List<MapVO> list = service.getMap(map1); // 전체 리스트를 반환한다.
+			List<MapVO> list = service.getMap(teamInfo); // 전체 리스트를 반환한다.
 			req.setAttribute("list", list);
 			req.setAttribute("choice", choice);
 			req.setAttribute("searchString", searchString);
 		}
-		System.out.println("여기?");
 		return "pjs/map/googleMap2.all";
 	}/* ================================================================================================================================================= */
 
