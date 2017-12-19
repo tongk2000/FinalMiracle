@@ -105,10 +105,9 @@
  <!-- ============================================================================================================================================================= -->	
  	<!-- === *** 게시판의 idx로 해당 글의 정보를 보여주는 뷰단으로 정보전달하기 *** === -->
 	<select id="getIdxTeam" parameterType="HashMap" resultMap="idxTeam">
-		select W.Fk_Team_Idx as team_idx, m.userid as userid, m.img, n.subject, n.content ,w.status, f.*, n.idx as n_idx
+		select W.Fk_Team_Idx as team_idx, m.userid as userid, m.img, n.subject, n.content ,w.status, n.idx as n_idx
 		from tbl_notice n join tbl_member m on n.fk_userid = M.Userid 
                               left join tbl_teamwon w on w.fk_member_idx = M.Idx
-                              join tbl_noticefile f on f.fk_idx = n.idx
 		where n.idx = #{nidx} and w.fk_team_idx = #{teamidx}
 	</select>
 	<resultMap id="idxTeam" type="HashMap">
@@ -118,49 +117,59 @@
  		<result property="subject" 				column="subject" 		javaType="String"></result>
  		<result property="content" 				column="content" 		javaType="String"></result>
  		<result property="status" 				column="status" 		javaType="String"></result>
- 		<result property="idx" 					column="idx"	 		javaType="String"></result>
- 		<result property="filename" 			column="filename" 		javaType="String"></result>
- 		<result property="orgfilename" 			column="orgfilename" 	javaType="String"></result>
- 		<result property="filesize" 			column="filesize" 		javaType="String"></result>
- 		<result property="fk_idx" 				column="fk_idx"			javaType="String"></result>
  		<result property="n_idx" 				column="n_idx"			javaType="String"></result>
  	</resultMap>
 <!-- ============================================================================================================================================================= -->	
-	<!-- === *** 팀장이 게시물 삭제할 경우 *** === -->
-	<!-- <update id="delNoticeIdx" parameterType="HashMap">
-		update tbl_notice set status = 0
-		where groupno = (select groupno from tbl_notice where idx in 	
-		<foreach collection="list" item="nidx" index="index" open="(" close=")" separator=",">
-        	#{nidx.value}
-        </foreach>
-        and ref_idx >= (select ref_idx from tbl_notice where idx in
-        <foreach collection="list" item="nidx" index="index" open="(" close=")" separator=",">
-        	#{nidx.value}
-        </foreach>
-        )
-	</update> -->
-	
-	<update id="delNoticeIdx" parameterType="java.util.HashMap">
+	<!-- 파일 가져오기 -->
+	<select id="getfilename" parameterType="String" resultType="com.miracle.pjs.model.NoticeFileVO">
+		    select *
+    		from tbl_notice n join tbl_noticefile f on n.idx = f.fk_idx
+    		where n.idx = #{nidx}
+	</select>
+<!-- ============================================================================================================================================================= -->	
+	<!-- <update id="delNoticeIdx" parameterType="String">
         <if test="idxArr != null">
             update tbl_notice set status = 0
         	where groupno = (select groupno from tbl_notice where idx in
         	<foreach collection="idxArr" index="i" open="(" separator="," close=")" >
-        		${idxArr[i]}
+        		${idxArr}
         	</foreach>
         	) and ref_idx >= (select ref_idx from tbl_notice where idx in
         	<foreach collection="idxArr" index="i" open="(" separator="," close=")" >
-        		${idxArr[i]}
+        		${idxArr}
         	</foreach>
         	)
         </if>
+	</update> -->
+	<update id="delNoticeIdx" parameterType="java.lang.String">
+            update tbl_notice set status = 0
+        	where groupno = ( select groupno from tbl_notice where idx = #{idx} ) 
+        	and ref_idx >= ( select ref_idx from tbl_notice where idx = #{idx} )
 	</update>
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 리플 글 가져오기 *** === -->
-	<select id="getComment" parameterType="String" resultType="com.miracle.pjs.model.ReplyVO">
-    	  select  reply_content, regday, sesid, m.img
-		  from tbl_noticereply r join tbl_member m on m.userid = r.sesid
-		  where fk_idx = #{idx}
-		  order by regday DESC
+	<select id="getComment" parameterType="HashMap" resultType="com.miracle.pjs.model.ReplyVO">
+    	select *
+		from 
+		(
+		  select rownum as rno, v.*       
+		  from 
+		  (
+		       select p.reply_content, p.regday, p.sesid, m.img
+		       from tbl_noticereply p join tbl_notice n on p.fk_idx = n.idx
+		                                              join tbl_member m on m.userid = p.sesid
+		       where n.idx = #{idx}
+		  ) v
+		)  t
+		where rno between #{sNum} and #{eNum}
+	</select>
+<!-- ============================================================================================================================================================= -->	
+	<!-- === *** 리플글 총 수 *** === -->
+	<select id="getReplyCount" parameterType="HashMap" resultType="int">
+       select count(*)
+       from tbl_noticereply p join tbl_notice n on p.fk_idx = n.idx
+                              join tbl_member m on m.userid = p.sesid
+       where n.idx = #{idx}
 	</select>
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 리플글 입력하기 *** === -->
@@ -177,15 +186,15 @@
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 글쓰기 *** === -->
 	<insert id="setNoticeWrite" parameterType="HashMap">
-		insert into tbl_notice --- 수정글 쓸 때
-		values(seq_notice.nextval,#{userid},#{subject},#{content}, sysdate, default, default , seq_notice.nextval , default, default )
+		insert into tbl_notice
+		values(seq_notice.nextval,#{userid},#{subject}, sysdate, default, default , seq_notice.nextval , default, default ,#{content})
         <!--        idx          fk_userid, subject, content, regday, readcount, depth, groupno, ref_idx, status -->
 	</insert>
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 수정글쓰기 *** === -->
 	<insert id="setNoticeEditWrite" parameterType="HashMap">
-		insert into tbl_notice --- 수정글 쓸 때
-		values(seq_notice.nextval,#{userid},#{subject},#{content}, sysdate, default, #{depth} , #{groupno}, #{nidx}, default )
+		insert into tbl_notice 
+		values(seq_notice.nextval,#{userid},#{subject}, sysdate, default, #{depth} , #{groupno}, #{nidx}, default ,#{content})
         <!--         idx          fk_userid, subject, content, regday, readcount, depth, groupno, ref_idx, status -->
 	</insert>
 <!-- ============================================================================================================================================================= -->	
@@ -206,6 +215,19 @@
 		from  tbl_notice n join tbl_noticereply y on n.idx = y.fk_idx
 		where n.idx = #{idx}
 	</select>
+<!-- ============================================================================================================================================================= -->	
+<!-- === ***  *** === -->
+	<!-- <select id="" parameterType="HashMap" resultMap="editView">
+		select n.idx
+		from tbl_notice n join tbl_member m on n.fk_idx = m.userid
+		where n.idx = #{nidx} 
+	</select>
+	<resultMap id="editView" type="HashMap">
+ 		<result property="idx" 				column="idx"		javaType="String"></result>
+ 		<result property="subject" 			column="subject" 	javaType="String"></result>
+ 		<result property="content" 			column="content" 	javaType="String"></result>
+ 		<result property="userid" 			column="userid" 	javaType="String"></result>
+ 	</resultMap> -->
 <!-- ============================================================================================================================================================= -->	
 	
 	
@@ -317,13 +339,14 @@
 <!-- ============================================================================================================================================================= -->	
 	<insert id="setMindWrite" parameterType="HashMap">
 		insert into tbl_mind 
-		<if test='nidx!= null and !"".equals(nidx)'>
-			values(seq_mind.nextval,#{userid}, #{subject}, #{content}, default, #{depth}, #{nidx}, #{nidx},default, default, default, #{chkid})
+		<if test='nidx!=null and !"".equals(nidx)'>
+			values(seq_mind.nextval,#{userid}, #{subject}, default, #{depth}, #{nidx}, #{nidx},default, default, default, #{chkid}, #{content})
 		</if>
 		<if test='nidx==null or "".equals(nidx)'>
-			values(seq_mind.nextval,#{userid}, #{subject}, #{content}, default, default, seq_mind.nextval,default, default, default, default, #{userid})
+			values(seq_mind.nextval,#{userid}, #{subject}, default, default, seq_mind.nextval,default, default, default, default, #{userid}, #{content})
 		</if>
 	</insert>
+	<!-- FK_USERID, IDX, SUBJECT, REGDAY, DEPTH, GROUPNO, REF_IDX, READCOUNT, STATUS, CHECKNUM, CHKID, CONTENT -->
 <!-- ============================================================================================================================================================= -->	
 	<select id="getMindDepth" parameterType="String" resultMap="mindDepth">
 		 	select depth, groupno
@@ -342,11 +365,10 @@
 <!-- ============================================================================================================================================================= -->	
 	<update id="updateMindCheckNum" parameterType="String">
 		update tbl_mind set checkNum = checkNum + 1
-		where idx = #{nidx}
+		where idx = #{idx}
 	</update>
 <!-- ============================================================================================================================================================= -->	
-	<update id="delMindIdx" parameterType="java.util.HashMap">
-        <if test="idxArr != null">
+	<!-- <update id="delMindIdx" parameterType="java.util.HashMap">
             update tbl_mind set status = 0
         	where groupno = (select groupno from tbl_mind where idx in
         	<foreach collection="idxArr" index="i" open="(" separator="," close=")" >
@@ -357,7 +379,15 @@
         		${idxArr[i]}
         	</foreach>
         	)
-        </if>
+	</update> -->
+<!-- ============================================================================================================================================================= -->	
+	<update id="delMindIdx" parameterType="String">
+            update tbl_mind set status = 0
+        	where groupno = (select groupno from tbl_mind where idx =
+        		#{idxArr}
+        	) and ref_idx >= (select ref_idx from tbl_mind where idx =
+        		#{idxArr}
+        	)
 	</update>
 <!-- ============================================================================================================================================================= -->	
 	
@@ -368,8 +398,9 @@
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 구글맵 전체 정보를 가져온다. *** === -->
 	<select id="getMap" resultType="com.miracle.pjs.model.MapVO">
-		select * from tbl_map 
-		order by idx
+		  select m.*
+          from tbl_map m join tbl_teamwon w on m.team_idx = w.fk_team_idx
+          where m.team_idx = #{team_idx}
 	</select>
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 구글맵에서 검색한 정보를 가져온다. *** === -->
@@ -640,7 +671,7 @@
 	<!-- === *** 쪽지를 받은 사람이 읽었는지 않 읽었는지 update *** === -->
 	<insert id="insertsender" parameterType="HashMap" >
 		insert into tbl_memomemory
-		values(seq_memomemory.nextval, #{subject}, #{content}, #{writeuserid}, default, default)
+		values(seq_memomemory.nextval, #{subject}, #{writeuserid}, default, default , #{content})
 	</insert>
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 쪽지를 받은 사람이 읽었는지 않 읽었는지 update *** === -->
@@ -682,13 +713,13 @@
 		values(seq_noticefile.nextval, #{newfilename}, #{originalfilename}, #{filesize}, #{idx})
 	</insert>
 <!-- ============================================================================================================================================================= -->	
-<!-- === *** 쪽지를 받은 사람이 읽었는지 않 읽었는지 update *** === -->
-	<select id="getfilename" parameterType="HashMap" resultType="String">
+<!-- === ***  *** === -->
+	<select id="getfilenamelist" parameterType="HashMap" resultType="String">
 		  select count(*)
           from tbl_notice n join tbl_noticefile f on n.idx = f.idx
           where f.fk_idx= #{idx}
 	</select>
-<!-- ============================================================================================================================================================= -->	
+<!-- =========================================================================================================================================================== -->	
 	<select id="getViewWithNoAddCount" parameterType="HashMap" resultType="com.miracle.pjs.model.FileVO">
 		select *
 		from tbl_noticefile
@@ -702,6 +733,55 @@
 	</select>
 		
 <!-- ============================================================================================================================================================= -->	
-          
+    <update id="setUpdateWrite" parameterType="HashMap">
+		 update tbl_notice set subject = #{subject},
+		 					   content = #{content}
+		 where idx = #{idx}					   
+	</update>
+		
+<!-- ============================================================================================================================================================= -->	
+       
+       
+    <!-- === *** 쪽지를 받은 사람이 읽었는지 않 읽었는지 update *** === -->
+	<insert id="setMindWriteWithFile" parameterType="HashMap" >
+		insert into tbl_mindfile
+		values(seq_mindfile.nextval, #{newfilename}, #{originalfilename}, #{filesize}, #{idx})
+	</insert>
+<!-- ============================================================================================================================================================= -->	
+    <!-- === *** 쪽지를 받은 사람이 읽었는지 않 읽었는지 update *** === -->
+	<update id="setMindViewEdit" parameterType="HashMap" >
+		update tbl_mind set subject = #{subject},
+						    content = #{content}
+		where idx = #{idx}				    
+	</update>
+<!-- ============================================================================================================================================================= -->	
+    <!-- 파일이 있는 지 없는지 -->
+	<select id="getMindfilenamelist" parameterType="HashMap" resultType="String">
+		  select count(*)
+          from tbl_mind m join tbl_mindfile f on m.idx = f.idx
+          where f.fk_idx= #{idx}
+	</select>
+<!-- ============================================================================================================================================================= -->	
+     <!-- 파일 가져오기 -->
+	<select id="getMindfilename" parameterType="String" resultType="com.miracle.pjs.model.MindFileVO">
+		    select *
+    		from tbl_mind m join tbl_mindfile f on m.idx = f.fk_idx
+    		where f.fk_idx = #{idx}
+	</select>
+<!-- ============================================================================================================================================================= -->	
+    <!-- 파일넣은 리스트 가져오기 -->
+	<select id="getMindWrite" parameterType="HashMap" resultType="String">
+		    select max(idx)
+    		from tbl_mind
+    		where fk_userid = #{userid} and subject=#{subject}
+	</select>
+<!-- ============================================================================================================================================================= -->	
+     <select id="getmindViewWithNoAddCount" parameterType="HashMap" resultType="com.miracle.pjs.model.FileVO">
+		select *
+		from tbl_mindfile
+		where fk_idx = #{fidx}
+	</select>
+<!-- ============================================================================================================================================================= -->	
+     
           
 </mapper>

@@ -21,9 +21,9 @@ public interface PjsinterDAO {
 
 //	int delNoticeIdx(List<String> list); // 공지사항 게시물을 지우는 메소드
 //	int delNoticeIdx(HashMap<String,String> paramap); // 공지사항 게시물을 지우는 메소드
-	int delNoticeIdx(HashMap<String, String[]> paramap); // 공지사항 게시물을 지우는 메소드
+	int delNoticeIdx(HashMap<String, String> paramap, String[] idxArr); // 공지사항 게시물을 지우는 메소드
 	
-	List<ReplyVO> getComment(String idx); // 공지사항 게시물의 리플을 얻는 메소드 
+	List<ReplyVO> getComment(HashMap<String, Object> map); // 공지사항 게시물의 리플을 얻는 메소드 
 	
 	int setComment(HashMap<String, String> map); // 공지사항 게시글에 리플달기
 	
@@ -57,13 +57,13 @@ public interface PjsinterDAO {
 	
 	int updateMindCheckNum(String nidx); // 대기, 확인, 답변완료 상태변경 메소드
 	
-	int delMindIdx(HashMap<String,String[]> paramap); // 마음의 소리 다중행 삭제
+	int delMindIdx(HashMap<String,String> paramap , String[] idxArr); // 마음의 소리 다중행 삭제
 	
 	
 //==========================================================================================================================================================//	
 	
 	// === *** 구글맵 *** === //
-	List<MapVO> getMap(); // 구글맵 테이블의 전체 내용을 가져온다.
+	List<MapVO> getMap(HashMap<String, String> map); // 구글맵 테이블의 전체 내용을 가져온다.
 	
 	List<MapVO> getMapWithSearch(HashMap<String, String> map); // 검색어를 포함한 지도 리스트를 받아온다.
 	
@@ -131,11 +131,29 @@ public interface PjsinterDAO {
 
 	int setNoticeWriteWithFile(HashMap<String, String> team); // 공지사항 파일올리기
 
-	String getfilename(HashMap<String, Object> map); // 파일이 있는지 없는지 가져오기
+	String getfilenamelist(HashMap<String, Object> map); // 파일이 있는지 없는지 가져오기
 
 	FileVO getViewWithNoAddCount(HashMap<String, String> map); // 파일 다운로드
 
 	String getmemoReadCount(String string); // 메모 읽었는지 여부 반환
+
+	NoticeFileVO getfilename(String nidx); // 뷰에 뿌릴 파일 가져오기
+
+	int setUpdateWrite(HashMap<String, String> team); // 공지사항 수정하기
+
+	int setMindWriteWithFile(HashMap<String, String> team); // 마음의 소리 파일첨부
+
+	int getReplyCount(HashMap<String, Object> map); // 리플 글 총 수
+
+	int setMindViewEdit(HashMap<String, String> team); // 글 수정
+
+	String getMindfilenamelist(HashMap<String, String> map); // 마음의 소리에 파일이 있는지 없는지 반환
+
+	MindFileVO getMindfilename(String idx); // 마음의 소리에 파일vo 반환
+
+	String getMindWrite(HashMap<String, String> team); // 첨부파일의 fk_idx를 가져온다.
+
+	FileVO getmindViewWithNoAddCount(HashMap<String, String> map); // 마음의 소리 파일 가져오기
 
 	
 

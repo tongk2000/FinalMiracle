@@ -277,30 +277,16 @@
 </head>
 <body>
 
-<div style="width:100%; height:500px; border:4px dotted red; "> 
-	<div style="border:4px dotted skyblue; width:50%; height:250px; float: left;" align="center">
+
+<div style="width:100%; height:500px; padding-top:20px; "> 
 		
-		<div style="border:4px dotted blue; width:100%; float: left;"> 
-			<span >회사정보</span>
-			<div id="tm" style="border:4px dotted green; margin-top:50px; width:100%;"></div>
-		</div>
-	</div>
-	
-	<div style="border:4px dotted yellow; width:50%; height: 250px; float: right;">
-		<span> 당산 : 서울특별시 영등포구 선유동2로 57 이레빌딩 (구관) 19F, 20F </span>
-		<div align="center">
-			<img src="<%= request.getContextPath() %>/resources/images/당산이미지.PNG" style="width:400px; height:200px; margin-top:5px;"/>
-		</div>
-	</div>
-	
-	<div align="center">
+	<div align="center"  style="z-index:2000;">
 		<div id="googleMap" style="width: 900px; clear:both; height: 450px; border:1px solid red" ></div>
-	  
 	 	<form name="map">
 			<input type="hidden" name="choice">
 			<input type="hidden" name="searchString">
 		</form>
-		
+		 
 		<select id="choice" name="choice" style="font-size:12pt; margin-top:10px;">
 			<option value="0" selected> 전체</option>
 			<option value="1" >팀정보</option>
@@ -310,16 +296,34 @@
 		<input type="text" name="searchString" id="searchString" />
 		<button type="button" id="goSearch">검색</button>
 		
-		<div >
-			<div id="displayList" style="background-color:white; border:2px solid gray; width:175px;  margin-left:45px;	 z-index:500;"></div>
-		</div>
-	</div> 
-</div>
+	</div>
 
-<div style="border: 2px solid blue;"> 
-	<div class="modal-body" id="launchMapBody" style="border:2px gray dotted; overflow-x:hidden;overflow-y:hidden "  align="center">
+	
+	<br/><br/><br/><br/>
+	
+
+	<div style=" width:50%; height:250px; padding-left:300px; float: left;" align="center">
+		<div style=" width:100%; float: left;"> 
+			<span >회사정보</span>
+			<div id="tm" style=" margin-top:50px; width:100%;"></div>
+		</div>
+	</div>
+	
+	<div style=" width:50%; height: 250px; float: right; ">
+		<span style="align:center"> 당산 : 서울특별시 영등포구 선유동2로 57 이레빌딩 (구관) 19F, 20F </span>
+		<div align="center">
+			<img src="<%= request.getContextPath() %>/resources/images/당산이미지.PNG" style="width:400px; height:200px; padding-top:5px; padding-left:10px;"/>
+		</div>
+	</div>
+</div>
+			
+<div> 
+	<div class="modal-body" id="launchMapBody" style=" overflow-x:hidden;overflow-y:hidden "  align="center">
 		<div class="modal fade" id="mapInfo" role="dialog"></div>
 	</div>
 </div>
+		<div>
+			<div id="displayList" style="background-color:white; border:2px solid gray; width:175px;  margin-left:500px; z-index: 300000;"></div>
+		</div>
 </body>
 </html>
