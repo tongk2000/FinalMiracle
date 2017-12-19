@@ -3,7 +3,7 @@
 <%@ page import="java.net.InetAddress" %>
 
 
-<%  
+<% 
     // === 서버 IP 주소 알아오기 === ==채팅을 위해 서버 아이피를 알아옴== //
    InetAddress inet = InetAddress.getLocalHost();
    String serverIP = inet.getHostAddress(); 
@@ -12,7 +12,10 @@
    String serverName = "http://"+serverIP+":"+portnumber;
 
 %>
+<<<<<<< HEAD
 
+=======
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 <style type="text/css">
 
 </style>
@@ -38,4 +41,3 @@
 	<li><a href="<%= request.getContextPath() %>/memoList.mr" title="메모"><img src="<%= request.getContextPath() %>/resources/images/icon/10.png" style="width:35px; heigth:35px;"/></a></li>
 	<li><a href="<%= request.getContextPath() %>/memoreceiver.mr" title="쪽지"><img src="<%= request.getContextPath() %>/resources/images/icon/11.png" style="width:35px; heigth:35px;" /></a></li>
 </ul>
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
