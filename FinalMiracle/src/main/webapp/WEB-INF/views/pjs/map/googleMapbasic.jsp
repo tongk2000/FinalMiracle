@@ -130,14 +130,8 @@
 	});
 </script>
 </head>
-<<<<<<< HEAD
-<body>
-
-	<div id="googleMap"	style="width: 100%; height: 400px;"></div>
-=======
 <body>
 	<div id="googleMap"	style="margin:20% 10% 20% 20% ; ">sdfsdfsdfsdf</div>
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle
 </body>
 </html>
 

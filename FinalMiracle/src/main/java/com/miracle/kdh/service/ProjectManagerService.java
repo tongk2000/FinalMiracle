@@ -123,9 +123,14 @@ public class ProjectManagerService {
 		dao.setTaskComplete(fvo);
 	} // end of void setTaskComplete(FolderVO fvo) ---------------------------------------------------------------------
 
-	// 하위폴더 추가시 상위 폴더의 정보를 가져오기
+	// 요소 추가시 참조값 가져오기
 	public HashMap<String, String> getUpFolder(String upIdx) {
-		HashMap<String, String> map = dao.getUpFolder(upIdx);
+		HashMap<String, String> map = null;
+		if(upIdx.equals("0")) { // 만약 최상위 요소 추가 라면 
+			map = dao.getMaxGroupNo(upIdx); // 마지막 groupNo 을 받아오고
+		} else { // 하위 요소 추가 라면
+			map = dao.getUpFolder(upIdx); // 상위 요소의 groupNo 을 받아온다.
+		}
 		return map;
 	} // end of HashMap<String, String> getUpFolder(int upIdx) --------------------------------------------------------
 
@@ -135,7 +140,7 @@ public class ProjectManagerService {
 		return teamwonList;
 	} // end of List<HashMap<String, String>> getTeamwonList(String team_idx) --------------------------------------------------
 
-	// 하위요소 추가하기(+추가된 요소에 소속된 담당들도 folder_teamwon 테이블에 추가)
+	// 요소 추가하기(+추가된 요소에 소속된 담당들도 folder_teamwon 테이블에 추가)
 	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
 	public HashMap<String, Object> addDownElementEnd(FolderVO fvo, HashMap<String, Object> map, String term, String page, List<Folder_FileVO> ffList) {
 		int result1 = dao.addDownElement(fvo); // 하위요소 추가하기
@@ -212,15 +217,33 @@ public class ProjectManagerService {
 	
 	// 내가 속한 요소의 idx 받아오기
 	public HashMap<String, Object> getMyElement(HashMap<String, String> map) {
-		List<String> myElementList = dao.getMyElement(map);
+		List<String> idxListByElement = dao.getMyElement(map);
 		HashMap<String, String> periodCntMap = dao.getPeriodCntByTeamwon(map);
+		
 		HashMap<String, Object> returnMap = new HashMap<String, Object>();
-		returnMap.put("myElementList", myElementList);
+		returnMap.put("idxListByElement", idxListByElement);
 		returnMap.put("periodCntMap", periodCntMap);
 		return returnMap;
 	} // end of public List<String> getMyElement(HashMap<String, String> map) ---------------------------------------------------------------
 	
+	// 검색한 요소의 idx 받아오기
+	public HashMap<String, Object> getSearchElement(HashMap<String, String> map) {
+		List<String> idxListByElement = dao.getSearchElement(map);
+		HashMap<String, String> periodCntMap = dao.getPeriodCntBySearch(map);
+		
+		HashMap<String, Object> returnMap = new HashMap<String, Object>();
+		returnMap.put("idxListByElement", idxListByElement);
+		returnMap.put("periodCntMap", periodCntMap);
+		return returnMap;
+	} // end of public List<String> getMyElement(HashMap<String, String> map) ---------------------------------------------------------------
 	
+	// 특정 요소와 그 하위요소들을 다른 상위요소로 이동하기
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int elementMove(FolderVO fvo) {
+		dao.elementMoveByFkIdx(fvo); // 1. 이동하는 첫번째 요소의 fk_folder_idx 변경해주기
+		int result = dao.elementMoveByGroup(fvo); // 2. 이동하는 모든 요소의 groupNo, depth 변경해주기
+		return result;
+	} // end of int elementMove(FolderVO fvo) ----------------------------------------------------------------------------------------------------
 	
 	
 	// 페이징 처리하기(PageVO 를 받아서 setPageBar 후에 해당 PagaVO 를 반환하는 방식)
