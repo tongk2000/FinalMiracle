@@ -136,6 +136,14 @@
 		where idx = #{upIdx}
 	</select>
 	
+	<!-- 최상위 요소 추가라면 마지막 groupNo 에 1 더해서 반환해주기 -->
+	<resultMap type="HashMap" id="getMaxGroupNo">
+		<result property="groupNo" column="groupNo" javaType="String"/>		
+	</resultMap>
+	<select id="getMaxGroupNo" resultMap="getMaxGroupNo">
+		select max(groupNo)+1 as groupNo
+		from tbl_folder F
+	</select>
 	
 	<!-- 현재 팀의 소속된 팀원 목록을 가져오기 -->
 	<resultMap type="HashMap" id="getTeamwonList">
@@ -149,7 +157,7 @@
 	</select>
 	
 	
-	<!-- 하위 폴더 추가하기 -->
+	<!-- 요소 추가하기 -->
 	<insert id="addDownElement" parameterType="com.miracle.kdh.model.FolderVO">
 		insert into tbl_folder(idx, fk_teamwon_idx, subject, content, startdate, lastdate, fk_folder_idx, groupNo, depth, category, status, importance)
 		values(seq_folder.nextval, #{fk_teamwon_idx}, #{subject}, #{content}, #{startDate}, #{lastDate}, #{fk_folder_idx}, #{groupNo}, #{depth}, #{category}, 1, #{importance})
@@ -177,45 +185,6 @@
 		              start with idx = #{idx}
 		              connect by prior idx = fk_folder_idx)
 	</update>
-	
-	
-	<!-- 페이징 처리를 위해 1주간의 날짜를 동적으로 받아오기(뷰단에서 너무 노가다라 다른걸로 대체함;) -->
-	<!-- <resultMap type="HashMap" id="getPageDate">
-		<result property="threeago" column="threeago" javaType="String"/>
-		<result property="threeagoDP" column="threeagoDP" javaType="String"/>
-		<result property="twoago" column="twoago" javaType="String"/>
-		<result property="twoagoDP" column="twoagoDP" javaType="String"/>
-		<result property="oneago" column="oneago" javaType="String"/>
-		<result property="oneagoDP" column="oneagoDP" javaType="String"/>
-		<result property="standard" column="standard" javaType="String"/>
-		<result property="standardDP" column="standardDP" javaType="String"/>
-		<result property="onelater" column="onelater" javaType="String"/>
-		<result property="onelaterDP" column="onelaterDP" javaType="String"/>
-		<result property="twolater" column="twolater" javaType="String"/>
-		<result property="twolaterDP" column="twolaterDP" javaType="String"/>
-		<result property="threelater" column="threelater" javaType="String"/>
-		<result property="threelaterDP" column="threelaterDP" javaType="String"/>
-	</resultMap>
-	<select id="getPageDate" resultMap="getPageDate">
-		select to_char(v.standarddate-3, 'yyyymmdd') as threeago
-		     , to_char(v.standarddate-3, 'mm/dd(dy)') as threeagoDP
-		     , to_char(v.standarddate-2, 'yyyymmdd') as twoago
-		     , to_char(v.standarddate-2, 'mm/dd(dy)') as twoagoDP
-		     , to_char(v.standarddate-1, 'yyyymmdd') as oneago
-		     , to_char(v.standarddate-1, 'mm/dd(dy)') as oneagoDP
-		     , to_char(v.standarddate, 'yyyymmdd') as standard
-		     , to_char(v.standarddate, 'mm/dd(dy)') as standardDP
-		     , to_char(v.standarddate+1, 'yyyymmdd') as onelater
-		     , to_char(v.standarddate+1, 'mm/dd(dy)') as onelaterDP
-		     , to_char(v.standarddate+2, 'yyyymmdd') as twolater
-		     , to_char(v.standarddate+2, 'mm/dd(dy)') as twolaterDP
-		     , to_char(v.standarddate+3, 'yyyymmdd') as threelater
-		     , to_char(v.standarddate+3, 'mm/dd(dy)') as threelaterDP
-		from (
-		  select (sysdate+#{page}) as standarddate
-		  from dual
-		)V
-	</select> -->
 	
 	<!-- 페이징 처리를 위해 1주간의 날짜를 동적으로 수정하기 -->
 	<update id="updatePageDateWeek">
@@ -288,15 +257,22 @@
 	<!-- 요소 수정시 팀원 목록 수정하기 끝 -->
 	
 	
-	<!-- 내가 속한 요소의 idx 받아오기 -->
+	<!-- 나 혹은 팀원이 속한 요소의 idx 받아오기 -->
 	<select id="getMyElement" parameterType="HashMap" resultType="String">
-		select f.idx
+		select distinct f.idx
 		from tbl_folder F
 		join tbl_folder_teamwon FT
 		on f.idx = ft.fk_folder_idx
-		where f.fk_teamwon_idx in (select idx from tbl_teamwon where fk_team_idx = #{team_idx})
-		  and ft.fk_teamwon_idx = #{teamwon_idx}
-		  and ft.status = 1
+		where ft.status = 1
+		  and ft.fk_teamwon_idx = ${teamwon_idx}
+	</select>
+	
+	<!-- 검색한 요소의 idx 받아오기 -->
+	<select id="getSearchElement" parameterType="HashMap" resultType="String">
+		select distinct idx
+		from view_getSearchElement 
+		where fk_teamwon_idx in (select idx from tbl_teamwon where fk_team_idx = #{team_idx})
+		  and searchWord like '%'||#{searchWord}||'%'
 	</select>
 	
 	<!-- 진행전, 진행중, 기한경과, 완료 건수를 가져오기 -->
@@ -324,6 +300,33 @@
 		           and idx in (select fk_folder_idx from tbl_folder_teamwon where fk_teamwon_idx = #{teamwon_idx} and status = 1)) as complete
 		from dual
 	</select>
+	<select id="getPeriodCntBySearch" resultMap="getPeriodCnt"> <!-- 검색어별 건수 -->
+		select (select count(*) from tbl_folder where status = 1 and startdate > sysdate
+		           and idx in (select distinct idx
+		                       from view_getSearchElement 
+		                       where fk_teamwon_idx in (select idx from tbl_teamwon where fk_team_idx = #{team_idx})
+		                         and searchWord like '%'||#{searchWord}||'%')
+		       ) as before
+		     , (select count(*) from tbl_folder where status = 1 and startdate &lt; sysdate and sysdate &lt; lastdate
+		           and idx in (select distinct idx
+		                       from view_getSearchElement 
+		                       where fk_teamwon_idx in (select idx from tbl_teamwon where fk_team_idx = #{team_idx})
+		                         and searchWord like '%'||#{searchWord}||'%')
+		       ) as doing
+		     , (select count(*) from tbl_folder where status = 1 and lastdate &lt; sysdate
+		           and idx in (select distinct idx
+		                       from view_getSearchElement 
+		                       where fk_teamwon_idx in (select idx from tbl_teamwon where fk_team_idx = #{team_idx})
+		                         and searchWord like '%'||#{searchWord}||'%')
+		       ) as lapse
+		     , (select count(*) from tbl_folder where status = 0
+		           and idx in (select distinct idx
+		                       from view_getSearchElement 
+		                       where fk_teamwon_idx in (select idx from tbl_teamwon where fk_team_idx = #{team_idx})
+		                         and searchWord like '%'||#{searchWord}||'%')
+		       ) as complete
+		from dual
+	</select>
 	
 	<!-- 첨부파일의 정보를 입력해주기 -->
 	<insert id="insertFolderFile" parameterType="com.miracle.kdh.model.Folder_FileVO">
@@ -336,6 +339,20 @@
 		delete from tbl_folder_file
 		where serFilename = #{serFilename}
 	</delete>
+	
+	<!-- 1.특정 요소와 그 하위요소들을 다른 상위요소로 이동할때 첫번째 요소의 fk_folder_idx 변경해주기 -->
+	<update id="elementMoveByFkIdx" parameterType="com.miracle.kdh.model.FolderVO">
+		update tbl_folder set fk_folder_idx = ${fk_folder_idx}
+		where idx = ${idx}
+	</update>
+	<!-- 2.특정 요소와 그 하위요소들을 다른 상위요소로 이동할때 이동하는 모든 요소의 groupNo, depth 변경해주기 -->
+	<update id="elementMoveByGroup" parameterType="com.miracle.kdh.model.FolderVO">
+		update tbl_folder set groupNo = ${groupNo}, depth = depth + ${depth}
+		where idx in (select idx from tbl_folder
+		              start with idx = ${idx}
+		              connect by prior idx = fk_folder_idx)
+	</update>
+	
 </mapper>
 
 

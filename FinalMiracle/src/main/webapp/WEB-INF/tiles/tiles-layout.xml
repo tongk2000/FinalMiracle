@@ -4,12 +4,12 @@
        "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
        "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
 <tiles-definitions>
-    <!-- ==== tiles 를 사용하는 레이아웃 설정 시작 -->
+      <!-- ==== tiles 를 사용하는 레이아웃 설정 시작 -->
       <definition name="layout-all" template="/WEB-INF/tiles/layout/layout-all.jsp">
       <!-- 이 xml 파일에서 설정된 값을 받아서 적용할 레이아웃 페이지를 지정한다. -->
             <put-attribute name="header" value="/WEB-INF/tiles/tile/header.jsp" />
             <put-attribute name="content" value="" />
-            <put-attribute name="sideInfo" value="/WEB-INF/tiles/tile/sideInfo.jsp" />
+            <put-attribute name="sideInfo" value="/WEB-INF/tiles/tile/sideInfoDetail.jsp" />
             <put-attribute name="footer" value="/WEB-INF/tiles/tile/footer.jsp" />
       </definition>
       
@@ -25,6 +25,10 @@
       <definition name="*/*/*/*.all" extends="layout-all">
             <put-attribute name="content" value="/WEB-INF/views/{1}/{2}/{3}/{4}.jsp"/>
       </definition>
+      <definition name="*/*/*/*/*.all" extends="layout-all">
+            <put-attribute name="content" value="/WEB-INF/views/{1}/{2}/{3}/{4}/{5}.jsp"/>
+      </definition>
+      <!-- ==== tiles 를 사용하는 레이아웃 설정 끝 -->
       
       <!-- ==== tiles 를 사용하지 않는 레이아웃 설정 시작 -->
       <definition name="layout-not" template="/WEB-INF/tiles/layout/layout-not.jsp">
@@ -42,6 +46,9 @@
       </definition>
       <definition name="*/*/*/*.not" extends="layout-not">
             <put-attribute name="content" value="/WEB-INF/views/{1}/{2}/{3}/{4}.jsp"/>
+      </definition>
+      <definition name="*/*/*/*/*.not" extends="layout-not">
+            <put-attribute name="content" value="/WEB-INF/views/{1}/{2}/{3}/{4}/{5}.jsp"/>
       </definition>
       <!-- ==== tiles 를 사용하지 않는 레이아웃 설정 끝 -->
       
@@ -61,6 +68,9 @@
       </definition>
       <definition name="*/*/*/*.xml" extends="layout-xml">
             <put-attribute name="content" value="/WEB-INF/views/{1}/{2}/{3}/{4}.jsp"/>
+      </definition>
+      <definition name="*/*/*/*/*.xml" extends="layout-xml">
+            <put-attribute name="content" value="/WEB-INF/views/{1}/{2}/{3}/{4}/{5}.jsp"/>
       </definition>
       <!-- ==== XML 을 사용하는 레이아웃 설정 끝 -->
       

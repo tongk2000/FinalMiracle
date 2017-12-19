@@ -66,8 +66,12 @@ public class ProjectMangerController {
 		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo");
 		String team_idx = teamInfo.get("team_idx");
 		
-		String page = "0"; // 첫화면이므로 초기값 0을 줌
-		String term = "7"; // 첫화면이므로 초기값 7을 줌
+		String page = req.getParameter("page");
+		String term = req.getParameter("term");
+		if(page == null || term == null || page.trim().isEmpty() || term.trim().isEmpty()) {
+			page = "0"; // 첫화면이면 초기값 0을 줌
+			term = "7"; // 첫화면이면 초기값 7을 줌
+		}
 		req.setAttribute("term", term);	// 페이징 값 유지용
 		req.setAttribute("page", page);	// 페이징 값 유지용
 		
@@ -165,7 +169,6 @@ public class ProjectMangerController {
 		
 		// 서버폴더에 파일저장하고 DB에 저장할 파일 정보 가져오기
 		List<Folder_FileVO> ffList = doFileUpdate(freq, ses, fvo.getIdx(), Integer.parseInt(fk_teamwon_idx));
-		
 		int result = svc.do_goModalEdit(ses, fvo, ftList, ffList, delFileArr);
 		
 		JSONObject json = new JSONObject();
@@ -203,7 +206,7 @@ public class ProjectMangerController {
 		return "kdh/doList/popup/addDownElement.not";
 	} // end of String addDownElement(HttpServletRequest req) ----------------------------------------------
 	
-	// 하위요소 추가하기
+	// 요소 추가하기
 	@RequestMapping(value="do_addDownElementEnd.mr", method={RequestMethod.POST})
 	public String addDownElementEnd(HttpServletRequest req, HttpSession ses, MultipartHttpServletRequest freq, FolderVO fvo) {		
 		String[] teamwonIdxArr = req.getParameterValues("teamwonIdx"); // 추가되는 요소에 지정된 담당 팀원목록을 받아옴
@@ -211,18 +214,16 @@ public class ProjectMangerController {
 		map.put("teamwonIdxArr", teamwonIdxArr);
 		
 		@SuppressWarnings("unchecked")
-		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo"); // 추가하는 팀원이 누구인지 세션에서 가져와서
+		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo"); // 요소를 만드는 팀원이 누구인지 세션에서 가져와서
 		int fk_teamwon_idx = Integer.parseInt(teamInfo.get("teamwon_idx"));
 		fvo.setFk_teamwon_idx(fk_teamwon_idx); // FolderVO 에 넣어줌
-		
-		map.put("teamwon_idx", Integer.parseInt(teamInfo.get("teamwon_idx")) ); // 폴더팀원목록에도 넣어줌(status 다르게 해주기 위함)
 		
 		String term = req.getParameter("term"); // 페이징 기간을 가져옴
 		String page = (String)req.getParameter("page"); // 페이징 이동할 페이지를 가져옴
 		
 		// 서버폴더에 파일저장하고 DB에 저장할 파일 정보 가져오기
 		List<Folder_FileVO> ffList = doFileUpdate(freq, ses, fvo.getIdx(), fk_teamwon_idx);
-				
+		
 		map = svc.addDownElementEnd(fvo, map, term, page, ffList); // 트랜잭션 결과와 새로 추가된 요소의 정보를 가져옴 
 		
 		req.setAttribute("map", map);
@@ -283,19 +284,61 @@ public class ProjectMangerController {
 	public String goCommentPage(HttpServletRequest req, PageVO pvo) {
 		HashMap<String, Object> map = svc.getFolder_commentInfo(pvo);
 		req.setAttribute("map", map);
-		return "kdh/doList/modal/modalCommentPage.not";
+		return "kdh/doList/modal/includePage/modalCommentPage.not";
 	} // end of String goCommentPage(HttpServletRequest req, PageVO pvo) ----------------------------------------------------------------------------------
 	
 	// 내가 속한 요소의 idx 받아오기
 	@RequestMapping(value="do_getMyElement.mr", method={RequestMethod.GET})
 	public String getMyElement(HttpServletRequest req, HttpSession ses) {
 		@SuppressWarnings("unchecked")
-		HashMap<String, String> map = (HashMap<String, String>)ses.getAttribute("teamInfo");		
+		HashMap<String, String> map = (HashMap<String, String>)ses.getAttribute("teamInfo");	
+		
 		HashMap<String, Object> returnMap = svc.getMyElement(map);
 		req.setAttribute("map", returnMap);
-		return "kdh/doList/getMyElement.xml";
-	} // end of public List<String> getMyElement(HashMap<String, String> map) ---------------------------------------------------------------
+		return "kdh/doList/getIdxListByElement.xml";
+	} // end of List<String> getMyElement(HttpServletRequest req, HttpSession ses) ---------------------------------------------------------------
 	
+	// 팀원이 속한 요소의 idx 받아오기
+	@RequestMapping(value="do_getTeamwonElement.mr", method={RequestMethod.GET})
+	public String getTeamwonElement(HttpServletRequest req) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("teamwon_idx", req.getParameter("fk_teamwon_idx"));
+		HashMap<String, Object> returnMap = svc.getMyElement(map);
+		req.setAttribute("map", returnMap);
+		return "kdh/doList/getIdxListByElement.xml";
+	} // end of List<String> getMyElement(HttpServletRequest req, HttpSession ses) ---------------------------------------------------------------
+	
+	// 검색한 요소의 idx 받아오기
+	@RequestMapping(value="do_getSearchElement.mr", method={RequestMethod.GET})
+	public String getSearchElement(HttpServletRequest req, HttpSession ses) {
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> map = (HashMap<String, String>)ses.getAttribute("teamInfo");
+		String searchWord = req.getParameter("searchWord").replaceAll(" ", "%");
+		map.put("searchWord", searchWord);
+		
+		HashMap<String, Object> returnMap = svc.getSearchElement(map);
+		req.setAttribute("map", returnMap);
+		return "kdh/doList/getIdxListByElement.xml";
+	} // end of List<String> getSearchElement) ---------------------------------------------------------------
+	
+	// 특정 요소와 그 하위요소들을 다른 상위요소로 이동하기
+	@RequestMapping(value="do_elementMove.mr", method={RequestMethod.GET})
+	public String elementMove(HttpServletRequest req, FolderVO fvo) {	
+		int result = svc.elementMove(fvo);
+		
+		if(result == 0) {
+			req.setAttribute("msg", "폴더 이동에 실패했습니다.\\n관리자에게 문의하세요");
+		} else {
+			req.setAttribute("msg", "폴더 이동에 성공했습니다.");
+		}
+		req.setAttribute("loc", "doList.mr");
+		
+		String page = req.getParameter("page");
+		String term = req.getParameter("term");
+		req.setAttribute("term", term);	// 페이징 값 유지용
+		req.setAttribute("page", page);	// 페이징 값 유지용
+		return "kdh/msg.not";
+	} // end of String elementMove(HttpServletRequest req, FolderVO fvo) ---------------------------------------------------------------
 	
 	// ============================= ***** 파일 관련 메소드 시작 ***** =============================
 	// 파일 업로드하고 ffvo 에 파일 정보 저장하기
@@ -313,6 +356,10 @@ public class ProjectMangerController {
 				
 				String orgFilename = attach.getOriginalFilename(); // 사용자가 올린 원본 파일명
 				// 입퇴실체크.jpg
+				
+				if(orgFilename == null || orgFilename.trim().isEmpty()) { // 만약 셋 중 하나라도 null 이라면 null 로 반환
+					return null;
+				}
 				
 				long filesize = attach.getSize(); // 파일크기를 읽어옴
 				// 126922
@@ -365,9 +412,7 @@ public class ProjectMangerController {
             writer.println("<script type='text/javascript'>alert('파일 다운로드가 불가능합니다.!!')</script>");      
 		}
 	} // end of void fileDownload(HttpServletRequest req, HttpServletResponse res, HttpSession ses, Folder_FileVO ffvo) --------------------------------
-	
-	// 첨부파일 삭제 하기
-	
+	// 첨부파일 삭제는 파일매니저 클래스에서 자체적으로 사용함
 	// ============================= ***** 파일 관련 메소드 끝 ***** =============================
 }
 	 

@@ -153,8 +153,6 @@ public class VoteController {
 		
 		String gobackURL = MyUtil.getCurrentURL(req); //돌아갈 페이지를 위해서 현재 페이지의 주소를 뷰단으로 넘겨주자
 		
-		req.setAttribute("gobackURL", gobackURL);
-		
 		String colname = req.getParameter("colname");
 		String search = req.getParameter("search");
 		
@@ -260,8 +258,6 @@ public class VoteController {
 		List<HashMap<String, String>> voteCommList = null;
 		
 		String gobackURL = MyUtil.getCurrentURL(req); //돌아갈 페이지를 위해서 현재 페이지의 주소를 뷰단으로 넘겨주자
-		
-		req.setAttribute("gobackURL", gobackURL);
 		
 		String colname = req.getParameter("colname");
 		String search = req.getParameter("search");
@@ -433,16 +429,16 @@ public class VoteController {
 		    }
         }
 			
-		if(compare1 > 0){ //간격이 있다면 
-			String msg = "종료일이 시작일보다 날짜가 앞섭니다.";
+		if(compare1 >= 0){ //간격이 있다면 
+			String msg = "종료일이 시작일보다 날짜가 같거나 앞섭니다.";
 			String loc = "javascript:history.back()";
 			
 			req.setAttribute("msg", msg);
 			req.setAttribute("loc", loc);
 			
 			return "ksh/msg.not";
-		} else if(compare2 > 0){
-			String msg = "종료일이 현재일보다 날짜가 앞섭니다.";
+		} else if(compare2 >= 0){
+			String msg = "종료일이 현재일보다 날짜가 같거나 앞섭니다.";
 			String loc = "javascript:history.back()";
 			
 			req.setAttribute("msg", msg);

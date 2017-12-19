@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="com.miracle.kdh.model.FolderVO" %>
+<%@ page import="java.util.HashMap" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <style type="text/css">
@@ -74,11 +76,30 @@
 							</td>
 						</tr>
 	
-						<tr>
+						<tr class="trLine">
 							<td class="infoClass">할일 중요도</td>
 							<td class="infoData showInfo">${map.fvo.importance}</td>
 							<td class="infoData hiddenEdit">
-								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="importance" value="${map.fvo.importance}" />
+								<%-- <input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="importance" value="${map.fvo.importance}" /> --%>
+								<select id="example" name="importance" class="hiddenEditInputSelector">
+									<%
+										@SuppressWarnings("unchecked")
+										HashMap<String, Object> map = (HashMap<String, Object>)request.getAttribute("map");
+										FolderVO fvo = (FolderVO)map.get("fvo");
+										int i = 0;
+										for(i=1; i<=10; i++) {
+											if(i == fvo.getImportance()) {
+									%>
+												<option value="<%= i %>" selected><%= i %></option>
+									<%
+											} else {
+									%>
+												<option value="<%= i %>"><%= i %></option>
+									<%
+											}
+										}
+									%>
+								</select>
 							</td>
 						</tr>
 						
