@@ -53,6 +53,13 @@
 		font-weight: bold;
 		cursor: pointer;
 	}
+	
+	.subjectStyle {
+		color: black;
+		font-weight: bold;
+		font-size: 10pt;
+		cursor: pointer;
+	}
 
 </style>
 
@@ -74,6 +81,16 @@
 		$(".subjectInfo").bind("mouseout", function(event){
 			var $target = $(event.target);
 			$target.removeClass("subjectInfoStyle");
+		});
+		
+		// =========================================== *** 글목록에서 제목에 마우스 가져댈 경우 css 효과 주기 *** =================== 
+		$(".subject").bind("mouseover", function(event){
+			var $target = $(event.target);
+			$target.addClass("subjectStyle");
+		});
+		$(".subject").bind("mouseout", function(event){
+			var $target = $(event.target);
+			$target.removeClass("subjectStyle");
 		});
 		// ================================== *** 이전글 다음글 타겟시 hover 효과 주기 *** ============================
 		$(".beforeNextStyle").hover(function(){ 
@@ -139,14 +156,14 @@
 				var html = "";
 				
 				var imgPath = data.infoImg;
-				html += "<div style='float: right;'><img src='<%= request.getContextPath() %>/resources/images/" + imgPath + "' style='width: 100px; height: 100px; border-radius: 50px;' /></div>" + "<br/>"
+				html += "<div style='font-family: verdana; font-size: 10pt;'><div style='float: right;'><img src='<%= request.getContextPath() %>/resources/images/" + imgPath + "' style='width: 100px; height: 100px; border-radius: 50px;' /></div>" + "<br/>"
 					 +  "<span style='font-weight: bold;'>ID : </span>"+ data.infoUserid + "<br/>"
 					 +  "<span style='font-weight: bold;'>성명 : </span>"+ data.infoName + "<br/>"
 					 +  "<span style='font-weight: bold;'>핸드폰 : </span>" +data.infoHp1 + "-" +data.infoHp2+"-"+data.infoHp3 +"<br/>"
-					 +  "<span style='font-weight: bold;'>생년월일 : </span>" +data.infoBirth1 + " / " + data.infoBirth2 + " / " + data.infoBirth3 + "<br/>"
+					 +  "<span style='font-weight: bold;'>생년월일 : </span>" +data.infoBirth1 + " / " + data.infoBirth2 + " / " + data.infoBirth3 + "<br/><br/>"
 					 +  "<span style='font-weight: bold;'>주소 : </span>" + data.infoAddr1 + " " + data.infoAddr2 + "</span><br/>"
 					 +  "<span style='font-weight: bold;'>이메일 : </span>" + data.infoEmail + "<br/><br/>"
-					 +  "<span style='font-weight: bold;'>소개 : </span>" + data.infoProfile ;
+					 +  "<span style='font-weight: bold;'>소개 : </span>" + data.infoProfile +"</div>" ;
 				
 				$(".modal-body").html(html);
 				$("#freeViewModal").modal();
@@ -173,7 +190,7 @@
 <div style="height: 840px; border: 0px dotted pin; margin-top: 20px; margin-bottom: 30px; overflow-y: auto;" align="center" >
 	<div style="border: solid 0px red; width: 800px;" >
 		<div style="float: left;">
-			<table id="table" style="width: 500px; border: 0px solid dimgray; border-left: none; border-right: none;">
+			<table id="table" style="width: 550px; border: 0px solid dimgray; border-left: none; border-right: none;">
 				<!-- ============================= *** 자유게시판 소개 *** =================================== -->
 				<tr class="title above">
 					<td colspan="2" style="padding-left: 20px; font-weight: bold; font-size: 10pt;">
@@ -288,8 +305,8 @@
 				<table id="comment" style="width: 700px; padding: 2px; margin-bottom: 5px;">
 					<c:forEach var="commentvo" items="${freeCommentList}" varStatus="status" >
 						<tr id="comment${commentvo.idx}" class="freeReplyListRow">
-							<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 1%;">
-								<span style="font-weight: bold; font-size: smaller;">${status.count}</span>
+							<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 2%;">
+								<span style="font-weight: bold; font-size: smaller;"> ${status.count}</span>
 								<input type="hidden" name="commentIdx" value="${commentvo.idx}" />
 							</td>
 							<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 2%;">
@@ -394,7 +411,8 @@
 		</table>
 		
 		<div style="width: 150px; float: left; margin-left: 10px; margin-top: 5px;" align="left">
-			<span class="showFreeList hoverStyle" onClick="javascript:location.href='<%= request.getContextPath() %>/freeList.mr'" style="font-size: 10pt; font-family: arial black; color: black; cursor: pointer;">첫목록보기</span>&nbsp;
+			<span class="showFreeList hoverStyle" onClick="javascript:location.href='<%= request.getContextPath() %>/freeList.mr'" style="font-size: 10pt; font-family: arial black; color: black; cursor: pointer;">첫목록보기</span>&nbsp;&nbsp;
+			<span class="addFree hoverStyle" onClick="javascript:location.href='<%= request.getContextPath() %>/freeAdd.mr'" style="font-size: 10pt; font-family: arial black; text-decoration: none; color: black; cursor: pointer;">글쓰기</span>
 		</div>
 		<!-- ===================================== *** 글 검색용 폼 생성 *** ================================================== -->
 		<div style="width: 300px; float: right; margin-top: 5px;">

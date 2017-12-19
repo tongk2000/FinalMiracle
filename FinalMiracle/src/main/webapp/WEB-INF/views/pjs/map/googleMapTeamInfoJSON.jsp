@@ -2,10 +2,10 @@
 	pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <style type="text/css">
-	img {
+	/* img {
 		width:25px;
 		heigth:25px;
-	}
+	} */
 	tr, td, th {
 		border:1px solid black;
 	}
@@ -41,7 +41,7 @@
 									<tr>
 										<td>${google.memberidx}</td>
 										<td><img src="<%=request.getContextPath() %>/resources/images/${google.img}"/> ${google.userid}</td>
-										<td>${google.membername}</td>
+										<td>${google.memberName}</td>
 										<c:if test="${google.status == 1}">
 											<td>팀원</td>
 										</c:if>

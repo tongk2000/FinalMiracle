@@ -18,11 +18,13 @@ request.setCharacterEncoding("UTF-8");
 		border: 1px solid black;
 		border-collapse:none;
 		padding:7px;
+		font-family:verdana;
 	}
 	th {
 		text-align:center;
-		background-color:black;
+		background-color:#337ab7;
 		color:white;
+		font-size:12pt;
 	}
 	td {
 		padding-left:5px;
@@ -36,14 +38,14 @@ request.setCharacterEncoding("UTF-8");
 		opacity:1.0;
 	} 
 	.subjectstyle {font-weight: bold;
-    	           color: gray;
+    	           color: #eaeaea;
     	           cursor: pointer; }
     .grayColor {
-    	background-color:gray;
+    	background-color:#eaeaea;
     	cursor: pointer;
     }
     .selectLine {
-    	background-color:gray;
+    	background-color:#eaeaea;
     }
 </style>
 <title>Notice 게시판 입니다!</title>
@@ -53,7 +55,7 @@ request.setCharacterEncoding("UTF-8");
 	<div align="center" >
 		<h2>공지사항 게시판</h2>
 			
-			<table style="width:90%;">
+			<table style="width:90%;" class="table">
 				<thead>
 					<tr>
 						<th>번호</th>		<!-- 번호 -->
@@ -133,10 +135,61 @@ request.setCharacterEncoding("UTF-8");
 			<input type="text" id="searchString" name="searchString" />
 			<button type="button" id="btnClick" onClick="goSearch();">검색</button><br/>
 		</form>
+		
 		<div style="z-index:2000;">
 				<div id="displayList" style="background-color:white; width:176px; margin-left: 28px; border-top: 0px; border: solid gray 3px;"></div>
 		</div>
+	
 	</div>
+	
+<!-- <div>
+<div class="row">
+		
+  <nav class="navbar navbar-default">
+        <div class="nav nav-justified navbar-nav">
+ 
+            <form class="navbar-form navbar-search" role="search">
+                <div class="input-group">
+                
+                    <div class="input-group-btn"> 여기는 검색 버튼
+                        <button type="button" class="btn btn-search btn-default dropdown-toggle" data-toggle="dropdown">
+                            <span class="glyphicon glyphicon-search"></span>
+                            <span class="label-icon">Search</span>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu pull-left" role="menu">
+                           <li>
+                                <a href="#" id="userid">
+                                    <span class="glyphicon glyphicon-user"></span>
+                                    <span class="label-icon">Search By User</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" id="subject">
+	                                <span class="glyphicon glyphicon-book"></span>
+	                                <span class="label-icon">Search By Organization</span> 
+                                </a>
+                            </li>
+                        </ul>
+                        <input type="hidden" name="searchType" >
+                    </div>
+        
+                    <input type="text" class="form-control"> 여기는 검색어 입력하는 곳
+                
+                    <div class="input-group-btn"> 여기는 검색 버튼
+                        <button type="button" class="btn btn-search btn-default">
+                        	Search
+                        </button>
+                    </div>
+                    
+                </div>  
+            </form>   
+         
+        </div>
+    </nav>
+	</div>
+</div> -->
+	
 	<form name="view">
 		<input type="hidden" name="idx" />
 		<input type="hidden" name="userid" />
@@ -156,8 +209,20 @@ request.setCharacterEncoding("UTF-8");
 		<input type="hidden" name="userid" />
 		<input type="hidden" name="teamNum" />
 	</form>
+	
+
 	<script>
 		$(document).ready(function(){
+			
+			$("#userid").click(function(){
+				var frm = document.frm;
+				frm.searchType.value = "fk_userid";
+			});
+			$("#subject").click(function(){
+				var frm = document.frm;
+				frm.searchType.value = "subject";
+			});
+			
 			$("tr:has(td)").click(function(){ // tr중에서 td를 가지고 있는 tr
 				var bool = $(this).hasClass("selectLine"); // 한번 더 클릭하면 클래스 삭제
 				alert(bool);

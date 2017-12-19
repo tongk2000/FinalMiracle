@@ -18,6 +18,7 @@ request.setCharacterEncoding("UTF-8");
 		border-collapse:none;
 		height:30px;
 		padding:7px;
+		font-family:verdana;
 	}
 	td, th {
 		text-align:center;
@@ -34,18 +35,19 @@ request.setCharacterEncoding("UTF-8");
     	           color: gray;
     	           cursor: pointer; }
    	.selectLine {
-    	background-color:gray;
+    	background-color:#eaeaea;
     }
     .image {
 		width:50px;
 		height:50px;
 	}
 	th {
-		background-color:black;
+		background-color:#337ab7;
 		color:white;
+		font-size:12pt;
 	}
 	.grayColor {
-    	background-color:gray;
+    	background-color:#eaeaea;
     	cursor: pointer;
     }
 </style>

@@ -287,7 +287,7 @@
 			<input type="hidden" name="searchString">
 		</form>
 		 
-		<select id="choice" name="choice" style="font-size:12pt; margin-top:10px;">
+		<select id="choice" name="choice" style="font-size:10pt;">
 			<option value="0" selected> 전체</option>
 			<option value="1" >팀정보</option>
 			<option value="-1">맛집정보</option>
@@ -318,12 +318,12 @@
 </div>
 			
 <div> 
-	<div class="modal-body" id="launchMapBody" style=" overflow-x:hidden;overflow-y:hidden "  align="center">
+	<div class="modal-body" id="launchMapBody" style=" overflow-x:hidden;overflow-y:hidden" align="center">
 		<div class="modal fade" id="mapInfo" role="dialog"></div>
 	</div>
 </div>
 		<div>
-			<div id="displayList" style="background-color:white; border:2px solid gray; width:175px;  margin-left:500px; z-index: 300000;"></div>
+			<div id="displayList" style="opacity:0.5; background-color: ivory; border:2px solid gray; width:175px; margin-left:550px; margin-top:-25px; width:180px; z-index: 300000;"></div>
 		</div>
 </body>
 </html>
