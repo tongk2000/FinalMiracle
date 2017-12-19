@@ -1332,7 +1332,7 @@
 	}
 </script>
 
-<div class="container" style="width:100%; float:left">
+<div style="width:100%; float:left; height:100%; overflow-y:auto;">
 	<table style="width:100%; border:1px solid black;">
 		<thead>
 			<tr id="firstHeaderLine">
