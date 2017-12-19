@@ -155,7 +155,7 @@ public class BoardController {
 		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 		
 		int totalCount = 0;
-		int sizePerPage = 20;
+		int sizePerPage = 15;
 		int	currentShowPageNo = 0;
 		int totalPage = 0;
 		
@@ -247,7 +247,7 @@ public class BoardController {
 	@RequestMapping(value="/freeView.mr", method={RequestMethod.GET})
 	public String freeView(HttpServletRequest req, HttpSession session, FreeBoardVO freevo){
 		String idx = req.getParameter("idx");
-		String gobackURL = MyUtil.getCurrentURL(req);
+
 		freevo = null;
 		
 		@SuppressWarnings("unchecked")
@@ -272,7 +272,6 @@ public class BoardController {
 		
 		req.setAttribute("freevo", freevo);
 		
-		req.setAttribute("gobackURL", gobackURL);
 		req.setAttribute("currentShowPageNo", req.getParameter("currentShowPageNo"));
 		req.setAttribute("sizePerPage", req.getParameter("sizePerPage"));
 		req.setAttribute("colname", req.getParameter("colname"));
@@ -300,7 +299,7 @@ public class BoardController {
 		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 		
 		int totalCount = 0;
-		int sizePerPage = 10;
+		int sizePerPage = 15;
 		int	currentShowPageNo = 0;
 		int totalPage = 0;
 		
@@ -358,10 +357,15 @@ public class BoardController {
 	
 	// ===================================================== *** 자유게시판 글 쓰기 *** ============================================
 	@RequestMapping(value="/freeAdd.mr", method={RequestMethod.GET})
-	public String freeAdd(HttpServletRequest req) {  // 글쓰기 폼페이지 띄우기
+	public String freeAdd(HttpServletRequest req , HttpSession session) {  // 글쓰기 폼페이지 띄우기
 		String fk_idx = req.getParameter("fk_idx");
 		String groupno = req.getParameter("groupno");
 		String depthno = req.getParameter("depthno");
+		
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo =  (HashMap<String, String>)session.getAttribute("teamInfo");
+		String fk_team_idx = teamInfo.get("team_idx");
+		req.setAttribute("fk_team_idx", fk_team_idx);
 		
 		req.setAttribute("fk_idx", fk_idx);
 		req.setAttribute("groupno", groupno);
@@ -416,7 +420,11 @@ public class BoardController {
 	// ======================================================================= *** 자유게시판 댓글 쓰기 *** ==============================
 	@RequestMapping(value="/freeComment.mr", method={RequestMethod.GET})
 	public String freeComment(HttpServletRequest req, HttpServletResponse response, FreeCommentVO commentvo) throws Throwable {
-		String gobackURL = MyUtil.getCurrentURL(req);
+		//String gobackURL = MyUtil.getCurrentURL(req);
+		String search = req.getParameter("search");
+		String colname = req.getParameter("colname");
+		String sizePerPage = req.getParameter("sizePerPage");
+		String currentShowPageNo = req.getParameter("currentShowPageNo");
 		
 		int result = service.addComment(commentvo);
 		
@@ -427,7 +435,11 @@ public class BoardController {
 		}
 		String idx = String.valueOf(commentvo.getParentIdx());
 		req.setAttribute("idx", idx);
-		req.setAttribute("gobackURL", gobackURL);
+		//req.setAttribute("gobackURL", gobackURL);
+		req.setAttribute("search", search);
+		req.setAttribute("colname", colname);
+		req.setAttribute("sizePerPage", sizePerPage);
+		req.setAttribute("currentShowPageNo", currentShowPageNo);
 		
 		return "psw/board/freeComment.not";
 	}

@@ -14,6 +14,7 @@
 			<td>
 				<input type="hidden" class="fk_folder_idx" value="${dvo.fk_folder_idx}" />
 				<input type="hidden" class="downCnt" value="${dvo.downCnt}" />
+				<input type="hidden" class="category" value="${dvo.category}" />
 				<span id="span${dvo.idx}" style="margin-left:${dvo.depth*20}px;">
 					<c:if test="${dvo.category == 1}"> <!-- 폴더라면 -->
 						<span class="foldingIcon" style="cursor:default;">

@@ -15,6 +15,11 @@
 <script src="<%=request.getContextPath() %>/resources/summernote/lang/summernote-ko-KR.js"></script>
 
 <style type="text/css">
+	td {
+		font-size: 10pt;
+		font-family: verdana;
+	}
+	
 	.modal.modal-center {
 	  text-align: center;
 	}
@@ -32,34 +37,23 @@
 	  vertical-align: middle; 
 	}	
 	
-	table th {
-		border: 1px solid gray;
-		border-left: none;
-		border-right: none;
-		background-color: lightblue;
-	}
-	
-	.above {
-		background-color: lightblue;
-	}
-	
 	.subjectStyle {
 		color: black;
 		font-weight: bold;
-		font-size: 11pt;
+		font-size: 10pt;
 		cursor: pointer;
 	}
 	.infoStyle {
 		color: #034F84;
 		font-weight: bold;
-		font-size: 11pt;
+		font-size: 10pt;
 		cursor: pointer;
 	}
 	.addStyle {
 		color: #034F84;
 		font-weight: bold;
 		font-style: italic;
-		font-size: 12pt;
+		font-size: 11pt;
 		cursor: pointer;
 	}
 	.searchListStyle {
@@ -185,7 +179,7 @@
 				var html = "";
 				
 				var imgPath = data.infoImg;
-				html += "<div style='float: right;'><img src='<%= request.getContextPath() %>/resources/images/" + imgPath + "' style='width: 100px; height: 100px;' /></div>" + "<br/>"
+				html += "<div style='float: right;'><img src='<%= request.getContextPath() %>/resources/images/" + imgPath + "' style='width: 100px; height: 100px; border-radius: 50px;' /></div>" + "<br/>"
 					 +  "<span style='font-weight: bold;'>ID : </span>"+ data.infoUserid + "<br/>"
 					 +  "<span style='font-weight: bold;'>성명 : </span>"+ data.infoName + "<br/>"
 					 +  "<span style='font-weight: bold;'>핸드폰 : </span>" +data.infoHp1 + "-" +data.infoHp2+"-"+data.infoHp3 +"<br/>"
@@ -230,31 +224,36 @@
 
 <body>
 
-<div style="border: 3px dotted pink;" align="center">
-	<div style="border: 1px solid orange; width: 800px;" align="left">
+<div style="border: 0px dotted pink; margin-top: 30px;" align="center">
+	<div style="border: 0px solid orange; width: 800px;" align="left">
 		<!-- ============================= *** 자유게시판 소개 *** =================================== -->
 		<div style="width: 600px;">
 			<table>
 				<tr class="title above">
-					<td colspan="2" style="padding-left: 20px; font-weight: bold;">
+					<td colspan="2" style="padding-left: 20px; font-weight: bold; background-color: lightblue;">
 						<span style="font-size: smaller; vertical-align: baseline; color: blue;">[${fk_team_idx} 팀] </span>자유게시판입니다.
 					</td>
 				</tr>
 				<tr class="title">
-				<td colspan="2" style="padding-left: 10px; border: 1px solid lightgray; border-left: none; border-right: none;">
-					미풍양속을 해치지 않는 범위 내에서 자유롭게 작성해주세요.<br/>
-					단, 팀원간 마찰은 <a href="<%= request.getContextPath() %>/mindList.mr">마음의 소리 게시판</a>을,
-					       팀내 공지사항은 <a href="<%= request.getContextPath() %>/noticeList.mr">공지사항</a> 게시판을,
-					<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:1 대화를 원하시는 회원님은 <a href="<%= request.getContextPath() %>/mindList.mr">쪽지</a> 또는 
-					<a href="<%= request.getContextPath() %>/chatting.mr">채팅</a> 기능을 이용해주시기 바랍니다.
-				</td>
+					<td colspan="2" style="padding-left: 10px; border: 1px solid lightgray; border-left: none; border-right: none;">
+						미풍양속을 해치지 않는 범위 내에서 자유롭게 작성해주세요.<br/>
+						단, 팀원간 마찰은 <a href="<%= request.getContextPath() %>/mindList.mr">마음의 소리 게시판</a>을,
+						       팀내 공지사항은 <a href="<%= request.getContextPath() %>/noticeList.mr">공지사항</a> 게시판을,
+						<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:1 대화를 원하시는 회원님은 <a href="<%= request.getContextPath() %>/mindList.mr">쪽지</a> 또는 
+						<a href="<%= request.getContextPath() %>/chatting.mr">채팅</a> 기능을 이용해주시기 바랍니다.
+					</td>
 				</tr>
 				<!-- ============================= *** 공 백 *** ================================ -->
-				<tr style="border: 0px solid lightgray; border: none;">
+				<tr style="border: 0px solid lightgray;">
 					<td colspan="2" style="padding-left: 20px;"> 
 						<br/>
-						총 게시글 '<span style="font-size: larger; color: orange;">${totalCount}</span>' 개
+						<c:if test="${search eq null || empty search}">
+							<span style="font-weight: bold;">총 게시글 '<span style="font-size: larger; color: orange;"> ${totalCount} </span>' 개</span>
+						</c:if>
+						<c:if test="${search ne null && not empty search}">
+							<span style="font-weight: bold;">검색된 게시글 '<span style="font-size: larger; color: orange;"> ${totalCount} </span>' 개</span>
+						</c:if>
 					</td>
 				</tr>
 			</table>
@@ -263,12 +262,12 @@
 		<div style="width: 800px;">
 			<table style="width: 800px; border: 1px solid dimgray; border-left: none; border-right: none;">
 				<thead>
-					<tr>
-						<th style="text-align: center;">글번호</th>
-						<th style="text-align: center;">작성자</th>
-						<th style="text-align: center;">글제목</th>
-						<th style="text-align: center;">조회수</th>
-						<th style="text-align: center;">등록일자</th>
+					<tr style="background-color: silver;">
+						<th style="text-align: center; padding: 2px;">글번호</th>
+						<th style="text-align: center; padding: 2px;">작성자</th>
+						<th style="text-align: center; padding: 2px;">글제목</th>
+						<th style="text-align: center; padding: 2px;">조회수</th>
+						<th style="text-align: center; padding: 2px;">등록일자</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -277,10 +276,9 @@
 							<td style="border: 1px solid lightgray; border-left: none; border-right: none; text-align: center;">
 								${freevo.idx}
 							</td>
-							<td  style="border: 1px solid lightgray; border-left: none; border-right: none; text-align: center;">
+							<td  style="border: 1px solid lightgray; border-left: none; border-right: none; margin-left: 20px;">
 								<span class="infoDetail" onClick="showUserInfo('${freevo.userid}')">
-									<%-- <img src="<%= request.getContextPath() %>/resources/images/${freevo.img}" style="width: 20px; height: 22px; vertical-align: middle; padding-top: 2px; padding-bottom: 2px;" align="middle"> --%>
-									<span style="font-size: 11pt; font-family: verdana; ">${freevo.userid} [${freevo.name}]</span>
+									<span style="cursor: pointer;">${freevo.userid} [${freevo.name}]</span>
 								</span>
 							</td>
 							
@@ -306,7 +304,7 @@
 							<c:if test="${freevo.depthno > 0}">
 								<c:if test="${freevo.commentCnt > 0}">
 									<span class="subject" onClick="goView(${freevo.idx})">
-										<span style="color: navy; padding-left: ${freevo.depthno*10}px; font-size: smaller; font-weight: bold;">┗[답변글] </span>${freevo.subject}
+										<span style="color: navy; padding-left: ${freevo.depthno*20}px; font-size: smaller; font-weight: bold;">┗[답변글] </span>${freevo.subject}
 									</span>
 									<span style="color: red; font-weight: bold; font-style: italic; font-size: smaller; vertical-align: super;">
 										[${freevo.commentCnt}]
@@ -314,7 +312,7 @@
 								</c:if>
 								<c:if test="${freevo.commentCnt == 0}">
 									<span class="subject" onClick="goView(${freevo.idx})">
-										<span style="color: navy; padding-left: ${freevo.depthno*10}px; font-size: smaller; font-weight: bold;">┗[답변글] </span>${freevo.subject}
+										<span style="color: navy; padding-left: ${freevo.depthno*20}px; font-size: smaller; font-weight: bold;">┗[답변글] </span>${freevo.subject}
 									</span>
 								</c:if>
 							</c:if>

@@ -76,21 +76,22 @@
 		swal({
 		  title: "투표 삭제 여부",
 		  text: "투표를 삭제하시겠습니까?",
-		  icon: "warning",
-		  buttons: true,
-		  dangerMode: true,
-		})
-		.then((willDelete) => {
-		    if (willDelete) {
-		    	var frm = document.idxFrm;
-				
-				frm.idx.value = idx;
-				
-				frm.action = "voteDel.mr";
-				frm.submit();
-			}
-		  	else {
-		    	return;
+		  type: "warning",
+		  showCancelButton: true,
+		  confirmButtonClass: "btn-danger",
+		  confirmButtonText: "삭제",
+		  cancelButtonText: "취소",
+		  closeOnConfirm: false,
+		  closeOnCancel: true
+		},
+		function(isConfirm) {
+		  if (isConfirm) {
+		    var frm = document.idxFrm;
+			
+			frm.idx.value = idx;
+			
+			frm.action = "voteDel.mr";
+			frm.submit();
 		  }
 		});
 		
@@ -194,138 +195,152 @@
 </script>
 
 <form class="form-inline" id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/voteList.mr" method="get" enctype="multipart/form-data">
-<div style="padding-left: 1%; padding-right: 1%; border: solid 0px red; width: 100%; height: 840px; overflow-y: auto;">
-	<h1>투표목록</h1>
-	
-	<div style="margin-top: 20px;">
-		<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteList.mr'">진행중 투표</button>&nbsp;
-		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteReadyList.mr'">시작전 투표</button>&nbsp;
-		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteEndList.mr'">종료된 투표</button>&nbsp;
-		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteMyList.mr'">나의 투표</button>&nbsp; --%>
-		<a href="javascript:location.href='<%= request.getContextPath() %>/voteList.mr'" class="btn btn-primary">진행중 투표</a>&nbsp;
-		<a href="javascript:location.href='<%= request.getContextPath() %>/voteReadyList.mr'" class="btn btn-primary">시작전 투표</a>&nbsp;
-		<a href="javascript:location.href='<%= request.getContextPath() %>/voteEndList.mr'" class="btn btn-primary">종료된 투표</a>&nbsp;
-		<a href="javascript:location.href='<%= request.getContextPath() %>/voteMyList.mr'" class="btn btn-primary">나의 투표</a>&nbsp;
-		<br/>전체 <span style="color: red; font-weight: bold;">${totalCount}</span>&nbsp;
-		목록 수 : 
-		<select name="sizePerPage" id="sizePerPage" class="form-control">
-			<option value="5">5</option>
-			<option value="10">10</option>
-			<option value="15">15</option>
-			<option value="20">20</option>
-		</select>
+<div style="padding-left: 1%; padding-right: 1%; border: solid 0px red; width: 100%; height: 840px; overflow-y: auto; font-family: verdana;">
+	<div style="width: 100%;">
+		<div style="float: left; margin-top: 2%;">
+			<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteList.mr'">진행중 투표</button>&nbsp;
+			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteReadyList.mr'">시작전 투표</button>&nbsp;
+			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteEndList.mr'">종료된 투표</button>&nbsp;
+			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteMyList.mr'">나의 투표</button>&nbsp; --%>
+			<a href="javascript:location.href='<%= request.getContextPath() %>/voteList.mr'" class="btn btn-primary">진행중 투표</a>&nbsp;
+			<a href="javascript:location.href='<%= request.getContextPath() %>/voteReadyList.mr'" class="btn btn-primary">시작전 투표</a>&nbsp;
+			<a href="javascript:location.href='<%= request.getContextPath() %>/voteEndList.mr'" class="btn btn-primary">종료된 투표</a>&nbsp;
+			<a href="javascript:location.href='<%= request.getContextPath() %>/voteMyList.mr'" class="btn btn-primary">나의 투표</a>&nbsp;	
+		</div>
+		
+		<div style="float: right;">
+			<h1>투표목록</h1>
+		</div>
 	</div>
 	
+	<div style="margin-top: 7%;">
 	
-	<table id="table">
-		<thead>
-			<tr>
-				<th style="width: 5%;">투표번호</th>
-				<th style="width: 5%;">팀 / <br/>팀원번호</th>
-				<th style="width: 10%;">글쓴이</th>
-				<th style="width: 10%;">제목</th>
-				<th style="width: 15%">내용</th>
-				<th style="width: 5%;">시작날짜</th>
-				<th style="width: 5%;">종료날짜</th>
-				<th style="width: 10%;">문항</th>
-				<th style="width: 10%;">비고</th>
-				<th style="width: 25%;">댓글</th>
-			</tr>
-		</thead>
-		
-		<c:if test="${not empty voteList}">
-		<tbody>
-			<c:forEach var="votevo" items="${voteList}" varStatus="status">
-				<c:set value="${votevo.IDX}" var="voteidx" />
-				<tr>
-					<td>${votevo.IDX}</td>
-					<td>${votevo.FK_TEAM_IDX} / ${votevo.FK_TEAMWON_IDX}</td>
-					<td>
-						<img src="<%= request.getContextPath() %>/resources/files/${votevo.IMG}" width="30px" height="30px">
-						<a href="javascript:showUserInfo('${votevo.USERID}')">${votevo.NAME}(${votevo.USERID})</a>
-					</td>
-					<td>${votevo.SUBJECT}</td>
-					<td>${votevo.CONTENT}</td>
-					<td>${votevo.STARTDATE}</td>
-					<td>${votevo.ENDDATE}</td>
-					<td>
-						<c:set value="0" var="votesum" />
-						<c:forEach var="voteitemvo" items="${voteItemList}" varStatus="status">
-							<c:set value="${voteitemvo.fk_vote_idx}" var="voteitemidx" />
-							<c:if test="${voteidx eq voteitemidx}">
-								<input type="radio" name="voteitem_info" value="${voteitemvo.item}">${voteitemvo.item}&nbsp;${voteitemvo.votenum}표
-								<%-- <button type="button" onClick="goVote('${votevo.IDX}', '${votevo.FK_TEAMWON_IDX}', '${voteitemvo.idx}', '${gobackURL}');">선택</button> --%>
-								<a href="javascript:goVote('${votevo.IDX}', '${votevo.FK_TEAMWON_IDX}', '${voteitemvo.idx}', '${gobackURL}');" class="btn btn-xs btn-default">선택</a>&nbsp;
-								<br/>
-								<c:set var="votesum" value="${votesum + voteitemvo.votenum}" />
-							</c:if>
-						</c:forEach>
-						<br/>
-						참여한 인원 : <c:out value="${votesum}"/>명
-					</td>
-					<td>
-						<c:if test="${votevo.FK_TEAMWON_IDX eq sessionScope.loginUser.idx}">
-							<%-- <button type="button" onClick="goDel('${votevo.IDX}');">투표삭제</button>&nbsp; --%>
-							<a href="javascript:goDel('${votevo.IDX}');" class="btn btn-danger">메모삭제</a>&nbsp;
-						</c:if>
-					</td>
-					<td>
-						<textarea id="commcontent${votevo.IDX}" name="commcontent${votevo.IDX}" class="form-control" style="width: 80%; resize: none;" placeholder="타인을 비방하는 댓글은 삼가해주시기 바랍니다."></textarea>
-						<%-- <button type="button" onClick="goCommAdd('${votevo.IDX}');">등록</button>&nbsp; --%>
-						<a href="javascript:goCommAdd('${votevo.IDX}');" class="btn btn-default">댓글등록</a>&nbsp;
-						<br/>
-						<div id="moreComm">
-							<c:forEach var="votecommvo" items="${voteCommList}" varStatus="status" begin="0" end="20">
-								<c:set value="${votecommvo.FK_VOTE_IDX}" var="votecommidx" />
-								
-								<c:if test="${voteidx eq votecommidx}">
-									<img src="<%= request.getContextPath() %>/resources/files/${votecommvo.IMG}" width="30px" height="30px">
-									${votecommvo.NAME}(${votecommvo.COMMDATE})<br/>${votecommvo.CONTENT}&nbsp;&nbsp;
-									<c:if test="${votecommvo.MEMIDX eq sessionScope.loginUser.idx}">
-										<%-- <button type="button" onClick="goCommAdd('${votevo.IDX}', '${votecommvo.IDX}');">수정</button>&nbsp; --%>
-										<%-- <button type="button" onClick="goCommDel('${votecommvo.COMMIDX}');">삭제</button> --%>
-										<a href="goCommDel('${votecommvo.COMMIDX}');" class="btn btn-xs btn-danger">댓글삭제</a>&nbsp;
-									</c:if>
-									<br/>
-								</c:if>
-							</c:forEach>
-						</div>
-						<%-- <button type="button" onClick="goCommMore('${votevo.IDX}');">더보기</button> --%>
-					</td>
-				</tr>
-			</c:forEach>
-		</tbody>
-		</c:if>
-		
-		<c:if test="${empty voteList}">
-		<tbody>
-			<tr>
-				<td colspan="10">투표 목록이 존재하지 않습니다.</td>
-			</tr>
-		</tbody>
-		</c:if>
-
-	</table>	
-	<br/>
-
-	<!-- ==== 페이지바 ==== -->
-	<div align="center" style="width: 100%;">
-		${pagebar}
-	</div>
-	
-	<!-- ==== 투표 검색창 ==== -->
-	<div align="center" style="width: 100%;">
-		<div style="float: left;">
+		<div style="float: left; margin-bottom: 1%">
 			<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteAdd.mr'">투표작성</button> --%>
 			<a href="javascript:location.href='<%= request.getContextPath() %>/voteAdd.mr'" class="btn btn-success">투표작성</a>&nbsp;
 		</div>
-		<select name="colname" id="colname" class="form-control">
-			<option value="subject">제목</option>
-			<option value="content">내용</option>
-			<!-- <option value="name">글쓴이</option> -->
-		</select>
-		<input type="text" name="search" id="search" size="40" class="form-control" placeholder="검색할 단어를 입력해주세요" />
-		<a href="javascript:goSearch();" class="btn btn-default">검색</a>&nbsp;
+		
+		<div style="float: right; margin-bottom: 1%">
+			전체 <span style="color: red; font-weight: bold;">${totalCount}</span>&nbsp;
+			목록 수 : 
+			<select name="sizePerPage" id="sizePerPage" class="form-control">
+				<option value="5">5</option>
+				<option value="10">10</option>
+				<option value="15">15</option>
+				<option value="20">20</option>
+			</select>
+		</div>
+	</div>
+	
+	<div style="width: 100%; margin-top: 6%;">
+		<table id="table">
+			<thead>
+				<tr>
+					<th style="width: 5%;">투표번호</th>
+					<th style="width: 5%;">팀 / <br/>팀원번호</th>
+					<th style="width: 10%;">글쓴이</th>
+					<th style="width: 10%;">제목</th>
+					<th style="width: 15%">내용</th>
+					<th style="width: 5%;">시작날짜</th>
+					<th style="width: 5%;">종료날짜</th>
+					<th style="width: 10%;">문항</th>
+					<th style="width: 10%;">비고</th>
+					<th style="width: 25%;">댓글</th>
+				</tr>
+			</thead>
+			
+			<c:if test="${not empty voteList}">
+			<tbody>
+				<c:forEach var="votevo" items="${voteList}" varStatus="status">
+					<c:set value="${votevo.IDX}" var="voteidx" />
+					<tr>
+						<td>${votevo.IDX}</td>
+						<td>${votevo.FK_TEAM_IDX} / ${votevo.FK_TEAMWON_IDX}</td>
+						<td>
+							<img src="<%= request.getContextPath() %>/resources/files/${votevo.IMG}" width="30px" height="30px">
+							<a href="javascript:showUserInfo('${votevo.USERID}')">${votevo.NAME}(${votevo.USERID})</a>
+						</td>
+						<td>${votevo.SUBJECT}</td>
+						<td>${votevo.CONTENT}</td>
+						<td>${votevo.STARTDATE}</td>
+						<td>${votevo.ENDDATE}</td>
+						<td>
+							<c:set value="0" var="votesum" />
+							<c:forEach var="voteitemvo" items="${voteItemList}" varStatus="status">
+								<c:set value="${voteitemvo.fk_vote_idx}" var="voteitemidx" />
+								<c:if test="${voteidx eq voteitemidx}">
+									<input type="radio" name="voteitem_info" value="${voteitemvo.item}">${voteitemvo.item}&nbsp;${voteitemvo.votenum}표
+									<%-- <button type="button" onClick="goVote('${votevo.IDX}', '${votevo.FK_TEAMWON_IDX}', '${voteitemvo.idx}', '${gobackURL}');">선택</button> --%>
+									<a href="javascript:goVote('${votevo.IDX}', '${votevo.FK_TEAMWON_IDX}', '${voteitemvo.idx}', '${gobackURL}');" class="btn btn-xs btn-default">선택</a>&nbsp;
+									<br/>
+									<c:set var="votesum" value="${votesum + voteitemvo.votenum}" />
+								</c:if>
+							</c:forEach>
+							<br/>
+							참여한 인원 : <c:out value="${votesum}"/>명
+						</td>
+						<td>
+							<c:if test="${votevo.FK_TEAMWON_IDX eq sessionScope.loginUser.idx}">
+								<%-- <button type="button" onClick="goDel('${votevo.IDX}');">투표삭제</button>&nbsp; --%>
+								<a href="javascript:goDel('${votevo.IDX}');" class="btn btn-danger">메모삭제</a>&nbsp;
+							</c:if>
+						</td>
+						<td>
+							<textarea id="commcontent${votevo.IDX}" name="commcontent${votevo.IDX}" class="form-control" style="width: 80%; resize: none;" placeholder="타인을 비방하는 댓글은 삼가해주시기 바랍니다."></textarea>
+							<%-- <button type="button" onClick="goCommAdd('${votevo.IDX}');">등록</button>&nbsp; --%>
+							<a href="javascript:goCommAdd('${votevo.IDX}');" class="btn btn-default">등록</a>&nbsp;
+							<br/>
+							<div id="moreComm">
+								<c:forEach var="votecommvo" items="${voteCommList}" varStatus="status" begin="0" end="20">
+									<c:set value="${votecommvo.FK_VOTE_IDX}" var="votecommidx" />
+									
+									<c:if test="${voteidx eq votecommidx}">
+										<img src="<%= request.getContextPath() %>/resources/files/${votecommvo.IMG}" width="30px" height="30px">
+										${votecommvo.NAME}(${votecommvo.COMMDATE})<br/>${votecommvo.CONTENT}&nbsp;&nbsp;
+										<c:if test="${votecommvo.MEMIDX eq sessionScope.loginUser.idx}">
+											<%-- <button type="button" onClick="goCommAdd('${votevo.IDX}', '${votecommvo.IDX}');">수정</button>&nbsp; --%>
+											<%-- <button type="button" onClick="goCommDel('${votecommvo.COMMIDX}');">삭제</button> --%>
+											<a href="goCommDel('${votecommvo.COMMIDX}');" class="btn btn-xs btn-danger">×</a>&nbsp;
+										</c:if>
+										<br/>
+									</c:if>
+								</c:forEach>
+							</div>
+							<%-- <button type="button" onClick="goCommMore('${votevo.IDX}');">더보기</button> --%>
+						</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+			</c:if>
+			
+			<c:if test="${empty voteList}">
+			<tbody>
+				<tr>
+					<td colspan="10">투표 목록이 존재하지 않습니다.</td>
+				</tr>
+			</tbody>
+			</c:if>
+	
+		</table>	
+		<br/>
+	</div>
+
+	<div style="width: 100%;">
+		<!-- ==== 페이지바 ==== -->
+		<div align="center" style="float: left;">
+			${pagebar}
+		</div>
+		
+		<!-- ==== 투표 검색창 ==== -->
+		<div align="center" style="float: right;">
+			<select name="colname" id="colname" class="form-control">
+				<option value="subject">제목</option>
+				<option value="content">내용</option>
+				<!-- <option value="name">글쓴이</option> -->
+			</select>
+			<input type="text" name="search" id="search" size="40" class="form-control" placeholder="검색할 단어를 입력해주세요" />
+			<a href="javascript:goSearch();" class="btn btn-default">검색</a>&nbsp;
+		</div>
 	</div>
 	
 </div>
@@ -357,7 +372,7 @@
 
 <!-- 회원 상세정보 모달 창 -->
 <!-- Modal -->
-<div class="modal fade modal-center" id="InfoModal" role="dialog">
+<div class="modal fade modal-center" id="InfoModal" role="dialog" style="font-family: verdana;">
 	<div class="modal-dialog modal-sm modal-center">
 		<!-- Modal content-->
 		<div class="modal-content">

@@ -219,181 +219,201 @@
 </script>
 
 <form class="form-inline" id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/tmWithdrawList.mr" method="get" enctype="multipart/form-data">
-<div style="padding-left: 1%; padding-right: 1%; border: solid 0px red; width: 100%; height: 840px; overflow-y: auto;">
-	<h1>탈퇴 요청 목록</h1>
-	
-	<div style="margin-top: 20px;">
-		<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmList.mr'">팀원 리스트</button>&nbsp;
-		<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmAddress.mr'">주소록</button>&nbsp;
-		<c:if test="${teamwon_status.equals('1')}">	
-			<button type="button" class="btn btn-danger" onClick="goWithdraw();">팀 탈퇴</button>&nbsp;
-		</c:if>
-		<c:if test="${teamwon_status.equals('2')}">
-			<button type="button" class="btn btn-primary" onClick="goInvite();">팀원 초대</button>&nbsp;
-			<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmWithdrawList.mr'">팀원 탈퇴목록</button>&nbsp;
-			<button type="button" class="btn btn-danger" onClick="goDisband();">팀 해체</button>&nbsp;
-		</c:if>
-		<br/>전체 <span style="color: red; font-weight: bold;">${totalCount1}</span>&nbsp;
-		목록 수 : 
-		<select name="sizePerPage1" id="sizePerPage1" class="form-control">
-			<option value="5">5</option>
-			<option value="10">10</option>
-			<option value="15">15</option>
-			<option value="20">20</option>
-		</select>
+<div style="padding-left: 1%; padding-right: 1%; border: solid 0px red; width: 100%; height: 840px; overflow-y: auto; font-family: verdana;">
+	<div style="width: 100%;">
+		<div style="float: left; margin-top: 2%;">
+			<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmList.mr'">팀원 리스트</button>&nbsp;
+			<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmAddress.mr'">주소록</button>&nbsp;
+			<c:if test="${teamwon_status.equals('1')}">	
+				<button type="button" class="btn btn-danger" onClick="goWithdraw();">팀 탈퇴</button>&nbsp;
+			</c:if>
+			<c:if test="${teamwon_status.equals('2')}">
+				<button type="button" class="btn btn-primary" onClick="goInvite();">팀원 초대</button>&nbsp;
+				<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmWithdrawList.mr'">팀원 탈퇴목록</button>&nbsp;
+				<button type="button" class="btn btn-danger" onClick="goDisband();">팀 해체</button>&nbsp;
+			</c:if>
+		</div>
+		<div style="float: right;">
+			<h1>탈퇴 요청 목록</h1>
+		</div>
+	</div>
+
+	<div style="margin-top: 7%;">
+		<div style="float: right; margin-bottom: 1%">
+			전체 <span style="color: red; font-weight: bold;">${totalCount1}</span>&nbsp;
+			목록 수 : 
+			<select name="sizePerPage1" id="sizePerPage1" class="form-control">
+				<option value="5">5</option>
+				<option value="10">10</option>
+				<option value="15">15</option>
+				<option value="20">20</option>
+			</select>
+		</div>
 	</div>
 	
-	
-	<table id="table">
-		<thead>
-			<tr>
-				<th style="width: 11%;">팀원번호</th>
-				<th style="width: 11%;">팀번호</th>
-				<th style="width: 11%;">회원번호</th>
-				<th style="width: 11%;">아이디</th>
-				<th style="width: 11%;">성명</th>
-				<th style="width: 11%;">상태값</th>
-				<th style="width: 11%;">가입날짜</th>
-				<th style="width: 11%;">요청날짜</th>
-				<th style="width: 12%;">비고</th>
-			</tr>
-		</thead>
-		
-		<c:if test="${not empty reqwdList}">
-		<tbody>
-			<c:forEach var="req" items="${reqwdList}" varStatus="status">
+	<div style="width: 100%; margin-top: 6%;">
+		<table id="table">
+			<thead>
 				<tr>
-					<td>${req.IDX}</td>
-					<td>${req.FK_TEAM_IDX}</td>
-					<td>${req.FK_MEMBER_IDX}</td>
-					<td>${req.USERID}</td>
-					<td>${req.NAME}</td>
-					<td>${req.STATUS}</td>
-					<td>${req.REGDATE}</td>
-					<td>${req.DISDATE}</td>
-					<td>
-						<button type="button" class="btn btn-danger" id="btnWithDraw" name="btnWithDraw" onclick="goWithDraw('${req.IDX}');">탈퇴처리</button><br/>
-						<button type="button" class="btn btn-primary" id="btnWithDraw" name="btnWithDraw" onclick="goWithDrawCancle('${req.IDX}');">탈퇴취소</button>
-					</td>
+					<th style="width: 11%;">팀원번호</th>
+					<th style="width: 11%;">팀번호</th>
+					<th style="width: 11%;">회원번호</th>
+					<th style="width: 11%;">아이디</th>
+					<th style="width: 11%;">성명</th>
+					<th style="width: 11%;">상태값</th>
+					<th style="width: 11%;">가입날짜</th>
+					<th style="width: 11%;">요청날짜</th>
+					<th style="width: 12%;">비고</th>
 				</tr>
-			</c:forEach>
-		</tbody>
-		</c:if>
-		
-		<c:if test="${empty reqwdList}">
-		<tbody>
-			<tr>
-				<td colspan="10">요청 목록이 존재하지 않습니다.</td>
-			</tr>
-		</tbody>
-		</c:if>
-
-	</table>	
-	<br/>
-
-	<!-- ==== 페이지바 ==== -->
-	<div align="center" style="width: 100%;">
-		${pagebar1}
-	</div>
+			</thead>
+			
+			<c:if test="${not empty reqwdList}">
+			<tbody>
+				<c:forEach var="req" items="${reqwdList}" varStatus="status">
+					<tr>
+						<td>${req.IDX}</td>
+						<td>${req.FK_TEAM_IDX}</td>
+						<td>${req.FK_MEMBER_IDX}</td>
+						<td>${req.USERID}</td>
+						<td>${req.NAME}</td>
+						<td>${req.STATUS}</td>
+						<td>${req.REGDATE}</td>
+						<td>${req.DISDATE}</td>
+						<td>
+							<button type="button" class="btn btn-danger" id="btnWithDraw" name="btnWithDraw" onclick="goWithDraw('${req.IDX}');">탈퇴처리</button><br/>
+							<button type="button" class="btn btn-primary" id="btnWithDraw" name="btnWithDraw" onclick="goWithDrawCancle('${req.IDX}');">탈퇴취소</button>
+						</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+			</c:if>
+			
+			<c:if test="${empty reqwdList}">
+			<tbody>
+				<tr>
+					<td colspan="10">요청 목록이 존재하지 않습니다.</td>
+				</tr>
+			</tbody>
+			</c:if>
 	
-	<!-- ==== 검색창 ==== -->
-	<div align="center" style="width: 100%;">
-		<select name="colname1" id="colname1" class="form-control">
-			<option value="userid1">아이디</option>
-			<option value="name1">성명</option>
-			<!-- <option value="name">글쓴이</option> -->
-		</select>
-		<input type="text" name="search1" id="search1" size="40" class="form-control" placeholder="검색할 단어를 입력해주세요" />
-		<button type="button" class="btn btn-default" onclick="goSearch1();">검색</button>
+		</table>	
+		<br/>
+	</div>
+
+	<div style="width: 100%;">
+		<!-- ==== 페이지바 ==== -->
+		<div align="center" style="float: left;">
+			${pagebar1}
+		</div>
+		
+		<!-- ==== 검색창 ==== -->
+		<div align="center" style="float: right;">
+			<select name="colname1" id="colname1" class="form-control">
+				<option value="userid1">아이디</option>
+				<option value="name1">성명</option>
+				<!-- <option value="name">글쓴이</option> -->
+			</select>
+			<input type="text" name="search1" id="search1" size="40" class="form-control" placeholder="검색할 단어를 입력해주세요" />
+			<button type="button" class="btn btn-default" onclick="goSearch1();">검색</button>
+		</div>
 	</div>
 
 <br/><br/><br/>
-
-	<h1>탈퇴 목록</h1>
 	
-	<div style="margin-top: 20px;">
-		<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmList.mr'">팀원 리스트</button>&nbsp;
-		<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmAddress.mr'">주소록</button>&nbsp;
-		<c:if test="${teamwon_status.equals('1')}">	
-			<button type="button" class="btn btn-danger" onClick="goWithdraw();">팀 탈퇴</button>&nbsp;
-		</c:if>
-		<c:if test="${teamwon_status.equals('2')}">
-			<button type="button" class="btn btn-primary" onClick="goInvite();">팀원 초대</button>&nbsp;
-			<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmWithdrawList.mr'">팀원 탈퇴목록</button>&nbsp;
-			<button type="button" class="btn btn-danger" onClick="javascript:location.href='<%= request.getContextPath() %>/tmDisband.mr'">팀 해체</button>&nbsp;
-		</c:if>
-		<br/>전체 <span style="color: red; font-weight: bold;">${totalCount2}</span>&nbsp;
-		목록 수 : 
-		<select name="sizePerPage2" id="sizePerPage2" class="form-control">
-			<option value="5">5</option>
-			<option value="10">10</option>
-			<option value="15">15</option>
-			<option value="20">20</option>
-		</select>
+	<div style="width: 100%;">
+		<div style="float: left; margin-top: 2%;">
+			<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmList.mr'">팀원 리스트</button>&nbsp;
+			<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmAddress.mr'">주소록</button>&nbsp;
+			<c:if test="${teamwon_status.equals('1')}">	
+				<button type="button" class="btn btn-danger" onClick="goWithdraw();">팀 탈퇴</button>&nbsp;
+			</c:if>
+			<c:if test="${teamwon_status.equals('2')}">
+				<button type="button" class="btn btn-primary" onClick="goInvite();">팀원 초대</button>&nbsp;
+				<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmWithdrawList.mr'">팀원 탈퇴목록</button>&nbsp;
+				<button type="button" class="btn btn-danger" onClick="javascript:location.href='<%= request.getContextPath() %>/tmDisband.mr'">팀 해체</button>&nbsp;
+			</c:if>
+		</div>
+		<div style="float: right;">
+			<h1>탈퇴 목록</h1>
+		</div>
 	</div>
 	
+	<div style="margin-top: 7%;">
+		<div style="float: right; margin-bottom: 1%">
+			전체 <span style="color: red; font-weight: bold;">${totalCount2}</span>&nbsp;
+			목록 수 : 
+			<select name="sizePerPage2" id="sizePerPage2" class="form-control">
+				<option value="5">5</option>
+				<option value="10">10</option>
+				<option value="15">15</option>
+				<option value="20">20</option>
+			</select>
+		</div>
+	</div>
 	
-	<table id="table">
-		<thead>
-			<tr>
-				<th style="width: 11%;">팀원번호</th>
-				<th style="width: 11%;">팀번호</th>
-				<th style="width: 11%;">회원번호</th>
-				<th style="width: 11%;">아이디</th>
-				<th style="width: 11%;">성명</th>
-				<th style="width: 11%;">상태값</th>
-				<th style="width: 11%;">가입날짜</th>
-				<th style="width: 11%;">요청날짜</th>
-				<th style="width: 12%;">비고</th>
-			</tr>
-		</thead>
-		
-		<c:if test="${not empty wdList}">
-		<tbody>
-			<c:forEach var="wd" items="${wdList}" varStatus="status">
+	<div style="width: 100%; margin-top: 6%;">
+		<table id="table">
+			<thead>
 				<tr>
-					<td>${wd.IDX}</td>
-					<td>${wd.FK_TEAM_IDX}</td>
-					<td>${wd.FK_MEMBER_IDX}</td>
-					<td>${wd.USERID}</td>
-					<td>${wd.NAME}</td>
-					<td>${wd.STATUS}</td>
-					<td>${wd.REGDATE}</td>
-					<td>${wd.DISDATE}</td>
-					<td><button type="button" class="btn btn-success" id="btnRestore" name="btnRestore" onclick="goRestore('${wd.IDX}');">복구</button></td>
+					<th style="width: 11%;">팀원번호</th>
+					<th style="width: 11%;">팀번호</th>
+					<th style="width: 11%;">회원번호</th>
+					<th style="width: 11%;">아이디</th>
+					<th style="width: 11%;">성명</th>
+					<th style="width: 11%;">상태값</th>
+					<th style="width: 11%;">가입날짜</th>
+					<th style="width: 11%;">요청날짜</th>
+					<th style="width: 12%;">비고</th>
 				</tr>
-			</c:forEach>
-		</tbody>
-		</c:if>
+			</thead>
+			
+			<c:if test="${not empty wdList}">
+			<tbody>
+				<c:forEach var="wd" items="${wdList}" varStatus="status">
+					<tr>
+						<td>${wd.IDX}</td>
+						<td>${wd.FK_TEAM_IDX}</td>
+						<td>${wd.FK_MEMBER_IDX}</td>
+						<td>${wd.USERID}</td>
+						<td>${wd.NAME}</td>
+						<td>${wd.STATUS}</td>
+						<td>${wd.REGDATE}</td>
+						<td>${wd.DISDATE}</td>
+						<td><button type="button" class="btn btn-success" id="btnRestore" name="btnRestore" onclick="goRestore('${wd.IDX}');">복구</button></td>
+					</tr>
+				</c:forEach>
+			</tbody>
+			</c:if>
+			
+			<c:if test="${empty wdList}">
+			<tbody>
+				<tr>
+					<td colspan="10">탈퇴 목록이 존재하지 않습니다.</td>
+				</tr>
+			</tbody>
+			</c:if>
+	
+		</table>	
+		<br/>
+	</div>
+
+	<div style="width: 100%;">
+		<!-- ==== 페이지바 ==== -->
+		<div align="center" style="float: left;">
+			${pagebar2}
+		</div>
 		
-		<c:if test="${empty wdList}">
-		<tbody>
-			<tr>
-				<td colspan="10">탈퇴 목록이 존재하지 않습니다.</td>
-			</tr>
-		</tbody>
-		</c:if>
-
-	</table>	
-	<br/>
-
-	<!-- ==== 페이지바 ==== -->
-	<div align="center" style="width: 100%;">
-		${pagebar2}
+		<!-- ==== 검색창 ==== -->
+		<div align="center" style="float: right;">
+			<select name="colname2" id="colname2" class="form-control">
+				<option value="userid2">아이디</option>
+				<option value="name2">성명</option>
+				<!-- <option value="name">글쓴이</option> -->
+			</select>
+			<input type="text" name="search2" id="search2" size="40" class="form-control" placeholder="검색할 단어를 입력해주세요" />
+			<button type="button" class="btn btn-default" onclick="goSearch2();">검색</button>
+		</div>
 	</div>
-	
-	<!-- ==== 검색창 ==== -->
-	<div align="center" style="width: 100%;">
-		<select name="colname2" id="colname2" class="form-control">
-			<option value="userid2">아이디</option>
-			<option value="name2">성명</option>
-			<!-- <option value="name">글쓴이</option> -->
-		</select>
-		<input type="text" name="search2" id="search2" size="40" class="form-control" placeholder="검색할 단어를 입력해주세요" />
-		<button type="button" class="btn btn-default" onclick="goSearch2();">검색</button>
-	</div>
-	
-
 </div>
 
 </form>

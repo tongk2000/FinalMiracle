@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="com.miracle.kdh.model.FolderVO" %>
+<%@ page import="java.util.HashMap" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <style type="text/css">
@@ -61,7 +63,7 @@
 
 						<tr>
 							<td id="addTeamwon" class="infoClass">
-								담당&nbsp;<div id="btn_add" style="display:inline-block;"class="pointer">[추가▷]</div>
+								담당&nbsp;<div id="btn_add" style="display:inline-block;" class="pointer">[추가▷]</div>
 							</td>
 							<td class="infoData">
 								<div style="float:left; width:100%;" id="selectedTeamwon">
@@ -79,16 +81,32 @@
 							<td class="infoClass">폴더 중요도</td>
 							<td class="infoData showInfo">${map.fvo.importance}</td>
 							<td class="infoData hiddenEdit">
-								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="importance" value="${map.fvo.importance}" />
+								<%-- <input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="importance" value="${map.fvo.importance}" /> --%>
+								<select id="example" name="importance" class="hiddenEditInputSelector">
+									<%
+										@SuppressWarnings("unchecked")
+										HashMap<String, Object> map = (HashMap<String, Object>)request.getAttribute("map");
+										FolderVO fvo = (FolderVO)map.get("fvo");
+										int i = 0;
+										for(i=1; i<=10; i++) {
+											if(i == fvo.getImportance()) {
+									%>
+												<option value="<%= i %>" selected><%= i %></option>
+									<%
+											} else {
+									%>
+												<option value="<%= i %>"><%= i %></option>
+									<%
+											}
+										}
+									%>
+								</select>
 							</td>
 						</tr>
 						
 						<tr class="trLine">
 							<td class="infoClass">하위 요소 중요도</td>
-							<td class="infoData showInfo">${map.fvo.importanceAvg}</td>
-							<td class="infoData hiddenEdit">
-								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="importanceAvg" value="${map.fvo.importanceAvg}" />
-							</td>
+							<td class="infoData">${map.fvo.importanceAvg}</td>
 						</tr>
 						<jsp:include page="includePage/modalFileAttachList.jsp"/> <!-- 첨부 파일리스트는 공통이라 따로 뺌 -->
 						<jsp:include page="includePage/modalFileAddList.jsp"/> <!-- 파일 추가도 공통이라 따로 뺌 -->
