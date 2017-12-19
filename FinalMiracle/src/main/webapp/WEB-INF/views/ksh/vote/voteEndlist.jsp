@@ -265,7 +265,7 @@
 						<c:forEach var="voteitemvo" items="${voteItemList}" varStatus="status">
 							<c:set value="${voteitemvo.fk_vote_idx}" var="voteitemidx" />
 							<c:if test="${voteidx eq voteitemidx}">
-								<input type="radio" name="chk_info" value="${voteitemvo.item}">${voteitemvo.item}<br/>${voteitemvo.votenum}표
+								* ${voteitemvo.item}&nbsp;:&nbsp;${voteitemvo.votenum}표
 								<br/>
 								<c:set var="votesum" value="${votesum + voteitemvo.votenum}" />
 							</c:if>
@@ -284,7 +284,7 @@
 					<td>
 						<textarea id="commcontent${votevo.IDX}" name="commcontent${votevo.IDX}" class="form-control" style="width: 80%; resize: none;" placeholder="타인을 비방하는 댓글은 삼가해주시기 바랍니다."></textarea>
 						<%-- <button type="button" onClick="goCommAdd('${votevo.IDX}');">등록</button>&nbsp; --%>
-						<a href="javascript:goCommAdd('${votevo.IDX}');" class="btn btn-default">댓글등록</a>&nbsp;
+						<a href="javascript:goCommAdd('${votevo.IDX}');" class="btn btn-default">등록</a>&nbsp;
 						<br/>
 						<c:forEach var="votecommvo" items="${voteCommList}" varStatus="status">
 							<c:set value="${votecommvo.FK_VOTE_IDX}" var="votecommidx" />
@@ -294,7 +294,7 @@
 								<c:if test="${votecommvo.MEMIDX eq sessionScope.loginUser.idx}">
 									<%-- <button type="button" onClick="goCommAdd('${votevo.IDX}', '${votecommvo.IDX}');">수정</button>&nbsp; --%>
 									<%-- <button type="button" onClick="goCommDel('${votecommvo.COMMIDX}');">삭제</button> --%>
-									<a href="javascript:goCommDel('${votecommvo.COMMIDX}');" class="btn btn-xs btn-danger">댓글삭제</a>&nbsp;
+									<a href="javascript:goCommDel('${votecommvo.COMMIDX}');" class="btn btn-xs btn-danger">×</a>&nbsp;
 								</c:if>
 								<br/>
 							</c:if>
