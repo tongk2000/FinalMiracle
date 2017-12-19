@@ -282,10 +282,10 @@
 		
 	 	
 			<fieldset>
-				<div style="border: 1px dotted pink; float: right;">
+				<div style="border: 1px dotted pink; float: right;" align="center">
 					<img alt="프로필사진" src="<%= request.getContextPath() %>/resources/images/${sessionScope.loginUser.img}" style="height: 150px; width: 140px;">
 					<br/>
-					<a href="#">[대표 이미지 변경]</a>
+					<a href="#" style="text-align: center;">[대표 이미지 변경]</a>
 				</div>
 				
 				<div style="border: 1px dotted blue; width: 400px;">

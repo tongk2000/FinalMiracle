@@ -9,13 +9,16 @@
 <head>
 <style>
 	.imgs {
-		width:25px;
-		height:25px;
+		width:30px;
+		height:30px;
 	}
+/* 	
 	table {
 		border:1px solid blue;
 		padding:5px;
+		border-radius:30px;
 	}
+	 */
 	tr {
 		border:1px solid yellow;
 		padding:5px;
@@ -24,13 +27,19 @@
 		border:1px solid black;
 		padding:5px;
 		text-align:center;
+		font-family:verdana;
 	}
 	.selectLine {
-    	background-color:gray;
+    	background-color:#eaeaea;
     }
     .grayColor {
-    	background-color:gray;
+    	background-color:#eaeaea;
     	cursor: pointer;
+    }
+    th {
+    	font-size:12pt;
+    	background-color:#337ab7;
+    	color:white;
     }
 </style>
 <script>
@@ -82,7 +91,7 @@
 <title>쪽지</title>
 </head>
 <body>
-	<div style="border:1px solid red; padding:5px;]" class="container">
+	<div style="border:1px solid red; padding:5px;" class="container">
 		<div style="border:1px solid green; padding:5px;" align="center">
 			<div style="border:1px solid purple;">
 				<a href="<%=request.getContextPath()%>/memoWrite.mr"><span style="color:red;">쪽지 쓰기</span></a>
@@ -94,7 +103,7 @@
 			<div style="border:1px solid pink; padding:5px;">
 				<table>
 					<thead>
-						<tr style="background-color:black; color:white;">
+						<tr >
 							<th>번호</th>
 							<th>보낸사람</th>
 							<th>제목</th>

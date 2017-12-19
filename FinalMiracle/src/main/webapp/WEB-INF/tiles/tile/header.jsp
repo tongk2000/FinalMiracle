@@ -6,7 +6,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
-
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <%
 	// === 서버 IP 주소 알아오기 === //
 	InetAddress inet = InetAddress.getLocalHost();

@@ -159,6 +159,7 @@
 		       from tbl_noticereply p join tbl_notice n on p.fk_idx = n.idx
 		                                              join tbl_member m on m.userid = p.sesid
 		       where n.idx = #{idx}
+		       order by p.regday desc
 		  ) v
 		)  t
 		where rno between #{sNum} and #{eNum}
@@ -398,8 +399,9 @@
 <!-- ============================================================================================================================================================= -->	
 	<!-- === *** 구글맵 전체 정보를 가져온다. *** === -->
 	<select id="getMap" resultType="com.miracle.pjs.model.MapVO">
-		  select m.*
+		  select m.*, r.name
           from tbl_map m join tbl_teamwon w on m.team_idx = w.fk_team_idx
+                         join tbl_member r on w.fk_member_idx = r.idx
           where m.team_idx = #{team_idx}
 	</select>
 <!-- ============================================================================================================================================================= -->	

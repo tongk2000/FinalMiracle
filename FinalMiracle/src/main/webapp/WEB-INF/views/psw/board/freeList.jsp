@@ -14,6 +14,7 @@
 <script src="<%=request.getContextPath() %>/resources/summernote/summernote.js"></script>
 <script src="<%=request.getContextPath() %>/resources/summernote/lang/summernote-ko-KR.js"></script>
 
+
 <style type="text/css">
 	td {
 		font-size: 10pt;
@@ -80,8 +81,7 @@
 		      maxHeight: null,      // 최대 높이값(null은 제한 없음)
 		      lang: 'ko-KR'         // 한국어 지정(기본값은 en-US)
 	    });
-		// =========================================== *** 글목록에서 제목에 마우스 가져댈 경우 css 효과 주기 *** ===================
- 
+		// =========================================== *** 글목록에서 제목에 마우스 가져댈 경우 css 효과 주기 *** =================== 
 		$(".subject").bind("mouseover", function(event){
 			var $target = $(event.target);
 			$target.addClass("subjectStyle");
@@ -179,14 +179,14 @@
 				var html = "";
 				
 				var imgPath = data.infoImg;
-				html += "<div style='float: right;'><img src='<%= request.getContextPath() %>/resources/images/" + imgPath + "' style='width: 100px; height: 100px; border-radius: 50px;' /></div>" + "<br/>"
+				html += "<div style='font-size: 10pt; font-family: verdana;'><div style='float: right;'><img src='<%= request.getContextPath() %>/resources/images/" + imgPath + "' style='width: 100px; height: 100px; border-radius: 50px;' /></div>" + "<br/>"
 					 +  "<span style='font-weight: bold;'>ID : </span>"+ data.infoUserid + "<br/>"
 					 +  "<span style='font-weight: bold;'>성명 : </span>"+ data.infoName + "<br/>"
 					 +  "<span style='font-weight: bold;'>핸드폰 : </span>" +data.infoHp1 + "-" +data.infoHp2+"-"+data.infoHp3 +"<br/>"
-					 +  "<span style='font-weight: bold;'>생년월일 : </span>" +data.infoBirth1 + " / " + data.infoBirth2 + " / " + data.infoBirth3 + "<br/>"
+					 +  "<span style='font-weight: bold;'>생년월일 : </span>" +data.infoBirth1 + " / " + data.infoBirth2 + " / " + data.infoBirth3 + "<br/><br/>"
 					 +  "<span style='font-weight: bold;'>주소 : </span>" + data.infoAddr1 + " " + data.infoAddr2 + "</span><br/>"
 					 +  "<span style='font-weight: bold;'>이메일 : </span>" + data.infoEmail + "<br/><br/>"
-					 +  "<span style='font-weight: bold;'>소개 : </span>" + data.infoProfile ;
+					 +  "<span style='font-weight: bold;'>소개 : </span>" + data.infoProfile + "</div>" ;
 				
 				$(".modal-body").html(html);
 				$("#freeListModal").modal();
