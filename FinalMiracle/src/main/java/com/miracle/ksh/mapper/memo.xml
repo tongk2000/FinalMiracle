@@ -306,5 +306,10 @@
 		delete from tbl_memo
 		where idx = #{idxs}
 	</delete>
+	
+	<update id="MemoUpdateGroups" parameterType="HashMap">
+		update tbl_memo set groups = #{upfolder}
+		where idx = #{idxs}
+	</update>
 
 </mapper>

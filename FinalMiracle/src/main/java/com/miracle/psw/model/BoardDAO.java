@@ -57,9 +57,15 @@ public class BoardDAO implements InterBoardDAO {
 	}
 
 	@Override
-	public int freeAdd(FreeBoardVO freevo) {
+	public int freeAdd(FreeBoardVO freevo) {  // 자유게시판 글쓰기
 		int n = sqlsession.insert("board_psw.freeAdd", freevo);
 		return n;
+	}
+	
+	@Override
+	public int getGroupMaxno() {  // 원글인지 답변글인지 확인을 위한 groupno 최대값 확인하기
+		int max = sqlsession.selectOne("board_psw.getGroupMaxno");
+		return max;
 	}
 
 	@Override
@@ -67,6 +73,7 @@ public class BoardDAO implements InterBoardDAO {
 		FreeBoardVO vo = sqlsession.selectOne("board_psw.getView", idx);
 		return vo;
 	}
+	
 
 	@Override
 	public void setAddReadCnt(String idx) {  // 선택한 1개 글이 다른 사용자의 글일 경우 readCnt 1 증가시키기
@@ -149,6 +156,12 @@ public class BoardDAO implements InterBoardDAO {
 		int n = sqlsession.update("board_psw.deleteComment", idx);
 		return n;
 	}
+
+
+
+
+
+
 	
 	
 

@@ -7,12 +7,11 @@
 <meta charset="UTF-8">
 <title>Miracle_회원가입</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type="text/css"
-	href="<%=request.getContextPath()%>/resources/BootStrapStudy/css/bootstrap.css">
-<script type="text/javascript"
-	src="<%=request.getContextPath()%>/resources/js/jquery-2.0.0.js"></script>
-<script type="text/javascript"
-	src="<%=request.getContextPath()%>/resources/BootStrapStudy/js/bootstrap.js"></script>
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/BootStrapStudy/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+<script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/jquery-2.0.0.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/resources/BootStrapStudy/js/bootstrap.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 
@@ -340,7 +339,7 @@ th#th {
 				});// end of $("#post2").blur()----------------------
 
 		$("#userid").bind("keyup", function() {
-			alert("ID검사 버튼을 클릭하여 ID중복 검사를 하십시오.");
+			swal("ID검사 버튼을 클릭하여 ID중복 검사를 하세요.", "", "info");
 			$(this).val("");
 		});// end of $("#userid").bind()----------------------
 
@@ -370,10 +369,10 @@ th#th {
 		});
 
 		if (flagBool) {
-			alert("필수입력란은 모두 입력하셔야 합니다.");
+			swal("필수입력란은 모두 입력하셔야 합니다.", "", "info");
 			event.preventDefault();
 		} else if (!$("#agree").is(":checked")) {
-			alert("이용약관에 동의하셔야 합니다.");
+			swal("이용약관에 동의하셔야 합니다.", "", "info");
 			event.preventDefault();
 		} else {
 			var frm = document.registerFrm;

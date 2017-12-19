@@ -1,7 +1,10 @@
 package com.miracle.kdh.service;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,11 +18,14 @@ import com.miracle.kdh.model.Folder_FileVO;
 import com.miracle.kdh.model.Folder_TeamwonVO;
 import com.miracle.kdh.model.PageVO;
 import com.miracle.kdh.model.ProjectManagerDAO;
+import com.miracle.kdh.util.FileManagerKDH;
 
 @Service
 public class ProjectManagerService {
 	@Autowired
 	ProjectManagerDAO dao;
+	@Autowired
+	FileManagerKDH fileManager;
 	
 	// 페이징처리된 모든 폴더, 할일 리스트를 가져오는 메소드
 	public HashMap<String, Object> getAllDoList(String team_idx, String page, String term) {
@@ -76,17 +82,30 @@ public class ProjectManagerService {
 
 	// 선택한 요소의 정보를 수정하기
 	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
-	public int do_goModalEdit(FolderVO fvo, List<Folder_TeamwonVO> ftList, List<Folder_FileVO> ffList) {
+	public int do_goModalEdit(HttpSession ses, FolderVO fvo, List<Folder_TeamwonVO> ftList, List<Folder_FileVO> ffList, String[] delFileArr) {
 		dao.do_goModalEdit(fvo); // 요소 정보 수정하기
 		int result = 0;
 		
-		if(ffList.size() != 0) { // 첨부된 파일이 있다면
-			for(Folder_FileVO ffvo : ffList) {
-				dao.insertFolderFile(ffvo); // DB에 파일 정보를 넣어줌
+		// 첨부파일 삭제
+		String root = ses.getServletContext().getRealPath("/");
+		String path = root+"resources"+File.separator+"files";
+		for(int i=0; delFileArr != null && i<delFileArr.length; i++) {
+			dao.deleteFolderFile(delFileArr[i]); // DB에서 목록 지우고
+			try {
+				fileManager.doFileDelete(delFileArr[i], path); // 서버에서는 파일 지운다.
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		
-		// ***** 요소의 수정된 팀원 정보를 tbl_folder_teamwon 에 업데이트 혹은 인서트 하기 시작 ***** 
+		// 새로 첨부한 파일 관리하기 시작
+		if(ffList != null && ffList.size() != 0) { // 첨부된 파일이 있다면
+			for(Folder_FileVO ffvo : ffList) {
+				dao.insertFolderFile(ffvo); // DB에 파일 정보를 넣어줌
+			}
+		} // 새로 첨부한 파일 관리하기 끝
+		
+		// 요소의 수정된 팀원 정보를 tbl_folder_teamwon 에 업데이트 혹은 인서트 하기 시작 
 		dao.updateAllFolderTeamwon(fvo.getIdx()); // 먼저 해당 요소의 팀원을 전부 탈퇴상태로 업데이트 후
 		for(Folder_TeamwonVO ftvo : ftList) {
 			result = dao.updateFolderTeamwon(ftvo); // 만약 해당 요소에 이미 등록돼있던 팀원이라면 일반상태로 업데이트 후에 1을 받아올테고
@@ -94,7 +113,7 @@ public class ProjectManagerService {
 				result = dao.insertFolderTeamwon(ftvo); // 없던 팀원이라면 새로 insert 해준다. 
 			}
 		} 
-		// ***** 요소의 수정된 팀원 정보를 tbl_folder_teamwon 에 업데이트 혹은 인서트 하기 끝 *****
+		// 요소의 수정된 팀원 정보를 tbl_folder_teamwon 에 업데이트 혹은 인서트 하기 끝
 		
 		return result;
 	} // end of int do_goModalEdit(FolderVO fvo) --------------------------------------------------------------------
@@ -118,11 +137,21 @@ public class ProjectManagerService {
 
 	// 하위요소 추가하기(+추가된 요소에 소속된 담당들도 folder_teamwon 테이블에 추가)
 	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
-	public HashMap<String, Object> addDownElementEnd(FolderVO fvo, HashMap<String, Object> map, String term, String page) {
+	public HashMap<String, Object> addDownElementEnd(FolderVO fvo, HashMap<String, Object> map, String term, String page, List<Folder_FileVO> ffList) {
 		int result1 = dao.addDownElement(fvo); // 하위요소 추가하기
 		int result2 = dao.addDoTeamwon(map); // 하위요소 추가할때 담당 팀원 추가하기(가장 최근에 올라온 folderIdx를 구해서 입력주는 방식임)
 		List<FolderVO> doList = dao.getAddedElement(); // 방금 추가한 요소를 가져오기
-		fvo = doList.get(0); // 동적으로 페이지를 재구성하기 위해 vo도 하나 넘겨줌
+		
+		// 새로 첨부한 파일 관리하기 시작
+		if(ffList != null && ffList.size() != 0) { // 첨부된 파일이 있다면
+			for(Folder_FileVO ffvo : ffList) {
+				ffvo.setFk_folder_idx(doList.get(0).getIdx()); // 새로 추가되는걸 받아와야 하는거라 수정과는 다르게 이렇게 처리함
+				dao.insertFolderFile(ffvo); // DB에 파일 정보를 넣어줌
+			}
+		} // 새로 첨부한 파일 관리하기 끝
+		
+		doList = dao.getAddedElement(); // TODO 파일 목록까지 최신화 하려고 한번 더 가져옴 ㅠㅠ 뭔가 더 효율적인 방법은..?
+		fvo = doList.get(0); // 동적으로 페이지를 재구성하기 위해 vo도 하나 넘겨줌	
 		
 		List<HashMap<String, String>> pageDateList = null;
 		if(term.equals("7")) {
@@ -136,6 +165,7 @@ public class ProjectManagerService {
 				pageDateList = dao.getPageDateMonth(); // 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기
 			}
 		}
+		
 		map = new HashMap<String, Object>();
 		map.put("result", result1*result2);
 		map.put("doList", doList);
@@ -228,7 +258,6 @@ public class ProjectManagerService {
 		pvo.setPageBar(pageBar);
 		return pvo;
 	} // end of String getCommentPagingBar(PageVO pvo) -----------------------------------------------------------------------------------------------------
-	
 }
 
 

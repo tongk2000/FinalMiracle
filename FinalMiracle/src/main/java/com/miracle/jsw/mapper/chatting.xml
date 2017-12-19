@@ -60,9 +60,10 @@
 		<result property="idx" 			column="idx" 			javaType="int" />
 		<result property="name" 		column="name" 			javaType="String" />
 		<result property="img" 			column="img" 			javaType="String" />
+		<result property="cridx" 		column="cridx" 			javaType="int" />
 	</resultMap>
 	<select id="getChattingMember" parameterType="String" resultMap="chattingMemberlist">
-		select m.idx as idx, m.name as name, m.img as img
+		select m.idx as idx, m.name as name, m.img as img, cm.fk_cr_idx as cridx
 		from chat_member cm join tbl_member m
 		on cm.fk_member_idx = m.idx
 		where cm.cm_status = 1 
@@ -114,9 +115,106 @@
 		and idx != #{idx}
 	</select>
 	
+	<insert id="newRoom" parameterType="HashMap">
+		insert into tbl_chat_room
+		values(seq_chat_room.nextval, #{idx}, #{roomname}, default, default)
+	</insert>
 	
+	<insert id="newRoomMember" parameterType="HashMap">
+		<selectKey keyProperty="cridx" resultType="int" order="BEFORE">
+			select LAST_NUMBER-1 as cridx
+			from user_sequences
+			where SEQUENCE_NAME = 'SEQ_CHAT_ROOM'
+		</selectKey>
+		<!-- selectKey -->
+		insert into chat_member
+		values(seq_chat_member.nextval, #{cridx}, #{idx}, 0, default)
+	</insert>
 	
+	<select id="getCRidxNewRoom" resultType="String">
+		select LAST_NUMBER-1 as cridx
+		from user_sequences
+		where SEQUENCE_NAME = 'SEQ_CHAT_ROOM'
+	</select>
 	
+	<insert id="newRoomNewMember" parameterType="HashMap">
+		insert into chat_member
+		values(seq_chat_member.nextval, #{cridx}, #{midx}, 0, default)
+	</insert>
+	
+	<update id="addMemberCount" parameterType="HashMap">
+		<selectKey keyProperty="cridx" resultType="int" order="BEFORE">
+			select LAST_NUMBER-1 as cridx
+			from user_sequences
+			where SEQUENCE_NAME = 'SEQ_CHAT_ROOM'
+		</selectKey>
+		<!-- selectKey -->
+		update tbl_chat_room set person = person+1
+		where cr_idx = #{cridx}
+	</update>
+	
+	<update id="addMemberCnt" parameterType="String">
+		update tbl_chat_room set person = to_number(person)+1
+		where cr_idx = #{cridx}
+	</update>
+	
+	<update id="outRoom" parameterType="HashMap">
+		update chat_member set cm_status = 0
+		where fk_cr_idx = #{cridx}
+		and fk_member_idx = #{idx}
+	</update>
+	
+	<update id="outRoomCnt" parameterType="String">
+		update tbl_chat_room set person = to_number(person)-1
+		where cr_idx = #{cridx}
+	</update>
+	
+	<select id="getChattingRoomMember" parameterType="String" resultType="String">
+		select fk_member_idx as idx
+		from chat_member
+		where fk_cr_idx = #{cridx}
+		and cm_status = 1
+	</select>
+	
+	<select id="getTeamwonNotChatMember" parameterType="HashMap" resultMap="TeamwonListNotMe">
+		select m.idx as idx, m.name as name, m.img as img, m.userid as userid
+		from tbl_teamwon tw join tbl_member m
+		on tw.fk_member_idx = m.idx
+		where tw.fk_team_idx = #{tidx}
+		and tw.status != 0
+		and m.status = 1
+		<if test="midxArr != null">
+			and m.idx NOT IN
+			<foreach collection="midxArr" index="i" open="(" close=")" separator=",">
+				${midxArr[i]} <!-- foreach문에서는 #이 아닌 $를 사용해야한다 -->
+			</foreach>
+		</if>
+	</select>
+	
+	<select id="getAllNotChatMember" parameterType="HashMap" resultMap="TeamwonListNotMe">
+		select idx, name, img, userid
+		from tbl_member 
+		where status = 1
+		<if test="midxArr != null">
+			and idx NOT IN
+			<foreach collection="midxArr" index="i" open="(" close=")" separator=",">
+				${midxArr[i]} <!-- foreach문에서는 #이 아닌 $를 사용해야한다 -->
+			</foreach>
+		</if>
+	</select>
+	
+	<select id="getFindNotChatMember" parameterType="HashMap" resultMap="TeamwonListNotMe">
+		select idx, name, img, userid
+		from tbl_member
+		where status = 1 
+		and ${what} like '%' || #{subject} ||'%'
+		<if test="midxArr != null">
+			and idx NOT IN
+			<foreach collection="midxArr" index="i" open="(" close=")" separator=",">
+				${midxArr[i]} <!-- foreach문에서는 #이 아닌 $를 사용해야한다 -->
+			</foreach>
+		</if>
+	</select>
 	
 	
 	

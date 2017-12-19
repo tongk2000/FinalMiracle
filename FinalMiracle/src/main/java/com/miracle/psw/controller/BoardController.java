@@ -133,7 +133,7 @@ public class BoardController {
 	/////////////////////////////////////////////////////////// 자유게시판  /////////////////////////////////////////////////////
 	// ==================================================== *** 자유게시판 목록 보여주기 *** ========================================
 	@RequestMapping(value="/freeList.mr", method={RequestMethod.GET})
-	public String freeList(HttpServletRequest req, HttpSession session) {
+	public String freeList(HttpServletRequest req, HttpSession session, FreeBoardVO freevo) {
 		List<FreeBoardVO> freeList = service.freeList();
 		
 		@SuppressWarnings("unchecked")
@@ -141,10 +141,10 @@ public class BoardController {
 		
 		String fk_team_idx = teamInfo.get("team_idx");
 		String fk_teamwon_idx = teamInfo.get("teamwon_idx");
-
+		
 		String colname = req.getParameter("colname");
 		String search = req.getParameter("search");
-
+		
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("colname", colname);
 		map.put("search", search);
@@ -198,8 +198,11 @@ public class BoardController {
 		
 		session.setAttribute("readCntPermission", "yes");  // f5 눌러도 조회수 안올리기 하기 위한 것.(session 에 키값 지정)
 		
+		req.setAttribute("totalCount", totalCount);
 		req.setAttribute("currentShowPageNo", currentShowPageNo);
 		req.setAttribute("sizePerPage", sizePerPage);
+		
+		req.setAttribute("fk_team_idx", fk_team_idx);
 		
 		req.setAttribute("pagebar", pagebar);
 		req.setAttribute("freeList", freeList);
@@ -247,6 +250,11 @@ public class BoardController {
 		String gobackURL = MyUtil.getCurrentURL(req);
 		freevo = null;
 		
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo =  (HashMap<String, String>)session.getAttribute("teamInfo");
+		String fk_team_idx = teamInfo.get("team_idx");
+		req.setAttribute("fk_team_idx", fk_team_idx);
+		
 		// ==================================== *** F5 클릭시 글 조회수 증가 안하게 하기 위해 조건문 걸기 *** ===========================
 		if(session.getAttribute("readCntPermission") != null && "yes".equals(session.getAttribute("readCntPermission")) ) {
 			MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
@@ -256,12 +264,14 @@ public class BoardController {
 				userid = loginUser.getUserid();
 			}
 			freevo = service.getView(idx, userid);
+			
 			session.removeAttribute("readCntPermission"); // 글목록 본 후에 세션값 삭제.
 		} else {
 			freevo = service.getViewWithNoReadCnt(idx);
 		}
 		
 		req.setAttribute("freevo", freevo);
+		
 		req.setAttribute("gobackURL", gobackURL);
 		req.setAttribute("currentShowPageNo", req.getParameter("currentShowPageNo"));
 		req.setAttribute("sizePerPage", req.getParameter("sizePerPage"));
@@ -270,16 +280,11 @@ public class BoardController {
 		
 		// ==================================== *** 댓글 목록 보여주기 *** ======================
 		List<FreeCommentVO> freeCommentList = service.freeListComment(idx);
-		req.setAttribute("freeCommentList", freeCommentList);
-		
+		req.setAttribute("freeCommentList", freeCommentList);		
 		
 		// ====================================== *** 자유게시판 목록 다시 보여주기 *** ==================================
 		List<FreeBoardVO> freeList = service.freeList();
 		
-		@SuppressWarnings("unchecked")
-		HashMap<String, String> teamInfo =  (HashMap<String, String>)session.getAttribute("teamInfo");
-		
-		String fk_team_idx = teamInfo.get("team_idx");
 		String fk_teamwon_idx = teamInfo.get("teamwon_idx");
 
 		String colname = req.getParameter("colname");
@@ -340,6 +345,7 @@ public class BoardController {
 		
 		req.setAttribute("currentShowPageNo", currentShowPageNo);
 		req.setAttribute("sizePerPage", sizePerPage);
+		req.setAttribute("totalCount", totalCount);
 		
 		req.setAttribute("pagebar", pagebar);
 		req.setAttribute("freeList", freeList);
@@ -352,15 +358,23 @@ public class BoardController {
 	
 	// ===================================================== *** 자유게시판 글 쓰기 *** ============================================
 	@RequestMapping(value="/freeAdd.mr", method={RequestMethod.GET})
-	public String freeAdd() {  // 글쓰기 폼페이지 띄우기
+	public String freeAdd(HttpServletRequest req) {  // 글쓰기 폼페이지 띄우기
+		String fk_idx = req.getParameter("fk_idx");
+		String groupno = req.getParameter("groupno");
+		String depthno = req.getParameter("depthno");
+		
+		req.setAttribute("fk_idx", fk_idx);
+		req.setAttribute("groupno", groupno);
+		req.setAttribute("depthno", depthno);
 		
 		return "psw/board/freeAdd.all";
 	}
 	@RequestMapping(value="/freeAddEnd.mr", method={RequestMethod.POST})
-	public String freeAddEnd(FreeBoardVO freevo, HttpServletRequest req) {
+	public String freeAddEnd(FreeBoardVO freevo, HttpSession session, HttpServletRequest req) {
+
 		int n = service.freeAdd(freevo);
 		req.setAttribute("n", n);
-		
+	
 		return "psw/board/freeAddEnd.not";
 	}
 	

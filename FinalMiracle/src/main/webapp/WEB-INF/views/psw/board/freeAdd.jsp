@@ -104,7 +104,7 @@
 				<tr>
 					<th>글제목</th>
 					<td>
-						<input type="text" name="subject" class="long" />
+						<input type="text" name="subject" id="subject" class="long" />
 					</td>
 				</tr>
 				
@@ -116,11 +116,18 @@
 	         	</tr>
 			</table>
 			
+			<!-- ================ *** 답변글쓰기가 추가된 경우 *** ================= -->
+			<input type="hidden" name="fk_idx" value="${fk_idx}" />
+			<input type="hidden" name="groupno" value="${groupno}" />
+			<input type="hidden" name="depthno" value="${depthno}" />
+			
 			<div style="float: right; margin-right: 30%; margin-top: 10px;">
 				<span class="addButton" style="font-size: 11pt; font-family: verdana; font-weight: bold; cursor: pointer;" onClick="goWrite();">글쓰기</span>&nbsp;&nbsp;
 				<span class="addButton" style="font-size: 11pt; font-family: verdana; font-weight: bold; cursor: pointer;" onClick="javascript:history.back();">취소</span>
 			</div>
+		
 		</form>
+		
 	</div>
 
 </div>	
