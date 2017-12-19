@@ -20,32 +20,64 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 
 <style type="text/css">
-	.container{/* border:1px solid red; */ width:100%; min-height:800px; padding:0px;}
-	.header{/* border:1px solid black; */ width:100%; min-height:50px;}
-	.sideInfo{/* border:1px solid blue; */ width:2%; min-height:850px; float:left;}
-	.content{/* border:1px solid green; */ width:97%; min-height:850px; float:right;}
-	.footer{/* border:1px solid black; */ width:100%; min-height:0px; clear:both;}
+	html, body{height:100%;}
+	.miracleLayout {
+		border:none !important;
+		padding:0px !important;
+		margin:0px !important;
+	}
+	#layoutTable {
+		width:100% !important;
+		height:100% !important;
+	}
+	#firstMiracleLine {
+		width:100% !important;
+		height:50px !important;"
+	}
+	#secondMiracleLine {
+		width:100% !important;
+		height:100% !important;
+		vertical-align:top !important;
+	}
+	#toggleSidebar {
+		height:50px !important;
+	}
+	#header {
+		height:50px !important;
+		background-color:#1f5c87 !important;
+	}
+	#sideInfo {
+		width:40px !important;
+		background-color:#1f5c87 !important;
+	}
+	#content {
+		
+	}
 </style>
 
 </head>
 <body id="body">
-	<div class="container">
-		<div class="header">
-		      <tiles:insertAttribute name="header" />
-		</div>
-		
-		<div class="sideInfo">
-		      <tiles:insertAttribute name="sideInfo" />
-		</div>
-		
-		<div class="content">
-		      <tiles:insertAttribute name="content" />
-		</div>
-		
-		<div class="footer container">
-		      <tiles:insertAttribute name="footer" />
-		</div>
-	</div>
+	<table class="miracleLayout" id="layoutTable">
+		<tr class="miracleLayout" id="firstMiracleLine">
+			<td id="toggleSidebar" class="miracleLayout">
+				<a href="<%= request.getContextPath() %>/doList.mr" title="메인 페이지">
+					<img src="<%= request.getContextPath() %>/resources/images/icon/00.png" style="width:50px; heigth:50px; background-color:#4882ab;" />
+				</a>
+			</td>
+			<td id="header" class="miracleLayout">
+				<tiles:insertAttribute name="header"/>
+			</td>
+		</tr>
+		<tr class="miracleLayout" id="secondMiracleLine">
+			<td id="sideInfo" class="miracleLayout">
+				<tiles:insertAttribute name="sideInfo"/>
+			</td>
+			<td id="content" class="miracleLayout">
+				<tiles:insertAttribute name="content"/>
+			</td>
+		</tr>
+	</table>
 </body>
+
 
 </html>

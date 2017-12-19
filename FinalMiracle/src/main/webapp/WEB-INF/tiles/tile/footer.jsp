@@ -3,16 +3,7 @@
     pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
-<<<<<<< HEAD
-=======
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
-<<<<<<< HEAD
-=======
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
 <script type="text/javascript">
 	$(document).ready(function(){
 		teamCall();
@@ -78,9 +69,3 @@
 	</div>
 </div>
 --%>
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
-=======
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
