@@ -256,7 +256,7 @@ public class MyUtil {
 	
 	//kind 추가 버전
 	public static String getPageBarWithSearch(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo,
-			String colname, String search, String period, String kind, String url) {
+			String colname, String search, String period, String votekind, String url) {
 		String pageBar = "";
 		
 		int loop = 1;
@@ -271,10 +271,10 @@ public class MyUtil {
 		String str_pageNo = "";
 		
 		if (pageNo == 1) {
-			str_pageNo = "&nbsp;[이전"+blockSize+"페이지]";
+			str_pageNo = "&nbsp;<a href=\"#\" class=\"btn btn-default\"><span class=\"glyphicon glyphicon-chevron-left\"></span></a>&nbsp;&nbsp;&nbsp;";
 		}
 		else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"&kind="+kind+"\" >"+"[이전"+blockSize+"페이지]</a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"&votekind="+votekind+"\" class=\"btn btn-default\" >"+"<span class=\"glyphicon glyphicon-chevron-left\"></span></a>&nbsp;"; 
 		}
 		
 		pageBar += str_pageNo;
@@ -282,9 +282,9 @@ public class MyUtil {
 		while(!(pageNo > totalPage || loop > blockSize)){
 			
 			if (pageNo == currentShowPageNo)
-				str_pageNo = "&nbsp;<span style=\"color:red; font-size:12pt; font-weight:bold; text-decoration:underline;\">"+pageNo+ "</span>&nbsp;";
+				str_pageNo = "&nbsp;<span style=\"color:red; font-size:12pt; font-weight:bold; text-decoration:underline;\">"+pageNo+ "</span>&nbsp;&nbsp;&nbsp;";
 			else
-				str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"&kind="+kind+"\" >"+pageNo+"</a>" + "&nbsp;";
+				str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"&votekind="+votekind+"\" >"+pageNo+"</a>" + "&nbsp;&nbsp;&nbsp;";
 			
 			pageBar += str_pageNo; 
 			
@@ -293,10 +293,10 @@ public class MyUtil {
 		}
 		
 		if (pageNo > totalPage) {
-			str_pageNo = "&nbsp;[다음"+blockSize+"페이지]";
+			str_pageNo = "&nbsp;<a href=\"#\" class=\"btn btn-default\"><span class=\"glyphicon glyphicon-chevron-right\"></span></a>&nbsp;&nbsp;&nbsp;";
 		}
 		else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"&kind="+kind+"\" >"+"[다음"+blockSize+"페이지]</a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"&votekind="+votekind+"\" class=\"btn btn-default\">"+"<span class=\"glyphicon glyphicon-chevron-right\"></span>&nbsp;&nbsp;&nbsp;"; 
 		}
 		
 		pageBar += str_pageNo;	

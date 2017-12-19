@@ -153,8 +153,6 @@ public class VoteController {
 		
 		String gobackURL = MyUtil.getCurrentURL(req); //돌아갈 페이지를 위해서 현재 페이지의 주소를 뷰단으로 넘겨주자
 		
-		req.setAttribute("gobackURL", gobackURL);
-		
 		String colname = req.getParameter("colname");
 		String search = req.getParameter("search");
 		
@@ -260,8 +258,6 @@ public class VoteController {
 		List<HashMap<String, String>> voteCommList = null;
 		
 		String gobackURL = MyUtil.getCurrentURL(req); //돌아갈 페이지를 위해서 현재 페이지의 주소를 뷰단으로 넘겨주자
-		
-		req.setAttribute("gobackURL", gobackURL);
 		
 		String colname = req.getParameter("colname");
 		String search = req.getParameter("search");

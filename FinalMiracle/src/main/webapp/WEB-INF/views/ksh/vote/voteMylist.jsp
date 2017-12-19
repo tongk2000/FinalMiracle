@@ -177,6 +177,17 @@
 		});
 	}
 	
+	function goVote(idx, fidx, itemidx, gobackURL){
+		var frm = document.choiceFrm;
+		
+		frm.vote_idx.value = idx;
+		frm.teamwon_idx.value = fidx;
+		frm.voteitem_idx.value = itemidx;
+		frm.gobackURL.value = gobackURL;
+		
+		frm.submit();
+	}
+	
 	
 </script>
 
@@ -246,10 +257,23 @@
 						<c:forEach var="voteitemvo" items="${voteItemList}" varStatus="status">
 							<c:set value="${voteitemvo.fk_vote_idx}" var="voteitemidx" />
 							<c:if test="${voteidx eq voteitemidx}">
-								＊ ${voteitemvo.item} : ${voteitemvo.votenum}표
-								<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteChoice.mr'">선택</button> --%>
-								<br>
-								<c:set var="votesum" value="${votesum + voteitemvo.votenum}" />
+								<c:if test="${votekind eq 'ing'}">
+									<input type="radio" name="voteitem_info" value="${voteitemvo.item}">${voteitemvo.item}&nbsp;${voteitemvo.votenum}표
+									<%-- <button type="button" onClick="goVote('${votevo.IDX}', '${votevo.FK_TEAMWON_IDX}', '${voteitemvo.idx}', '${gobackURL}');">선택</button> --%>
+									<a href="javascript:goVote('${votevo.IDX}', '${votevo.FK_TEAMWON_IDX}', '${voteitemvo.idx}', '${gobackURL}');" class="btn btn-xs btn-default">선택</a>&nbsp;
+									<br/>
+									<c:set var="votesum" value="${votesum + voteitemvo.votenum}" />
+								</c:if>
+								<c:if test="${votekind eq 'ready'}">
+									＊ ${voteitemvo.item}
+									<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteChoice.mr'">선택</button> --%>
+								</c:if>
+								<c:if test="${votekind ne 'ing'}">
+									＊ ${voteitemvo.item} : ${voteitemvo.votenum}표
+									<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteChoice.mr'">선택</button> --%>
+									<br>
+									<c:set var="votesum" value="${votesum + voteitemvo.votenum}" />
+								</c:if>
 							</c:if>
 						</c:forEach>
 						<br/>
@@ -271,7 +295,7 @@
 					<td>
 						<textarea id="commcontent${votevo.IDX}" name="commcontent${votevo.IDX}" class="form-control" style="width: 80%; resize: none;" placeholder="타인을 비방하는 댓글은 삼가해주시기 바랍니다."></textarea>
 						<%-- <button type="button" onClick="goCommAdd('${votevo.IDX}');">등록</button>&nbsp; --%>
-						<a href="javascript:goCommAdd('${votevo.IDX}');" class="btn btn-default">댓글등록</a>&nbsp;
+						<a href="javascript:goCommAdd('${votevo.IDX}');" class="btn btn-default">등록</a>&nbsp;
 						<br/>
 						<c:forEach var="votecommvo" items="${voteCommList}" varStatus="status">
 							<c:set value="${votecommvo.FK_VOTE_IDX}" var="votecommidx" />
@@ -281,7 +305,7 @@
 								<c:if test="${votecommvo.MEMIDX eq sessionScope.loginUser.idx}">
 									<%-- <button type="button" onClick="goCommAdd('${votevo.IDX}', '${votecommvo.IDX}');">수정</button>&nbsp; --%>
 									<%-- <button type="button" onClick="goCommDel('${votecommvo.COMMIDX}');">삭제</button> --%>
-									<a href="javascript:goCommDel('${votecommvo.COMMIDX}');" class="btn btn-xs btn-danger">댓글삭제</a>&nbsp;
+									<a href="javascript:goCommDel('${votecommvo.COMMIDX}');" class="btn btn-xs btn-danger">×</a>&nbsp;
 								</c:if>
 								<br/>
 							</c:if>
@@ -324,7 +348,7 @@
 		<a href="javascript:goSearch();" class="btn btn-default">검색</a>&nbsp;
 	</div>
 	
-
+	<input type="hidden" name="votekind" value="${votekind}" />
 </div>
 </form>
 
@@ -341,6 +365,13 @@
 
 <form name="DelCommFrm" action="<%= request.getContextPath() %>/voteCommDel.mr" method="get" enctype="multipart/form-data">
 	<input type="hidden" id="delidx" name="delidx" />
+	<input type="hidden" name="gobackURL" value="${gobackURL}" />
+</form>
+
+<form name="choiceFrm" action="<%= request.getContextPath() %>/voteChoice.mr" method="get" enctype="multipart/form-data">
+	<input type="hidden" name="vote_idx"/>
+	<input type="hidden" name="teamwon_idx"/>
+	<input type="hidden" name="voteitem_idx"/>
 	<input type="hidden" name="gobackURL" value="${gobackURL}" />
 </form>
 
