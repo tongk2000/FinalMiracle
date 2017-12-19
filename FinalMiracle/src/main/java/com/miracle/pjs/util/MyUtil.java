@@ -148,6 +148,41 @@ public class MyUtil {
 		pageBar += str_pageNo;	
 		return pageBar;
 	}// end of String getPageBar(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String url)-----------------	   
+	public static String getPageBar2(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String url) {
+		System.out.println("페이징바"+sizePerPage+" "+blockSize+" "+totalPage+" "+currentShowPageNo+" "+url);
+		String pageBar = "";
+		int loop = 1;
+		int pageNo = ((currentShowPageNo - 1)/blockSize)*blockSize + 1;
+		// 공식임!!!
+		// currentShowPageNo 가 1~10 일때 pageNo 는   1 
+		// currentShowPageNo 가 11~20 일때 pageNo 는 11
+		// currentShowPageNo 가 21~30 일때 pageNo 는 21
+		String str_pageNo = "";
+		if (pageNo == 1) {
+			str_pageNo = "&nbsp;[이전"+blockSize+"페이지]";
+		}
+		else {
+			str_pageNo = "&nbsp;<a onClick='gourl("+(pageNo-1)+");' >"+"[이전"+blockSize+"페이지]</a>&nbsp;"; 
+		}
+		pageBar += str_pageNo;
+		while(!(pageNo > totalPage || loop > blockSize)){
+			if (pageNo == currentShowPageNo)
+				str_pageNo = "&nbsp;<span style='color:red; font-size:13pt; font-weight:bold; text-decoration:underline;'>"+pageNo+ "</span>&nbsp;";
+			else
+				str_pageNo = "&nbsp;<a onClick='gourl("+pageNo+");' >"+pageNo+"</a>" + "&nbsp;";
+			pageBar += str_pageNo; 
+			pageNo++;
+			loop++;
+		}
+		if (pageNo > totalPage) {
+			str_pageNo = "&nbsp;[다음"+blockSize+"페이지]";
+		}
+		else {
+			str_pageNo = "&nbsp;<a onClick='gourl("+pageNo+");' >"+"[다음"+blockSize+"페이지]</a>&nbsp;"; 
+		}
+		pageBar += str_pageNo;	
+		return pageBar;
+	}// end of String getPageBar(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String url)-----------------	   
 	public static String getPageBarWithSearch(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String colname, String search, String period, String url) {
 		String pageBar = "";
 		int loop = 1;

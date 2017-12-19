@@ -76,16 +76,22 @@ public class PjsDAOImpl implements PjsinterDAO {
 		return sum;
 	}*//* ================================================================================================================================================== */
 	@Override
-	public int delNoticeIdx(HashMap<String, String[]> paramap) {
+	public int delNoticeIdx(HashMap<String, String> paramap, String[] idxArr) {
 		// 공지사항 게시물을 지우는 메소드
 		// System.out.println("====> idxes : " + idxes);
-		int n = sqlsession.update("pjsfinal.delNoticeIdx", paramap);
+		int n =0;
+		for(int i=0; i<idxArr.length; i++) {
+			String idx = paramap.get("idxArr"+i);
+			n = sqlsession.update("pjsfinal.delNoticeIdx", idx);
+			if(n==0) 
+				return 0;
+		}
 		return n;
 	}/* ================================================================================================================================================== */
 	@Override
-	public List<ReplyVO> getComment(String idx) {
+	public List<ReplyVO> getComment(HashMap<String, Object> map) {
 		// 공지사항 게시물의 리플을 얻어오는 메소드
-		List<ReplyVO> list = sqlsession.selectList("pjsfinal.getComment", idx);
+		List<ReplyVO> list = sqlsession.selectList("pjsfinal.getComment", map);
 		return list;
 	}/* ================================================================================================================================================== */
 	@Override
@@ -192,9 +198,13 @@ public class PjsDAOImpl implements PjsinterDAO {
 		return n;
 	}
 	@Override
-	public int delMindIdx(HashMap<String,String[]> paramap) {
+	public int delMindIdx(HashMap<String,String> paramap , String[] idxArr) {
 		// 마음의 소리 다중행 삭제
-		int n = sqlsession.update("pjsfinal.delMindIdx", paramap);
+		int n=0;
+		for(int i=0; i<idxArr.length; i++) {
+			String idx = paramap.get("idxArr"+i);
+			n = sqlsession.update("pjsfinal.delMindIdx", idx);
+		}
 		return n;
 	}
 	
@@ -205,9 +215,9 @@ public class PjsDAOImpl implements PjsinterDAO {
 	
 	// === *** 구글맵 *** === //
 	@Override
-	public List<MapVO> getMap() {
+	public List<MapVO> getMap(HashMap<String, String> map) {
 		// 구글맵 테이블의 전체 내용을 가져온다.
-		List<MapVO> list = sqlsession.selectList("pjsfinal.getMap");
+		List<MapVO> list = sqlsession.selectList("pjsfinal.getMap",map);
 		return list;
 	}/* ================================================================================================================================================== */
 	@Override
@@ -375,9 +385,9 @@ public class PjsDAOImpl implements PjsinterDAO {
 		return n;
 	}
 	@Override
-	public String getfilename(HashMap<String, Object> map) {
+	public String getfilenamelist(HashMap<String, Object> map) {
 		// 파일이 있는지 없는지 가져오기
-		String file = sqlsession.selectOne("pjsfinal.getfilename", map);
+		String file = sqlsession.selectOne("pjsfinal.getfilenamelist", map);
 		return file;
 	}
 	@Override
@@ -391,6 +401,60 @@ public class PjsDAOImpl implements PjsinterDAO {
 		// 메모 읽었는지 여부반환
 		String memo = sqlsession.selectOne("pjsfinal.getmemoReadCount", string);
 		return memo;
+	}
+	@Override
+	public NoticeFileVO getfilename(String nidx) {
+		// 뷰에 뿌릴 파일 가져오기
+		NoticeFileVO file = sqlsession.selectOne("pjsfinal.getfilename", nidx);
+		return file;
+	}
+	@Override
+	public int setUpdateWrite(HashMap<String, String> team) {
+		// 공지사항 수정하기
+		int n = sqlsession.update("pjsfinal.setUpdateWrite",team);
+		return n;
+	}
+	@Override
+	public int setMindWriteWithFile(HashMap<String, String> team) {
+		// 마음의 소리 글쓰기 파일첨부
+		int n=sqlsession.insert("pjsfinal.setMindWriteWithFile", team);
+		return n;
+	}
+	@Override
+	public int getReplyCount(HashMap<String, Object> map) {
+		// 리플 글 총 수
+		int n = sqlsession.selectOne("pjsfinal.getReplyCount", map);
+		return n;
+	}
+	@Override
+	public int setMindViewEdit(HashMap<String, String> team) {
+		// 마음의 소리 글 수정
+		int n = sqlsession.update("pjsfinal.setMindViewEdit", team);
+		return n ;
+	}
+	@Override
+	public String getMindfilenamelist(HashMap<String, String> map) {
+		// 마음의 소리 파일 있는지 없는지 반환
+		String n = sqlsession.selectOne("pjsfinal.getMindfilenamelist",map);
+		return n;
+	}
+	@Override
+	public MindFileVO getMindfilename(String idx) {
+		// 마음의 소리 파일vo반환
+		MindFileVO vo = sqlsession.selectOne("pjsfinal.getMindfilename",idx);
+		return vo;
+	}
+	@Override
+	public String getMindWrite(HashMap<String, String> team) {
+		// 첨부파일의 fk_idx를 가져온다.
+		String a = sqlsession.selectOne("pjsfinal.getMindWrite", team);
+		return a ;
+	}
+	@Override
+	public FileVO getmindViewWithNoAddCount(HashMap<String, String> map) {
+		// 마음의 소리 filevo가져오기
+		FileVO vo = sqlsession.selectOne("pjsfinal.getmindViewWithNoAddCount", map);
+		return vo;
 	}
 	
 

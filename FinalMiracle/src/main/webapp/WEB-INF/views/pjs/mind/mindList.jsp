@@ -14,7 +14,7 @@ request.setCharacterEncoding("UTF-8");
 		border: 1px solid black;
 	}
 	tr, th, td {
-		border: 1px solid black;
+	 	border: 1px solid black; 
 		border-collapse:none;
 		height:30px;
 		padding:7px;
@@ -53,9 +53,9 @@ request.setCharacterEncoding("UTF-8");
 <title>Mind 게시판 입니다!</title>
 </head>
 <body>
-<c:set var="user" value="${userTeam}" />
-	<!-- <div align="center" > 
-	<div style="width:80%; border:red 3px dotted;" align="center"> -->
+ <c:set var="user" value="${userTeam}" />
+	<div align="center" > 
+	<div style="width:80%; border:red 3px dotted;" align="center">
 		<h2>마음의 소리 게시판</h2>
 			<table style="width:100%;">
 				<thead>
@@ -64,7 +64,9 @@ request.setCharacterEncoding("UTF-8");
 						<th>아이디</th>	<!-- 아이디 -->
 						<th>제목</th>		<!-- 제목 -->
 						<th>글쓴 시간</th>	<!-- 글쓴 시간 -->
+						<th>첨부파일</th>
 						<th>상태</th>		<!-- 조회수-->
+						<th></th>	
 					</tr>
 				</thead>
 				<tbody>
@@ -76,7 +78,7 @@ request.setCharacterEncoding("UTF-8");
 					<c:if test="${not empty list}">
 						<c:forEach var="md" items="${list}" varStatus="status">
 							<tr class="line"> <!-- d_idx, fk_userid subject regday readcount img, depth, status, t_idx, groupno, tstatus -->
-								<td width="5%"><input type="checkbox"><input type="hidden" value="${md.d_idx}"/></td>	<!-- 번호 -->
+								<td width="5%"><input type="hidden" value="${md.d_idx}"/><input type="checkbox"></td>	<!-- 번호 -->
 								<c:if test="${md.tstatus == 2 || sessionScope.loginUser.userid == md.fk_userid}">
 									<td width="15%">
 										<a onClick="goUserInfo('${md.fk_userid}');">
@@ -93,7 +95,15 @@ request.setCharacterEncoding("UTF-8");
 								<c:if test="${md.depth > 0}">
 									<td width="45%" onClick="goView('${md.d_idx}','${md.fk_userid}','${md.t_idx}')" style="padding-left:${md.depth*10}px; color:black; font-weight:bold; text-align:left;">└ [답글] ${md.subject}</td><!-- 제목 -->
 								</c:if>		<!-- 제목 -->
-								<td width="25%">${md.regday}</td>		<!-- 날짜 -->
+								<td width="20%">${md.regday}</td>		<!-- 날짜 -->
+								
+								<c:if test="${md.file > 0}">
+								    <td width="5%" style="text-align:center;"><img src="<%=request.getContextPath() %>/resources/images/disk.gif" ></td>
+								</c:if>
+								<c:if test="${md.file == 0}">
+								    <td width="5%" style="text-align:center;">X</td>
+								</c:if>
+									
 								<td width="10%">
 								<c:if test="${md.depth == 0}">
 									<c:if test="${md.readcount == 0}" >
@@ -110,7 +120,14 @@ request.setCharacterEncoding("UTF-8");
 									답변
 								</c:if>
 								</td>	<!-- 조회수-->
+								<c:if test="${md.fk_userid == sessionScope.loginUser.userid}">
+									<td width="5%"><button type="button" onClick="goEditView('${md.d_idx}','${md.fk_userid}', '${md.t_idx}');">수정</button></td>
+								</c:if>
+								<c:if test="${md.fk_userid != sessionScope.loginUser.userid}">
+									<td width="5%"></td>
+								</c:if>
 							</tr>
+							<input type="hidden" id="midx" value="${md.d_idx}"/>	
 						</c:forEach>
 					</c:if>	
 				</tbody>
@@ -137,14 +154,20 @@ request.setCharacterEncoding("UTF-8");
 					<div id="displayList" style="background-color:white; width:175px; margin-left: 28px; border-top: 0px; border: solid gray 3px;"></div>
 				</div>
 			</form>
-	<!-- 	</div>
-	</div> -->
+		</div>
+	</div> 
 	<form name="view">
 		<input type="hidden" name="idx" />
 		<input type="hidden" name="userid" />
 		<input type="hidden" name="teamNum" />
 	</form>
 	<form name="write">
+		<input type="hidden" name="idx"/>
+		<input type="hidden" name="userid" />
+		<input type="hidden" name="teamNum" />
+	</form>
+	<form name="edit">
+		<input type="hidden" name="idx" />
 		<input type="hidden" name="userid" />
 		<input type="hidden" name="teamNum" />
 	</form>
@@ -283,9 +306,19 @@ request.setCharacterEncoding("UTF-8");
 		}
 		function goWrite() {
 			var frm = document.write;
+			frm.idx.value=$("#midx").val();
 			frm.teamNum.value= "${user.teamNum}";
 			frm.userid.value="${user.userid}";
 			frm.action="<%=request.getContextPath()%>/mindWrite.mr";
+			frm.method="post";
+			frm.submit();
+		}
+		function goEditView(d_idx, userid, teamNum) {
+			var frm = document.edit; //userid, 글번호(idx), teamNum 
+			frm.idx.value = d_idx;
+			frm.userid.value = userid; 
+			frm.teamNum.value = teamNum;
+			frm.action="<%=request.getContextPath()%>/mindViewEdit.mr";
 			frm.method="post";
 			frm.submit();
 		}

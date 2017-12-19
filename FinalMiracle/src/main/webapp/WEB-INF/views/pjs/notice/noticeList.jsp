@@ -62,6 +62,9 @@ request.setCharacterEncoding("UTF-8");
 						<th>첨부파일</th>
 						<th>글쓴 시간</th>	<!-- 글쓴 시간 -->
 						<th>조회수</th>	<!-- 조회수-->
+						<c:if test="${team.status == 2}" >
+							<th></th>
+						</c:if>
 					</tr>
 				</thead>
 				<tbody>
@@ -73,7 +76,7 @@ request.setCharacterEncoding("UTF-8");
 					<c:if test="${not empty list}">
 						<c:forEach var="nt" items="${list}" varStatus="status">
 							<tr class="line">
-								<td width="5%" style="text-align:center;"><input type="checkbox"><input type="hidden" value="${nt.n_idx}"/></td><!-- 번호 -->
+								<td width="5%" style="text-align:center;"><input type="hidden" value="${nt.n_idx}"/><input type="checkbox"></td><!-- 번호 -->
 								<td width="15%" style="padding-left:10px;">
 									<a onClick="goUserInfo('${nt.fk_userid}');"> <!-- 유저아이디 -->
 										<img src="<%= request.getContextPath()%>/resources/images/${nt.img}" class="imgs" /> 
@@ -87,13 +90,16 @@ request.setCharacterEncoding("UTF-8");
 									<td width="35%" onClick="goView('${nt.n_idx}','${nt.fk_userid}','${nt.t_idx}')" style="margin-left:10px; padding-left:${nt.depth*10}px; color:black; font-weight:bold; ">└ [답글] ${nt.subject} <span style="color:blue">&nbsp;&nbsp;&nbsp;[댓글 수 : ${nt.count}]</span></td><!-- 제목 -->
 							</c:if>
 							<c:if test="${nt.file > 0}">
-								    <td width="10%" style="text-align:center;"><img src="<%=request.getContextPath() %>/resources/images/disk.gif" ></td>
+								    <td width="5%" style="text-align:center;"><img src="<%=request.getContextPath() %>/resources/images/disk.gif" ></td>
 							</c:if>	
 							<c:if test="${nt.file == 0}">
-								    <td width="10%" style="text-align:center;">X</td>
+								    <td width="5%" style="text-align:center;">X</td>
 							</c:if>	
 								<td width="25%" style="text-align:center;">${nt.regday}</td><!-- 날짜 -->
-								<td width="10%" style="text-align:center;">${nt.readcount}</td><!-- 조회수 -->
+								<td width="7%" style="text-align:center;">${nt.readcount}</td><!-- 조회수 -->
+							<c:if test="${team.status == 2}" >
+								<td width="8%" style="text-align:center;"><button type="button" onClick="goEdit('${nt.n_idx}','${nt.t_idx}');">글수정</button></td>
+							</c:if>	
 							</tr>
 							<input type="hidden" id="nidx"name="aidx" value="${nt.n_idx}"/>		
 						</c:forEach>
@@ -132,6 +138,15 @@ request.setCharacterEncoding("UTF-8");
 		</div>
 	</div>
 	<form name="view">
+		<input type="hidden" name="idx" />
+		<input type="hidden" name="userid" />
+		<input type="hidden" name="teamidx" />
+	</form>
+	<form name="editView">
+		<input type="hidden" name="idx" />
+		<input type="hidden" name="teamidx" />
+	</form>
+	<form name="edit"><!-- 수정글쓰기 -->
 		<input type="hidden" name="idx" />
 		<input type="hidden" name="userid" />
 		<input type="hidden" name="teamidx" />
@@ -272,6 +287,16 @@ request.setCharacterEncoding("UTF-8");
 			frm.action="<%=request.getContextPath()%>/noticeView.mr";
 			frm.method="get";
 			frm.submit();
+		}
+		function goEdit(idx, t_idx) { /* 글 수정하기 */
+			var frm = document.editView;
+			alert(idx, t_idx);
+			frm.idx.value = idx;
+			frm.teamidx.value = t_idx;
+			frm.action="<%=request.getContextPath()%>/noticeViewEdit.mr";
+			frm.method="get";
+			frm.submit();
+			
 		}
 		function goWrite() {
 			<c:if test="${team.teamNum != null&&team.teamNum!=''}" >

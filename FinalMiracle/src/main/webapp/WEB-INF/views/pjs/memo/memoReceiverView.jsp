@@ -78,7 +78,7 @@
 							<th>제목 :  </th><td><input type="text" name="subject" id="subject" readonly value="${receiver.subject}"/></td>
 						</tr>
 						<tr>
-							<th>내용 :  </th><td><textarea name="content" id="content" class="summernote" >${receiver.content}</textarea></td>
+							<th>내용 :  </th><td><div style="width:700px; height:500px;">${receiver.content}</div></td>
 						</tr>
 					</tbody>
 				</table>
