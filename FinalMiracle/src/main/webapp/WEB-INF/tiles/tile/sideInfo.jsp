@@ -10,8 +10,8 @@
    int portnumber = request.getServerPort();
    
    String serverName = "http://"+serverIP+":"+portnumber;
-
 %>
+
 <script type="text/javascript">
    $(function() {
        $(document).tooltip();
