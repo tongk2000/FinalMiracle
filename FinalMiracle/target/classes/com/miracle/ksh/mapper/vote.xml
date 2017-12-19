@@ -83,7 +83,6 @@
 		and B.fk_team_idx = #{fk_team_idx}
 		and enddate >= sysdate
 		and startdate <![CDATA[<=]]> sysdate
-		or startdate = enddate
 	</select>
 	
 	
@@ -102,7 +101,6 @@
 				and B.fk_team_idx = #{fk_team_idx}
 				and enddate >= sysdate
 				and startdate <![CDATA[<=]]> sysdate
-				or startdate = enddate
 				order by idx desc
 			) V
 		) T
@@ -175,7 +173,6 @@
 				and B.fk_team_idx = #{fk_team_idx}
 				and enddate >= sysdate
 				and startdate <![CDATA[<=]]> sysdate
-				or startdate = enddate
 				and ${colname} like '%'|| #{search} ||'%'
 				order by idx desc
 			) V
@@ -194,7 +191,6 @@
 		and enddate > sysdate
 		and startdate <![CDATA[<]]> sysdate
 		and ${colname} like '%'|| #{search} ||'%'
-		or startdate = enddate
 	</select>
 	
 	
@@ -250,7 +246,6 @@
                 	and A.fk_teamwon_idx = #{fk_teamwon_idx}
                 	and enddate >= sysdate
 					and startdate <![CDATA[<=]]> sysdate
-					or startdate = enddate
                 </if>
                 <if test="votekind.equals('end')">
 	                and A.status = 1
@@ -288,7 +283,6 @@
                 <if test='votekind.equals("ing")'>
                 	and enddate >= sysdate
 					and startdate <![CDATA[<=]]> sysdate
-					or startdate = enddate
                 </if>
                 <if test='votekind.equals("end")'>
                 	and enddate <![CDATA[<]]> sysdate
@@ -423,7 +417,6 @@
 			and A.fk_teamwon_idx = #{fk_teamwon_idx}
 			and enddate >= sysdate
 			and startdate <![CDATA[<=]]> sysdate
-			or startdate = enddate
 		</if>
 		<if test="votekind.equals('end')">
 			and B.fk_team_idx = #{fk_team_idx}
@@ -452,7 +445,6 @@
 			and enddate >= sysdate
 			and startdate <![CDATA[<]]> sysdate
 			and ${colname} like '%'|| #{search} ||'%'
-			or startdate = enddate
 		</if>
 		<if test="votekind.equals('end')">
 			and B.fk_team_idx = #{fk_team_idx}

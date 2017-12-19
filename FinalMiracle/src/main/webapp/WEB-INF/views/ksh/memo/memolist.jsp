@@ -181,7 +181,7 @@
 		} --%>
 		
 		swal({
-		  title: "삭제 여부",
+		  title: "메모 삭제 여부",
 		  text: "메모를 삭제하시겠습니까?",
 		  type: "warning",
 		  showCancelButton: true,
@@ -300,7 +300,7 @@
 
 
 <form class="form-inline" id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/memoList.mr" method="get" enctype="multipart/form-data">
-<div style="padding-left: 1%; padding-right: 1%; border: solid 0px red; width: 100%; height: 840px; overflow-y: auto;">
+<div style="padding-left: 1%; padding-right: 1%; border: solid 0px red; width: 100%; height: 840px; overflow-y: auto; font-family: verdana;">
 	<div style="width: 100%;">
 		<div style="float: left; margin-top: 2%;">
 			<a href="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=전체'" class="btn btn-primary">전체</a>&nbsp;

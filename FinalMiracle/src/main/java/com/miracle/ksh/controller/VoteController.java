@@ -429,16 +429,16 @@ public class VoteController {
 		    }
         }
 			
-		if(compare1 > 0){ //간격이 있다면 
-			String msg = "종료일이 시작일보다 날짜가 앞섭니다.";
+		if(compare1 >= 0){ //간격이 있다면 
+			String msg = "종료일이 시작일보다 날짜가 같거나 앞섭니다.";
 			String loc = "javascript:history.back()";
 			
 			req.setAttribute("msg", msg);
 			req.setAttribute("loc", loc);
 			
 			return "ksh/msg.not";
-		} else if(compare2 > 0){
-			String msg = "종료일이 현재일보다 날짜가 앞섭니다.";
+		} else if(compare2 >= 0){
+			String msg = "종료일이 현재일보다 날짜가 같거나 앞섭니다.";
 			String loc = "javascript:history.back()";
 			
 			req.setAttribute("msg", msg);

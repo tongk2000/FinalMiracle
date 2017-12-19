@@ -219,10 +219,10 @@ public class MyUtil {
 		String str_pageNo = "";
 		
 		if (pageNo == 1) {
-			str_pageNo = "&nbsp;[이전"+blockSize+"페이지]";
+			str_pageNo = "&nbsp;<a href=\"#\" class=\"btn btn-default\"><span class=\"glyphicon glyphicon-chevron-left\"></span></a>";
 		}
 		else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" >"+"[이전"+blockSize+"페이지]</a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" class=\"btn btn-default\" >"+"<span class=\"glyphicon glyphicon-chevron-left\"></span></a>"; 
 		}
 		
 		pageBar += str_pageNo;
@@ -230,9 +230,9 @@ public class MyUtil {
 		while(!(pageNo > totalPage || loop > blockSize)){
 			
 			if (pageNo == currentShowPageNo)
-				str_pageNo = "&nbsp;<span style=\"color:red; font-size:12pt; font-weight:bold; text-decoration:underline;\">"+pageNo+ "</span>&nbsp;";
+				str_pageNo = "&nbsp;<span style=\"color:red; font-weight:bold; text-decoration:underline;\" class=\"btn btn-default\">"+pageNo+ "</span>";
 			else
-				str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" >"+pageNo+"</a>" + "&nbsp;";
+				str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" class=\"btn btn-default\" >"+pageNo+"</a>" + "";
 			
 			pageBar += str_pageNo; 
 			
@@ -241,10 +241,10 @@ public class MyUtil {
 		}
 		
 		if (pageNo > totalPage) {
-			str_pageNo = "&nbsp;[다음"+blockSize+"페이지]";
+			str_pageNo = "&nbsp;<a href=\"#\" class=\"btn btn-default\"><span class=\"glyphicon glyphicon-chevron-right\"></span></a>";
 		}
 		else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" >"+"[다음"+blockSize+"페이지]</a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" class=\"btn btn-default\" >"+"<span class=\"glyphicon glyphicon-chevron-right\"></span></a>"; 
 		}
 		
 		pageBar += str_pageNo;	
@@ -271,10 +271,10 @@ public class MyUtil {
 		String str_pageNo = "";
 		
 		if (pageNo == 1) {
-			str_pageNo = "&nbsp;<a href=\"#\" class=\"btn btn-default\"><span class=\"glyphicon glyphicon-chevron-left\"></span></a>&nbsp;&nbsp;&nbsp;";
+			str_pageNo = "&nbsp;<a href=\"#\" class=\"btn btn-default\"><span class=\"glyphicon glyphicon-chevron-left\"></span></a>";
 		}
 		else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"&votekind="+votekind+"\" class=\"btn btn-default\" >"+"<span class=\"glyphicon glyphicon-chevron-left\"></span></a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"&votekind="+votekind+"\" class=\"btn btn-default\" >"+"<span class=\"glyphicon glyphicon-chevron-left\"></span></a>"; 
 		}
 		
 		pageBar += str_pageNo;
@@ -282,9 +282,9 @@ public class MyUtil {
 		while(!(pageNo > totalPage || loop > blockSize)){
 			
 			if (pageNo == currentShowPageNo)
-				str_pageNo = "&nbsp;<span style=\"color:red; font-size:12pt; font-weight:bold; text-decoration:underline;\">"+pageNo+ "</span>&nbsp;&nbsp;&nbsp;";
+				str_pageNo = "&nbsp;<span style=\"color:red; font-weight:bold; text-decoration:underline;\" class=\"btn btn-default\">"+pageNo+ "</span>";
 			else
-				str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"&votekind="+votekind+"\" >"+pageNo+"</a>" + "&nbsp;&nbsp;&nbsp;";
+				str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"&votekind="+votekind+"\" class=\"btn btn-default\">"+pageNo+"</a>" + "";
 			
 			pageBar += str_pageNo; 
 			
@@ -293,10 +293,10 @@ public class MyUtil {
 		}
 		
 		if (pageNo > totalPage) {
-			str_pageNo = "&nbsp;<a href=\"#\" class=\"btn btn-default\"><span class=\"glyphicon glyphicon-chevron-right\"></span></a>&nbsp;&nbsp;&nbsp;";
+			str_pageNo = "&nbsp;<a href=\"#\" class=\"btn btn-default\"><span class=\"glyphicon glyphicon-chevron-right\"></span></a>";
 		}
 		else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"&votekind="+votekind+"\" class=\"btn btn-default\">"+"<span class=\"glyphicon glyphicon-chevron-right\"></span>&nbsp;&nbsp;&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"&votekind="+votekind+"\" class=\"btn btn-default\">"+"<span class=\"glyphicon glyphicon-chevron-right\"></span>"; 
 		}
 		
 		pageBar += str_pageNo;	
