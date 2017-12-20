@@ -110,4 +110,10 @@ public class CommuteService implements InterCommuteService {
 		return list;
 	}
 
+	@Override
+	public String getTimg(String tidx) {
+		String n = dao.getTimg(tidx);
+		return n;
+	}
+
 }

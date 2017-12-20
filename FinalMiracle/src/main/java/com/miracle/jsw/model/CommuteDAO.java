@@ -109,4 +109,10 @@ public class CommuteDAO implements InterCommuteDAO {
 		return list;
 	}
 
+	@Override
+	public String getTimg(String tidx) {
+		String n = sqlsession.selectOne("commute.getTimg", tidx);
+		return n;
+	}
+
 }
