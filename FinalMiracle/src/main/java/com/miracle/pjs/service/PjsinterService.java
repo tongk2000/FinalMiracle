@@ -148,6 +148,8 @@ public interface PjsinterService {
 
 	FileVO getmindViewWithNoAddCount(HashMap<String, String> map); // 마음의 소리 파일가져오기
 
+	HashMap<String, String> getNoticeInfo(HashMap<String, String> view); // 공지사항 정보 가져오기
+
 
 	
 

@@ -379,11 +379,13 @@ public class GeniousPjsController {
 		HashMap<String, String> view = new HashMap<String, String>();
 		view.put("nidx", nidx);
 		view.put("teamidx", teamidx);
+		HashMap<String, String> info = service.getNoticeInfo(view);
 		HashMap<String, String> map =  service.getIdxTeam(view); // USERID, IMG, SUBJECT, CONTENT, STATUS, IDX, FILENAME, ORGFILENAME, FILESIZE, FK_IDX
 		NoticeFileVO file = service.getfilename(nidx);
 		//List<ReplyVO> comment = service.getComment(nidx); // 해당 nidx에 해당하는 comment를 가져온다.
 		//req.setAttribute("sessionid", sessionid);
 		//req.setAttribute("comment", comment);
+		req.setAttribute("info", info);
 		req.setAttribute("file", file);
 		req.setAttribute("map", map);
 		req.setAttribute("nidx",nidx);

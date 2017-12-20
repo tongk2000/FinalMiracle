@@ -45,12 +45,20 @@
 		position: relative;
 	}
 	body {overflow-Y:hidden;} 
+	#displayList{
+		float:left;
+		z-index:1000;
+		position: absolute;
+		background-color:white;
+		border:2px solid gray;
+		width:180px;
+	}
 </style>
 
 <script type="text/javascript">
 	$(document).ready(function() {
 		$("#displayList").hide();	
-	
+		
 		google.maps.event.addDomListener(window, 'load', initialize); // 구글사에서 그대로 따옴!!! ====== 구글맵 생성
 		function initialize(){ // 사용자가 커스텀마이즈 할 수 있다.									    ====== 구글맵 처음 시작할 때
 		    var mapOptions = { // 구글 맵 옵션 설정
@@ -136,7 +144,7 @@
 		function goDetail(map_idx, map_team_idx) // 모달창을 띄우자
 		{
 			var data_form = {"map_idx":map_idx, "map_team_idx":map_team_idx};
-			alert("map_idx"+map_idx+" map_team_idx"+map_team_idx);
+			//alert("map_idx"+map_idx+" map_team_idx"+map_team_idx);
 			$.ajax({
 				url:"googleMapTeamInfoJSON.mr",
 				type:"get",
@@ -148,11 +156,11 @@
 						$("#mapInfo").modal(); // 이게 그 뭐더냐 모달열기
 					}
 					else {
-						alert("여기옴?");
+						//alert("여기옴?");
 					}
 				},
 				error : function() {
-					alert("에러");
+					//alert("에러");
 				}
 			}); // end of $.ajax 
 		}
@@ -184,6 +192,10 @@
 					}
 					else {
 					}
+					var left = $("#searchString").offset().left;
+					var top = $("#searchString").offset().top;
+					top = top + ($("#searchString").height());
+					$("#displayList").css({"left":left+"px", "top":top+"px"});
 					$("#displayList").html(resultHTML);
 					$("#displayList").show();	
 				},
@@ -269,7 +281,7 @@
 				
 				$("#tm").html(html);
 			}, error: function(request, status, error){
-				alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+				//alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
 			}
 		});
 	}
@@ -323,7 +335,7 @@
 	</div>
 </div>
 		<div>
-			<div id="displayList" style="opacity:0.5; background-color: ivory; border:2px solid gray; width:175px; margin-left:550px; margin-top:-25px; width:180px; z-index: 300000;"></div>
+			<div id="displayList"></div>
 		</div>
 </body>
 </html>

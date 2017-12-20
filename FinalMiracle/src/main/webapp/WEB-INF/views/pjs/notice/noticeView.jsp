@@ -14,53 +14,63 @@ request.setCharacterEncoding("UTF-8");
 <script src="<%=request.getContextPath() %>/resources/summernote/lang/summernote-ko-KR.js"></script> 
 <meta charset="UTF-8">
 <title>공지사항 글</title>
+<style>
+	
+</style>
 </head>
 
 <body>
 <c:set var="user" value="${map}" /> <!-- teamNum , userid , teamNum , status -->
-	<div align="center"  > <!-- style="width:700px; float:right;" -->
-		 <div style="border: 1px solid yellow; " align="center"> <!-- width:500px; -->
-			<div style=" border:3px solid Orange; "> <!-- width:500px; -->
-			 <span style="color:Orange"> 공지사항 글 </span><br/>
+	<div> <!-- style="width:700px; float:right;" -->
+		 <div style="border: 0px solid yellow; " align="center"> <!-- width:500px; -->
+			<div style=" border:3px solid #337ab7; "> <!-- width:500px; -->
+			 <span style="color:red"> 공지사항 글 </span><br/>
 			 <span style="color:lightblue;">팀 프로젝트 중요사항 입니다.</span>
 			</div><br/>
 		
+		 <div>
 			<form name="editform">
-			<table>
+			<table style="width:80%; margin:20px;">
 				<thead>
 					<tr>
-						<th colspan="2" style="color:white;"><span >공지글</span></th> <!-- style="size:20px;" -->
+						<th colspan="2" style="color:red; text-align:center; border-top:1px solid lightgray; "><span >공지글</span></th> <!-- style="size:20px;" -->
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td >유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" > &nbsp;&nbsp; ${user.userid}<input type="hidden" name="fk_userid" value="${user.userid}"></td>
+					<tr style="text-align:right; border-bottom:1px solid lightgray;"> 
+						<td colspan="2" style="text-align:right;"> 조회수 : ${info.readcount}  &nbsp;  작성일 : ${info.regday} </td>
 					</tr>
-					<tr>
-						<td >팀정보 : </td><td >${user.team_idx} 팀</td> <!-- style="padding-left:12px;" -->
-					</tr>
-					<tr>
-						<td >제목 :</td>
-						<td><input type="text" value="${user.subject}" name="subject" readonly /></td>
-					</tr>
-					<tr > <!-- style="min-height: 200px;"  -->
-						<td>내용 :</td>
-						<td id="edit1"><div  >${user.content}</div></td> <!-- style="width:500px; height:500px;" -->
-					</tr>
-					<tr>
-						<td>첨부파일</td>   <!-- USERID, IMG, SUBJECT, CONTENT, STATUS, IDX, FILENAME, ORGFILENAME, FILESIZE, FK_IDX -->
-						<td>
-						    <a href="<%= request.getContextPath() %>/download.mr?nidx=${user.n_idx}&fidx=${file.idx}">${file.orgFilename}</a> 
+					<tr style="border-top:1px solid lightgray; border-bottom:1px solid lightgray; ">
+						<td style="width:30%;"><img src="<%= request.getContextPath() %>/resources/images/${user.img}" style="width:150px; heightL:100px;"> <br/>
+						</td>
+						<td> 아이디 : ${user.userid}<input type="hidden" name="fk_userid" value="${user.userid}"><br/><br/>
+							 제목 : <input type="hidden" name="subject" value="${user.subject}">${user.subject}
 						</td>
 					</tr>
+						
 				</tbody>
 			</table>
+			<table style="width:80%;">
+				<tr > <!-- style="min-height: 200px;"  -->
+					<td id="edit1"><div >${user.content}</div></td> <!-- style="width:500px; height:500px;" -->
+				</tr>
+			</table>
+			<table style="width:80%; border-top:1px solid lightgray; border-bottom:1px solid lightgray; margin:10px; "> 
+				<tr >
+					<td style="padding-top:1%; padding-bottom:1%; width:20%;">첨부파일</td>   <!-- USERID, IMG, SUBJECT, CONTENT, STATUS, IDX, FILENAME, ORGFILENAME, FILESIZE, FK_IDX -->
+					<td style="padding-top:1%; padding-bottom:1%;">
+					    <a href="<%= request.getContextPath() %>/download.mr?nidx=${user.n_idx}&fidx=${file.idx}">${file.orgFilename}</a> 
+					</td>
+				</tr>
+			</table>
 			</form>
-			<div > <!-- style="display:inline; margin-left:40px;" -->
+		</div>
+		
+			<div style="display:inline;"> <!-- " -->
 				<button type="button" onClick="goback();">목록보기</button>
 			</div> 
 			<c:if test="${sessionScope.teamInfo.teamwon_status == 2}">
-				<div   ><!-- style="margin-left:80px; display:inline;" -->
+				<div style="margin-left:80px; display:inline;" ><!--  -->
 					<button type="button" onClick="goEdit();">수정글쓰기</button>
 				</div>
 			</c:if>
@@ -106,7 +116,7 @@ request.setCharacterEncoding("UTF-8");
 					$("#displayList").html(data);
 				},
 				error:function() {
-					alert("getReply 실패");
+					//alert("getReply 실패");
 				}
 			});
 		}
@@ -139,14 +149,14 @@ request.setCharacterEncoding("UTF-8");
 				data:form_data,
 				dataType:"html",
 				success:function(data) {
-					alert(data);
+					//alert(data);
 					$("#goedit").hide();
 					var html =	"<button type='button' onClick='edit();'>완료</button>";
 					$("#goedit").html(html).show();
 					$("#edit1").html(data);
 				},
 				error:function () {
-					alert("에러");
+					//alert("에러");
 				}
 			})
 		} 

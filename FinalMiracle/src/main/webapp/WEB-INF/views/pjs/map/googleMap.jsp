@@ -147,7 +147,7 @@
 						$("#mapInfo").modal(); // 이게 그 뭐더냐 모달열기
 					}
 					else {
-						alert("여기옴?");
+						//alert("여기옴?");
 					}
 				},
 				error : function() {
@@ -275,15 +275,7 @@
 </div>
 
 </body>
-<<<<<<< HEAD
 </html>
-
-<div>뜨냐</div>
-
-=======
-</html>
-<div>뜨냐</div>
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 
 
 

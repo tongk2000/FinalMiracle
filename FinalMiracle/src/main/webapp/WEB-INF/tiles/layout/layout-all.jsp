@@ -19,6 +19,9 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery.form.min.js"></script> <!-- 파일까지 업로드 가능한 jquery form 플러그인 -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 <style type="text/css">
 	html, body{height:100%;}
 	.miracleLayout {
@@ -42,8 +45,8 @@
 	}
 	#toggleSidebar {
 		height:50px !important;
-		width:190px !important;
-		background-color:#4882ab !important;
+		width:50px !important;
+		background-color:#4882ab;
 	}
 	#header {
 		height:50px !important;
@@ -56,17 +59,57 @@
 	#content {
 		
 	}
+	
+	.iconPng {	
+		margin-left:0px !important;
+	}
+	.sideIconPng {
+		width:30px !important;
+		heigth:30px !important;
+		margin-top:10px !important;
+		margin-bottom:10px !important;
+	}
+	.headerIconPng {
+		width:35px !important;
+		heigth:35px !important;
+		margin-top:7.5px !important;
+		margin-left:12.5px !important;
+	}
+	.iconTag {
+		cursor:pointer !important;
+	}
+	.headerDiv {
+		margin:0px !important;
+		width:60px !important;
+		float:left !important;
+		height:50px !important;
+		display:inline-block !important;
+	}
 </style>
+
+<script type="text/javascript">
+	$(document).ready(function(){	    		
+	    $(".iconTag").hover(function(){
+	    	$(this).css({"background-color":"#154465 !important"});
+	    }, function(){
+	    	$(this).css({"background-color":"#205b86 !important"});
+	    });
+	    
+	    $("#toggleSidebar").hover(function(){
+	    	$(this).css({"background-color":"#205b86 !important"});
+	    }, function(){
+	    	$(this).css({"background-color":"#4882ab !important"});
+	    });
+	});
+</script>
 
 </head>
 <body id="body">
 	<table class="miracleLayout" id="layoutTable">
 		<tr class="miracleLayout" id="firstMiracleLine">
-			<td id="toggleSidebar" class="miracleLayout">
-				<a title="메뉴상세">
-					<img src="<%= request.getContextPath() %>/resources/images/icon/00.png" style="width:50px; heigth:50px;" />
-					<span class="toggleText">메뉴상세</span>
-				</a>
+			<td id="toggleSidebar" class="miracleLayout" title="메뉴상세" style="cursor:pointer;">
+				<img src="<%= request.getContextPath() %>/resources/images/icon/15.png" class="headerIconPng" style="margin-top:0px !important; margin-left:7.5px !important;" />
+				<span class="toggleText"></span>
 			</td>
 			<td id="header" class="miracleLayout">
 				<tiles:insertAttribute name="header"/>
