@@ -24,9 +24,6 @@
 		    from tbl_faq
 		    where status = 1
 		 	and ${colname} like '%'|| #{search} || '%'
-		 	<if test="category != null">
-		 	and category = #{category}
-		 	</if>
 		    order by idx desc 
 		  )V
 		)T
@@ -40,9 +37,6 @@
 		  ( select idx, category, subject, content, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
 		    from tbl_faq
 		    where status = 1  
-		    <if test="category != null">
-		 	and category = #{category}
-		 	</if> 
 		    order by idx desc 
 		  )V
 		)T
@@ -55,17 +49,11 @@
 		from tbl_faq
 		where status = 1
 		and ${colname} like '%'|| #{search} ||'%'
-		<if test="category != null">
-		and category = #{category}
-		</if>
 	</select>
 	<select id="getTotalCountWithNoSearch" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_faq
 		where status = 1
-		<if test="category != null">
-		and category = #{category}
-		</if>
 	</select>
 	
 	<!-- FAQ 게시판 글쓰기 -->

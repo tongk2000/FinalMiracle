@@ -41,7 +41,7 @@ request.setCharacterEncoding("UTF-8");
     	border: solid gray 3px;
     }
 </style>
-<script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
+
 <title>Mind 게시판 입니다!</title>
 </head>
 <body>

@@ -33,11 +33,11 @@
 	}
 	
 	.freeListRowCssStyle {
-		background-color: lightgray;
+		background-color: #F0F0F0;
 	}
 	
 	.freeReplyListRowCssStyle {
-		background-color: lightgreen;
+		background-color: #F0F0F0;
 	}
 	
 	.hoverStyleCss {
@@ -131,7 +131,7 @@
 		$(document).on("click", ".modalClose", function(){
 			$('.modal').modal('hide');
 		}); // end of $(".modalClose").click(function() --------------------------------------------------
-	});
+	});  // end of $(document).ready() -------------------------------------------------------------------
 	
 	// ===================================== *** 댓글 달기 폼 전송하기 *** ====================================================
     function goWrite() {

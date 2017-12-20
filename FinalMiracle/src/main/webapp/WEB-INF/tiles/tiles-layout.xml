@@ -10,7 +10,6 @@
             <put-attribute name="header" value="/WEB-INF/tiles/tile/header.jsp" />
             <put-attribute name="content" value="" />
             <put-attribute name="sideInfo" value="/WEB-INF/tiles/tile/sideInfo.jsp" />
-            <put-attribute name="footer" value="/WEB-INF/tiles/tile/footer.jsp" />
       </definition>
       
       <definition name="*.all" extends="layout-all">
