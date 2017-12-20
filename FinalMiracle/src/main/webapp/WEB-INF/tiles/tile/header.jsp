@@ -68,15 +68,23 @@
 </div>
 
 <div style="/* border: 1px solid blue; */ float: left; width: 3%; height: 50px;" align="center">
-	<a href="<%= request.getContextPath() %>/doList.mr" title="검색"><img src="<%= request.getContextPath() %>/resources/images/icon/14.png" style="width: 40px; height: 35px; margin-top: 7px;" /></a>
+	<a href="<%= request.getContextPath() %>/doList.mr" title="검색">
+		<img src="<%= request.getContextPath() %>/resources/images/icon/14.png" class="iconPng toggleIconPng" />
+	</a>
 </div>
 
 <!-- ===== 로그인 성공한 사용자 정보 출력 ===== -->
 <c:if test="${sessionScope.loginUser != null}">
-	<a href="<%= request.getContextPath() %>/tmForm.mr" title="팀 선택"><img src="<%= request.getContextPath() %>/resources/images/icon/12.png" style="width:50px; heigth:50px;" /></a>
-	<a href="<%= request.getContextPath() %>/member_logout.mr" title="로그아웃"><img src="<%= request.getContextPath() %>/resources/images/icon/13.png" style="width:50px; heigth:50px;" /></a>
+	<a href="<%= request.getContextPath() %>/tmForm.mr" title="팀 선택">
+		<img src="<%= request.getContextPath() %>/resources/images/icon/12.png" class="iconPng toggleIconPng"/>
+	</a>
+	<a href="<%= request.getContextPath() %>/member_logout.mr" title="로그아웃">
+		<img src="<%= request.getContextPath() %>/resources/images/icon/13.png" class="iconPng toggleIconPng" />
+	</a>
 	<div style="float:right;">
-		<a href="javascript:showMyInfo();" title="${sessionScope.loginUser.name}(${sessionScope.loginUser.userid})"><img src="<%= request.getContextPath() %>/resources/images/${sessionScope.loginUser.img}" style="height: 50px; width: 50px;"></a>
+		<a href="javascript:showMyInfo();" title="${sessionScope.loginUser.name}(${sessionScope.loginUser.userid})">
+			<img src="<%= request.getContextPath() %>/resources/images/${sessionScope.loginUser.img}" style="height: 50px; width: 50px;">
+		</a>
 	</div>
 </c:if>
 
