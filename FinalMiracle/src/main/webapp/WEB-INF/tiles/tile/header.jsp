@@ -70,7 +70,7 @@
 		<div onclick="javascript:location.href='<%= request.getContextPath() %>/tmForm.mr'" title="팀 선택" class="iconTag headerDiv">
 			<img src="<%= request.getContextPath() %>/resources/images/icon/12.png" class="iconPng headerIconPng"/>
 		</div>
-		<div onclick="'javascript:location.href=<%= request.getContextPath() %>/member_logout.mr'" title="로그아웃" class="iconTag headerDiv">
+		<div onclick="javascript:location.href='<%= request.getContextPath() %>/member_logout.mr'" title="로그아웃" class="iconTag headerDiv">
 			<img src="<%= request.getContextPath() %>/resources/images/icon/13.png" class="iconPng headerIconPng"/>
 		</div>
 		<div onclick="javascript:showMyInfo();" title="${sessionScope.loginUser.name}(${sessionScope.loginUser.userid})" style="display:inline-block;">
