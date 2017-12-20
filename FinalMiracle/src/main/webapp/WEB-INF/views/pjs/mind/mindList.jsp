@@ -50,6 +50,14 @@ request.setCharacterEncoding("UTF-8");
     	background-color:#eaeaea;
     	cursor: pointer;
     }
+    #displayList {
+    	position: absolute;
+    	background-color:white;
+    	width:189px; 
+    	margin-left: 28px; 
+    	border-top: 0px; 
+    	border: solid gray 3px;
+    }
 </style>
 <script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 <title>Mind 게시판 입니다!</title>
@@ -153,7 +161,7 @@ request.setCharacterEncoding("UTF-8");
 				<input type="text" id="searchString" name="searchString" />
 				<button type="button" id="btnClick" onClick="goSearch();">검색</button><br/><br/><br/>
 				<div style="display:block; z-index:1000; margin-top:-40px;" align="center">
-					<div id="displayList" style="background-color:white; width:175px; margin-left: 28px; border-top: 0px; border: solid gray 3px;"></div>
+					<div id="displayList" ></div>
 				</div>
 			</form>
 		</div>
@@ -229,6 +237,10 @@ request.setCharacterEncoding("UTF-8");
 								result = "<span class='first' style='color:blue;'>" +wordstr.substr(0, index)+ "</span>" + "<span class='second' style='color:red; font-weight:bold;'>" +wordstr.substr(index, len)+ "</span>" + "<span class='third' style='color:blue;'>" +wordstr.substr(index+len, wordstr.length - (index+len) )+ "</span>";  
 								resultHTML += "<span style='cursor:pointer;'>"+ result +"</span><br/>"; 
 							});
+							var left = $("#searchString").position().left-28;
+							var top = $("#searchString").position().top+5	;
+							top = top + ($("#searchString").height());
+							$("#displayList").css({"left":left+"px", "top":top+"px"});
 							$("#displayList").html(resultHTML);
 							$("#displayList").show();
 						}

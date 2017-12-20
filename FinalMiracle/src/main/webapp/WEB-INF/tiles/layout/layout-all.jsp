@@ -42,7 +42,7 @@
 	}
 	#toggleSidebar {
 		height:50px !important;
-		width:190px !important;
+		width:50px !important;
 		background-color:#4882ab !important;
 	}
 	#header {
@@ -56,6 +56,19 @@
 	#content {
 		
 	}
+	.iconPng {
+		width:35px !important;
+		heigth:35px !important;
+		margin-left:0px !important;
+	}
+	.sideIconPng {
+		margin-top:10px !important;
+		margin-bottom:10px !important;
+	}
+	.toggleInconPng {
+		margin-top:7.5px !important;
+		margin-left:7.5px !important;
+	}
 </style>
 
 </head>
@@ -64,8 +77,8 @@
 		<tr class="miracleLayout" id="firstMiracleLine">
 			<td id="toggleSidebar" class="miracleLayout">
 				<a title="메뉴상세">
-					<img src="<%= request.getContextPath() %>/resources/images/icon/00.png" style="width:50px; heigth:50px;" />
-					<span class="toggleText">메뉴상세</span>
+					<img src="<%= request.getContextPath() %>/resources/images/icon/00.png" class="iconPng toggleInconPng" />
+					<span class="toggleText"></span>
 				</a>
 			</td>
 			<td id="header" class="miracleLayout">

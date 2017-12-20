@@ -275,15 +275,7 @@
 </div>
 
 </body>
-<<<<<<< HEAD
 </html>
-
-<div>뜨냐</div>
-
-=======
-</html>
-<div>뜨냐</div>
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 
 
 
