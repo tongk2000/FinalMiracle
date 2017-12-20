@@ -50,7 +50,7 @@
 	.content {
 		border-radius: 15px;
 		margin-left: 20px;
-		padding: 5px 10px;
+		padding: 5px;
 		background-color:#fafafa;
 	}
 	
@@ -186,7 +186,7 @@
 						  </p>
 						  <div class="content">
 						  	<span style="color: blue; font-weight: bold;">[ A ]</span><br/>
-						  	<span style=" margin-top: 5px; font-weight: bold;">${faq.content}<br/></span>
+						  	<span style="font-weight: bold;">${faq.content}<br/></span>
 						  </div>
 						</c:forEach>
 
@@ -221,18 +221,18 @@
 
 </body>
 
-<!-- 글번호 전송을 위한 폼 -->
-<form name="idxFrm">
-	<input type="hidden" name="idx" />
-</form>
+	<input type="hidden" name="currentShowPageNo" value="${currentShowPageNo}"/>
+	<input type="hidden" name="sizePerPage" value="${sizePerPage}"/>
+	<input type="hidden" name="colname" value="${colname}"/>
+	<input type="hidden" name="search" value="${search}"/>
 
 
 <!-- 카테고리번호 전송을 위한 category frm -->
-<div>
-	<form name="categoryFrm" action="<%= request.getContextPath() %>/faqList.mr" method="get">
-		<input type="hidden" name="category" />
-	</form>
-</div>
+<form name="categoryFrm" action="<%= request.getContextPath() %>/faqList.mr" method="get">
+	<input type="hidden" name="category" />
+	
+</form>
+
 
 
 
