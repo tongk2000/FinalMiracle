@@ -456,6 +456,12 @@ public class PjsDAOImpl implements PjsinterDAO {
 		FileVO vo = sqlsession.selectOne("pjsfinal.getmindViewWithNoAddCount", map);
 		return vo;
 	}
+	@Override
+	public HashMap<String, String> getNoticeInfo(HashMap<String, String> view) {
+		// 공지사항 정보가져오기
+		HashMap<String, String> map = sqlsession.selectOne("pjsfinal.getNoticeInfo", view);
+		return map;
+	}
 	
 
 	

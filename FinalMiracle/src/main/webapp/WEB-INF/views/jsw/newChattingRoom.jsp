@@ -218,7 +218,7 @@
 			</c:forEach>
 		  </select>
 		</div>
-		<div style="display: inline-block; margin: 20px;">
+		<div style="display: inline-block; margin: 20px; vertical-align: bottom;">
 		<select id="nameOrId">
 			<option value="name">이름</option>
 			<option value="userid">아이디</option>
@@ -226,7 +226,7 @@
 		<input id="nameORid" type="text"/>&nbsp;<span id="serchMem">찾기</span>
 		</div>
 		<div id="MemberList" style="border: 1px solid teal; height : 400px; overflow: auto;"></div>
-		<div style="margin-left: 30px;"><input type="text" id="roomname" placeholder="채팅방 이름" />&nbsp;<span id="newRoom">방만들기</span></div>
+		<div style="margin-top: 10px; vertical-align: middle;"><input type="text" id="roomname" placeholder="채팅방 이름" />&nbsp;<span id="newRoom">방만들기</span></div>
 	</div>
 	<form id="newRoomFrm">
 		<input type="hidden" name="invmemidx" />

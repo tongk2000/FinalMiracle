@@ -103,4 +103,10 @@ public class CommuteDAO implements InterCommuteDAO {
 		return userTeamDetail;
 	}
 
+	@Override
+	public List<HashMap<String, String>> getStatistics(HashMap<String, String> map) {
+		List<HashMap<String, String>> list = sqlsession.selectList("commute.getStatistics", map);
+		return list;
+	}
+
 }

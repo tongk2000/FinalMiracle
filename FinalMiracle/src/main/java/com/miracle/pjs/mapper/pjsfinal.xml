@@ -217,18 +217,15 @@
 		where n.idx = #{idx}
 	</select>
 <!-- ============================================================================================================================================================= -->	
-<!-- === ***  *** === -->
-	<!-- <select id="" parameterType="HashMap" resultMap="editView">
-		select n.idx
-		from tbl_notice n join tbl_member m on n.fk_idx = m.userid
-		where n.idx = #{nidx} 
-	</select>
-	<resultMap id="editView" type="HashMap">
- 		<result property="idx" 				column="idx"		javaType="String"></result>
- 		<result property="subject" 			column="subject" 	javaType="String"></result>
- 		<result property="content" 			column="content" 	javaType="String"></result>
- 		<result property="userid" 			column="userid" 	javaType="String"></result>
- 	</resultMap> -->
+	<select id="getNoticeInfo" parameterType="HashMap" resultMap="info">	
+		select regday, readcount
+		from tbl_notice
+		where idx = #{nidx}
+	</select>	
+	<resultMap id="info" type="HashMap">
+ 		<result property="regday" 		column="regday"		javaType="String"></result>
+ 		<result property="readcount" 	column="readcount" 	javaType="String"></result>
+ 	</resultMap>
 <!-- ============================================================================================================================================================= -->	
 	
 	

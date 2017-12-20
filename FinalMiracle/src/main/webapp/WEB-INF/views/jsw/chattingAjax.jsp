@@ -5,7 +5,7 @@
 
 <style type="text/css">
 	
-	
+
 
 </style>
 
@@ -83,7 +83,7 @@
 				alert("code: " + request.status + "\n"+"message: " + request.responseText + "\n" + "error: " + error);     
 			}
 		});
-		$("#message").show()
+		$("#message").show();
 		$("#sendMessage").show();
 	}
 	
@@ -196,8 +196,9 @@
 	
 </script>
 
+<div style="width: 95%; height: 100%; border: 0px solid red; margin-left: 5%;" align="center">
 
-<div style="float: left; width: 300px; height: 550px; border: 1px solid red; overFlow: auto;">
+	<div style="float: left; width: 200px; height: 550px; border: 1px solid red; overFlow: auto;">
 
 	<div>채팅방 목록</div>
 	<div style="border: 1px solid maroon;" onclick="newChattingRoom()">채팅방 만들기</div>
@@ -205,9 +206,12 @@
 		
 	</div>
 	<div style="float: left;">
-	<div id="chatMessage" style="overFlow: auto; height: 550px; border: 1px solid blue; width: 700px;"></div>
-    <input type="text" id="message" placeholder="메시지 내용" style="width: 80%;"/>
-    <input type="button" id="sendMessage" value="전송" />
+	<div id="chatMessage" style="overFlow: auto; height: 550px; border: 1px solid blue; width: 550px; background-color: #a0c0d7;"></div>
+    <input type="text" id="message" placeholder="메시지 내용" style="width: 90%; margin-top: 5px;"/>
+    <input type="button" id="sendMessage" class="btn-info" value="전송" />
     <input type="hidden" id="roomid" />
     </div>
-    <div id="memberinfo" style="overFlow: auto; width: 200px; height: 550px; border: 1px solid yellow;"></div>
+    <div id="memberinfo" style="overFlow: auto; width: 240px; height: 550px; border: 1px solid yellow; float: left;"></div>
+    <i class="fa fa-comments"></i>
+    
+</div>

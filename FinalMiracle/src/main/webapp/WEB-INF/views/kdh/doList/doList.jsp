@@ -1426,7 +1426,7 @@
 
 <div class="modal fade" id="modalElementInfo" role="dialog"></div>
 
-<div id="folderRcm" style="padding:0px;">
+<div id="folderRcm" style="padding:0px; display:none;">
 	<table>
 		<tr>
 			<th class="rcmSubject"></th>
@@ -1453,7 +1453,7 @@
 </div>
 
 
-<div id="taskRcm" style="padding:0px;">
+<div id="taskRcm" style="padding:0px; display:none;">
 	<table>
 		<tr>
 			<th class="rcmSubject"></th>
