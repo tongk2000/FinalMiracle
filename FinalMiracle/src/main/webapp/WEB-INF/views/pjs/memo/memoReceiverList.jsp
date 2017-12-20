@@ -91,16 +91,16 @@
 <title>쪽지</title>
 </head>
 <body>
-	<div style="border:1px solid red; padding:5px;" class="container">
-		<div style="border:1px solid green; padding:5px;" align="center">
-			<div style="border:1px solid purple;">
+	<div style="border:0px solid red; padding:5px;" class="container">
+		<div style="border:0px solid green; padding:5px;" align="center">
+			<div style="border:0px solid purple;">
 				<a href="<%=request.getContextPath()%>/memoWrite.mr"><span style="color:red;">쪽지 쓰기</span></a>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<a href="<%=request.getContextPath()%>/memomemory.mr"><span style="color:red;">보낸 쪽지</span></a>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<a href="<%=request.getContextPath()%>/memoreceiver.mr"><span style="color:red;">받은 쪽지</span></a>
 			</div>
-			<div style="border:1px solid pink; padding:5px;">
+			<div style="border:0px solid pink; padding:5px;">
 				<table>
 					<thead>
 						<tr >
@@ -141,12 +141,12 @@
 					</tbody>
 				</table>
 			</div>
-			<div style="border:1px solid black; padding-left:190px;">
+			<div style="border:0px solid black; padding-left:190px;">
 				<button type="button" id="write">글쓰기</button>
 				<button type="button" id="del">삭제</button>
 			</div>
 		</div>
-		<div style="border:1px solid gray" align="center">
+		<div style="border:0px solid gray" align="center">
 			${pagebar}
 		</div>
 	</div>

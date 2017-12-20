@@ -500,6 +500,12 @@ public class PjsserviceImpl implements PjsinterService {
 		FileVO vo = dao.getmindViewWithNoAddCount(map);
 		return vo;
 	}
+	@Override
+	public HashMap<String, String> getNoticeInfo(HashMap<String, String> view) {
+		// 공지사항 정보
+		HashMap<String, String> map = dao.getNoticeInfo(view);
+		return map;
+	}
 	
 	
 	

@@ -147,7 +147,7 @@
 						$("#mapInfo").modal(); // 이게 그 뭐더냐 모달열기
 					}
 					else {
-						alert("여기옴?");
+						//alert("여기옴?");
 					}
 				},
 				error : function() {
