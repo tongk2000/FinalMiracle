@@ -200,10 +200,10 @@
 </head>
 
 
+
 <body background="<%= request.getContextPath() %>/resources/images/loginbg.png">
 
 	<div class="content" style="width: 100%; vertical-align: middle; margin-top: 15%;" align="center">
-
 		<div style="width: 600px; height: 400px; border-radius: 10px; background-color: #4F84C4; margin: 100px;">
 			<div style="padding-top: 5px; padding-bottom: 5px;">
 				<h2 style="text-align: center;"><span style="color: #FAE03C; font-family: verdana;">Miracle World</span></h2>

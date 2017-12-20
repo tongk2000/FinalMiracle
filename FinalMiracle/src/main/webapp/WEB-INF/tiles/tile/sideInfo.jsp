@@ -11,6 +11,9 @@
    
    String serverName = "http://"+serverIP+":"+portnumber;
 %>
+<style type="text/css">
+
+</style>
 
 <script type="text/javascript">
    $(function() {
