@@ -32,11 +32,8 @@ public class BoardController {
 	
 	// =================================================================== *** FAQ 게시판 목록 *** =====================
 	@RequestMapping(value="/faqList.mr", method={RequestMethod.GET})
-	public String faqList(HttpServletRequest req, HttpSession session) {
+	public String faqList(HttpServletRequest req, HttpSession session, FaqBoardVO faqvo) {
 		List<FaqBoardVO> faqList = null;  
-		
-		String gobackURL = req.getParameter("gobackURL");
-		req.setAttribute("gobackURL", gobackURL);
 		
 		String colname = req.getParameter("colname");
 		String search = req.getParameter("search");
@@ -78,6 +75,8 @@ public class BoardController {
 		} else {  // 검색어가 없는경우
 			faqList = service.faqListWithNoSearch(map);
 		}
+
+		
 		// ================================================ *** 페이지바 만들기 *** ====================
 		if( (colname != null && search != null && category != null) &&
 			(!colname.trim().isEmpty() && !search.trim().isEmpty()) &&
@@ -103,7 +102,7 @@ public class BoardController {
 		} else {
 			// ================================================= *** 검색이 없을 경우 *** =================================
 			pagebar = "<ul>";
-			pagebar += MyUtil.getPageBar(sizePerPage, blockSize, totalPage, currentShowPageNo, "faqList.mr");
+			pagebar += MyUtil.getFAQPageBar(sizePerPage, blockSize, totalPage, currentShowPageNo, category, "faqList.mr");
 			pagebar += "</ul>";
 		}
 		req.setAttribute("pagebar", pagebar);

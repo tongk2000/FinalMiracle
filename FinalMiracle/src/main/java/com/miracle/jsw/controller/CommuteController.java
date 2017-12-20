@@ -86,6 +86,10 @@ public class CommuteController {
 		req.setAttribute("commuteList", commuteList);
 		req.setAttribute("userTeamDetail", userTeamDetail);
 		
+		List<HashMap<String, String>> statisticsList = service.getStatistics(map);
+		req.setAttribute("statisticsList", statisticsList);
+		
+		
 		return "jsw/commute.all";
 	}
 	
