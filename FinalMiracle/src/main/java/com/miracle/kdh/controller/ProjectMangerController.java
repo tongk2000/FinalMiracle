@@ -415,6 +415,7 @@ public class ProjectMangerController {
 	// 첨부파일 삭제는 파일매니저 클래스에서 자체적으로 사용함
 	// ============================= ***** 파일 관련 메소드 끝 ***** =============================
 	
+	// 선택한 메뉴에 css 입히기 위해 어떤 메뉴를 선택했는지 세션에 저장하기
 	@RequestMapping(value="setSelectIconToSession.mr", method={RequestMethod.GET})
 	public String setSelectIconToSession(HttpServletRequest req) {
 		String selectIcon = req.getParameter("selectIcon");
@@ -422,7 +423,7 @@ public class ProjectMangerController {
 		ses.setAttribute("selectIcon", selectIcon);
 		System.out.println("selectIcon : "+selectIcon);
 		return "kdh/json.not"; // 굳이 반환 안해도 되는데.. Could not resolve view with name 'setSelectIconToSession' 오류 떠서 어쩔수 없이 넣어줌
-	}
+	} // end of String setSelectIconToSession(HttpServletRequest req) --------------------------------------------------------------------------------------
 }
 	 
 

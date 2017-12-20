@@ -96,31 +96,40 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
+		// 선택한 메뉴에 css 입히기 시작
 		var selectIcon = "${sessionScope.selectIcon}";
 		if(selectIcon == "") {
 			selectIcon = "doIcon";
 		}
 		$("#"+selectIcon).css({"background-color":"#154465 !important"});
+		// 선택한 메뉴에 css 입히기 끝 ----------------------------------------------------------------------------------------
 		
-	    $(".iconTag").hover(function(){
-	    	$(this).addClass("selectMenuColor");
-	    }, function(){
-	    	$(this).removeClass("selectMenuColor");
-	    });
-	    
-	    $("#toggleSidebar").hover(function(){
-	    	$(this).addClass("selectToggleMenuColor");
-	    }, function(){
-	    	$(this).removeClass("selectToggleMenuColor");
-	    });
-	    
-	  	$(".sideBarLi").click(function(){
+		// 선택한 메뉴에 css 입히기 위해 사이드바 메뉴 클릭시 메뉴값을 ajax로 보내서 세션에 저장함  
+		$(".sideBarLi").click(function(){
 	    	var frm = {"selectIcon":$(this).attr("id")};
 	    	$.ajax({
 	    		url:"setSelectIconToSession.mr",
 	    		data:frm
 	    	});
-	    });
+	    }); // end of $(".sideBarLi").click(function() ----------------------------------------------------------------------------
+		
+	 	// 메뉴 아이콘 hover
+	    $(".iconTag").hover(function(){
+	    	$(this).addClass("selectMenuColor");
+	    }, function(){
+	    	$(this).removeClass("selectMenuColor");
+	    }); // end of $(".iconTag").hover(function() -----------------------------------------------------------------------------------
+	    
+	    // 토글 메뉴 아이콘 hover
+	    $("#toggleSidebar").hover(function(){
+	    	$(this).addClass("selectToggleMenuColor");
+	    }, function(){
+	    	$(this).removeClass("selectToggleMenuColor");
+	    }); // end of $("#toggleSidebar").hover(function() ---------------------------------------------------------------------------------
+	  	
+	  	$("#toggleSidebar").click(function(){
+	  		
+	  	}); // end of $("#toggleSidebar").click(function() --------------------------------------------------------------------------------
 	});
 </script>
 
