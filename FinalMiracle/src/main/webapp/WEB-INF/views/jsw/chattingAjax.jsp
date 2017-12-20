@@ -200,7 +200,7 @@
 
 <div style="width: 95%; height: 100%; border: 0px solid red; margin-left: 5%;" align="center">
 
-	<div style="float: left; width: 200px; height: 550px; border: 1px solid red; overFlow: auto;">
+	<div style="float: left; width: 150px; height: 550px; border: 1px solid red; overFlow: auto;">
 
 	<div>채팅방 목록</div>
 	<div style="border: 1px solid maroon;" onclick="newChattingRoom()">채팅방 만들기</div>
@@ -213,7 +213,7 @@
     <input type="button" id="sendMessage" class="btn-info" value="전송" />
     <input type="hidden" id="roomid" />
     </div>
-    <div id="memberinfo" style="overFlow: auto; width: 240px; height: 550px; border: 1px solid yellow; float: left;"></div>
+    <div id="memberinfo" style="overFlow: auto; width: 220px; height: 550px; border: 1px solid yellow; float: left;"></div>
     <i class="fa fa-comments"></i>
     
 </div>
