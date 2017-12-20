@@ -6,6 +6,9 @@ public class MapVO {
 	private double longitude;	  		 	// 경도
 	private int team_idx;	  	 		 	// 왜래키(팀테이블 참조, 팀 테이블의 조장값 하나)
 	private String name;				 	// 위치이름
+	private String username;				// 유저이름
+	
+	
 	public MapVO(){}
 	public MapVO(int idx, double latitude, double longitude, int team_idx, String name) {
 		super();
@@ -14,6 +17,13 @@ public class MapVO {
 		this.longitude = longitude;
 		this.team_idx = team_idx;
 		this.name = name;
+	}
+	
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	public int getIdx() {
 		return idx;

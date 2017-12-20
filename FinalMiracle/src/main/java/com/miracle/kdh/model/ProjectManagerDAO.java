@@ -59,13 +59,19 @@ public class ProjectManagerDAO {
 		return map;
 	} // end of HashMap<String, String> getUpFolder(String upIdx) -----------------------------------------------------------------
 
+	// 최상위 요소 추가라면 마지막 groupNo 에 1 더해서 반환해주기
+	public HashMap<String, String> getMaxGroupNo(String upIdx) {
+		HashMap<String, String> map = sql.selectOne("do.getMaxGroupNo",upIdx);
+		return map;
+	} // end of HashMap<String, String> getMaxGroupNo(String upIdx) -----------------------------------------------------------------
+	
 	// 현재 팀의 소속된 팀원 목록을 가져오기
 	public List<HashMap<String, String>> getTeamwonList(String team_idx) {
 		List<HashMap<String, String>> teamwonList = sql.selectList("do.getTeamwonList",team_idx);
 		return teamwonList;
 	} // end of List<HashMap<String, String>> getTeamwonList(String team_idx) -----------------------------------------------------------
 	
-	// 하위 요소 추가하기
+	// 요소 추가하기
 	public int addDownElement(FolderVO fvo) {
 		int result = sql.insert("do.addDownElement",fvo);
 		return result;
@@ -133,8 +139,14 @@ public class ProjectManagerDAO {
 	
 	// 내가 속한 요소의 idx 받아오기
 	public List<String> getMyElement(HashMap<String, String> map) {
-		List<String> myElementList = sql.selectList("do.getMyElement", map);
-		return myElementList;
+		List<String> idxListByElement = sql.selectList("do.getMyElement", map);
+		return idxListByElement;
+	} // end of public List<String> getMyElement(HashMap<String, String> map) ---------------------------------------------------------------
+	
+	// 검색한 요소의 idx 받아오기
+	public List<String> getSearchElement(HashMap<String, String> map) {
+		List<String> idxListByElement = sql.selectList("do.getSearchElement", map);
+		return idxListByElement;
 	} // end of public List<String> getMyElement(HashMap<String, String> map) ---------------------------------------------------------------
 	
 	// 요소 수정시 팀원 목록 수정하기 시작
@@ -165,6 +177,12 @@ public class ProjectManagerDAO {
 		return periodCntMap;
 	} // end of HashMap<String, String> getPeriodCnt() --------------------------------------------------------------------
 	
+	// 진행전, 진행중, 기한경과, 완료 건수를 검색어별로 가져오기
+	public HashMap<String, String> getPeriodCntBySearch(HashMap<String, String> map) {
+		HashMap<String, String> periodCntMap = sql.selectOne("do.getPeriodCntBySearch", map);
+		return periodCntMap;
+	} // end of HashMap<String, String> getPeriodCnt() --------------------------------------------------------------------
+	
 	// 첨부파일의 정보를 입력해주기
 	public int insertFolderFile(Folder_FileVO ffvo) {
 		int result = sql.insert("do.insertFolderFile", ffvo);
@@ -175,6 +193,17 @@ public class ProjectManagerDAO {
 	public void deleteFolderFile(String serFilename) { 
 		sql.delete("do.deleteFolderFile", serFilename);
 	} // end of void deleteFolderFile(String serFilename) --------------------------------------------------------------------
+
+	// 1.특정 요소와 그 하위요소들을 다른 상위요소로 이동할때 이동하는 첫번째 요소의 fk_folder_idx 변경해주기
+	public int elementMoveByFkIdx(FolderVO fvo) {
+		int result = sql.update("do.elementMoveByFkIdx", fvo);
+		return result;
+	} // end of int elementMoveByFkIdx(FolderVO fvo) -----------------------------------------------------------------------
+	// 2.특정 요소와 그 하위요소들을 다른 상위요소로 이동할때 이동하는 모든 요소의 groupNo, depth 변경해주기
+	public int elementMoveByGroup(FolderVO fvo) {
+		int result = sql.update("do.elementMoveByGroup", fvo);
+		return result;
+	} // end of int elementMoveByFkIdx(FolderVO fvo) -----------------------------------------------------------------------
 }
 
 

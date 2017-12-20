@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="UTF-8"%>
 <%
-request.setCharacterEncoding("UTF-8");
+	request.setCharacterEncoding("UTF-8");
 %>    
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/resources/jqueryuicss/jquery-ui.css" />
@@ -13,12 +13,12 @@ request.setCharacterEncoding("UTF-8");
 <html>
 <head>
 <meta charset="UTF-8">
-<title>공지사항 글</title>
+<title>마음의 소리 글</title>
 <style>
-	img {
+	/* img {
 		width:25px;
 		height:25px;
-	}
+	} */
 	
 </style>
 </head>
@@ -26,6 +26,7 @@ request.setCharacterEncoding("UTF-8");
 <c:set var="user" value="${map}" />  <!-- teamNum , userid , teamNum , memberNum, status -->
 	<div style="border: 1px solid green; width:100%;">
 		<div style="border: 1px solid yellow;">
+			<form name="end" enctype="multipart/form-data"> 
 			<table style="border: 1px solid red; width: 80%;">
 				<thead>
 					<tr>
@@ -34,49 +35,55 @@ request.setCharacterEncoding("UTF-8");
 				</thead>
 				<tbody>
 					<tr>
-						<td width="12%">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="img"> &nbsp;&nbsp; ${user.userid}</td>
+						<td width="12%">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="img"> &nbsp;&nbsp; ${user.userid}
+						<input type="hidden" name="userid" value="${user.userid}"></td>
 					</tr>
 					<tr>
-						<td width="12%">팀정보 : </td><td>${user.teamNum}</td>
+						<td width="12%">팀정보 : </td><td>${user.teamNum}<input type="hidden" name="teamNum" value="${user.teamNum}"></td>
 					</tr>
 					<tr>
 						<td width="12%">제목 : </td>
-						<td><input id="subject" type="text"/></td>
+						<td><input id="subject" type="text" name="subject"/><input type="hidden" name="idx"></td>
 					</tr>
 					<tr style="min-height: 200px;">
 						<td>내용 :</td>
-						<td height="200px"><textarea name="content" id="content" class="summernote"></textarea></td>
+						<td height="200px"><textarea name="content" id="content" class="summernote"></textarea><input type="hidden" name="chkid"></td>
+					</tr>
+					<tr>
+					   <td>파일첨부</td>
+					   <td><input type="file" name="attach" /></td>
 					</tr>
 				</tbody>
 			</table>
+			</form>
 			<div style="display:block; float:right;"><button type="button" onClick="writeEnd();">완료</button></div>
 		</div>
 	</div>
-	<form name="end">
-		<input type="hidden" name="userid">
-		<input type="hidden" name="teamNum">
-		<input type="hidden" name="subject">
+	<!-- <form name="end" enctype="multipart/form-data"> 
 		<input type="hidden" name="content">
 		<input type="hidden" name="nidx">
-		<input type="hidden" name="chkid">
-	</form>
+	</form> -->
 	<script>
 		function writeEnd() {
-			var frm = document.end;
-			var subject = $("#subject").val();
-			var content = $("#content").val();
-			var nidx = "${nidx}";
-			frm.nidx.value = nidx;
-			if(nidx == null || nidx=="") { // 일반글쓰기
+			var frm = document.end; // nidx, subject, content ,userid, teanNum
+			/* var subject = $("#subject").val();
+			var content = $("#content").val(); */
+			
+			var idx = "${idx}";  // 수정글의 idx
+			//frm.nidx.value = "${nidx}"; 
+			if(idx == null || idx=="") { // 일반글쓰기 //if(nidx == null || nidx=="") {
 				frm.userid.value = "${user.userid}";
 			}
-			if(nidx!=null && nidx!=""){ // 답변글쓰기
+			if(idx!=null && idx!=""){ // 답변글쓰기 // if(nidx!=null && nidx!=""){
 				frm.userid.value = "${sessionScope.loginUser.userid}";
 				frm.chkid.value = "${chkid}";
 			}
-			frm.teamNum.value = "${user.teamNum}";
+			/* frm.teamNum.value = "${user.teamNum}";
 			frm.subject.value = subject;
 			frm.content.value = content;
+			frm.attach.value = $("#attach").val(); */
+			//frm.idx.value="${idx}";
+			alert(idx);
 			frm.action="<%=request.getContextPath()%>/mindWriteEnd.mr";
 			frm.method="post";
 			frm.submit();

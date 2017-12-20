@@ -15,10 +15,10 @@ request.setCharacterEncoding("UTF-8");
 <meta charset="UTF-8">
 <title>공지사항 글</title>
 <style>
-	img {
+	/* img {
 		width:25px;
 		heigth:25px;
-	}
+	} */
 </style>
 </head>
 <body>

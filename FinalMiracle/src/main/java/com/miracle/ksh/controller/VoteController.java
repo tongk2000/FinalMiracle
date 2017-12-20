@@ -153,8 +153,6 @@ public class VoteController {
 		
 		String gobackURL = MyUtil.getCurrentURL(req); //돌아갈 페이지를 위해서 현재 페이지의 주소를 뷰단으로 넘겨주자
 		
-		req.setAttribute("gobackURL", gobackURL);
-		
 		String colname = req.getParameter("colname");
 		String search = req.getParameter("search");
 		
@@ -260,8 +258,6 @@ public class VoteController {
 		List<HashMap<String, String>> voteCommList = null;
 		
 		String gobackURL = MyUtil.getCurrentURL(req); //돌아갈 페이지를 위해서 현재 페이지의 주소를 뷰단으로 넘겨주자
-		
-		req.setAttribute("gobackURL", gobackURL);
 		
 		String colname = req.getParameter("colname");
 		String search = req.getParameter("search");
@@ -433,16 +429,16 @@ public class VoteController {
 		    }
         }
 			
-		if(compare1 > 0){ //간격이 있다면 
-			String msg = "종료일이 시작일보다 날짜가 앞섭니다.";
+		if(compare1 >= 0){ //간격이 있다면 
+			String msg = "종료일이 시작일보다 날짜가 같거나 앞섭니다.";
 			String loc = "javascript:history.back()";
 			
 			req.setAttribute("msg", msg);
 			req.setAttribute("loc", loc);
 			
 			return "ksh/msg.not";
-		} else if(compare2 > 0){
-			String msg = "종료일이 현재일보다 날짜가 앞섭니다.";
+		} else if(compare2 >= 0){
+			String msg = "종료일이 현재일보다 날짜가 같거나 앞섭니다.";
 			String loc = "javascript:history.back()";
 			
 			req.setAttribute("msg", msg);
@@ -633,6 +629,7 @@ public class VoteController {
 	public String voteEdit(HttpServletRequest req){
 		
 		String idx = req.getParameter("idx"); //수정하려는 투표글
+		String gobackURL = req.getParameter("gobackURL");
 		//System.out.println(idx);
 		
 		VoteVO votevo = service.VoteView(idx); //수정하려는 투표글의 원 내용을 가져오자
@@ -656,6 +653,7 @@ public class VoteController {
 		req.setAttribute("votevo", votevo);
 		req.setAttribute("voteitemvo", voteitemvo);
 		req.setAttribute("cnt", cnt);
+		req.setAttribute("gobackURL", gobackURL);
 		
 		return "ksh/vote/voteEdit.all";
 	}
@@ -669,6 +667,7 @@ public class VoteController {
 		String content = req.getParameter("content"); //내용
 		String startdate = req.getParameter("datepicker1"); //투표시작일
 		String enddate = req.getParameter("datepicker2"); //투표종료일
+		String gobackURL = req.getParameter("gobackURL");
 		
 		//System.out.println(itemvo.getIdx());
 		//System.out.println(idx);
@@ -777,6 +776,7 @@ public class VoteController {
 		    
 		    req.setAttribute("x", x);
 			req.setAttribute("n", n);
+			req.setAttribute("gobackURL", gobackURL);
 			
 			return "ksh/vote/voteEditEnd.all";
 		
@@ -938,6 +938,8 @@ public class VoteController {
 		//int fk_teamwon_idx = service.getFk_teamwon_idx(getidx);
 		
 		//String str_idx = String.valueOf(fk_teamwon_idx);
+		
+		comment.replace("\r\n", "<br>");
 		
 		HashMap<String, String> commMap = new HashMap<String, String>();
 		commMap.put("comment", comment);

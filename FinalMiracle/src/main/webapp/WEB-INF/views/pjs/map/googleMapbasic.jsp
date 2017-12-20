@@ -131,10 +131,7 @@
 </script>
 </head>
 <body>
-
-	<div id="googleMap"	style="width: 100%; height: 400px;"></div>
-<body>
-	<div id="googleMap"	style="margin:20% 10% 20% 20% ; ">sdfsdfsdfsdf</div>
+	<div id="googleMap"	style="margin:20% 10% 20% 20% ; "></div>
 </body>
 </html>
 

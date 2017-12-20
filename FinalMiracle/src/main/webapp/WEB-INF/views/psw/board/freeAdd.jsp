@@ -11,36 +11,7 @@
 <script src="<%=request.getContextPath() %>/resources/summernote/lang/summernote-ko-KR.js"></script>
 
 <style type="text/css">
-	table, th, td, textarea {
-		border: solid darkgray 1px;
-		border-left: none;
-		border-right: none;
-	}
-	
-	#table {
-		border-collapse: collapse;
-		width: 70%;
-	}
-	#table th, #table td{
-		padding: 10px;
-		font-size: 11pt;
-	}
-	#table th{
-		width: 10%; 
-		background-color: #DFCFBE;
-	}
-	#table td{
-		width: 50%;
-	}
-	.long {width: 470px;}
-	.short {width: 120px;}
-	
-	.addButtonStyle {
-		text-decoration: inherit;
-		font-style: italic;
-		font-size: 12pt;
-		color: navy;
-	}
+
 </style>
 
 
@@ -82,47 +53,79 @@
 
 <body>
 
-<div style="margin-left: 10%; width: 90%; border: 0px solid red;">
-	<div>
-		<span style="font-size: 14pt; font-weight: bold; font-family: verdana;">자유게시판</span>
-		<span style="font-size: 12pt; font-weight: bold; font-family: arial;"> 글쓰기</span>
-	</div>
+<div style="width: 100%; border: 3px dotted pink; margin-top: 30px;" align="center">
+	<div style="width: 800px; border: 1px solid red;">
 	
-	<div style="border: 0px solid blue; width: 80%;" >
-		<form name="writeFrm">
-			<table id="table">
-			 
-				<tr>
-					<th>아이디</th>
-					<td>
-					    <input type="text" name="userid" value="${sessionScope.loginUser.userid}" class="short" readonly />
-						<input type="hidden" name="name" value="${sessionScope.loginUser.name}" readonly />
-						<input type="hidden" name="fk_teamwon_idx" value="${sessionScope.teamInfo.teamwon_idx}" readonly />
-					</td>
-				</tr>
-				 
-				<tr>
-					<th>글제목</th>
-					<td>
-						<input type="text" name="subject" id="subject" class="long" />
-					</td>
-				</tr>
-				
-				<tr>
-	            	<th>글내용</th>
-	            	<td>
-	            		<textarea name="content" id="content" class="summernote"></textarea>
-	            	</td>
-	         	</tr>
-			</table>
+		<div style="width: 800px;" align="left">
+			<table id="table" style="width: 500px; border: 0px solid dimgray; border-left: none; border-right: none;">
 			
-			<div style="float: right; margin-right: 30%; margin-top: 10px;">
-				<span class="addButton" style="font-size: 11pt; font-family: verdana; font-weight: bold; cursor: pointer;" onClick="goWrite();">글쓰기</span>&nbsp;&nbsp;
-				<span class="addButton" style="font-size: 11pt; font-family: verdana; font-weight: bold; cursor: pointer;" onClick="javascript:history.back();">취소</span>
-			</div>
-		</form>
+				<!-- ============================= *** 자유게시판 소개 *** =================================== -->
+				<tr style="background-color: lightblue; padding: 5px; border: 1px solid lightgray; border-left: none; border-right: none;">
+					<td colspan="2" style="padding: 5px; font-weight: bold; font-size: 10pt;">
+						<span style="vertical-align: baseline; color: blue; font-size: smaller;">[${fk_team_idx}팀]</span> 자유게시판입니다.
+					</td>
+				</tr>
+				<tr class="title" style="border: 1px solid lightgray; border-left: none; border-right: none;">
+					<td colspan="2" style="padding: 10px; font-size: 10pt; border-bottom: none;">
+						미풍양속을 해치지 않는 범위 내에서 자유롭게 작성해주세요.<br/>
+						단, 팀원간 마찰은 <a href="<%= request.getContextPath() %>/mindList.mr">마음의 소리 게시판</a>을,
+						        팀내 공지사항은 <a href="<%= request.getContextPath() %>/noticeList.mr">공지사항</a> 게시판을,
+						<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:1 대화를 원하시는 회원님은 <a href="<%= request.getContextPath() %>/mindList.mr">쪽지</a> 또는 
+						<a href="<%= request.getContextPath() %>/chatting.mr">채팅</a> 기능을 이용해주시기 바랍니다.
+					</td>
+				</tr>
+				<!-- ============================= *** 공 백 *** ================================ -->
+				<tr style="border: 1px solid lightgray; border-top: none; border-left: none; border-right: none; border-bottom: none;">
+					<td colspan="2" style="border-bottom: none;"> 
+						<br/>									
+					</td>
+				</tr>
+			</table >
+		</div>
+		
+		<div style="border: 0px solid blue; width: 800px;" >
+			<form name="writeFrm">
+				<table id="table" style="border: 1px solid lightgray; border-left: none; border-right: none;">
+					<tr style="border: 1px solid lightgray; border-left: none; border-right: none;">
+						<th style="background-color: #DFCFBE; padding: 10px;">아이디</th>
+						<td style="padding: 5px; padding-left: 10px;">
+						    <input type="text" name="userid" value="${sessionScope.loginUser.userid}" class="short" readonly />
+							<input type="hidden" name="name" value="${sessionScope.loginUser.name}" readonly />
+							<input type="hidden" name="fk_teamwon_idx" value="${sessionScope.teamInfo.teamwon_idx}" readonly />
+						</td>
+					</tr>
+					 
+					<tr style="border: 1px solid lightgray; border-left: none; border-right: none;">
+						<th style="background-color: #DFCFBE; padding: 10px;">글제목</th>
+						<td style="padding: 5px; padding-left: 10px;">
+							<input type="text" name="subject" id="subject" class="long" />
+						</td>
+					</tr>
+					
+					<tr style="border: 1px solid lightgray; border-left: none; border-right: none;">
+		            	<th style="background-color: #DFCFBE; padding: 10px;">글내용</th>
+		            	<td style="padding: 5px;">
+		            		<textarea name="content" id="content" class="summernote"></textarea>
+		            	</td>
+		         	</tr>
+				</table>
+				
+				<!-- ================ *** 답변글쓰기가 추가된 경우 *** ================= -->
+				<input type="hidden" name="fk_idx" value="${fk_idx}" />
+				<input type="hidden" name="groupno" value="${groupno}" />
+				<input type="hidden" name="depthno" value="${depthno}" />
+				
+				<div style="margin-top: 10px; margin-right: 30px;" align="right">
+					<span class="addButton" style="font-size: 11pt; font-family: verdana; font-weight: bold; cursor: pointer;" onClick="goWrite();">글쓰기</span>&nbsp;&nbsp;
+					<span class="addButton" style="font-size: 11pt; font-family: verdana; font-weight: bold; cursor: pointer;" onClick="javascript:history.back();">취소</span>
+				</div>
+			
+			</form>
+			
+		</div>
+		
 	</div>
-
 </div>	
 
 

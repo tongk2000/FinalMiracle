@@ -10,7 +10,7 @@ request.setCharacterEncoding("UTF-8");
 <head>
 <meta charset="UTF-8">
 <style type="text/css">
-	table {
+	/* table {
 		
 		border: 1px solid black;
 	}
@@ -18,11 +18,13 @@ request.setCharacterEncoding("UTF-8");
 		border: 1px solid black;
 		border-collapse:none;
 		padding:7px;
+		font-family:verdana;
 	}
 	th {
 		text-align:center;
-		background-color:black;
+		background-color:#337ab7;
 		color:white;
+		font-size:12pt;
 	}
 	td {
 		padding-left:5px;
@@ -36,24 +38,32 @@ request.setCharacterEncoding("UTF-8");
 		opacity:1.0;
 	} 
 	.subjectstyle {font-weight: bold;
-    	           color: gray;
+    	           color: #eaeaea;
     	           cursor: pointer; }
     .grayColor {
-    	background-color:gray;
+    	background-color:#eaeaea;
     	cursor: pointer;
     }
     .selectLine {
-    	background-color:gray;
+    	background-color:#eaeaea;
+    } */
+    #displayList {
+    	position:absolute;
+    	background-color:white; 
+    	width:187px; 
+    	margin-left: 28px; 
+    	border-top: 0px; 
+    	border: solid gray 3px;
     }
 </style>
 <title>Notice 게시판 입니다!</title>
 </head>
 <body>
 	<c:set var="team" value="${userTeam}"></c:set>
-	<div align="center" >
+	<%-- <div align="center" >
 		<h2>공지사항 게시판</h2>
 			
-			<table style="width:90%;">
+			<table style="width:90%;" class="table">
 				<thead>
 					<tr>
 						<th>번호</th>		<!-- 번호 -->
@@ -62,6 +72,9 @@ request.setCharacterEncoding("UTF-8");
 						<th>첨부파일</th>
 						<th>글쓴 시간</th>	<!-- 글쓴 시간 -->
 						<th>조회수</th>	<!-- 조회수-->
+						<c:if test="${team.status == 2}" >
+							<th></th>
+						</c:if>
 					</tr>
 				</thead>
 				<tbody>
@@ -73,7 +86,7 @@ request.setCharacterEncoding("UTF-8");
 					<c:if test="${not empty list}">
 						<c:forEach var="nt" items="${list}" varStatus="status">
 							<tr class="line">
-								<td width="5%" style="text-align:center;"><input type="checkbox"><input type="hidden" value="${nt.n_idx}"/></td><!-- 번호 -->
+								<td width="5%" style="text-align:center;"><input type="hidden" value="${nt.n_idx}"/><input type="checkbox"></td><!-- 번호 -->
 								<td width="15%" style="padding-left:10px;">
 									<a onClick="goUserInfo('${nt.fk_userid}');"> <!-- 유저아이디 -->
 										<img src="<%= request.getContextPath()%>/resources/images/${nt.img}" class="imgs" /> 
@@ -87,13 +100,16 @@ request.setCharacterEncoding("UTF-8");
 									<td width="35%" onClick="goView('${nt.n_idx}','${nt.fk_userid}','${nt.t_idx}')" style="margin-left:10px; padding-left:${nt.depth*10}px; color:black; font-weight:bold; ">└ [답글] ${nt.subject} <span style="color:blue">&nbsp;&nbsp;&nbsp;[댓글 수 : ${nt.count}]</span></td><!-- 제목 -->
 							</c:if>
 							<c:if test="${nt.file > 0}">
-								    <td width="10%" style="text-align:center;"><img src="<%=request.getContextPath() %>/resources/images/disk.gif" ></td>
+								    <td width="5%" style="text-align:center;"><img src="<%=request.getContextPath() %>/resources/images/disk.gif" ></td>
 							</c:if>	
 							<c:if test="${nt.file == 0}">
-								    <td width="10%" style="text-align:center;">X</td>
+								    <td width="5%" style="text-align:center;">X</td>
 							</c:if>	
 								<td width="25%" style="text-align:center;">${nt.regday}</td><!-- 날짜 -->
-								<td width="10%" style="text-align:center;">${nt.readcount}</td><!-- 조회수 -->
+								<td width="7%" style="text-align:center;">${nt.readcount}</td><!-- 조회수 -->
+							<c:if test="${team.status == 2}" >
+								<td width="8%" style="text-align:center;"><button type="button" onClick="goEdit('${nt.n_idx}','${nt.t_idx}');">글수정</button></td>
+							</c:if>	
 							</tr>
 							<input type="hidden" id="nidx"name="aidx" value="${nt.n_idx}"/>		
 						</c:forEach>
@@ -113,13 +129,6 @@ request.setCharacterEncoding("UTF-8");
 		</div>
 		<br/><br/>
 		<form name="frm">
-			<%-- <c:if test="${fn:length(team) > 1}" >
-				<select id="teamNum" name="teamNum" style="font-size:12pt;">
-					<c:forEach var="t" items="${team}">
-						<option value="${t.teamNum}">${t.teamNum}팀</option>
-					</c:forEach>	
-				</select>
-			</c:if> --%>
 			<select id="searchType" name="searchType" style="font-size:12pt; ">
 				<option value="fk_userid">아이디</option>
 				<option value="subject">제목</option>
@@ -127,11 +136,106 @@ request.setCharacterEncoding("UTF-8");
 			<input type="text" id="searchString" name="searchString" />
 			<button type="button" id="btnClick" onClick="goSearch();">검색</button><br/>
 		</form>
-		<div style="z-index:2000;">
+		
+	    <div style="z-index:2000;">
 				<div id="displayList" style="background-color:white; width:176px; margin-left: 28px; border-top: 0px; border: solid gray 3px;"></div>
-		</div>
-	</div>
+		</div> 
+	 --%>
+	 	<div align="center" >
+			<div style="display:block; width:90%; padding-top:30px;" align="center"> 
+				<div class="panel panel-primary">
+					<div class="panel-heading"></div>
+					<table class="table table-hover" id="dev-table">
+						<thead>
+							<tr>
+								<th style="text-align:center; font-family:verdana;">번호</th>		<!-- 번호 -->
+								<th style="text-align:center; font-family:verdana;">아이디</th>	<!-- 아이디 -->
+								<th style="text-align:center; font-family:verdana;">제목</th>		<!-- 제목 -->
+								<th style="text-align:center; font-family:verdana;">첨부파일</th>
+								<th style="text-align:center; font-family:verdana;">글쓴 시간</th>	<!-- 글쓴 시간 -->
+								<th style="text-align:center; font-family:verdana;">조회수</th>	<!-- 조회수-->
+								<c:if test="${team.status == 2}" >
+									<th></th>
+								</c:if>
+							</tr>
+						</thead>
+						<tbody>
+							<tbody>
+							<c:if test="${empty list}">
+								<tr>
+									<td colspan="6">데이터가 없습니다.</td>
+								</tr>
+							</c:if>
+							<c:if test="${not empty list}">
+								<c:forEach var="nt" items="${list}" varStatus="status">
+									<tr class="line">
+										<td width="5%" style="text-align:center; font-family:verdana;"><input type="hidden" value="${nt.n_idx}"/><input type="checkbox" style="height:20px;"></td><!-- 번호 -->
+										<td width="15%" style="text-align:center; font-family:verdana;">
+											<a onClick="goUserInfo('${nt.fk_userid}');"> <!-- 유저아이디 -->
+												<img src="<%= request.getContextPath()%>/resources/images/${nt.img}" class="imgs"  style="width:25px; height:auto;	"/> 
+												<span class="userid">${nt.fk_userid}</span>
+											</a>
+										</td>
+									<c:if test="${nt.depth == 0}">
+											<td width="35%" onClick="goView('${nt.n_idx}','${nt.fk_userid}', '${nt.t_idx}')" style=" font-family:verdana;"><span style="color:red; margin-left:10px;">${nt.subject} <span style="color:blue">&nbsp;&nbsp;&nbsp;[댓글 수 : ${nt.count}]</span></span></td><!-- 제목 -->
+									</c:if>
+									<c:if test="${nt.depth > 0}">
+											<td width="35%" onClick="goView('${nt.n_idx}','${nt.fk_userid}','${nt.t_idx}')" style="margin-left:10px; padding-left:${nt.depth*10}px; color:black; font-weight:bold;  font-family:verdana;">└ [답글] ${nt.subject} <span style="color:blue">&nbsp;&nbsp;&nbsp;[댓글 수 : ${nt.count}]</span></td><!-- 제목 -->
+									</c:if>
+									<c:if test="${nt.file > 0}">
+										    <td width="5%" style="text-align:center; font-family:verdana;"><img src="<%=request.getContextPath() %>/resources/images/disk.gif" ></td>
+									</c:if>	
+									<c:if test="${nt.file == 0}">
+										    <td width="8%" style="text-align:center; font-family:verdana;">X</td>
+									</c:if>	
+										<td width="22%" style="text-align:center; font-family:verdana;">${nt.regday}</td><!-- 날짜 -->
+										<td width="7%" style="text-align:center; font-family:verdana;">${nt.readcount}</td><!-- 조회수 -->
+									<c:if test="${team.status == 2}" >
+										<td width="8%" style="text-align:center; font-family:verdana;"><button type="button" onClick="goEdit('${nt.n_idx}','${nt.t_idx}');">글수정</button></td>
+									</c:if>	
+									</tr>
+									<input type="hidden" id="nidx"name="aidx" value="${nt.n_idx}"/>		
+								</c:forEach>
+							</c:if>
+						</tbody>
+					</table>
+				</div>
+			</div>	
+			<div style="border:0px dotted red">
+				<br/>
+				<c:if test="${team.status == 2}" >
+					<button type="button" onClick="goWrite();">글쓰기</button>
+					<button type="button" id="del" >삭제</button>
+				</c:if>
+			</div>
+			<br/><br/>
+			<div style="margin: 0 auto;">
+				${pagebar}
+			</div>
+			<br/><br/>
+			<form name="frm">
+				<select id="searchType" name="searchType" style="font-size:12pt; ">
+					<option value="fk_userid">아이디</option>
+					<option value="subject">제목</option>
+				</select>
+				<input type="text" id="searchString" name="searchString" style="width:187px"/>
+				<button type="button" id="btnClick" onClick="goSearch();">검색</button><br/>
+			</form>
+			
+		    <div style="z-index:2000;">
+					<div id="displayList" ></div>
+			</div>
+        </div>    
 	<form name="view">
+		<input type="hidden" name="idx" />
+		<input type="hidden" name="userid" />
+		<input type="hidden" name="teamidx" />
+	</form>
+	<form name="editView">
+		<input type="hidden" name="idx" />
+		<input type="hidden" name="teamidx" />
+	</form>
+	<form name="edit"><!-- 수정글쓰기 -->
 		<input type="hidden" name="idx" />
 		<input type="hidden" name="userid" />
 		<input type="hidden" name="teamidx" />
@@ -141,11 +245,25 @@ request.setCharacterEncoding("UTF-8");
 		<input type="hidden" name="userid" />
 		<input type="hidden" name="teamNum" />
 	</form>
-	<script>
+	
+
+	<script type="text/javascript">
 		$(document).ready(function(){
+			
+			$("#userid").click(function(){
+				var frm = document.frm;
+				frm.searchType.value = "fk_userid";
+				//alert("유저 아이디 오냐?");
+			});
+			$("#subject").click(function(){
+				var frm = document.frm;
+				frm.searchType.value = "subject";
+				//alert("주제 오냐?");	
+			});
+			
 			$("tr:has(td)").click(function(){ // tr중에서 td를 가지고 있는 tr
 				var bool = $(this).hasClass("selectLine"); // 한번 더 클릭하면 클래스 삭제
-				alert(bool);
+				//alert(bool);
 				if(bool) {
 					$(this).removeClass("selectLine");
 				}
@@ -185,6 +303,10 @@ request.setCharacterEncoding("UTF-8");
 								result = "<span class='first' style='color:blue;'>" +wordstr.substr(0, index)+ "</span>" + "<span class='second' style='color:red; font-weight:bold;'>" +wordstr.substr(index, len)+ "</span>" + "<span class='third' style='color:blue;'>" +wordstr.substr(index+len, wordstr.length - (index+len) )+ "</span>";  
 								resultHTML += "<span style='cursor:pointer;'>"+ result +"</span><br/>"; 
 							});
+							var left = $("#searchString").position().left-28;
+							var top = $("#searchString").position().top+5;
+							top = top + ($("#searchString").height());
+							$("#displayList").css({"left":left+"px", "top":top+"px"});
 							$("#displayList").html(resultHTML);
 							$("#displayList").show();
 						}
@@ -257,10 +379,10 @@ request.setCharacterEncoding("UTF-8");
 						$("#userinfo").modal(); // 이게 뭐였지????
 					}
 					else {
-						alert("ajax결과"+data);
+						//alert("ajax결과"+data);
 					}
 				},error : function() {
-					alert("실패!");
+					//alert("실패!");
 				}
 			});
 		}
@@ -273,10 +395,20 @@ request.setCharacterEncoding("UTF-8");
 			frm.method="get";
 			frm.submit();
 		}
+		function goEdit(idx, t_idx) { /* 글 수정하기 */
+			var frm = document.editView;
+			//alert(idx, t_idx);
+			frm.idx.value = idx;
+			frm.teamidx.value = t_idx;
+			frm.action="<%=request.getContextPath()%>/noticeViewEdit.mr";
+			frm.method="get";
+			frm.submit();
+			
+		}
 		function goWrite() {
 			<c:if test="${team.teamNum != null&&team.teamNum!=''}" >
 				var t_teamNum = "${team.teamNum}";
-				alert(t_teamNum);
+			//	alert(t_teamNum);
 			</c:if>
 			<c:if test="${team.userid != null&&team.userid!=''}">
 				var m_userid = "${team.userid}";
@@ -291,5 +423,7 @@ request.setCharacterEncoding("UTF-8");
 		}
 	</script>
 	<div class="modal fade" id="userinfo" role="dialog"></div>
+	
+	
 </body>
 </html>

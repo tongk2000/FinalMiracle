@@ -11,86 +11,66 @@ request.setCharacterEncoding("UTF-8");
 <link href="<%=request.getContextPath() %>/resources/summernote/summernote.css" rel="stylesheet">
 <script type="text/javascript" src="<%= request.getContextPath() %>/resources/jqueryuijs/jquery-ui.js"></script>
 <script src="<%=request.getContextPath() %>/resources/summernote/summernote.js"></script>
-<script src="<%=request.getContextPath() %>/resources/summernote/lang/summernote-ko-KR.js"></script>
+<script src="<%=request.getContextPath() %>/resources/summernote/lang/summernote-ko-KR.js"></script> 
 <meta charset="UTF-8">
 <title>공지사항 글</title>
-<style>
-	.imgs {
-		width:25px;
-		heigth:25px;
-	}
-	div#displayList {
-		width:80%;
-		align:center;
-	}
-	.first {
-		width:15%;
-	}
-	.second {
-		width:65%;
-	}
-	.third {
-		width:20%;
-	}
-	tr, th, td {
-		border:1px solid black;
-	}
-	th {
-		background-color:gray;
-	}
-	
-</style>
 </head>
+
 <body>
 <c:set var="user" value="${map}" /> <!-- teamNum , userid , teamNum , status -->
-	<div style="border: 1px solid green; width:100%;">
-		<div style="border: 1px solid yellow;" align="center">
-			<table style="border: 2px dotted red;">
+	<div align="center"  > <!-- style="width:700px; float:right;" -->
+		 <div style="border: 1px solid yellow; " align="center"> <!-- width:500px; -->
+			<div style=" border:3px solid Orange; "> <!-- width:500px; -->
+			 <span style="color:Orange"> 공지사항 글 </span><br/>
+			 <span style="color:lightblue;">팀 프로젝트 중요사항 입니다.</span>
+			</div><br/>
+		
+			<form name="editform">
+			<table>
 				<thead>
 					<tr>
-						<th colspan="2">공지글</th>
+						<th colspan="2" style="color:white;"><span >공지글</span></th> <!-- style="size:20px;" -->
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td width="12%">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="imgs"> &nbsp;&nbsp; ${user.userid}</td>
+						<td >유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" > &nbsp;&nbsp; ${user.userid}<input type="hidden" name="fk_userid" value="${user.userid}"></td>
 					</tr>
 					<tr>
-						<td width="12%" >팀정보 : </td><td style="padding-left:12px;">${user.team_idx} 팀</td>
+						<td >팀정보 : </td><td >${user.team_idx} 팀</td> <!-- style="padding-left:12px;" -->
 					</tr>
 					<tr>
-						<td width="12%">제목 :</td>
-						<td><input type="text" value="${user.subject}" readonly /></td>
+						<td >제목 :</td>
+						<td><input type="text" value="${user.subject}" name="subject" readonly /></td>
 					</tr>
-					<tr style="min-height: 200px;">
+					<tr > <!-- style="min-height: 200px;"  -->
 						<td>내용 :</td>
-						<td><textarea name="content" id="content" class="summernote">${user.content}</textarea></td>
+						<td id="edit1"><div  >${user.content}</div></td> <!-- style="width:500px; height:500px;" -->
 					</tr>
 					<tr>
 						<td>첨부파일</td>   <!-- USERID, IMG, SUBJECT, CONTENT, STATUS, IDX, FILENAME, ORGFILENAME, FILESIZE, FK_IDX -->
 						<td>
-						    <a href="<%= request.getContextPath() %>/download.mr?nidx=${user.n_idx}&fidx=${user.idx}">${user.orgfilename}</a> 
+						    <a href="<%= request.getContextPath() %>/download.mr?nidx=${user.n_idx}&fidx=${file.idx}">${file.orgFilename}</a> 
 						</td>
 					</tr>
 				</tbody>
 			</table>
-			<div style="margin-left:200px;"  >
-					<button type="button" onClick="goback();">목록보기</button>
-			</div>
+			</form>
+			<div > <!-- style="display:inline; margin-left:40px;" -->
+				<button type="button" onClick="goback();">목록보기</button>
+			</div> 
 			<c:if test="${sessionScope.teamInfo.teamwon_status == 2}">
-				<div style="margin-left:410px; clear:both;"  >
-					<button type="button" onClick="">이글 수정하기</button>
-				</div>
-				<div style="margin-left:710px;"  >
+				<div   ><!-- style="margin-left:80px; display:inline;" -->
 					<button type="button" onClick="goEdit();">수정글쓰기</button>
 				</div>
 			</c:if>
+			
 			<br/>
 			<br/>
-			<div id="displayList" style="background-color:white; align:center;"></div>
+			<div id="displayList" ></div> <!-- style="background-color:white; align:center;" -->
 			<br/>
 			<div style="align:center;">댓글 :&nbsp;&nbsp;<input type="text" id="contents" name="contents"/> <button type="button" id="goClick">쓰기</button></div> <br/><br/>
-		</div>
+		</div> 
 	</div>
 	<form name="edit">
 		<input type="hidden" name="nidx">
@@ -116,7 +96,7 @@ request.setCharacterEncoding("UTF-8");
 		    });
 		});
 		function getReply() {
-			var data_form = {"nidx":"${nidx}"}
+			var data_form = {"nidx":"${nidx}"};
 			$.ajax({
 				url:"getnoticeReplyList.mr",
 				type:"get",
@@ -136,9 +116,9 @@ request.setCharacterEncoding("UTF-8");
 				type:"post",
 				data:{"idx":idx,"contents":contents,"userid":userid}
 			});
-			getReply();				
+			getReply();
 		}
-		function goEdit() {
+		<%-- function goEdit() {
 			var frm = document.edit;
 			frm.nidx.value="${nidx}";
 			frm.userid.value="${sessionScope.loginUser.userid}";
@@ -146,10 +126,30 @@ request.setCharacterEncoding("UTF-8");
 			frm.action="<%=request.getContextPath()%>/noticeEditWrite.mr";
 			frm.method="get";
 			frm.submit();
-		}
+		} --%>
 		function goback() {
 			location.href="<%=request.getContextPath()%>/${sessionScope.gobackURL}";
 		}
+		 function ajaxedit(content) {
+			var form_data={content:content};
+			
+			$.ajax({
+				url:"noticeViewEdit.mr",
+				type:"post",
+				data:form_data,
+				dataType:"html",
+				success:function(data) {
+					alert(data);
+					$("#goedit").hide();
+					var html =	"<button type='button' onClick='edit();'>완료</button>";
+					$("#goedit").html(html).show();
+					$("#edit1").html(data);
+				},
+				error:function () {
+					alert("에러");
+				}
+			})
+		} 
 	</script>
 </body>
 </html>

@@ -3,7 +3,8 @@
 <%
 request.setCharacterEncoding("UTF-8");
 %>
-<script>
-	alert("${msg}");
+
+<script type="text/javascript">
+	alert(${msg});
 	${loc};
 </script>

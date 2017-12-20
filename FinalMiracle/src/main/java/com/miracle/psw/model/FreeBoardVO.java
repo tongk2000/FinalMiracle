@@ -9,11 +9,13 @@ public class FreeBoardVO {
 	private String content;         // 글내용    -- clob
 	private int readCnt;            // 글조회수
 	private int commentCnt;    		// 댓글수
-	private int groupno;            // 답변글쓰기에 있어서 그룹번호 원글(부모글)과 답변글은 동일한 groupno 를 가진다. 
+	
+	private String groupno;            // 답변글쓰기에 있어서 그룹번호 원글(부모글)과 답변글은 동일한 groupno 를 가진다. 
 	                                // 답변글이 아닌 원글(부모글)인 경우 groupno 의 값은 groupno 컬럼의 최대값(max)+1 로 한다.                                                
-	private int fk_idx;        		// fk_idx 컬럼은 절대로 foreign key가 아니다.fk_idx 컬럼은 자신의 글(답변글)에 있어서 원글(부모글)이 누구인지에 대한 정보값이다.
+	private String fk_idx;        		// fk_idx 컬럼은 절대로 foreign key가 아니다.fk_idx 컬럼은 자신의 글(답변글)에 있어서 원글(부모글)이 누구인지에 대한 정보값이다.
 	                                // 답변글쓰기에 있어서 답변글이라면 fk_seq 컬럼의 값은 원글(부모글)의 idx 컬럼의 값을 가지게 되며, 답변글이 아닌 원글일 경우 0 을 가지도록 한다.                                              
-	private int depthno;        	// 답변글쓰기에 있어서 답변글 이라면 원글(부모글)의 depthno + 1 을 가지게 되며, 답변글이 아닌 원글일 경우 0 을 가지도록 한다.
+	private String depthno;        	// 답변글쓰기에 있어서 답변글 이라면 원글(부모글)의 depthno + 1 을 가지게 되며, 답변글이 아닌 원글일 경우 0 을 가지도록 한다.
+	
 	private String regDate;         // 글쓴시간
 	private int status;             // 글삭제여부   1:사용가능한글, 0:삭제된글 
 	private int infoStatus;     	// 일반글: 0   공지사항: 1
@@ -21,6 +23,26 @@ public class FreeBoardVO {
 	private int fk_teamwon_idx;	    // tbl_teamwon 팀원번호 참조값
 	private int fk_team_idx;		// tbl_teamwon 팀번호 참조값
 	
+	private int next_idx;
+	private int pre_idx;
+	
+	public int getNext_idx() {
+		return next_idx;
+	}
+
+	public void setNext_idx(int next_idx) {
+		this.next_idx = next_idx;
+	}
+
+	public int getPre_idx() {
+		return pre_idx;
+	}
+
+	public void setPre_idx(int pre_idx) {
+		this.pre_idx = pre_idx;
+	}
+	
+
 	public int getFk_team_idx() {
 		return fk_team_idx;
 	}
@@ -43,7 +65,7 @@ public class FreeBoardVO {
 	public FreeBoardVO() { }
 	
 	public FreeBoardVO(int idx, String userid, String name, String subject, String content, int readCnt, int commentCnt,
-			int groupno, int fk_idx, int depthno, String regDate, int status, int infoStatus, int fk_teamwon_idx) {
+			String groupno, String fk_idx, String depthno, String regDate, int status, int infoStatus, int fk_teamwon_idx, int next_idx, int pre_idx) {
 
 		this.idx = idx;
 		this.userid = userid;
@@ -59,6 +81,8 @@ public class FreeBoardVO {
 		this.status = status;
 		this.infoStatus = infoStatus;
 		this.fk_teamwon_idx = fk_teamwon_idx;
+		this.next_idx = next_idx;
+		this.pre_idx = pre_idx;
 	}
 
 	public int getFk_teamwon_idx() {
@@ -125,27 +149,27 @@ public class FreeBoardVO {
 		this.commentCnt = commentCnt;
 	}
 
-	public int getGroupno() {
+	public String getGroupno() {
 		return groupno;
 	}
 
-	public void setGroupno(int groupno) {
+	public void setGroupno(String groupno) {
 		this.groupno = groupno;
 	}
 
-	public int getFk_idx() {
+	public String getFk_idx() {
 		return fk_idx;
 	}
 
-	public void setFk_idx(int fk_idx) {
+	public void setFk_idx(String fk_idx) {
 		this.fk_idx = fk_idx;
 	}
 
-	public int getDepthno() {
+	public String getDepthno() {
 		return depthno;
 	}
 
-	public void setDepthno(int depthno) {
+	public void setDepthno(String depthno) {
 		this.depthno = depthno;
 	}
 

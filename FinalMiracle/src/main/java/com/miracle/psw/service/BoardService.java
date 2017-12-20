@@ -68,7 +68,15 @@ public class BoardService implements InterBoardService {
 
 	@Override
 	public int freeAdd(FreeBoardVO freevo) {  // 자유게시판 글쓰기
-		int n = dao.freeAdd(freevo);
+		/* ======= 글쓰기가 원글인지 답글인지 구분하여 tbl_free 에 insert
+		 * 원글 : tbl_free groupno컬럼 값 max + 1
+		 * 답변글 : 넘겨받은 groupno컬럼 값 그대로 insert 
+		 */
+		if(freevo.getFk_idx().equals("") || freevo.getFk_idx().trim().isEmpty()) {  // 원글 쓰기인 경우
+			int groupno = dao.getGroupMaxno() + 1;
+			freevo.setGroupno(String.valueOf(groupno));
+		}
+		int n = dao.freeAdd(freevo);  // 답변글 쓰기인 경우
 		return n;
 	}
 
@@ -76,18 +84,22 @@ public class BoardService implements InterBoardService {
 	@Override
 	public FreeBoardVO getView(String idx, String userid) {  // 자유게시판 클릭한 게시글 1개 보여주기(조회수 증가 후)
 		FreeBoardVO vo = dao.getView(idx);  // 자유게시판 글 보여주기 
-		
+	
 		if(userid != null && !vo.getUserid().equals(userid)) {
 			dao.setAddReadCnt(idx); // 자유게시판 글(readCnt) 조회수 1 증가시키기
 			vo = dao.getView(idx);
 		}
-		return vo;
+		return vo;		
 	}
+
+	
+	// ========================= *** 자유게시판 글 조회수(readCnt) 증가 없이 보여주기 *** =====================
 	@Override
 	public FreeBoardVO getViewWithNoReadCnt(String idx) {  // 자유게시판 글 조회수(readCnt) 증가 없이 보여주기
 		FreeBoardVO vo = dao.getView(idx);
 		return vo;
 	}
+
 
 	// ===================== *** 자유게시판 검색 유/무에 따른 목록 보여주기 *** ==================================================
 	@Override
@@ -180,12 +192,9 @@ public class BoardService implements InterBoardService {
 		return n;
 	}
 
-	// ========================= *** 자유게시판 활성화된 게시글 총 갯수 알아오기 *** =============
-	@Override
-	public int getFreeListCnt() {
-		int cnt = dao.getFreeListCnt();
-		return cnt;
-	}
+
+
+
 
 	
 	

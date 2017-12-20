@@ -88,19 +88,43 @@
 	
 	<!-- 자유게시판 글쓰기 -->
 	<insert id="freeAdd" parameterType="com.miracle.psw.model.FreeBoardVO">
-		insert into tbl_free(idx, userid, name, subject, content, readCnt, commentCnt, groupno, fk_idx, depthno, regDate, status, infoStatus, fk_teamwon_idx)
-		values(seq_free.nextval, #{userid}, #{name}, #{subject}, #{content}, default, default, (select max(groupno)+1 from tbl_free), default, default, default, default, default, #{fk_teamwon_idx})  
+
+		<if test='fk_idx.equals("")'>
+			insert into tbl_free(idx, userid, name, subject, content, readCnt, commentCnt, groupno, depthno, regDate, status, infoStatus, fk_teamwon_idx)
+			values(seq_free.nextval, #{userid}, #{name}, #{subject}, #{content}, default, default, #{groupno}, default, default, default, default, #{fk_teamwon_idx})  
+		</if>
+		<if test='!fk_idx.equals("")'>
+			insert into tbl_free(idx, userid, name, subject, content, readCnt, commentCnt, groupno, fk_idx, depthno, regDate, status, infoStatus, fk_teamwon_idx)
+			values(seq_free.nextval, #{userid}, #{name}, #{subject}, #{content}, default, default, #{groupno}, #{fk_idx}, #{depthno}+1, default, default, default, #{fk_teamwon_idx})  
+		</if>
+		
 	</insert>
+	
+	<!-- groupno Max값 구하기 -->
+	<select id="getGroupMaxno" resultType="int">
+		select max(groupno) from tbl_free
+	</select>
 	
 	<!-- 자유게시판 글 1개 보여주기 (조건에 따른 글 조회수 1 증가 후) -->
 	<select id="getView" parameterType="String" resultType="com.miracle.psw.model.FreeBoardVO">
-		select F.idx, F.userid, F.name, F.subject, F.content, F.readCnt, F.commentCnt
-	         , to_char(F.regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
-	         , F.status, F.infoStatus, M.img
-		from tbl_free F join tbl_member M
-		on F.userid = M.userid
-		where F.status = 1
-		and F.idx = #{idx}
+		select v.idx, v.userid, v.name, v.subject, v.content, v.readCnt, v.commentCnt
+		          ,v.regDate, v.status, v.infoStatus, v.img
+		          ,v.groupno, v.fk_idx, v.depthno
+		          ,next_idx, pre_idx
+		from
+		(
+		  select F.idx, F.userid, F.name, F.subject, F.content, F.readCnt, F.commentCnt
+		           , to_char(F.regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+		           , F.status, F.infoStatus, M.img
+		           , F.groupno, F.fk_idx, F.depthno
+		           , lead(F.idx, 1, 0) over(order by F.idx) next_idx
+		           , lag(F.idx, 1, -9) over(order by F.idx) pre_idx
+		  from tbl_free F join tbl_member M
+		  on F.userid = M.userid
+		  where F.status = 1
+		  order by idx desc
+		)  v
+		where v.idx = #{idx}
 	</select>
 	<update id="setAddReadCnt" parameterType="String">
 		update tbl_free set readCnt = readCnt + 1
@@ -108,17 +132,20 @@
 		and idx = #{idx}
 	</update>
 	
+	
+	
 	<!-- 검색한 freeList 보여주기(페이징 처리 한 것) -->
 	<select id="freeListWithSearch" parameterType="HashMap" resultType="com.miracle.psw.model.FreeBoardVO">
 		select idx, userid, name, subject, content, readCnt, commentCnt
-		         , groupno, fk_idx, depthno
-		         , regDate, status, infoStatus, fk_teamwon_idx
+		     , groupno, fk_idx, depthno
+		     , regDate, status, infoStatus, fk_teamwon_idx
 		from
 		( select rownum as rno, v.idx, v.userid, v.name, v.subject, v.content, v.readCnt, v.commentCnt
 		       , v.groupno, v.fk_idx, v.depthno
 		       , v.regDate, v.status, v.infoStatus, v.fk_teamwon_idx
 		  from
-		  ( select F.idx, F.userid, F.name, F.subject, F.content, F.readCnt, F.commentCnt, F.groupno, F.fk_idx, F.depthno
+		  ( select F.idx, F.userid, F.name, F.subject, F.content, F.readCnt, F.commentCnt
+		  		 , F.groupno, F.fk_idx, F.depthno
 		         , to_char(F.regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
 		         , F.status, F.infoStatus, F.fk_teamwon_idx
 		    from tbl_free F join tbl_teamwon T
@@ -126,15 +153,17 @@
 		    where F.status = 1
 		    and T.fk_team_idx = #{fk_team_idx}
 		    and ${colname} like '%'|| #{search} ||'%'
-		    order by idx desc 
+		    start with F.fk_idx = 0
+		    connect by prior F.idx = F.fk_idx
+		    order siblings by F.groupno desc, F.idx asc
 		  )V
 		)T
 		where T.rno >= #{startRno} and T.rno <![CDATA[<=]]> #{endRno}		
 	</select>
 	<select id="freeListWithNoSearch" parameterType="HashMap" resultType="com.miracle.psw.model.FreeBoardVO">
 		select idx, userid, name, subject, content, readCnt, commentCnt
-		         , groupno, fk_idx, depthno
-		         , regDate, status, infoStatus, fk_teamwon_idx
+		     , groupno, fk_idx, depthno
+		     , regDate, status, infoStatus, fk_teamwon_idx
 		from
 		( select rownum as rno, v.idx, v.userid, v.name, v.subject, v.content, v.readCnt, v.commentCnt
 		       , v.groupno, v.fk_idx, v.depthno
@@ -147,7 +176,9 @@
 		    on F.fk_teamwon_idx = T.idx
 		    where F.status = 1
 		    and T.fk_team_idx = #{fk_team_idx}
-		    order by idx desc 
+		    start with F.fk_idx = 0
+		    connect by prior F.idx = F.fk_idx
+		    order siblings by F.groupno desc, F.idx asc 
 		  )V
 		)T
 		where T.rno >= #{startRno} and T.rno <![CDATA[<=]]> #{endRno}
@@ -192,7 +223,7 @@
 		from tbl_freeComment C join tbl_member M
 		on C.userid = M.userid
 		where parentIdx = #{idx}
-		order by idx desc
+		order by C.idx asc
 	</select>
 	
 	<!-- 자유게시판 목록에서 선택한 유저정보 보여주기 -->
@@ -227,12 +258,6 @@
 		where parentIdx = #{idx}
 	</update>
 	
-	<!-- ============== *** 자유게시판 총 게시글 수 구하기 *** ================== -->
-	<select id="getFreeListCnt" resultType="int">
-		select count(*)
-		from tbl_free
-		where status = 1
-	</select>
 	
 </mapper>
 
