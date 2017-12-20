@@ -51,12 +51,13 @@
 		}
 	}
 	
-	function goVote(idx, fidx, itemidx, gobackURL){
+	function goVote(idx, fidx, gobackURL){
 		var frm = document.choiceFrm;
+		var checkedValue = $("input[type=radio][name=voteitem_info"+idx+"]:checked").val();
 		
 		frm.vote_idx.value = idx;
 		frm.teamwon_idx.value = fidx;
-		frm.voteitem_idx.value = itemidx;
+		frm.voteitem_idx.value = checkedValue;
 		frm.gobackURL.value = gobackURL;
 		
 		frm.submit();
@@ -232,7 +233,7 @@
 		</div>
 	</div>
 	
-	<div style="width: 100%; margin-top: 6%;">
+	<%-- <div style="width: 100%; margin-top: 6%;">
 		<table id="table">
 			<thead>
 				<tr>
@@ -270,7 +271,7 @@
 								<c:set value="${voteitemvo.fk_vote_idx}" var="voteitemidx" />
 								<c:if test="${voteidx eq voteitemidx}">
 									<input type="radio" name="voteitem_info" value="${voteitemvo.item}">${voteitemvo.item}&nbsp;${voteitemvo.votenum}표
-									<%-- <button type="button" onClick="goVote('${votevo.IDX}', '${votevo.FK_TEAMWON_IDX}', '${voteitemvo.idx}', '${gobackURL}');">선택</button> --%>
+									<button type="button" onClick="goVote('${votevo.IDX}', '${votevo.FK_TEAMWON_IDX}', '${voteitemvo.idx}', '${gobackURL}');">선택</button>
 									<a href="javascript:goVote('${votevo.IDX}', '${votevo.FK_TEAMWON_IDX}', '${voteitemvo.idx}', '${gobackURL}');" class="btn btn-xs btn-default">선택</a>&nbsp;
 									<br/>
 									<c:set var="votesum" value="${votesum + voteitemvo.votenum}" />
@@ -281,13 +282,13 @@
 						</td>
 						<td>
 							<c:if test="${votevo.FK_TEAMWON_IDX eq sessionScope.loginUser.idx}">
-								<%-- <button type="button" onClick="goDel('${votevo.IDX}');">투표삭제</button>&nbsp; --%>
-								<a href="javascript:goDel('${votevo.IDX}');" class="btn btn-danger">메모삭제</a>&nbsp;
+								<button type="button" onClick="goDel('${votevo.IDX}');">투표삭제</button>&nbsp;
+								<a href="javascript:goDel('${votevo.IDX}');" class="btn btn-danger">투표삭제</a>&nbsp;
 							</c:if>
 						</td>
 						<td>
 							<textarea id="commcontent${votevo.IDX}" name="commcontent${votevo.IDX}" class="form-control" style="width: 80%; resize: none;" placeholder="타인을 비방하는 댓글은 삼가해주시기 바랍니다."></textarea>
-							<%-- <button type="button" onClick="goCommAdd('${votevo.IDX}');">등록</button>&nbsp; --%>
+							<button type="button" onClick="goCommAdd('${votevo.IDX}');">등록</button>&nbsp;
 							<a href="javascript:goCommAdd('${votevo.IDX}');" class="btn btn-default">등록</a>&nbsp;
 							<br/>
 							<div id="moreComm">
@@ -298,15 +299,15 @@
 										<img src="<%= request.getContextPath() %>/resources/files/${votecommvo.IMG}" width="30px" height="30px">
 										${votecommvo.NAME}(${votecommvo.COMMDATE})<br/>${votecommvo.CONTENT}&nbsp;&nbsp;
 										<c:if test="${votecommvo.MEMIDX eq sessionScope.loginUser.idx}">
-											<%-- <button type="button" onClick="goCommAdd('${votevo.IDX}', '${votecommvo.IDX}');">수정</button>&nbsp; --%>
-											<%-- <button type="button" onClick="goCommDel('${votecommvo.COMMIDX}');">삭제</button> --%>
+											<button type="button" onClick="goCommAdd('${votevo.IDX}', '${votecommvo.IDX}');">수정</button>&nbsp;
+											<button type="button" onClick="goCommDel('${votecommvo.COMMIDX}');">삭제</button>
 											<a href="goCommDel('${votecommvo.COMMIDX}');" class="btn btn-xs btn-danger">×</a>&nbsp;
 										</c:if>
 										<br/>
 									</c:if>
 								</c:forEach>
 							</div>
-							<%-- <button type="button" onClick="goCommMore('${votevo.IDX}');">더보기</button> --%>
+							<button type="button" onClick="goCommMore('${votevo.IDX}');">더보기</button>
 						</td>
 					</tr>
 				</c:forEach>
@@ -323,7 +324,85 @@
 	
 		</table>	
 		<br/>
-	</div>
+	</div> --%>
+	
+	<br/><br/>
+	
+	<c:if test="${not empty voteList}">
+		<c:forEach var="votevo" items="${voteList}" varStatus="status">
+			<c:set value="${votevo.IDX}" var="voteidx" />
+			<div style="width: 100%; height: auto; margin-top: 2%; border: 1px solid lightgray;">
+				<div style="width: 5%; float: left; text-align: center; padding-top: 1%;">
+					<img src="<%= request.getContextPath() %>/resources/images/ic_vote.png" style="width: 50px; height: 50px;">
+					<br/><br/><br/>
+				</div>
+				<div style="width: 95%; float: left; text-align: left; padding-top: 1%;">
+					<div style="width: 95%; height: 20%; font-size: 15pt;">
+						${votevo.SUBJECT}
+					</div>
+					<div style="width: 95%; height: 10%; font-size: 9pt; color:gray; vertical-align: center; margin-top: 1%;">
+						진행자 : <a href="javascript:showUserInfo('${votevo.USERID}')">${votevo.NAME}(${votevo.USERID})</a>
+						　|　투표기간 : ${votevo.STARTDATE} ~ ${votevo.ENDDATE}
+					</div>
+					<div style="width: 95%; margin-top: 2%;">
+						<div style="width: 20%; border: 1px solid lightgray; padding: 10px;">
+							<c:set value="0" var="votesum" />
+							<c:forEach var="voteitemvo" items="${voteItemList}" varStatus="status">
+								<c:set value="${voteitemvo.fk_vote_idx}" var="voteitemidx" />
+								<c:if test="${voteidx eq voteitemidx}">
+									<input type="radio" name="voteitem_info${votevo.IDX}" value="${voteitemvo.idx}">&nbsp;${voteitemvo.item}
+									<%-- <button type="button" onClick="goVote('${votevo.IDX}', '${votevo.FK_TEAMWON_IDX}', '${voteitemvo.idx}', '${gobackURL}');">선택</button> --%>
+									<%-- <a href="javascript:goVote('${votevo.IDX}', '${votevo.FK_TEAMWON_IDX}', '${voteitemvo.idx}', '${gobackURL}');" class="btn btn-xs btn-default">선택</a>&nbsp; --%>
+									<br/>
+									<c:set var="votesum" value="${votesum + voteitemvo.votenum}" />
+								</c:if>
+							</c:forEach>
+							<span style="text-decoration: underline; font-size : 9pt; color: gray;">참여 인원 : <span style="color: #FA5858;"><c:out value="${votesum}"/></span>명</span>
+							<br/>
+							<div style="text-align: center;">
+								<a href="javascript:goVote('${votevo.IDX}', '${votevo.FK_TEAMWON_IDX}', '${gobackURL}');" class="btn btn-xs btn-default">선택</a>&nbsp;
+							</div>
+						</div>
+						<br/>
+						${votevo.CONTENT}
+					</div>
+				</div>
+				<div style="float: right; text-align: left; margin-bottom: 3%;">
+					<c:if test="${votevo.FK_TEAMWON_IDX eq sessionScope.loginUser.idx}">
+						<a href="javascript:goDel('${votevo.IDX}');" class="btn btn-danger">투표삭제</a>&nbsp;
+					</c:if>
+				</div>
+				<br/>　<br/>　<br/>
+			</div>
+			<div style="width: 100%; height: auto; border: 1px solid lightgray; background-color: #FAFAFA; text-align: center; padding-top: 10px; padding-left: 70px;">
+				<textarea id="commcontent${votevo.IDX}" name="commcontent${votevo.IDX}" class="form-control" style="width: 80%; resize: none;" placeholder="타인을 비방하는 댓글은 삼가해주시기 바랍니다."></textarea>
+				<a href="#" class="btn btn-lg btn-default">등록</a>&nbsp;
+				<br/><br/>
+				<c:forEach var="votecommvo" items="${voteCommList}" varStatus="status" begin="0" end="20">
+					<c:set value="${votecommvo.FK_VOTE_IDX}" var="votecommidx" />
+					<c:if test="${voteidx eq votecommidx}">
+						<div style="width: 80%; text-align: left;">
+							<img src="<%= request.getContextPath() %>/resources/files/${votecommvo.IMG}" width="30px" height="30px">
+							<span style="font-size: 9pt;"><span style="font-weight: bold;">${votecommvo.NAME}(${votecommvo.USERID})</span>
+							　<span style="color: gray;">|　${votecommvo.COMMDATE}
+							　|　<a href="goCommDel('${votecommvo.COMMIDX}');" class="btn btn-xs btn-danger">×</a>&nbsp;</span></span>
+							<br/>
+							<span style="padding-left: 40px; font-size: 9pt;">${votecommvo.CONTENT}</span>
+							<br/><br/>
+						</div>
+					</c:if>
+				</c:forEach>
+				　
+			</div>
+		</c:forEach>
+	</c:if>
+	<c:if test="${empty voteList}">
+		<div style="width: 100%; height: auto; margin-top: 2%; border: 1px solid lightgray; text-align: center;">
+			투표글이 존재하지 않습니다.
+		</div>
+	</c:if>
+	
+	<br/><br/>
 
 	<div style="width: 100%;">
 		<!-- ==== 페이지바 ==== -->
@@ -340,6 +419,7 @@
 			</select>
 			<input type="text" name="search" id="search" size="40" class="form-control" placeholder="검색할 단어를 입력해주세요" />
 			<a href="javascript:goSearch();" class="btn btn-default">검색</a>&nbsp;
+			
 		</div>
 	</div>
 	

@@ -78,7 +78,7 @@ public class BoardController {
 
 		
 		// ================================================ *** 페이지바 만들기 *** ====================
-		if( (colname != null && search != null && category != null) &&
+		if( (colname != null && search != null) &&
 			(!colname.trim().isEmpty() && !search.trim().isEmpty()) &&
 			(!colname.equals("null") && !search.equals("null")) ) {  // 검색어가 있는 경우
 			totalCount = service.getTotalCountWithSearch(map);
@@ -90,7 +90,7 @@ public class BoardController {
 		
 		String pagebar = "";
 		
-		if( (colname != null && search != null && category != null) &&
+		if( (colname != null && search != null) &&
 			(!colname.trim().isEmpty() && !search.trim().isEmpty() ) &&
 			(!colname.equals("null") && !search.equals("null") ) ) {
 			// ================================================ *** 검색이 있을 경우 *** ====================================

@@ -91,7 +91,7 @@
 			//content 클래스를 가진 div를 표시/숨김(토글)
 		  $(".subject").click(function()
 		  {
-		    $(".content").not($(this).next(".content").slideToggle(100)).slideUp();
+		    $(".content").not($(this).next(".content").slideToggle(500)).slideUp();
 		  });
 		// ========================== accordion으로 FAQ 내용물 보여주기  끝 ===========================================
 			
@@ -153,17 +153,17 @@
 				<!-- ============================= *** 공 백 *** ================================ -->
 				<tr style="border: 0px solid lightgray; border: none;">
 					<td colspan="2" style="padding-left: 20px;">
-					<br/>
-					<c:if test="${search == null}">
-						<span style="font-family: verdana; font-weight: bold;">총 게시물 ' 
-							<span style="color: #92a8d1; font-size: larger;">${totalCount}</span> ' 개
-						</span>
-					</c:if> 
-					<c:if test="${search != null}">
-						<span style="font-family: verdana; font-weight: bold;">검색된 게시물 ' 
-							<span style="color: #92a8d1; font-size: larger;">${totalCount}</span> ' 개
-						</span>
-					</c:if> 
+						<br/>
+						<c:if test="${search == null}">
+							<span style="font-family: verdana; font-weight: bold;">총 게시물 ' 
+								<span style="color: #92a8d1; font-size: larger;">${totalCount}</span> ' 개
+							</span>
+						</c:if> 
+						<c:if test="${search != null}">
+							<span style="font-family: verdana; font-weight: bold;">검색된 게시물 ' 
+								<span style="color: #92a8d1; font-size: larger;">${totalCount}</span> ' 개
+							</span>
+						</c:if> 
 					</td>
 				</tr>
 			</table>
@@ -193,7 +193,7 @@
 
 					<c:forEach var="faq" items="${faqList}" varStatus="status">
 					  <p class="subject faqListRow">
-					  	<span style="color: red;">[ Q ] </span>${faq.subject}
+					  	<span style="color: red; font-weight: bold;">[ Q ] </span>${faq.subject}
 					  </p>
 					  <div class="content">
 					  	<span style="color: blue; font-weight: bold;">[ A ]</span><br/>
@@ -221,7 +221,7 @@
 				</div>
 				
 				<!-- =================== *** 페이지바 *** ====================== --> 	
-				<div style="clear: both;">
+				<div style="clear: both; margin-right: 100px;" align="center">
 					${pagebar}
 				</div>
 			</div>
