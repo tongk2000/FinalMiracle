@@ -12,7 +12,6 @@
    String serverName = "http://"+serverIP+":"+portnumber;
 
 %>
-<<<<<<< HEAD
 <script type="text/javascript">
 	$(document).ready(function(){
 		$(document).tooltip();
@@ -67,7 +66,6 @@
     </ul>
     
 </div>
-=======
 
 <style type="text/css">
 
@@ -93,4 +91,3 @@
 	<li><a href="<%= request.getContextPath() %>/memoList.mr" title="메모"><img src="<%= request.getContextPath() %>/resources/images/icon/10.png" style="width:40px; heigth:40px; margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"/></a></li>
 	<li><a href="<%= request.getContextPath() %>/memoreceiver.mr" title="쪽지"><img src="<%= request.getContextPath() %>/resources/images/icon/11.png" style="width:50px; heigth:50px;" /></a></li>
 </ul>
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
