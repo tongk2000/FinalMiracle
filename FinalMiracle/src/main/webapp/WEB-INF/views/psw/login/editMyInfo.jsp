@@ -277,18 +277,18 @@
 <!-- ====================================================== *** 회원번호가 있는 경우 *** ======================================= -->
 <c:if test="${not empty map}">
 
-	<div style="width: 100%; border: 1px dotted green;" align="left">
+	<div style="width: 100%; border: 0px dotted green;" align="left">
 		<form name="registerFrm" action="member_editEnd.mr" method="post">
 		
 	 	
 			<fieldset>
-				<div style="border: 1px dotted pink; float: right;" align="center">
+				<div style="border: 0px dotted pink; float: right;" align="center">
 					<img alt="프로필사진" src="<%= request.getContextPath() %>/resources/images/${sessionScope.loginUser.img}" style="height: 150px; width: 140px;">
 					<br/>
 					<a href="#" style="text-align: center;">[대표 이미지 변경]</a>
 				</div>
 				
-				<div style="border: 1px dotted blue; width: 400px;">
+				<div style="border: 1px dotted white; width: 400px;">
 					<!-- 회원정보 수정 폼 부트스닙스 -->
 					<div class="form-group" align="left">
 					  <label class="col-sm-4 control-label" for="name">성명 &nbsp;<span class="star">*</span></label>  
@@ -381,8 +381,8 @@
 					
 					<br/><br/>
 					
-					<div align="center">
-						<a class="btn btn-sm btn-success" id="btnEdit" onClick="goEditEnd();"><span style="color: white;">내정보 변경</span></a>
+					<div align="center" style="margin-top: 10px;">
+						<a class="btn btn-sm btn-success" id="btnEdit" onClick="goEditEnd();"><span style="color: white; font-family: verdana; font-size: 11pt;">내정보 변경</span></a>
 					</div>
 				</div>
 			</fieldset>

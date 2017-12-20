@@ -53,8 +53,8 @@
 
 <body>
 
-<div style="width: 100%; border: 3px dotted pink; margin-top: 30px;" align="center">
-	<div style="width: 800px; border: 1px solid red;">
+<div style="width: 100%; border: 0px dotted pink; margin-top: 30px;" align="center">
+	<div style="width: 800px; border: 0px solid red;">
 	
 		<div style="width: 800px;" align="left">
 			<table id="table" style="width: 500px; border: 0px solid dimgray; border-left: none; border-right: none;">
