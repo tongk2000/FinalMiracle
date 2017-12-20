@@ -419,9 +419,13 @@ public class ProjectMangerController {
 	@RequestMapping(value="setSelectIconToSession.mr", method={RequestMethod.GET})
 	public String setSelectIconToSession(HttpServletRequest req) {
 		String selectIcon = req.getParameter("selectIcon");
+		String toggleIcon = req.getParameter("toggleIcon");
+		HashMap<String, String> sideKeepMap = new HashMap<String, String>();
+		sideKeepMap.put("selectIcon", selectIcon);
+		sideKeepMap.put("toggleIcon", toggleIcon);
+		
 		HttpSession ses = req.getSession();
-		ses.setAttribute("selectIcon", selectIcon);
-		System.out.println("selectIcon : "+selectIcon);
+		ses.setAttribute("sideKeepMap", sideKeepMap);
 		return "kdh/json.not"; // 굳이 반환 안해도 되는데.. Could not resolve view with name 'setSelectIconToSession' 오류 떠서 어쩔수 없이 넣어줌
 	} // end of String setSelectIconToSession(HttpServletRequest req) --------------------------------------------------------------------------------------
 }

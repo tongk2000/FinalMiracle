@@ -55,15 +55,14 @@
 </script>
 
 <!-- 통합검색메뉴 -->
-<div style="/* border: 1px solid blue; */ float: left; width: 30%; height: 50px;" align="right">
-	<input type="text" class="form-control input-md" style="margin-top: 7px; width: 80%;" placeholder="통합 검색" />
+<div style="float: left; width: 30%; height: 50px;">
+	<input type="text" class="form-control input-md" style="margin-left:10px; margin-top: 7px; background-color:#154465; border-right:none;"/>
 </div>
-
-<div style="/* border: 1px solid blue; */ float: left; width: 3%; height: 50px;" align="center">
-	<a href="<%= request.getContextPath() %>/doList.mr" title="검색">
-		<img src="<%= request.getContextPath() %>/resources/images/icon/14.png" class="iconPng headerIconPng" />
-	</a>
-</div>
+<div style="width:50px; height: 50px; display:inline-block; float:left;" align="center">
+		<a href="<%= request.getContextPath() %>/doList.mr" title="검색">
+			<img src="<%= request.getContextPath() %>/resources/images/icon/14.png" class="iconPng headerIconPng" />
+		</a>
+	</div>
 
 <!-- ===== 로그인 성공한 사용자 정보 출력 ===== -->
 <c:if test="${sessionScope.loginUser != null}">
