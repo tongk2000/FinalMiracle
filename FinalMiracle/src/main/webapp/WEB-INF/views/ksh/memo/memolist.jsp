@@ -435,8 +435,6 @@
 		<br/>
 	</div>
 
-	
-
 	<div align="center" style="width: 100%; margin-top: 20px;">
 		<!-- ==== 페이지바 ==== -->
 		<div align="left" style="float: left;">
@@ -455,6 +453,29 @@
 			<a href="javascript:goSearch();" class="btn btn-default">검색</a>&nbsp;
 		</div>
 	</div>
+	
+	<br/><br/>
+	
+	<c:if test="${not empty memoList}">
+		<div style="width: 100%; height: 400px; margin-top: 3%; border: 1px solid lightgray;">
+			<div style="width: 5%; float: left; text-align: center; padding-top: 1%;">
+				<img src="<%= request.getContextPath() %>/resources/images/memo.png" style="width: 50px; height: 50px;">
+			</div>
+			<div style="width: 95%; float: left; text-align: left; padding-top: 1%;">
+				
+			</div>
+		</div>
+	</c:if>
+	<c:if test="${empty memoList}">
+		<div style="width: 100%; height: 400px; margin-top: 3%; border: 1px solid lightgray;">
+			<div style="width: 5%; float: left; text-align: center; padding-top: 1%;">
+				<img src="<%= request.getContextPath() %>/resources/images/memo.png" style="width: 50px; height: 50px;">
+			</div>
+			<div style="width: 95%; float: left; text-align: center; vertical-align: center; padding-top: 1%;">
+				메모가 존재하지 않습니다.
+			</div>
+		</div>
+	</c:if>
 	
 	<input type="hidden" name="gobackURL" value="${gobackURL}">
 
