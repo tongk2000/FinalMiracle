@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
-<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"  %>   
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"  %>
+<%@ taglib prefix="c" uri="http://tiles.apache.org/tags-tiles"  %>   
    
 <!DOCTYPE html>
 <html>
@@ -85,20 +85,41 @@
 		height:50px !important;
 		display:inline-block !important;
 	}
+	
+	.selectMenuColor {
+		background-color:#154465 !important;
+	}
+	.selectToggleMenuColor {
+		background-color:#205b86 !important;
+	}
 </style>
 
 <script type="text/javascript">
-	$(document).ready(function(){	    		
+	$(document).ready(function(){
+		var selectIcon = "${sessionScope.selectIcon}";
+		if(selectIcon == "") {
+			selectIcon = "doIcon";
+		}
+		$("#"+selectIcon).css({"background-color":"#154465 !important"});
+		
 	    $(".iconTag").hover(function(){
-	    	$(this).css({"background-color":"#154465 !important"});
+	    	$(this).addClass("selectMenuColor");
 	    }, function(){
-	    	$(this).css({"background-color":"#205b86 !important"});
+	    	$(this).removeClass("selectMenuColor");
 	    });
 	    
 	    $("#toggleSidebar").hover(function(){
-	    	$(this).css({"background-color":"#205b86 !important"});
+	    	$(this).addClass("selectToggleMenuColor");
 	    }, function(){
-	    	$(this).css({"background-color":"#4882ab !important"});
+	    	$(this).removeClass("selectToggleMenuColor");
+	    });
+	    
+	  	$(".sideBarLi").click(function(){
+	    	var frm = {"selectIcon":$(this).attr("id")};
+	    	$.ajax({
+	    		url:"setSelectIconToSession.mr",
+	    		data:frm
+	    	});
 	    });
 	});
 </script>

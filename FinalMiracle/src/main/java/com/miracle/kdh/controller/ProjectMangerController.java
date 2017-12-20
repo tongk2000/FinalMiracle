@@ -414,6 +414,15 @@ public class ProjectMangerController {
 	} // end of void fileDownload(HttpServletRequest req, HttpServletResponse res, HttpSession ses, Folder_FileVO ffvo) --------------------------------
 	// 첨부파일 삭제는 파일매니저 클래스에서 자체적으로 사용함
 	// ============================= ***** 파일 관련 메소드 끝 ***** =============================
+	
+	@RequestMapping(value="setSelectIconToSession.mr", method={RequestMethod.GET})
+	public String setSelectIconToSession(HttpServletRequest req) {
+		String selectIcon = req.getParameter("selectIcon");
+		HttpSession ses = req.getSession();
+		ses.setAttribute("selectIcon", selectIcon);
+		System.out.println("selectIcon : "+selectIcon);
+		return "kdh/json.not"; // 굳이 반환 안해도 되는데.. Could not resolve view with name 'setSelectIconToSession' 오류 떠서 어쩔수 없이 넣어줌
+	}
 }
 	 
 
