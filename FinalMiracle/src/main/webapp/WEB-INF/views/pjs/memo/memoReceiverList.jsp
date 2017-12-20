@@ -12,13 +12,13 @@
 		width:30px;
 		height:30px;
 	}
-/* 	
+	
 	table {
 		border:1px solid blue;
 		padding:5px;
 		border-radius:30px;
 	}
-	 */
+	
 	tr {
 		border:1px solid yellow;
 		padding:5px;

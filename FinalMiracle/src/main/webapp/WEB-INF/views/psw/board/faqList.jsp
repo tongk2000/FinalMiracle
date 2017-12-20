@@ -12,7 +12,7 @@
     }
 	.subjectstyle {
 		font-weight: bold;
-	    color: white;
+	    color: dimgray;
 	    cursor: pointer; 
     }
     	           
@@ -28,42 +28,33 @@
 		font-size: 13pt;
 	}
 	
-	
-	<%-- accordion css --%>
-	dt, dd {
-	  padding: 10px;
+	<%-- 아코디언 css --%>
+	.layer1 {
+		margin: 0;
+		padding: 0;
+		width: 500px;
 	}
 	
-	dt {
-	  border: 1px solid lightgray;
-	  border-left: none;
-	  border-right: none;
-	  margin-bottom: 5px;
+	.subject {
+		margin: 5px;
+		color: #404040;
+		padding: 5px 10px;
+		cursor: pointer;
+		position: relative;
+		border: 1px solid #989898;
+		border-left: none;
+		border-right: none;
+		font-weight: bold;
+		font-size: 12pt;
+	}
+	.content {
+		border-radius: 15px;
+		margin-left: 20px;
+		padding: 5px 10px;
+		background-color:#fafafa;
 	}
 	
-	dt span {
-	  display: inline-block;
-	  width: 5px;
-	  height: 5px;
-	  background-color: black;
-	  vertical-align: middle;
-	  margin-right: 10px;
-	}
-	 
-	dt.on span {
-	  background-color: red;
-	}
- 	
-	dd {
-	  border-radius: 20px;
-	  background-color: tan;
-	  margin-top: 10px;
-	  margin-bottom: 5px;
-	  margin-left: 30px;
-	  font-family: verdana;
-	  font-size: 10pt;
-	  display: none;
-	} 
+	p { padding: 5px 0; }
 
 </style>
 
@@ -92,28 +83,12 @@
 		searchKeep();
 		
 		// =================== *** accordion으로 FAQ 내용물 보여주기  *** =====================================	
-		var acodian = {
-			  click: function(target) {
-			    var _self = this, $target = $(target);
-			    $target.on('click', function() {
-			      var $this = $(this);
-			      if ($this.next('dd').css('display') == 'none') {
-			        $('dd').slideUp();
-			        _self.onremove($target);
-		
-			        $this.addClass('on');
-			        $this.next().slideDown();
-			      } else {
-			        $('dd').slideUp();
-			        _self.onremove($target);
-			      }
-			    });
-			  },
-			  onremove: function($target) {
-			    $target.removeClass('on');
-			  }
-			};
-			acodian.click('dt');
+	    jQuery(".content").hide();
+			//content 클래스를 가진 div를 표시/숨김(토글)
+		  $(".subject").click(function()
+		  {
+		    $(".content").not($(this).next(".content").slideToggle(500)).slideUp();
+		  });
 		// ========================== accordion으로 FAQ 내용물 보여주기  끝 ===========================================
 
 	});  // end of $(document).ready() ----------------------------------
@@ -168,14 +143,25 @@
 				<!-- ============================= *** 공 백 *** ================================ -->
 				<tr style="border: 0px solid lightgray; border: none;">
 					<td colspan="2" style="padding-left: 20px;">
+					<br/>
+					<c:if test="${search == null}">
+						<span style="font-family: verdana; font-weight: bold;">총 게시물 ' 
+							<span style="color: #92a8d1; font-size: larger;">${totalCount}</span> ' 개
+						</span>
+					</c:if> 
+					<c:if test="${search != null}">
+						<span style="font-family: verdana; font-weight: bold;">검색된 게시물 ' 
+							<span style="color: #92a8d1; font-size: larger;">${totalCount}</span> ' 개
+						</span>
+					</c:if> 
 					</td>
 				</tr>
 			</table>
 		</div>
 		
-		<div style="border: 0px dotted blue; width: 800px; padding-top: 10px;">
+		<div style="border: 0px dotted blue; width: 800px;">
 			<!-- ========================================= *** Category 분류 항목 *** ================================= -->
-			<div style="width: 650px; padding: 10px; margin-left: 30px; margin-top: 30px; margin-bottom: 20px; border-radius: 20px; background-color: lightgray; float: left;" align="left"> 
+			<div style="width: 650px; padding: 10px; margin-left: 30px; margin-bottom: 20px; border-radius: 20px; background-color: #E8E8E8; float: left;" align="left"> 
 				<div class="category" style="margin-left: 8%;">
 					<a onClick="goCategory(0)"><span style="font-family: sans-serif; font-size: 13pt; font-weight: bold; ">기타문의</span></a>
 				</div>
@@ -192,18 +178,18 @@
 			
 			<!-- ========================================== *** accordion FAQ 게시판 목록 *** ============================== -->
 			<div style="border: 0px dashed green; width: 800px; float: left; display: block;" align="left">
-				<div style="width: 700px;">
-					<dl>
+				<div class="layer1" style="width: 700px;">
+
 						<c:forEach var="faq" items="${faqList}" varStatus="status">
-						  <dt class="subject">
-						  	<span style="color: red;">Q.</span>${faq.subject}
-						  </dt>
-						  <dd class="answer">
+						  <p class="subject">
+						  	<span style="color: red;">[ Q ] </span>${faq.subject}
+						  </p>
+						  <div class="content">
 						  	<span style="color: blue; font-weight: bold;">[ A ]</span><br/>
 						  	<span style=" margin-top: 5px; font-weight: bold;">${faq.content}<br/></span>
-						  </dd>
+						  </div>
 						</c:forEach>
-					</dl>
+
 				</div>
 				<!-- =================== *** 검색 박스  *** =========================== -->
 				<div style="float: right; margin-right: 100px; display: inline-block;">

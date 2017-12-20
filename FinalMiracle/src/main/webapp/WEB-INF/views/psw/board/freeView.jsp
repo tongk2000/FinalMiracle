@@ -187,7 +187,7 @@
 </script>
 
 
-<div style="height: 840px; border: 0px dotted pin; margin-top: 20px; margin-bottom: 30px; overflow-y: auto;" align="center" >
+<div style="height: 100%; border: 0px dotted pin; margin-top: 20px; margin-bottom: 30px; overflow-y: auto;" align="center" >
 	<div style="border: solid 0px red; width: 800px;" >
 		<div style="float: left;">
 			<table id="table" style="width: 550px; border: 0px solid dimgray; border-left: none; border-right: none;">

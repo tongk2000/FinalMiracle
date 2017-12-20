@@ -3,14 +3,13 @@
 <%@ page import="java.net.InetAddress" %>
 
 
-<%  
+<% 
     // === 서버 IP 주소 알아오기 === ==채팅을 위해 서버 아이피를 알아옴== //
    InetAddress inet = InetAddress.getLocalHost();
    String serverIP = inet.getHostAddress(); 
    int portnumber = request.getServerPort();
    
    String serverName = "http://"+serverIP+":"+portnumber;
-
 %>
 <style type="text/css">
 
