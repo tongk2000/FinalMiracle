@@ -61,7 +61,7 @@
 		heigth:35px !important;
 		margin-left:10px !important;
 	}
-	.sideiconPng {
+	.sideIconPng {
 		margin-top:20px !important;
 	}
 	.toggleInconPng {
