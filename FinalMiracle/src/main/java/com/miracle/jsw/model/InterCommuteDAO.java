@@ -35,4 +35,6 @@ public interface InterCommuteDAO {
 
 	List<HashMap<String, String>> getUserTeamDetail(HashMap<String, String> map);
 
+	List<HashMap<String, String>> getStatistics(HashMap<String, String> map);
+
 }
