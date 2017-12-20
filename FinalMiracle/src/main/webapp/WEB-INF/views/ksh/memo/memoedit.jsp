@@ -11,6 +11,7 @@
 
 <style type="text/css">
   th {width: 25%;}
+  #folderdiv {width:200px; float:left; margin-left: 10px;}
 </style>
 
 <script type="text/javascript">
@@ -31,7 +32,7 @@
 			var html = "";
 			
 			if(folder == "새분류"){
-				html += "<input id='newfolder' name='newfolder' class='form-control' style='width: 200px;' />"
+				html += "<input id='newfolder' name='newfolder' class='form-control' style='width: 200px;' placeholder='새분류 입력칸' />"
 				
 				$("#folderdiv").append(html);
 			} else {
@@ -82,57 +83,58 @@
 	
 </script>
 
-<div>
-	<h3 style="width: 60%; padding-top: 20px;">메모 등록</h3>
+<div style="width:100%; font-family: verdana;" align="center">
+	<h1 style="margin: 2%;">메모 등록</h1>
 	
-	<form name="EditFrm" action="<%= request.getContextPath() %>/memoEditEnd.mr" method="post" enctype="multipart/form-data" >
-		<table id="table" class="table table-bordered" style="width: 70%; margin-top: 50px;">
-			<tr>
-				<th>분류선택</th>
-				<td>
-					<div style="width: 25%;">
-						<select name="folder" id="folder" class="form-control">
+	<form class="form-inline" name="EditFrm" action="<%= request.getContextPath() %>/memoEditEnd.mr" method="post" enctype="multipart/form-data" >
+		<div style="border: none;">
+			<table id="table" class="table" style="width: 90%; margin-top: 50px; border: none; background-image:url('<%= request.getContextPath() %>/resources/images/noteimage.jpg');">
+				<tr>
+					<td style="border-top: none;">
+						<div style="width: 100%; float: left;">
+							<div style="width: 120px; float: left;">
+								<select name="folder" id="folder" class="form-control">
+									<c:forEach var="memo" items="${memovo}" varStatus="status">
+										<option value="${memo.groups}">${memo.groups}(현재)</option>
+									</c:forEach>
+									<option value="전체">전체</option>
+									<option value="중요">중요</option>
+									<c:forEach var="folder" items="${folderlist}" varStatus="status">
+										<option value="${folder}">${folder}</option>
+									</c:forEach>
+									<option value="새분류">새분류</option>
+								</select>
+							</div>
+							<div id="folderdiv"></div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-top: none;">
+						<div style="width: 100%;  float: left;">
 							<c:forEach var="memo" items="${memovo}" varStatus="status">
-								<option value="${memo.groups}">${memo.groups}(현재)</option>
-							</c:forEach>
-							<option value="전체">전체</option>
-							<option value="중요">중요</option>
-							<c:forEach var="folder" items="${folderlist}" varStatus="status">
-								<option value="${folder}">${folder}</option>
-							</c:forEach>
-							<option value="새분류">새분류</option>
-						</select>
-						<div id="folderdiv"></div>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<th>제목명</th>
-				<td>
-					<div style="width: 100%;">
-						<c:forEach var="memo" items="${memovo}" varStatus="status">
-					  		<input type="text" name="subject" id="subject" class="form-control" value="${memo.subject}" placeholder="제목을 입력하세요" />
-					  	</c:forEach>
-					</div> 
-				</td>
-			</tr>
-			<tr>
-				<th>내용</th>
-				<td>
-				    <div style="width: 100%">
-					   <textarea name="content" id="content" class="summernote">
-					   <c:forEach var="memo" items="${memovo}" varStatus="status">
-					   		${memo.content}
-					   </c:forEach>
-					   </textarea>
-					</div>
-				</td>
-			</tr>
-		</table>
-		<br/>
+						  		<input type="text" name="subject" id="subject" class="form-control" style="width: 100%;" value="${memo.subject}" placeholder="제목을 입력하세요" />
+						  	</c:forEach>
+						</div> 
+					</td>
+				</tr>
+				<tr>
+					<td style="border-top: none;">
+					    <div style="width: 100%">
+						   <textarea name="content" id="content" class="summernote">
+						   <c:forEach var="memo" items="${memovo}" varStatus="status">
+						   		${memo.content}
+						   </c:forEach>
+						   </textarea>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<br/>
+		</div>
 		
 		<button type="button" class="btn btn-primary" style="margin-right: 10px;" onClick="goEdit();">메모수정</button>
-		<button type="button" class="btn btn-primary" style="margin-right: 10px;" onClick="javascript:location.href='<%= request.getContextPath() %>/${gobackURL}'">메모목록</button> 
+		<button type="button" class="btn btn-default" style="margin-right: 10px;" onClick="javascript:location.href='<%= request.getContextPath() %>/${gobackURL}'">메모목록</button> 
 		
 		<c:forEach var="memo" items="${memovo}" varStatus="status">
 			<input type="hidden" id="idx" name="idx" value="${memo.idx}" />

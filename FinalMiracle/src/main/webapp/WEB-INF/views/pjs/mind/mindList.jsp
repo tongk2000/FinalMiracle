@@ -9,43 +9,25 @@ request.setCharacterEncoding("UTF-8");
 <head>
 <meta charset="UTF-8">
 <style type="text/css">
-	table {
-		
-		border: 1px solid black;
-	}
-	tr, th, td {
-	 	border: 1px solid black; 
-		border-collapse:none;
-		height:30px;
-		padding:7px;
-		font-family:verdana;
-	}
-	td, th {
-		text-align:center;
-	}
-	.imgs {
-		width:25px;
-		height:25px;
-	}
-	div.min{
+	/* div.min{
 		height:10px;
 		opacity:1.0;
-	} 
+	}  */
 	.subjectstyle {font-weight: bold;
     	           color: gray;
     	           cursor: pointer; }
    	.selectLine {
     	background-color:#eaeaea;
     }
-    .image {
+   /*  .image {
 		width:50px;
 		height:50px;
-	}
-	th {
+	} */
+	/* th {
 		background-color:#337ab7;
 		color:white;
 		font-size:12pt;
-	}
+	} */
 	.grayColor {
     	background-color:#eaeaea;
     	cursor: pointer;
@@ -64,7 +46,7 @@ request.setCharacterEncoding("UTF-8");
 </head>
 <body>
  <c:set var="user" value="${userTeam}" />
-	<div align="center" > 
+	<%-- <div align="center" > 
 	<div style="width:80%; border:red 3px dotted;" align="center">
 		<h2>마음의 소리 게시판</h2>
 			<table style="width:100%;">
@@ -92,7 +74,7 @@ request.setCharacterEncoding("UTF-8");
 								<c:if test="${md.tstatus == 2 || sessionScope.loginUser.userid == md.fk_userid}">
 									<td width="15%">
 										<a onClick="goUserInfo('${md.fk_userid}');">
-											<img class="imgs" src="<%= request.getContextPath()%>/resources/images/${md.img}"/>  <span class="userid" >${md.fk_userid}</span>	<!-- 아이디 -->
+											<img class="imgs" src="<%= request.getContextPath()%>/resources/images/${md.img}"/ style="width:30px; height:30px;">  <span class="userid" >${md.fk_userid}</span>	<!-- 아이디 -->
 										</a>
 									</td>
 								</c:if>		
@@ -165,7 +147,7 @@ request.setCharacterEncoding("UTF-8");
 				</div>
 			</form>
 		</div>
-	</div> 
+	</div>  --%>
 	<form name="view">
 		<input type="hidden" name="idx" />
 		<input type="hidden" name="userid" />
@@ -181,6 +163,114 @@ request.setCharacterEncoding("UTF-8");
 		<input type="hidden" name="userid" />
 		<input type="hidden" name="teamNum" />
 	</form>
+	<div align="center">
+		<div style="display:block; width:90%; padding-top:30px;" align="center"> 
+			<div class="panel panel-primary">
+				<div class="panel-heading"></div>
+				<div style=" border:3px solid #337ab7; "> <!-- width:500px; -->
+				 <span style="color:red"> 마음의 소리 글 </span><br/>
+				 <span style="color:skyblue;">팀 프로젝트에 대해 속마음을 털업!</span>
+				</div><br/>
+				<table class="table table-hover" id="dev-table">
+					<thead>
+						<tr>
+							<th style="text-align:center; font-family:verdana;">번호</th>		<!-- 번호 -->
+							<th style="text-align:center; font-family:verdana;">아이디</th>	<!-- 아이디 -->
+							<th style="text-align:center; font-family:verdana;">제목</th>		<!-- 제목 -->
+							<th style="text-align:center; font-family:verdana;">글쓴 시간</th>	<!-- 글쓴 시간 -->
+							<th style="text-align:center; font-family:verdana;">첨부파일</th>
+							<th style="text-align:center; font-family:verdana;">상태</th>		<!-- 조회수-->
+							<th style="text-align:center; font-family:verdana;"></th>	
+						</tr>
+					</thead>
+					<tbody>
+					<c:if test="${empty list}">
+						<tr>
+							<td colspan="6">데이터가 없습니다.</td>
+						</tr>
+					</c:if>
+					<c:if test="${not empty list}">
+						<c:forEach var="md" items="${list}" varStatus="status">
+							<tr class="line"> <!-- d_idx, fk_userid subject regday readcount img, depth, status, t_idx, groupno, tstatus -->
+								<td width="5%" style="text-align:center; font-family:verdana;"><input type="hidden" value="${md.d_idx}"/><input type="checkbox"></td>	<!-- 번호 -->
+								<c:if test="${md.tstatus == 2 || sessionScope.loginUser.userid == md.fk_userid}">
+									<td width="15%" style="text-align:center; font-family:verdana;">
+										<a onClick="goUserInfo('${md.fk_userid}');">
+											<img class="imgs" src="<%= request.getContextPath()%>/resources/images/${md.img}" style="width:30px; height:30px;">  <span class="userid" >${md.fk_userid}</span>	<!-- 아이디 -->
+										</a>
+									</td>
+								</c:if>		
+								<c:if test="${md.tstatus == 1 && sessionScope.loginUser.userid != md.fk_userid}">
+									<td style="text-align:center; font-family:verdana;">익명</td>
+								</c:if>
+								<c:if test="${md.depth == 0}">
+									<td width="35%" onClick="goView('${md.d_idx}','${md.fk_userid}', '${md.t_idx}')" style="text-align:left; padding-left:10px; font-family:verdana;"><span style="color:red; ">${md.subject}</span></td><!-- 제목 -->
+								</c:if>
+								<c:if test="${md.depth > 0}">
+									<td width="35%" onClick="goView('${md.d_idx}','${md.fk_userid}','${md.t_idx}')" style="padding-left:${md.depth*10}px; color:black; font-weight:bold; text-align:left;  font-family:verdana;">└ [답글] ${md.subject}</td><!-- 제목 -->
+								</c:if>		<!-- 제목 -->
+								<td width="20%" style="text-align:center; font-family:verdana;">${md.regday}</td>		<!-- 날짜 -->
+								
+								<c:if test="${md.file > 0}">
+								    <td width="8%" style="text-align:center; font-family:verdana;"><img src="<%=request.getContextPath() %>/resources/images/disk.gif" ></td>
+								</c:if>
+								<c:if test="${md.file == 0}">
+								    <td width="8%" style="text-align:center; font-family:verdana;">X</td>
+								</c:if>
+									
+								<td width="7%" style="text-align:center; font-family:verdana;">
+								<c:if test="${md.depth == 0}">
+									<c:if test="${md.readcount == 0}" >
+										대기중
+									</c:if>
+									<c:if test="${md.readcount > 0 && md.checkNum == 0}" >
+										확인
+									</c:if>
+									<c:if test="${md.checkNum > 0}" >
+										답변완료
+									</c:if>
+								</c:if>	
+								<c:if test="${md.depth > 0}">
+									답변
+								</c:if>
+								</td>	<!-- 조회수-->
+								<c:if test="${md.fk_userid == sessionScope.loginUser.userid}">
+									<td width="15%" style="text-align:center; font-family:verdana;"><button type="button" onClick="goEditView('${md.d_idx}','${md.fk_userid}', '${md.t_idx}');">수정</button></td>
+								</c:if>
+								<c:if test="${md.fk_userid != sessionScope.loginUser.userid}">
+									<td width="15%" style="text-align:center; font-family:verdana;"></td>
+								</c:if>
+							</tr>
+							<input type="hidden" id="midx" value="${md.d_idx}"/>	
+						</c:forEach>
+					</c:if>	
+				</tbody>
+			</table>
+		</div>
+	</div>	
+	</div>
+	<div align="center" style="padding-bottom:20px;">
+		${pagebar}
+	</div>	
+	<div style="float:right;">
+			<c:if test="${user.status == 1}" >
+				<button type="button" id="del">삭제</button>
+				<button type="button" onClick="goWrite();">글쓰기</button>
+			</c:if>
+	</div>
+	<br/><br/>
+	<form name="frm">
+		<select id="searchType" name="searchType" style="font-size:12pt;">
+			<option value="fk_userid">아이디</option>
+			<option value="subject">제목</option>
+		</select>
+		<input type="text" id="searchString" name="searchString" />
+		<button type="button" id="btnClick" onClick="goSearch();">검색</button><br/><br/><br/>
+		<div style="display:block; z-index:1000; margin-top:-40px;" align="center">
+			<div id="displayList" ></div>
+		</div>
+	</form>
+	
 	<script>
 		$(document).ready(function(){
 			keep();

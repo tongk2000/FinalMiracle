@@ -36,10 +36,10 @@ request.setCharacterEncoding("UTF-8");
 </style>
 <script type="text/javascript">
 	window.onload = function() {
-	 alert("여기 오냐?");
+	 //alert("여기 오냐?");
 	}
 	function gourl(pageNo) {
-		alert(pageNo);
+		//alert(pageNo);
 		data_form = {"idx":"${idx}",
 				     "currentShowPageNo":pageNo
 				     };
@@ -58,8 +58,8 @@ request.setCharacterEncoding("UTF-8");
 	}
 </script>
 <table style="width:800px; border:0px; text-align:center;" class="noticetable">
-	<thead style="">
-		<tr class="noticetable" style="border-bottom:0px; text-align:center;">
+	<thead >
+		<tr  style="border-bottom:0px; text-align:center; background-color:#337ab7; ">
 			<th class="noticewrite"></th>
 			<th class="noticewrite">작성자</th>
 			<th class="noticewrite">댓글</th>
