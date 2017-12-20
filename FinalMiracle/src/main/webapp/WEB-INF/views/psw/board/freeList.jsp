@@ -17,8 +17,9 @@
 
 <style type="text/css">
 	td {
-		font-size: 10pt;
+		font-size: 11pt;
 		font-family: verdana;
+		padding: 2px;
 	}
 	
 	.modal.modal-center {
@@ -41,7 +42,7 @@
 	.subjectStyle {
 		color: black;
 		font-weight: bold;
-		font-size: 10pt;
+		font-size: 11pt;
 		cursor: pointer;
 	}
 	.infoStyle {
@@ -67,7 +68,7 @@
 	}
 	
 	.freeListRowCssStyle {
-		background-color: lightgray;
+		background-color: #F0F0F0;
 	}
 	
 </style>
@@ -230,12 +231,12 @@
 		<div style="width: 600px;">
 			<table>
 				<tr class="title above">
-					<td colspan="2" style="padding-left: 20px; font-weight: bold; background-color: lightblue;">
-						<span style="font-size: smaller; vertical-align: baseline; color: blue;">[${fk_team_idx} 팀] </span>자유게시판입니다.
+					<td colspan="2" style="padding: 5px; padding-left: 20px; font-weight: bold; background-color: lightblue;">
+						<span style="font-size: smaller; vertical-align: baseline; color: blue;">[${fk_team_idx} 팀] </span><span style="font-size: 11pt; font-family: verdana;">자유게시판입니다.</span>
 					</td>
 				</tr>
 				<tr class="title">
-					<td colspan="2" style="padding-left: 10px; border: 1px solid lightgray; border-left: none; border-right: none;">
+					<td colspan="2" style="padding: 10px; border: 1px solid lightgray; border-left: none; border-right: none;">
 						미풍양속을 해치지 않는 범위 내에서 자유롭게 작성해주세요.<br/>
 						단, 팀원간 마찰은 <a href="<%= request.getContextPath() %>/mindList.mr">마음의 소리 게시판</a>을,
 						       팀내 공지사항은 <a href="<%= request.getContextPath() %>/noticeList.mr">공지사항</a> 게시판을,
@@ -248,12 +249,16 @@
 				<tr style="border: 0px solid lightgray;">
 					<td colspan="2" style="padding-left: 20px;"> 
 						<br/>
-						<c:if test="${search eq null || empty search}">
-							<span style="font-weight: bold;">총 게시글 '<span style="font-size: larger; color: orange;"> ${totalCount} </span>' 개</span>
-						</c:if>
-						<c:if test="${search ne null && not empty search}">
-							<span style="font-weight: bold;">검색된 게시글 '<span style="font-size: larger; color: orange;"> ${totalCount} </span>' 개</span>
-						</c:if>
+						<c:if test="${search == null}">
+							<span style="font-family: verdana; font-weight: bold;">총 게시물 ' 
+								<span style="color: #92a8d1; font-size: larger;">${totalCount}</span> ' 개
+							</span>
+						</c:if> 
+						<c:if test="${search != null}">
+							<span style="font-family: verdana; font-weight: bold;">검색된 게시물 ' 
+								<span style="color: #92a8d1; font-size: larger;">${totalCount}</span> ' 개
+							</span>
+						</c:if> 
 					</td>
 				</tr>
 			</table>
@@ -349,10 +354,19 @@
 				<a class="searchFreeList" onClick="goSearch();" style="font-size: 10pt; font-family: arial black; text-decoration: none; color: black; cursor: pointer;">검색</a>
 			</form>
 		</div>
+		
 		<!-- 페이지 바 만들기 -->
-		<div style="width: 800px; clear: both;">
+		<%-- <div style="width: 800px; clear: both;">
 			${pagebar}
-		</div>
+		</div> --%>
+		
+		<!-- Paging 처리, Bootstrap -->
+		<nav aria-label="..." style="text-align: center; clear: both;">
+		  <ul class="pagination">
+		    ${pagebar}
+		  </ul>
+		</nav>
+		
 	</div>
 	
 	

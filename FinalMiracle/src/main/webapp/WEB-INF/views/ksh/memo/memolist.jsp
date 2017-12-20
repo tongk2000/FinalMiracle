@@ -300,7 +300,7 @@
 
 
 <form class="form-inline" id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/memoList.mr" method="get" enctype="multipart/form-data">
-<div style="padding-left: 1%; padding-right: 1%; border: solid 0px red; width: 100%; height: 840px; overflow-y: auto; font-family: verdana;">
+<div style="padding-left: 1%; padding-right: 1%; border: solid 0px red; width: 100%; height: 880px; overflow-y: auto; font-family: verdana; float: left;">
 	<div style="width: 100%;">
 		<div style="float: left; margin-top: 2%;">
 			<a href="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=전체'" class="btn btn-primary">전체</a>&nbsp;
@@ -323,6 +323,7 @@
 	<div style="width: 100%; margin-top: 3%;">
 		<div style="float: left;">
 		<c:if test="${groups ne '휴지통'}">
+			전체선택 <input type="checkbox" name="chk_Allmemo" onclick="allcheck();">&nbsp;
 			<a href="javascript:location.href='<%= request.getContextPath() %>/memoAdd.mr'" class="btn btn-success">메모작성</a>&nbsp;
 			<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoAdd.mr'">메모작성</button>&nbsp; --%>
 			<a href="javascript:goChkGarbage();" class="btn btn-warning">선택휴지통</a>&nbsp;
@@ -339,6 +340,7 @@
 			&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${groups eq '휴지통'}">
+			전체선택 <input type="checkbox" name="chk_Allmemo" onclick="allcheck();">&nbsp;
 			<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoAdd.mr'">메모작성</button>&nbsp;
 			<button type="button" onClick="goChkRestore();">선택복구</button>&nbsp;
 			<button type="button" onClick="goChkDel();">선택삭제</button>&nbsp; --%>
@@ -351,14 +353,14 @@
 		<div id="folderdiv" style="float: left;"></div>
 		
 		<div style="float: right;">
-			전체 <span style="color: red; font-weight: bold;">${totalCount}</span>&nbsp;
+			전체 : <span style="color: red; font-weight: bold;">${totalCount}</span>&nbsp;&nbsp;
 			목록 수 : 
 			<select name="sizePerPage" id="sizePerPage" class="form-control">
 				<option value="5">5</option>
 				<option value="10">10</option>
 				<option value="15">15</option>
 				<option value="20">20</option>
-			</select>
+			</select>&nbsp;&nbsp;
 			작성기간 : 
 			<select name="period" id="period" class="form-control">
 				<option value="-1">전체</option>
@@ -373,7 +375,7 @@
 	
 	<br/>
 	
-	<div style="width: 100%; margin-top: 3%;">
+	<%-- <div style="width: 100%; margin-top: 3%;">
 		<table id="table" style="width: 100%;">
 			<thead>
 				<tr>
@@ -406,14 +408,14 @@
 						<td>${memovo.editdate}</td>
 						<td>
 							<c:if test="${memovo.groups ne '휴지통'}">
-								<%-- <button type="button" onClick="goEdit('${memovo.idx}');">메모수정</button>&nbsp;
-								<button type="button" onClick="goGarbage('${memovo.idx}');">휴지통</button>&nbsp; --%>
+								<button type="button" onClick="goEdit('${memovo.idx}');">메모수정</button>&nbsp;
+								<button type="button" onClick="goGarbage('${memovo.idx}');">휴지통</button>&nbsp;
 								<a href="javascript:goEdit('${memovo.idx}');" class="btn btn-info">메모수정</a>&nbsp;
 								<a href="javascript:goGarbage('${memovo.idx}');" class="btn btn-warning">휴지통</a>&nbsp;
 							</c:if>
 							<c:if test="${memovo.groups eq '휴지통'}">
-								<%-- <button type="button" onClick="goRestore('${memovo.idx}');">메모복구</button>&nbsp;
-								<button type="button" onClick="goDel('${memovo.idx}');">메모삭제</button>&nbsp; --%>
+								<button type="button" onClick="goRestore('${memovo.idx}');">메모복구</button>&nbsp;
+								<button type="button" onClick="goDel('${memovo.idx}');">메모삭제</button>&nbsp;
 								<a href="javascript:goRestore('${memovo.idx}');" class="btn btn-success">메모복구</a>&nbsp;
 								<a href="javascript:goDel('${memovo.idx}');" class="btn btn-danger">메모삭제</a>&nbsp;
 							</c:if>
@@ -433,9 +435,58 @@
 	
 		</table>	
 		<br/>
-	</div>
+	</div> --%>
+	
+	<c:if test="${not empty memoList}">
+		<c:forEach var="memovo" items="${memoList}" varStatus="status">
+			<div style="width: 100%; height: auto; margin-top: 2%; border: 1px solid lightgray;">
+				<div style="width: 5%; float: left; text-align: center; padding-top: 1%;">
+					<img src="<%= request.getContextPath() %>/resources/images/memo.png" style="width: 50px; height: 50px;">
+					<br/><br/><br/>
+					<input type="checkbox" name="chk_memo" value="${memovo.idx}">
+				</div>
+				<div style="width: 95%; float: left; text-align: left; padding-top: 1%;">
+					<div style="width: 95%; height: 20%; font-size: 15pt;">
+						${memovo.subject}
+					</div>
+					<div style="width: 95%; height: 10%; font-size: 9pt; color:gray; vertical-align: center; margin-top: 1%;">
+						분류 : ${memovo.groups}　|　작성일 : ${memovo.regdate}　|　최종수정일 : ${memovo.editdate}
+					</div>
+					<div style="width: 95%; margin-top: 2%;">
+						${memovo.content}
+					</div>
+				</div>
+				<div style="float: right; text-align: left; margin-bottom: 3%;">
+					<c:if test="${memovo.groups ne '휴지통'}">
+						<%-- <button type="button" onClick="goEdit('${memovo.idx}');">메모수정</button>&nbsp;
+						<button type="button" onClick="goGarbage('${memovo.idx}');">휴지통</button>&nbsp; --%>
+						<a href="javascript:goEdit('${memovo.idx}');" class="btn btn-info">메모수정</a>&nbsp;
+						<a href="javascript:goGarbage('${memovo.idx}');" class="btn btn-warning">휴지통</a>&nbsp;
+					</c:if>
+					<c:if test="${memovo.groups eq '휴지통'}">
+						<%-- <button type="button" onClick="goRestore('${memovo.idx}');">메모복구</button>&nbsp;
+						<button type="button" onClick="goDel('${memovo.idx}');">메모삭제</button>&nbsp; --%>
+						<a href="javascript:goRestore('${memovo.idx}');" class="btn btn-success">메모복구</a>&nbsp;
+						<a href="javascript:goDel('${memovo.idx}');" class="btn btn-danger">메모삭제</a>&nbsp;
+					</c:if>
+				</div>
+				<br/>　<br/>　<br/>
+			</div>
+		</c:forEach>
+	</c:if>
+	<c:if test="${empty memoList}">
+		<div style="width: 100%; height: 400px; margin-top: 3%; border: 1px solid lightgray;">
+			<div style="width: 5%; float: left; text-align: center; padding-top: 1%;">
+				<img src="<%= request.getContextPath() %>/resources/images/memo.png" style="width: 50px; height: 50px;">
+			</div>
+			<div style="width: 95%; float: left; text-align: center; vertical-align: center; padding-top: 1%;">
+				메모가 존재하지 않습니다.
+			</div>
+		</div>
+	</c:if>
+	
 
-	<div align="center" style="width: 100%; margin-top: 20px;">
+	<div align="center" style="width: 100%; margin-top: 3%;">
 		<!-- ==== 페이지바 ==== -->
 		<div align="left" style="float: left;">
 			${pagebar}
@@ -454,28 +505,7 @@
 		</div>
 	</div>
 	
-	<br/><br/>
-	
-	<c:if test="${not empty memoList}">
-		<div style="width: 100%; height: 400px; margin-top: 3%; border: 1px solid lightgray;">
-			<div style="width: 5%; float: left; text-align: center; padding-top: 1%;">
-				<img src="<%= request.getContextPath() %>/resources/images/memo.png" style="width: 50px; height: 50px;">
-			</div>
-			<div style="width: 95%; float: left; text-align: left; padding-top: 1%;">
-				
-			</div>
-		</div>
-	</c:if>
-	<c:if test="${empty memoList}">
-		<div style="width: 100%; height: 400px; margin-top: 3%; border: 1px solid lightgray;">
-			<div style="width: 5%; float: left; text-align: center; padding-top: 1%;">
-				<img src="<%= request.getContextPath() %>/resources/images/memo.png" style="width: 50px; height: 50px;">
-			</div>
-			<div style="width: 95%; float: left; text-align: center; vertical-align: center; padding-top: 1%;">
-				메모가 존재하지 않습니다.
-			</div>
-		</div>
-	</c:if>
+	<br/><br/><br/><br/><br/>
 	
 	<input type="hidden" name="gobackURL" value="${gobackURL}">
 

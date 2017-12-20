@@ -78,11 +78,9 @@ public class BoardController {
 
 		
 		// ================================================ *** 페이지바 만들기 *** ====================
-		if( (colname != null && search != null && category != null) &&
+		if( (colname != null && search != null) &&
 			(!colname.trim().isEmpty() && !search.trim().isEmpty()) &&
-			(!colname.equals("null") && !search.equals("null")) &&
-			(!category.equals("null") && !category.trim().isEmpty()) 
-		   ) {  // 검색어가 있는 경우
+			(!colname.equals("null") && !search.equals("null")) ) {  // 검색어가 있는 경우
 			totalCount = service.getTotalCountWithSearch(map);
 		} else {  // 검색어가 없는경우
 			totalCount = service.getTotalCountWithNoSearch(map);
@@ -92,9 +90,9 @@ public class BoardController {
 		
 		String pagebar = "";
 		
-		if( (colname != null && search != null && category != null) &&
-			(!colname.trim().isEmpty() && !search.trim().isEmpty() && !category.trim().isEmpty() ) &&
-			(!colname.equals("null") && !search.equals("null") && !category.equals("null")) ) {
+		if( (colname != null && search != null) &&
+			(!colname.trim().isEmpty() && !search.trim().isEmpty() ) &&
+			(!colname.equals("null") && !search.equals("null") ) ) {
 			// ================================================ *** 검색이 있을 경우 *** ====================================
 			pagebar = "<ul>";
 			pagebar += MyUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentShowPageNo, colname, search, category, "faqList.mr");
@@ -102,7 +100,7 @@ public class BoardController {
 		} else {
 			// ================================================= *** 검색이 없을 경우 *** =================================
 			pagebar = "<ul>";
-			pagebar += MyUtil.getFAQPageBar(sizePerPage, blockSize, totalPage, currentShowPageNo, category, "faqList.mr");
+			pagebar += MyUtil.getPageBar(sizePerPage, blockSize, totalPage, currentShowPageNo, "faqList.mr");
 			pagebar += "</ul>";
 		}
 		req.setAttribute("pagebar", pagebar);

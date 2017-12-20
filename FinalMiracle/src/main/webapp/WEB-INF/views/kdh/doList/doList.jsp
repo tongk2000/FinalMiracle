@@ -859,7 +859,7 @@
 	// 오늘 날짜에는 가운데 선 그어주기
 	function todayLine() {
 		<jsp:useBean id="today" class="java.util.Date"/>
-		<fmt:formatDate value="${today}" var="now" pattern="yyyyMMdd"/> // 오늘 날짜를 구해서
+		<fmt:formatDate value="${today}" var="now" pattern="yyMMdd"/> // 오늘 날짜를 구해서
 		var now = ${now};
 		$("."+now).addClass("line-in-middle"); // 클래스가 오늘 날짜인건 전부 가운데 줄 그어주는 css 추가
 	} // end of function todayLine() --------------------------------------------------------------------------------------------------------------
@@ -1332,52 +1332,51 @@
 	}
 </script>
 
-<div style="width:100%; float:left; height:100%; overflow-y:auto;">
+<div style="width:100%; float:left; height:100%; overflow:auto; font-family:Tahoma; font-size:10pt;">
 	<table style="width:100%; border:1px solid black;">
 		<thead>
 			<tr id="firstHeaderLine">
-				<th colspan="7" class="seperatorLine" style="width:65%;">
+				<th colspan="${map.pageDateList.size() + 7}">
 					<span id="allClose" class="pointer" style="margin-left:20px;">[ 전체접기</span>  ||  <span id="allOpen" class="pointer">전체펴기</span> ]
-					&nbsp;&nbsp;&nbsp;&nbsp;
+					&nbsp;&nbsp;&nbsp;
 					[ <span class="pointer" onclick="addUpElement()">최상위 폴더 만들기</span> ]
-					&nbsp;&nbsp;&nbsp;&nbsp;
+					&nbsp;&nbsp;&nbsp;
 					[ <span class="pointer" onclick="myElementOn()">내할일표시</span>  ||  <span class="pointer" onclick="myElementOff()">해제</span> ]
-					&nbsp;&nbsp;&nbsp;&nbsp;
+					&nbsp;&nbsp;&nbsp;
 					[ <span class="pointer" id="teamwonListView" onclick="teamwonListView()">팀원표시</span>  ||  <span class="pointer" onclick="teamwonElementOff()">해제</span> ]
-					&nbsp;&nbsp;&nbsp;&nbsp;
-					<span style="float:right;">프로젝트 검색:<input type="text" onkeyup="serchElementOn(this.value)"/></span>
-				</th>
-				<th colspan="${map.pageDateList.size()}" style="text-align:center; width:35%;"></th>
+					&nbsp;&nbsp;&nbsp;
+					[ <span class="pointer" id="toggle" onclick="teamwonListView()">완료된 업무 숨기기</span>]
+					<span style="float:right;">프로젝트 검색:<input type="text" style="height:20px;" onkeyup="serchElementOn(this.value)"/></span>
 			</tr>
 			
 			<tr>
 				<th colspan="7" class="seperatorLine">
-					<div style="margin-left:20px; border-left:10px solid lightgreen; height:10px; display:inline;"></div>
+					<div style="margin-left:20px; border-left:10px solid #cccc00; height:10px; display:inline;"></div>
 					진행전(${map.periodCntMap.before}건
 						<span id="myBefore" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
 						<span id="teamwonBefore" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
 						<span id="searchBefore" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
 					)
-					<div style="margin-left:10px; border-left:10px solid green; height:10px; display:inline;"></div>
+					<div style="margin-left:10px; border-left:10px solid #d6f5d6; height:10px; display:inline;"></div>
 					진행중(${map.periodCntMap.doing}건
 						<span id="myDoing" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
 						<span id="teamwonDoing" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
 						<span id="searchDoing" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
 					)
-					<div style="margin-left:10px; border-left:10px solid red; height:10px; display:inline;"></div>
+					<div style="margin-left:10px; border-left:10px solid #ffcccc; height:10px; display:inline;"></div>
 					기한경과(${map.periodCntMap.lapse}건
 						<span id="myLapse" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
 						<span id="teamwonLapse" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
 						<span id="searchLapse" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
 					)
-					<div style="margin-left:10px; border-left:10px solid gray; height:10px; display:inline;"></div>
+					<div style="margin-left:10px; border-left:10px solid #d9d9d9; height:10px; display:inline;"></div>
 					완료(${map.periodCntMap.complete}건
 						<span id="myComplete" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
 						<span id="teamwonComplete" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
 						<span id="searchComplete" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
 					)
 				</th>
-				<th colspan="${map.pageDateList.size()}" style="text-align:center;">
+				<th colspan="${map.pageDateList.size()}" style="text-align:center; width:200px;">
 					<form name="pageDateFrm" method="get" action="do_changePageDate.mr">
 						<span class="pointer" onclick="beforeTerm()">◀</span>
 						<span class="pointer" onclick="beforeDate()">◁</span>
@@ -1396,22 +1395,29 @@
 			</tr>
 			
 			<tr id="headerLine">
-				<th>제목</th>
-				<th>담당</th>
-				<th>파일</th>
-				<th>댓글</th>
-				<th>시작일</th>
-				<th>마감일</th>
-				<th class="seperatorLine">중요도</th>
+				<th style="text-align:center;">제목</th>
+				<th style="text-align:center; width:35px;">담당</th>
+				<th style="text-align:center; width:35px;">파일</th>
+				<th style="text-align:center; width:35px;">댓글</th>
+				<th style="text-align:center; width:70px;">시작일</th>
+				<th style="text-align:center; width:70px;">마감일</th>
+				<th style="text-align:center; width:55px;" class="seperatorLine">중요도</th>
 				<c:forEach var="pageDate" items="${map.pageDateList}">
-					<th class="pointer" ondblClick="callToday()" style="
-						<c:if test="${pageDate.dotw == '토' || pageDate.dotw == '일'}">
-							background-color:#ffcccc;
+					<th class="pointer" ondblClick="callToday()" style="text-align:center; font-weight:normal !important;
+						<c:if test="${map.pageDateList.size() == 7}">
+							width:75px;
 						</c:if>
-						<c:if test="${fn:substring(pageDate.day, 6, 8) == '01'}">
+						<c:if test="${map.pageDateList.size() == 31}">
+							width:17px;
+							font-size:8pt !important;
+						</c:if>
+						<c:if test="${pageDate.dotw == '토' || pageDate.dotw == '일'}">
+							background-color:#fff3e6;
+						</c:if>
+						<c:if test="${fn:substring(pageDate.day, 4, 6) == '01'}">
 							border-left:2px solid #ff66ff;
 						</c:if>
-					">${pageDate.dayDP}</th> 
+					">${pageDate.dayDP}</th>
 				</c:forEach>
 			</tr>
 		</thead>
@@ -1426,7 +1432,7 @@
 
 <div class="modal fade" id="modalElementInfo" role="dialog"></div>
 
-<div id="folderRcm" style="padding:0px;">
+<div id="folderRcm" style="padding:0px; display:none;">
 	<table>
 		<tr>
 			<th class="rcmSubject"></th>
@@ -1453,7 +1459,7 @@
 </div>
 
 
-<div id="taskRcm" style="padding:0px;">
+<div id="taskRcm" style="padding:0px; display:none;">
 	<table>
 		<tr>
 			<th class="rcmSubject"></th>

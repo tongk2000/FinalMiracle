@@ -51,10 +51,14 @@
 		border-radius: 15px;
 		margin-left: 20px;
 		padding: 5px;
-		background-color:#fafafa;
+		background-color: whitesmoke;
 	}
 	
 	p { padding: 5px 0; }
+	
+	.faqListRowCssStyle {
+		background-color: #F0F0F0;
+	}
 
 </style>
 
@@ -90,7 +94,13 @@
 		    $(".content").not($(this).next(".content").slideToggle(500)).slideUp();
 		  });
 		// ========================== accordion으로 FAQ 내용물 보여주기  끝 ===========================================
-
+			
+		// ================================== *** 자유게시판 목록 행 전체에 hover 효과 주기 *** ============================
+		$(".faqListRow").hover(function(){ 
+			$(this).addClass("faqListRowCssStyle");
+		},function(){
+			$(this).removeClass("faqListRowCssStyle");
+		});
 	});  // end of $(document).ready() ----------------------------------
 	
 	// ===================================================== *** 검색폼에 입력한 검색값 유지 하는 함수 *** ================
@@ -125,7 +135,7 @@
 
 <body>
 
-<div style="width: 100%; height: 840px; border: 0px dotted pink; padding-top: 10px; overflow-y: scroll; " align="center">
+<div style="width: 100%; height: 100%; border: 0px dotted pink; padding-top: 10px; overflow-y: hidden; " align="center">
 	<div style="border: 0px solid orange; width: 800px;">
 		<!-- ============================= *** FAQ 게시판 소개 *** =================================== -->
 		<div style="width: 800px; border: 0px dotted maroon;" align="left">
@@ -135,7 +145,7 @@
 				</tr>
 				<tr class="title">
 				<td colspan="2" style="padding-left: 10px; padding-right: 10px; padding-top: 5px; border: 1px solid lightgray; border-left: none; border-right: none; font-size: 9pt;">
-					카테고리별 분류 검색과 Q(제목), A(내용) 검색기능을 이용 가능합니다. Question 클릭시 Answer 내용을 열람할 수 있습니다.<br/>
+					Question 클릭시 Answer 내용을 열람할 수 있습니다.<br/>
 					공지사항은 <a href="<%= request.getContextPath() %>/noticeList.mr">공지사항게시판</a> 
 					자유게시물 등록을 원하시는 회원님은 <a href="<%= request.getContextPath() %>/freeList.mr">자유게시판</a> 기능을 이용해주시기 바랍니다.
 				</td>
@@ -143,17 +153,17 @@
 				<!-- ============================= *** 공 백 *** ================================ -->
 				<tr style="border: 0px solid lightgray; border: none;">
 					<td colspan="2" style="padding-left: 20px;">
-					<br/>
-					<c:if test="${search == null}">
-						<span style="font-family: verdana; font-weight: bold;">총 게시물 ' 
-							<span style="color: #92a8d1; font-size: larger;">${totalCount}</span> ' 개
-						</span>
-					</c:if> 
-					<c:if test="${search != null}">
-						<span style="font-family: verdana; font-weight: bold;">검색된 게시물 ' 
-							<span style="color: #92a8d1; font-size: larger;">${totalCount}</span> ' 개
-						</span>
-					</c:if> 
+						<br/>
+						<c:if test="${search == null}">
+							<span style="font-family: verdana; font-weight: bold;">총 게시물 ' 
+								<span style="color: #92a8d1; font-size: larger;">${totalCount}</span> ' 개
+							</span>
+						</c:if> 
+						<c:if test="${search != null}">
+							<span style="font-family: verdana; font-weight: bold;">검색된 게시물 ' 
+								<span style="color: #92a8d1; font-size: larger;">${totalCount}</span> ' 개
+							</span>
+						</c:if> 
 					</td>
 				</tr>
 			</table>
@@ -161,6 +171,7 @@
 		
 		<div style="border: 0px dotted blue; width: 800px;">
 			<!-- ========================================= *** Category 분류 항목 *** ================================= -->
+			<!-- 
 			<div style="width: 650px; padding: 10px; margin-left: 30px; margin-bottom: 20px; border-radius: 20px; background-color: #E8E8E8; float: left;" align="left"> 
 				<div class="category" style="margin-left: 8%;">
 					<a onClick="goCategory(0)"><span style="font-family: sans-serif; font-size: 13pt; font-weight: bold; ">기타문의</span></a>
@@ -175,20 +186,20 @@
 					<a onClick="goCategory(3)"><span style="font-family: sans-serif; font-size: 13pt; font-weight: bold; ">업무관련</span></a>
 				</div>	
 			</div>
-			
+			 -->
 			<!-- ========================================== *** accordion FAQ 게시판 목록 *** ============================== -->
 			<div style="border: 0px dashed green; width: 800px; float: left; display: block;" align="left">
 				<div class="layer1" style="width: 700px;">
 
-						<c:forEach var="faq" items="${faqList}" varStatus="status">
-						  <p class="subject">
-						  	<span style="color: red;">[ Q ] </span>${faq.subject}
-						  </p>
-						  <div class="content">
-						  	<span style="color: blue; font-weight: bold;">[ A ]</span><br/>
-						  	<span style="font-weight: bold;">${faq.content}<br/></span>
-						  </div>
-						</c:forEach>
+					<c:forEach var="faq" items="${faqList}" varStatus="status">
+					  <p class="subject faqListRow">
+					  	<span style="color: red; font-weight: bold;">[ Q ] </span>${faq.subject}
+					  </p>
+					  <div class="content">
+					  	<span style="color: blue; font-weight: bold;">[ A ]</span><br/>
+					  	<span style="font-weight: bold;">${faq.content}<br/></span>
+					  </div>
+					</c:forEach>
 
 				</div>
 				<!-- =================== *** 검색 박스  *** =========================== -->
@@ -210,7 +221,7 @@
 				</div>
 				
 				<!-- =================== *** 페이지바 *** ====================== --> 	
-				<div style="clear: both;">
+				<div style="clear: both; margin-right: 100px;" align="center">
 					${pagebar}
 				</div>
 			</div>
@@ -221,19 +232,16 @@
 
 </body>
 
-	<input type="hidden" name="currentShowPageNo" value="${currentShowPageNo}"/>
-	<input type="hidden" name="sizePerPage" value="${sizePerPage}"/>
-	<input type="hidden" name="colname" value="${colname}"/>
-	<input type="hidden" name="search" value="${search}"/>
+
 
 
 <!-- 카테고리번호 전송을 위한 category frm -->
+<%-- 
 <form name="categoryFrm" action="<%= request.getContextPath() %>/faqList.mr" method="get">
 	<input type="hidden" name="category" />
-	
 </form>
 
-
+ --%>
 
 
 

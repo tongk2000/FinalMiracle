@@ -8,8 +8,8 @@
 	<!-- 모든 요소를 가져오는 메소드 -->
 	<select id="getAllDoList" resultType="com.miracle.kdh.model.FolderVO">
 		select idx, fk_teamwon_idx, subject, content
-		     , to_char(startdate, 'yyyy-mm-dd') as startdate
-		     , to_char(lastdate, 'yyyy-mm-dd') as lastdate
+		     , to_char(startdate, 'yy.mm.dd') as startdate
+		     , to_char(lastdate, 'yy.mm.dd') as lastdate
 		     , fk_folder_idx, groupno, depth, category, status, importance
 		     , case when trunc(startdate) <![CDATA[<]]> sysdate and sysdate <![CDATA[<]]> trunc(lastdate)+1 then 1
 		            when trunc(lastdate)+1 <![CDATA[<]]> sysdate then -1
@@ -32,8 +32,8 @@
 	<!-- 방금 추가한 요소를 가져오기 -->
 	<select id="getAddedElement" resultType="com.miracle.kdh.model.FolderVO">
 		select idx, fk_teamwon_idx, subject, content
-		     , to_char(startdate, 'yyyy-mm-dd') as startdate
-		     , to_char(lastdate, 'yyyy-mm-dd') as lastdate
+		     , to_char(startdate, 'yy.mm.dd') as startdate
+		     , to_char(lastdate, 'yy.mm.dd') as lastdate
 		     , fk_folder_idx, groupno, depth, category, status, importance
 		     , case when trunc(startdate) &lt; sysdate and sysdate &lt; trunc(lastdate)+1 then 1
 		            when trunc(lastdate)+1 &lt; sysdate then -1
@@ -188,7 +188,7 @@
 	
 	<!-- 페이징 처리를 위해 1주간의 날짜를 동적으로 수정하기 -->
 	<update id="updatePageDateWeek">
-		update tbl_doPaging_week set day = to_char(sysdate + modification + #{page}, 'yyyymmdd')
+		update tbl_doPaging_week set day = to_char(sysdate + modification + #{page}, 'yymmdd')
 	                               , dayDP = to_char(sysdate + modification + #{page}, 'mm/dd(dy)')
 	                               , dotw = to_char(sysdate + modification + #{page}, 'dy')
     </update>
@@ -206,7 +206,7 @@
 	
 	<!-- 페이징 처리를 위해 한달간의 날짜를 동적으로 수정하기 -->
 	<update id="updatePageDateMonth">
-		update tbl_doPaging_month set day = to_char(sysdate + modification + #{page}, 'yyyymmdd')
+		update tbl_doPaging_month set day = to_char(sysdate + modification + #{page}, 'yymmdd')
 	                                , dayDP = to_char(sysdate + modification + #{page}, 'dd')
 	                                , dotw = to_char(sysdate + modification + #{page}, 'dy')
     </update>

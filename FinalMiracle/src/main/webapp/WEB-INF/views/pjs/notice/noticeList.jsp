@@ -55,6 +55,9 @@ request.setCharacterEncoding("UTF-8");
     	border-top: 0px; 
     	border: solid gray 3px;
     }
+    #adjust {
+    	position:absolute;
+    }
 </style>
 <title>Notice 게시판 입니다!</title>
 </head>
@@ -145,6 +148,10 @@ request.setCharacterEncoding("UTF-8");
 			<div style="display:block; width:90%; padding-top:30px;" align="center"> 
 				<div class="panel panel-primary">
 					<div class="panel-heading"></div>
+					<div style=" border:3px solid #337ab7; "> <!-- width:500px; -->
+					 <span style="color:red"> 공지사항 글 </span><br/>
+					 <span style="color:skyblue;">팀 프로젝트 중요사항 입니다.</span>
+					</div><br/>
 					<table class="table table-hover" id="dev-table">
 						<thead>
 							<tr>
@@ -169,10 +176,10 @@ request.setCharacterEncoding("UTF-8");
 							<c:if test="${not empty list}">
 								<c:forEach var="nt" items="${list}" varStatus="status">
 									<tr class="line">
-										<td width="5%" style="text-align:center; font-family:verdana;"><input type="hidden" value="${nt.n_idx}"/><input type="checkbox" style="height:20px;"></td><!-- 번호 -->
+										<td width="5%" style="text-align:center; font-family:verdana;"><input type="hidden" value="${nt.n_idx}"/><input type="checkbox"></td><!-- 번호 -->
 										<td width="15%" style="text-align:center; font-family:verdana;">
 											<a onClick="goUserInfo('${nt.fk_userid}');"> <!-- 유저아이디 -->
-												<img src="<%= request.getContextPath()%>/resources/images/${nt.img}" class="imgs"  style="width:25px; height:auto;	"/> 
+												<img src="<%= request.getContextPath()%>/resources/images/${nt.img}" class="imgs"  style="width:25px; height:30px;	"/> 
 												<span class="userid">${nt.fk_userid}</span>
 											</a>
 										</td>
@@ -186,10 +193,10 @@ request.setCharacterEncoding("UTF-8");
 										    <td width="5%" style="text-align:center; font-family:verdana;"><img src="<%=request.getContextPath() %>/resources/images/disk.gif" ></td>
 									</c:if>	
 									<c:if test="${nt.file == 0}">
-										    <td width="8%" style="text-align:center; font-family:verdana;">X</td>
+										    <td width="8%" style="text-align:center; font-family:verdana;"></td>
 									</c:if>	
 										<td width="22%" style="text-align:center; font-family:verdana;">${nt.regday}</td><!-- 날짜 -->
-										<td width="7%" style="text-align:center; font-family:verdana;">${nt.readcount}</td><!-- 조회수 -->
+										<td width="7%" style="text-align:center; font-family:verdana; color:blue;">${nt.readcount}</td><!-- 조회수 -->
 									<c:if test="${team.status == 2}" >
 										<td width="8%" style="text-align:center; font-family:verdana;"><button type="button" onClick="goEdit('${nt.n_idx}','${nt.t_idx}');">글수정</button></td>
 									</c:if>	
@@ -201,18 +208,17 @@ request.setCharacterEncoding("UTF-8");
 					</table>
 				</div>
 			</div>	
-			<div style="border:0px dotted red">
-				<br/>
+			<div id="adjust" style="border:0px dotted red;">
 				<c:if test="${team.status == 2}" >
 					<button type="button" onClick="goWrite();">글쓰기</button>
 					<button type="button" id="del" >삭제</button>
 				</c:if>
 			</div>
-			<br/><br/>
+			<br/>
 			<div style="margin: 0 auto;">
 				${pagebar}
 			</div>
-			<br/><br/>
+			<br/>
 			<form name="frm">
 				<select id="searchType" name="searchType" style="font-size:12pt; ">
 					<option value="fk_userid">아이디</option>
@@ -249,6 +255,9 @@ request.setCharacterEncoding("UTF-8");
 
 	<script type="text/javascript">
 		$(document).ready(function(){
+			var right_dev = $("#dev-table").position().right;
+			var bottom_dev = $("#dev-table").position().bottom+2;
+			$("#adjust").css({"left":right_dev+"px", "top":top_dev+"px"});
 			
 			$("#userid").click(function(){
 				var frm = document.frm;

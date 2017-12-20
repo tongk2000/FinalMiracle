@@ -33,11 +33,11 @@
 	}
 	
 	.freeListRowCssStyle {
-		background-color: lightgray;
+		background-color: #F0F0F0;
 	}
 	
 	.freeReplyListRowCssStyle {
-		background-color: lightgreen;
+		background-color: #F0F0F0;
 	}
 	
 	.hoverStyleCss {
@@ -131,7 +131,7 @@
 		$(document).on("click", ".modalClose", function(){
 			$('.modal').modal('hide');
 		}); // end of $(".modalClose").click(function() --------------------------------------------------
-	});
+	});  // end of $(document).ready() -------------------------------------------------------------------
 	
 	// ===================================== *** 댓글 달기 폼 전송하기 *** ====================================================
     function goWrite() {
@@ -187,8 +187,8 @@
 </script>
 
 
-<div style="height: 100%; border: 0px dotted pin; margin-top: 20px; margin-bottom: 30px; overflow-y: auto;" align="center" >
-	<div style="border: solid 0px red; width: 800px;" >
+<div style="height: 100%; border: 0px dotted pin; overflow-y: scroll;" align="center" >
+	<div style="border: solid 0px red; width: 800px; margin-top: 20px; margin-bottom: 20px;" >
 		<div style="float: left;">
 			<table id="table" style="width: 550px; border: 0px solid dimgray; border-left: none; border-right: none;">
 				<!-- ============================= *** 자유게시판 소개 *** =================================== -->
@@ -333,9 +333,18 @@
 
 
 	<!-- ==================================== *** 자유게시판 목록 *** ============================================ -->
-	<div style="border: 0px solid blue; width: 800px; padding-top: 10px;">
+	<div style="border: 0px solid blue; width: 800px; padding-top: 10px; margin-bottom: 5%;">
 		<div align="left" style="margin-left: 20px;">
-			<span style="font-weight: bold;">총 게시글 '<span style="font-size: larger; color: orange;"> ${totalCount} '</span> 개 </span>
+			<c:if test="${search == null}">
+				<span style="font-family: verdana; font-weight: bold;">총 게시물 ' 
+					<span style="color: #92a8d1; font-size: larger;">${totalCount}</span> ' 개
+				</span>
+			</c:if> 
+			<c:if test="${search != null}">
+				<span style="font-family: verdana; font-weight: bold;">검색된 게시물 ' 
+					<span style="color: #92a8d1; font-size: larger;">${totalCount}</span> ' 개
+				</span>
+			</c:if> 
 		</div>
 		<table style="width: 800px; border: 1px solid dimgray; border-left: none; border-right: none;">
 			<thead>
@@ -350,7 +359,7 @@
 			<tbody>
 				<c:forEach var="fvo" items="${freeList}" varStatus="status">
 					<c:if test="${freevo.idx == fvo.idx}">
-						<tr class="freeListRow" style="background-color:lightgray; color: #034F84; font-family: verdana; font-weight: bold;">
+						<tr class="freeListRow" style="background-color: #E0E0E0; color: #034F84; font-family: verdana; font-weight: bold;">
 					</c:if>
 					<c:if test="${freevo.idx != fvo.idx}">
 						<tr class="freeListRow">
@@ -432,7 +441,7 @@
 		
 		<!-- 페이지 바 만들기 -->
 		<div style="width: 600px; clear: both; border: 0px solid green;">
-			<div align="left">${pagebar}</div>
+			<div align="center">${pagebar}</div>
 		</div>
 		
 	</div>
