@@ -9,6 +9,13 @@
 
 <style type="text/css">
 
+.circle {
+  width: 60px;
+  height: 60px;
+  border: 1px solid aqua;
+  border-radius: 50%;
+}
+
 
 </style>
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
@@ -42,6 +49,9 @@
 				alert("code: " + request.status + "\n"+"message: " + request.responseText + "\n" + "error: " + error);     
 			}
 		});
+		$("#message").hide();
+		$("#sendMessage").hide();
+		
 		
 	}
 	
@@ -86,15 +96,17 @@
 
 </head>
 <body>
-	<div style="font-size: 20px;">
-		<div style="border: 1px solid red;">대화상대</div>
-			<div onclick="addPersonStart()">+ 대화상대 추가하기</div>
+	<div style="font-size: 20px; text-align: left;">
+		<div style="border: 1px solid red; text-align: center;">대화상대</div>
+			<div onclick="addPersonStart()" style="cursor: pointer; color: aqua; margin: 5px;"><span class="circle" style="vertical-align: middle; font-size: 50px;">&nbsp;+ </span>&nbsp;대화상대 초대</div>
 			<c:forEach var="member" items="${chattingMember}" varStatus="status">
-				<div onclick="" style="border: 1px solid blue; cursor: pointer;"><img height="60px" width="60px" src="<%=request.getContextPath() %>/resources/images/${member.img}">
-				<span style="color: black;">${member.name}</span></div>
-				<input type="hidden" name="chattingRoomNum" id="chattingRoomNum" value="${member.cridx}"/>
+				<div style="margin: 5px;">
+					<div onclick="" style="border: 0px solid blue; cursor: pointer;"><img height="60px" width="60px" class="img-circle" src="<%=request.getContextPath() %>/resources/images/${member.img}">
+					<span style="color: black;">${member.name}</span></div>
+					<input type="hidden" name="chattingRoomNum" id="chattingRoomNum" value="${member.cridx}"/>
+				</div>
 			</c:forEach>
-			<div onclick="outRoom()">-> 채팅방 나가기</div>
+			<div onclick="outRoom()" style="cursor: pointer; text-align: center; margin: 10px;"><i class="glyphicon glyphicon-log-out"></i> 채팅방 나가기</div>
 	</div>
 </body>
 </html>

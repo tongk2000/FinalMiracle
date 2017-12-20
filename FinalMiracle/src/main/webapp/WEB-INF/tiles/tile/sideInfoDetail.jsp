@@ -13,12 +13,6 @@
 
 %>
 
-<script type="text/javascript">
-   $(function() {
-       $(document).tooltip();
-   });
-</script>
-
 <ul style="list-style-type: none; margin: 0px; padding: 0px;">
 	<li>
 		<a href="<%= request.getContextPath() %>/doList.mr" title="프로젝트">

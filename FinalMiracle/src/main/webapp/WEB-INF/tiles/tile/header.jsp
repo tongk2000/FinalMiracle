@@ -5,8 +5,6 @@
 <%-- ===== tiles 중 header 페이지 만들기  ===== --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <%
 	// === 서버 IP 주소 알아오기 === //
 	InetAddress inet = InetAddress.getLocalHost();
@@ -40,12 +38,6 @@
 </style>
 
 <script type="text/javascript">
-	
-	$(document).ready(function(){
-		
-		
-	});
-
 	function showMyInfo() {
 		$.ajax({
 			url: "member_edit.mr",
@@ -68,15 +60,23 @@
 </div>
 
 <div style="/* border: 1px solid blue; */ float: left; width: 3%; height: 50px;" align="center">
-	<a href="<%= request.getContextPath() %>/doList.mr" title="검색"><img src="<%= request.getContextPath() %>/resources/images/icon/14.png" style="width: 40px; height: 35px; margin-top: 7px;" /></a>
+	<a href="<%= request.getContextPath() %>/doList.mr" title="검색">
+		<img src="<%= request.getContextPath() %>/resources/images/icon/14.png" class="iconPng headerIconPng" />
+	</a>
 </div>
 
 <!-- ===== 로그인 성공한 사용자 정보 출력 ===== -->
 <c:if test="${sessionScope.loginUser != null}">
-	<a href="<%= request.getContextPath() %>/tmForm.mr" title="팀 선택"><img src="<%= request.getContextPath() %>/resources/images/icon/12.png" style="width:50px; heigth:50px;" /></a>
-	<a href="<%= request.getContextPath() %>/member_logout.mr" title="로그아웃"><img src="<%= request.getContextPath() %>/resources/images/icon/13.png" style="width:50px; heigth:50px;" /></a>
-	<div style="float:right;">
-		<a href="javascript:showMyInfo();" title="${sessionScope.loginUser.name}(${sessionScope.loginUser.userid})"><img src="<%= request.getContextPath() %>/resources/images/${sessionScope.loginUser.img}" style="height: 50px; width: 50px;"></a>
+	<div style="float:right; padding:0px !important; border-left:3px solid #2c6994">
+		<div onclick="javascript:location.href='<%= request.getContextPath() %>/tmForm.mr'" title="팀 선택" class="iconTag headerDiv">
+			<img src="<%= request.getContextPath() %>/resources/images/icon/12.png" class="iconPng headerIconPng"/>
+		</div>
+		<div onclick="'javascript:location.href=<%= request.getContextPath() %>/member_logout.mr'" title="로그아웃" class="iconTag headerDiv">
+			<img src="<%= request.getContextPath() %>/resources/images/icon/13.png" class="iconPng headerIconPng"/>
+		</div>
+		<div onclick="javascript:showMyInfo();" title="${sessionScope.loginUser.name}(${sessionScope.loginUser.userid})" style="display:inline-block;">
+			<img src="<%= request.getContextPath() %>/resources/images/${sessionScope.loginUser.img}" style="height: 50px; width: 50px;">
+		</div>
 	</div>
 </c:if>
 

@@ -22,7 +22,7 @@
 		$("#mem"+${list.idx}).click(function() {
 			if ( $("#invite"+${list.idx}).length <= 0 ) { 
 				data += "<div id='invite${list.idx}' class='inv' style='border: 1px solid black; cursor: pointer;'>";
-				data += "<div style='border: 1px solid blue; cursor: pointer; float: left;'><img height='70px' width='70px' src='"+path+"/resources/images/"+"${list.img}"+"'></div>";
+				data += "<div style='border: 0px solid blue; cursor: pointer; float: left;'><img height='70px' width='70px' class='img-circle' src='"+path+"/resources/images/"+"${list.img}"+"'></div>";
 				data +=	"<div>아이디 : ${list.userid}</div>";
 				data +=	"<div>이름 : ${list.name}</div><br/><br/>";
 				data +=	"<input type='hidden' id='tw${status.index}' class='twon' value='${list.idx}' />";
@@ -51,7 +51,7 @@
 	<c:if test="${!empty teamwonList}">
 		<c:forEach var="list" items="${teamwonList}" varStatus="status">
 			<div id="mem${list.idx}" style="width: 50%; border: 1px solid black; float: left; cursor: pointer;">
-			<div style="border: 1px solid blue; float: left;"><img height="70px" width="70px" src="<%=request.getContextPath() %>/resources/images/${list.img}"></div>
+			<div style="border: 0px solid blue; float: left;"><img height="70px" width="70px" class="img-circle" src="<%=request.getContextPath() %>/resources/images/${list.img}"></div>
 			<div>아이디 : ${list.userid}</div>
 			<div>이름 : ${list.name}</div><br/>
 			</div>

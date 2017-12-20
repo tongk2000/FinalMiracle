@@ -149,36 +149,25 @@ public class MyUtil {
 	   
 	   
 	public static String getPageBar(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String url) {
-		
 		String pageBar = "";
-		
 		int loop = 1;
-		
 		int pageNo = ((currentShowPageNo - 1)/blockSize)*blockSize + 1; 
-		// 공식임!!!
-		
-		// currentShowPageNo 가 1~10 일때 pageNo 는   1 
-		// currentShowPageNo 가 11~20 일때 pageNo 는 11
-		// currentShowPageNo 가 21~30 일때 pageNo 는 21
 		
 		String str_pageNo = "";
 		
 		if (pageNo == 1) {
 			str_pageNo = "&nbsp;[Before "+blockSize+" Page]";
-		}
-		else {
+		} else {
 			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"\" >"+"[Before "+blockSize+" Page]</a>&nbsp;"; 
 		}
-		
 		pageBar += str_pageNo;
 		
 		while(!(pageNo > totalPage || loop > blockSize)){
-			
-			if (pageNo == currentShowPageNo)
+			if (pageNo == currentShowPageNo) {
 				str_pageNo = "&nbsp;<span style=\"color:red; font-size:13pt; font-weight:bold; text-decoration:underline;\">"+pageNo+ "</span>&nbsp;";
-			else
+			} else {
 				str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"\" >"+pageNo+"</a>" + "&nbsp;";
-			
+			}
 			pageBar += str_pageNo; 
 			
 			pageNo++;
@@ -187,16 +176,49 @@ public class MyUtil {
 		
 		if (pageNo > totalPage) {
 			str_pageNo = "&nbsp;[Next "+blockSize+" Page]";
-		}
-		else {
+		} else {
 			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"\" >"+"[Next "+blockSize+" Page]</a>&nbsp;"; 
 		}
-		
 		pageBar += str_pageNo;	
 		
 		return pageBar;
+	}// end of String getPageBar(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String url)-----------------	 
+	
+	public static String getFAQPageBar(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String category, String url) {
+		String pageBar = "";
+		int loop = 1;
+		int pageNo = ((currentShowPageNo - 1)/blockSize)*blockSize + 1; 
 		
-	}// end of String getPageBar(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String url)-----------------	   
+		String str_pageNo = "";
+		
+		if (pageNo == 1) {
+			str_pageNo = "&nbsp;[Before "+blockSize+" Page]";
+		} else {
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&category="+category+"\" >"+"[Before "+blockSize+" Page]</a>&nbsp;"; 
+		}
+		pageBar += str_pageNo;
+		
+		while(!(pageNo > totalPage || loop > blockSize)){
+			if (pageNo == currentShowPageNo) {
+				str_pageNo = "&nbsp;<span style=\"color:red; font-size:13pt; font-weight:bold; text-decoration:underline;\">"+pageNo+ "</span>&nbsp;";
+			} else {
+				str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&category="+category+"\" >"+pageNo+"</a>" + "&nbsp;";
+			}
+			pageBar += str_pageNo; 
+			
+			pageNo++;
+			loop++;
+		}
+		
+		if (pageNo > totalPage) {
+			str_pageNo = "&nbsp;[Next "+blockSize+" Page]";
+		} else {
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"\" >"+"[Next "+blockSize+" Page]</a>&nbsp;"; 
+		}
+		pageBar += str_pageNo;	
+		
+		return pageBar;
+	}// end of String getPageBar(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String url)-----------------	 
 
 	
 	public static String getPageBarWithSearch(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String colname, String search, String category, String url) {

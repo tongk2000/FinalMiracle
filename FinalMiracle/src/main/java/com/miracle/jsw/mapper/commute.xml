@@ -255,7 +255,17 @@
 		and m.idx = #{idx}
 	</select>
 	
-	
+	<resultMap type="java.util.HashMap" id="statistics">
+		<result property="wstatus" 	column="wstatus" 	javaType="int" />
+ 		<result property="cnt" 		column="cnt" 		javaType="int" />
+	</resultMap>
+	<select id="getStatistics" parameterType="HashMap" resultMap="statistics">
+		select nvl(wstatus,-1) as wstatus, count(*) as cnt
+		from tbl_worktime
+		where fk_member_idx = #{idx}
+		and to_char(wt_date, 'yyyy-mm') = to_char(sysdate, 'yyyy-mm')
+		group by rollup(wstatus)
+	</select>
 	
 	
 	
