@@ -84,7 +84,7 @@
 </script>
 
 <div style="width:100%; font-family: verdana;" align="center">
-	<h1 style="margin: 2%;">메모 등록</h1>
+	<h1 style="margin: 2%;">메모 수정</h1>
 	
 	<form class="form-inline" name="EditFrm" action="<%= request.getContextPath() %>/memoEditEnd.mr" method="post" enctype="multipart/form-data" >
 		<div style="border: none;">

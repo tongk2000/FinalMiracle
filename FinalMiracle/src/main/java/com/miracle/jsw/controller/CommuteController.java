@@ -37,7 +37,7 @@ public class CommuteController {
 		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 		
 		int totalCount = 0; 		// 총 게시물 건수
-		int sizePerPage = 10; 		// 한페이지당 보여줄 게시물수
+		int sizePerPage = 15; 		// 한페이지당 보여줄 게시물수
 		int currentShowPageNo = 0;	// 현재 보여주는 페이지번호로서 초기치는 1페이지로 한다
 		int totalPage = 0;			// 총 페이지수(웹브라우저에서 보여줄 총 페이지수)
 		
@@ -190,11 +190,13 @@ public class CommuteController {
 			
 			
 			teamWonList = service.getTeamWonList(map);
+			String timg = service.getTimg(tidx);
 			String teamname = req.getParameter("teamname");
 			
 			req.setAttribute("teamname", teamname);
 			req.setAttribute("teamWonList", teamWonList);
 			req.setAttribute("tidx", tidx);
+			req.setAttribute("timg", timg);
 			
 			return "jsw/commuteTL.all";
 			  
@@ -249,7 +251,7 @@ public class CommuteController {
 			String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 			
 			int totalCount = 0; 		// 총 게시물 건수
-			int sizePerPage = 10; 		// 한페이지당 보여줄 게시물수
+			int sizePerPage = 15; 		// 한페이지당 보여줄 게시물수
 			int currentShowPageNo = 0;	// 현재 보여주는 페이지번호로서 초기치는 1페이지로 한다
 			int totalPage = 0;			// 총 페이지수(웹브라우저에서 보여줄 총 페이지수)
 			
@@ -287,7 +289,7 @@ public class CommuteController {
 			totalPage = (int)Math.ceil((double)totalCount/sizePerPage);
 			
 			String pageBar = "<ul>";
-			pageBar += JswUtil.getPageBarWithMonth(sizePerPage, blockSize, totalPage, currentShowPageNo, month, "commutetw.mr");
+			pageBar += JswUtil.getPageBarWithMonthTW(sizePerPage, blockSize, totalPage, currentShowPageNo, month, "commutetw.mr", twidx, username);
 			pageBar += "<ul>";
 			
 			
