@@ -48,7 +48,7 @@
 		var content = document.getElementById("content").value;
 		var folder = document.getElementById("folder").value;
 		
-		if(subject.trim() == "" || content.trim() == ""){
+		if(subject == "" || content == ""){
 			swal("수정 실패!", "모든 항목에 빈 칸 없이 넣어주세요.", "error");
 			return
 		} else {

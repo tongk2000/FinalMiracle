@@ -77,15 +77,13 @@
 	}); // end of $(document).ready()-----------------------------------
 	
 
-	function goEdit() {
-		// 유효성 검사는 생략함.
-		
+	function goEdit() {		
 		var subject = document.getElementById("subject").value;
 		var content = document.getElementById("content").value;
 		var datepicker1 = document.getElementById("datepicker1").value;
 		var datepicker2 = document.getElementById("datepicker2").value;
 		
-		if(subject.trim() == "" || content.trim() == "" || datepicker1.trim() == "" || datepicker2.trim() == ""){
+		if(subject == "" || content == "" || datepicker1 == "" || datepicker2 == ""){
 			swal("수정 실패!", "모든 항목에 빈 칸 없이 넣어주세요.", "error");
 			return;
 		} else {
@@ -96,7 +94,7 @@
 			} */
 			
 			swal({
-			  title: "수정 여부",
+			  title: "투표 수정 여부",
 			  text: "투표를 수정하시겠습니까?",
 			  type: "warning",
 			  showCancelButton: true,

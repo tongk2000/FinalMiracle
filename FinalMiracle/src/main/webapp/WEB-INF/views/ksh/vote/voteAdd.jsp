@@ -93,10 +93,10 @@
 		var datepicker1 = document.getElementById("datepicker1").value;
 		var datepicker2 = document.getElementById("datepicker2").value;
 		
-		if(subject.trim() == "" || content.trim() == "" || datepicker1.trim() == "" || datepicker2.trim() == ""){
+		if(subject == "" || content == "" || datepicker1 == "" || datepicker2 == ""){
 			//alert("모든 항목에 빈 칸 없이 넣어주세요.");
 			swal("작성 실패!", "모든 항목에 빈 칸 없이 넣어주세요.", "error");
-			return
+			return;
 		} else {
 			/* if(confirm("투표를 추가하시겠습니까?")){
 				var frm = document.addFrm;
@@ -107,18 +107,19 @@
 			swal({
 			  title: "투표 추가 여부",
 			  text: "투표를 추가하시겠습니까?",
-			  icon: "warning",
-			  buttons: true,
-			  dangerMode: true,
-			})
-			.then((willDelete) => {
-			    if (willDelete) {
-					var frm = document.addFrm;
+			  type: "warning",
+			  showCancelButton: true,
+			  confirmButtonClass: "btn-success",
+			  confirmButtonText: "추가",
+			  cancelButtonText: "취소",
+			  closeOnConfirm: false,
+			  closeOnCancel: true
+			},
+			function(isConfirm) {
+			  if (isConfirm) {
+				var frm = document.addFrm;
 					
-					frm.submit();
-				}
-			  	else {
-			    	return;
+				frm.submit();
 			  }
 			});
 		}
@@ -204,3 +205,5 @@
 	
 	</form>
 </div>
+
+<br/><br/><br/>
