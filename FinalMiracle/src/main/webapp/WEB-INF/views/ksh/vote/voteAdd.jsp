@@ -155,7 +155,7 @@
 	<form class="form-inline" name="addFrm" action="<%= request.getContextPath() %>/voteAddEnd.mr" method="post" enctype="multipart/form-data" >
 		<table id="table" class="table table-bordered" style="width: 80%; margin-top: 50px;">
 			<tr>
-				<th>제목명</th>
+				<th style="vertical-align: middle;">제목명</th>
 				<td colspan="2">
 					<div style="width: 100%;">
 					  <input type="text" name="subject" id="subject" class="form-control" style="width: 100%;" placeholder="제목을 입력하세요" />
@@ -163,7 +163,7 @@
 				</td>
 			</tr>
 			<tr>
-				<th>내용</th>
+				<th style="vertical-align: middle;">내용</th>
 				<td colspan="2">
 				    <div style="width: 100%">
 					   <textarea name="content" id="content" class="summernote"></textarea>
@@ -171,7 +171,7 @@
 				</td>
 			</tr>
 			<tr>
-				<th>날짜</th>
+				<th style="vertical-align: middle;">날짜</th>
 				<td>
 					<div style="width: 100%;">
 						<input type="text" id="datepicker1" name="datepicker1" class="form-control" style="width: 100%;" readonly="readonly" placeholder="시작날짜를 입력하세요 (클릭)">
@@ -184,7 +184,7 @@
 				</td>
 			</tr>
          	<tr>
-         		<th>문항</th>
+         		<th style="vertical-align: middle;">문항</th>
          		<td colspan="2">
          		    <label for="spinnerOqty">문항 수 : </label>
   		            <input id="spinnerOqty" value="2" style="width: 30px; height: 20px;">

@@ -166,7 +166,7 @@
 
 	<%-- <img src="<%= request.getContextPath() %>/resources/files/20171208183923121001009307995.jpg" style="width:200px; heigth:200px;"> --%>
 	
-	<div style="margin-top: 5%;">
+	<div style="margin-top: 7%;">
 		<div style="float: right; margin-bottom: 1%">
 			전체 <span style="color: red; font-weight: bold;">${totalCount}</span>&nbsp;
 			목록 수 : 

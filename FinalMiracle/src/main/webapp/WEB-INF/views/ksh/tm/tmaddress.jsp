@@ -169,7 +169,7 @@
 		</div>
 	</div>
 
-	<div style="margin-top: 5%;">
+	<div style="margin-top: 7%;">
 		<div style="float: right; margin-bottom: 1%">
 			전체 <span style="color: red; font-weight: bold;">${totalCount}</span>&nbsp;
 			목록 수 : 
@@ -183,7 +183,7 @@
 	</div>
 	
 	<div style="width: 100%; margin-top: 6%;">
-		<table id="table" class="table table-striped">
+		<table id="table" class="table table-striped" style="table-layout: fixed;">
 			<!-- <thead>
 				<tr>
 					<th style="width: 5%;">팀원번호</th>
@@ -206,12 +206,12 @@
 					<c:if test="${i%j == 0 }">
 					<tr>
 					</c:if>
-						<td style="width: 33%;">
+						<td style="width: 33%; word-break: break-all;">
 							<div style="width: 100px; float: left; margin-left: 10px;">
 								<br/><br/>
-								<img src="<%= request.getContextPath() %>/resources/files/defaultimg2.png" style="width:100px; heigth:100px; border-radius: 50%;">
+								<img src="<%= request.getContextPath() %>/resources/files/${tmAddr.IMG}" style="width:100px; heigth:100px; border-radius: 50%;">
 							</div>
-							<div style="float: left; margin-left: 10px; padding-top: 10px; padding-bottom: 10px;">
+							<div style="width: 300px; float: left; margin-left: 10px; padding-top: 10px; padding-bottom: 10px; word-break: break-all;">
 								<span style="font-weight: bold;">${tmAddr.NAME}(${tmAddr.USERID})</span><br/>
 								<span class="addrInfo">생일 : </span>${tmAddr.BIRTH1}년 ${tmAddr.BIRTH2}월 ${tmAddr.BIRTH3}일<br/>
 								<span class="addrInfo">연락처 : </span>${tmAddr.HP1}-${tmAddr.HP2}-${tmAddr.HP3}<br/>

@@ -277,7 +277,7 @@
 						<td style="width: 33%;">
 							<div style="width: 100px; float: left; margin-left: 10px;">
 								<br/><br/>
-								<img src="<%= request.getContextPath() %>/resources/files/defaultimg2.png" style="width:100px; heigth:100px; border-radius: 50%;">
+								<img src="<%= request.getContextPath() %>/resources/files/${req.IMG}" style="width:100px; heigth:100px; border-radius: 50%;">
 							</div>
 							<div style="float: left; margin-left: 10px; padding-top: 10px; padding-bottom: 10px;">
 								<span style="font-weight: bold;">${req.NAME}(${req.USERID})</span><br/>
@@ -385,7 +385,7 @@
 						<td style="width: 33%;">
 							<div style="width: 100px; float: left; margin-left: 10px;">
 								<br/><br/>
-								<img src="<%= request.getContextPath() %>/resources/files/defaultimg2.png" style="width:100px; heigth:100px; border-radius: 50%;">
+								<img src="<%= request.getContextPath() %>/resources/files/${wd.IMG}" style="width:100px; heigth:100px; border-radius: 50%;">
 							</div>
 							<div style="float: left; margin-left: 10px; padding-top: 10px; padding-bottom: 10px;">
 								<span style="font-weight: bold;">${wd.NAME}(${wd.USERID})</span><br/>
