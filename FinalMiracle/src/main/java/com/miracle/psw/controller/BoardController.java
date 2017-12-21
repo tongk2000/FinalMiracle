@@ -42,7 +42,6 @@ public class BoardController {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("colname", colname);
 		map.put("search", search);
-		map.put("category", category);
 		
 		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 		
@@ -75,7 +74,6 @@ public class BoardController {
 		} else {  // 검색어가 없는경우
 			faqList = service.faqListWithNoSearch(map);
 		}
-
 		
 		// ================================================ *** 페이지바 만들기 *** ====================
 		if( (colname != null && search != null) &&
@@ -85,6 +83,7 @@ public class BoardController {
 		} else {  // 검색어가 없는경우
 			totalCount = service.getTotalCountWithNoSearch(map);
 		}
+		
 		totalPage = (int)Math.ceil((double)totalCount/sizePerPage);
 		req.setAttribute("totalCount", totalCount);
 		
@@ -103,6 +102,95 @@ public class BoardController {
 			pagebar += MyUtil.getPageBar(sizePerPage, blockSize, totalPage, currentShowPageNo, "faqList.mr");
 			pagebar += "</ul>";
 		}
+		
+		map.put("category", category);
+		
+		req.setAttribute("pagebar", pagebar);
+		
+		req.setAttribute("faqList", faqList);
+		req.setAttribute("colname", colname);
+		req.setAttribute("search", search);
+		req.setAttribute("category", category);
+		
+		return "psw/board/faqList.all";
+	}  // end of public String faqList(HttpServletRequest req, HttpSession session) --------------------------------
+	
+	
+	// =================================================================== *** FAQ 게시판 목록 *** =====================
+	@RequestMapping(value="/faqCategoryList.mr", method={RequestMethod.GET})
+	public String faqCategoryList(HttpServletRequest req, HttpSession session, FaqBoardVO faqvo) {
+		List<FaqBoardVO> faqList = null;  
+		
+		String colname = req.getParameter("colname");
+		String search = req.getParameter("search");
+		String category = req.getParameter("category");
+
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("colname", colname);
+		map.put("search", search);
+		
+		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
+		
+		int totalCount = 0;
+		int sizePerPage = 10;
+		int	currentShowPageNo = 0;
+		int totalPage = 0;
+		
+		int startRno = 0;
+		int endRno = 0;
+		
+		int blockSize = 10;
+		
+		if (str_currentShowPageNo == null) {
+			currentShowPageNo = 1;
+		} else {
+			currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+		}
+		startRno = ((currentShowPageNo - 1)*sizePerPage)+1;
+		endRno = startRno + sizePerPage - 1;
+		
+		map.put("startRno", String.valueOf(startRno));
+		map.put("endRno", String.valueOf(endRno));
+		
+		if( (colname != null && search != null) && 
+			(!colname.trim().isEmpty() && !search.trim().isEmpty()) && 
+			(!colname.equals("null") && !search.equals("null")) 
+		   ){  // 검색어가 있는 경우
+			faqList = service.faqListWithSearch(map);
+		} else {  // 검색어가 없는경우
+			faqList = service.faqListWithNoSearch(map);
+		}
+		
+		// ================================================ *** 페이지바 만들기 *** ====================
+		if( (colname != null && search != null) &&
+			(!colname.trim().isEmpty() && !search.trim().isEmpty()) &&
+			(!colname.equals("null") && !search.equals("null")) ) {  // 검색어가 있는 경우
+			totalCount = service.getTotalCountWithSearch(map);
+		} else {  // 검색어가 없는경우
+			totalCount = service.getTotalCountWithNoSearch(map);
+		}
+		
+		totalPage = (int)Math.ceil((double)totalCount/sizePerPage);
+		req.setAttribute("totalCount", totalCount);
+		
+		String pagebar = "";
+		
+		if( (colname != null && search != null) &&
+			(!colname.trim().isEmpty() && !search.trim().isEmpty() ) &&
+			(!colname.equals("null") && !search.equals("null") ) ) {
+			// ================================================ *** 검색이 있을 경우 *** ====================================
+			pagebar = "<ul>";
+			pagebar += MyUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentShowPageNo, colname, search, category, "faqList.mr");
+			pagebar += "</ul>";
+		} else {
+			// ================================================= *** 검색이 없을 경우 *** =================================
+			pagebar = "<ul>";
+			pagebar += MyUtil.getPageBar(sizePerPage, blockSize, totalPage, currentShowPageNo, "faqList.mr");
+			pagebar += "</ul>";
+		}
+		
+		map.put("category", category);
+		
 		req.setAttribute("pagebar", pagebar);
 		
 		req.setAttribute("faqList", faqList);
