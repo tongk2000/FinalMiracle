@@ -52,7 +52,9 @@
 	
 	<resultMap type="java.util.HashMap" id="commutelist">
 		<result property="wt_idx" 		column="wt_idx" 	javaType="int" />
- 		<result property="wt_date" 		column="wt_date" 	javaType="String" />
+ 		<result property="wt_dateY" 	column="wt_dateY" 	javaType="String" />
+ 		<result property="wt_dateM" 	column="wt_dateM" 	javaType="String" />
+ 		<result property="wt_dateD" 	column="wt_dateD" 	javaType="String" />
  		<result property="stime" 		column="stime" 		javaType="String" />
  		<result property="etime" 		column="etime" 		javaType="String" />
  	 	<result property="whour" 		column="whour" 		javaType="String" />
@@ -62,13 +64,14 @@
  		<result property="name" 		column="name" 		javaType="String" />
 	</resultMap>
 	<select id="commuteList" resultMap="commutelist" parameterType="HashMap">
-		select wt_idx, wt_date, stime, etime, whour, wminute, status, wstatus, name
+		select wt_idx, wt_dateY, wt_dateM, wt_dateD, stime, etime, whour, wminute, status, wstatus, name
 		from 
 		(
-		select rownum as rno, wt_idx, wt_date, stime, etime, whour, wminute, status, wstatus, name
+		select rownum as rno, wt_idx, wt_dateY, wt_dateM, wt_dateD, stime, etime, whour, wminute, status, wstatus, name
 		from
 		(
-		  select wt_idx, to_char(wt_date, 'mm-dd') as wt_date, to_char(stime, 'hh24:mi') as stime, to_char(etime, 'hh24:mi') as etime
+		  select wt_idx, to_char(wt_date, 'yyyy') as wt_dateY, to_char(wt_date, 'mm') as wt_dateM, to_char(wt_date, 'dd') as wt_dateD
+		  , to_char(stime, 'hh24:mi') as stime, to_char(etime, 'hh24:mi') as etime
 		  , to_char(nvl(trunc((etime-stime)*24),0))||'시간' as whour
 		  , to_char(nvl(trunc((((etime-stime)*24)-(trunc((etime-stime)*24)))*60),0))||'분' as wminute
 		  , w.status, wstatus, name
@@ -83,13 +86,14 @@
 	</select>
 	
 	<select id="commuteListMonth" resultMap="commutelist" parameterType="HashMap">
-		select wt_idx, wt_date, stime, etime, whour, wminute, status, wstatus, name
+		select wt_idx, wt_dateY, wt_dateM, wt_dateD, stime, etime, whour, wminute, status, wstatus, name
 		from 
 		(
-		select rownum as rno, wt_idx, wt_date, stime, etime, whour, wminute, status, wstatus, name
+		select rownum as rno, wt_idx, wt_dateY, wt_dateM, wt_dateD, stime, etime, whour, wminute, status, wstatus, name
 		from
 		(
-		  select wt_idx, to_char(wt_date, 'mm-dd') as wt_date, to_char(stime, 'hh24:mi') as stime, to_char(etime, 'hh24:mi') as etime
+		  select wt_idx, to_char(wt_date, 'yyyy') as wt_dateY, to_char(wt_date, 'mm') as wt_dateM, to_char(wt_date, 'dd') as wt_dateD
+		  , to_char(stime, 'hh24:mi') as stime, to_char(etime, 'hh24:mi') as etime
 		  , to_char(nvl(trunc((etime-stime)*24),0))||'시간' as whour
 		  , to_char(nvl(trunc((((etime-stime)*24)-(trunc((etime-stime)*24)))*60),0))||'분' as wminute
 		  , w.status, wstatus, name
@@ -150,7 +154,9 @@
 	
 	<resultMap type="java.util.HashMap" id="twcommutelist">
 		<result property="wt_idx" 		column="wt_idx" 	javaType="int" />
- 		<result property="wt_date" 		column="wt_date" 	javaType="String" />
+ 		<result property="wt_dateY" 	column="wt_dateY" 	javaType="String" />
+ 		<result property="wt_dateM" 	column="wt_dateM" 	javaType="String" />
+ 		<result property="wt_dateD" 	column="wt_dateD" 	javaType="String" />
  		<result property="stime" 		column="stime" 		javaType="String" />
  		<result property="etime" 		column="etime" 		javaType="String" />
  	 	<result property="whour" 		column="whour" 		javaType="String" />
@@ -163,13 +169,14 @@
  		<result property="teamidx" 		column="teamidx" 	javaType="int" />
 	</resultMap>
 	<select id="twcommuteList" resultMap="twcommutelist" parameterType="HashMap">
-		select wt_idx, wt_date, stime, etime, whour, wminute, status, wstatus, name, regdate, teamidx, disdate
+		select wt_idx, wt_dateY, wt_dateM, wt_dateD, stime, etime, whour, wminute, status, wstatus, name, regdate, teamidx, disdate
 		from 
 		(
-		select rownum as rno, wt_idx, wt_date, stime, etime, whour, wminute, status, wstatus, name, regdate, teamidx, disdate
+		select rownum as rno, wt_idx, wt_dateY, wt_dateM, wt_dateD, stime, etime, whour, wminute, status, wstatus, name, regdate, teamidx, disdate
 		from
 		(
-		  select wt_idx, to_char(wt_date, 'mm-dd') as wt_date, to_char(stime, 'hh24:mi') as stime, to_char(etime, 'hh24:mi') as etime
+		  select wt_idx, to_char(wt_date, 'yyyy') as wt_dateY, to_char(wt_date, 'mm') as wt_dateM, to_char(wt_date, 'dd') as wt_dateD
+		  , to_char(stime, 'hh24:mi') as stime, to_char(etime, 'hh24:mi') as etime
 		  , to_char(nvl(trunc((etime-stime)*24),0))||'시간' as whour
 		  , to_char(nvl(trunc((((etime-stime)*24)-(trunc((etime-stime)*24)))*60),0))||'분' as wminute
 		  , w.status, wstatus, name 
@@ -190,13 +197,14 @@
 	</select>
 	
 	<select id="twcommuteListMonth" resultMap="twcommutelist" parameterType="HashMap">
-		select wt_idx, wt_date, stime, etime, whour, wminute, status, wstatus, name, regdate, teamidx, disdate
+		select wt_idx, wt_dateY, wt_dateM, wt_dateD, stime, etime, whour, wminute, status, wstatus, name, regdate, teamidx, disdate
 		from 
 		(
-		select rownum as rno, wt_idx, wt_date, stime, etime, whour, wminute, status, wstatus, name, regdate, teamidx, disdate
+		select rownum as rno, wt_idx, wt_dateY, wt_dateM, wt_dateD, stime, etime, whour, wminute, status, wstatus, name, regdate, teamidx, disdate
 		from
 		(
-		  select wt_idx, to_char(wt_date, 'mm-dd') as wt_date, to_char(stime, 'hh24:mi') as stime, to_char(etime, 'hh24:mi') as etime
+		  select wt_idx, to_char(wt_date, 'yyyy') as wt_dateY, to_char(wt_date, 'mm') as wt_dateM, to_char(wt_date, 'dd') as wt_dateD
+		  , to_char(stime, 'hh24:mi') as stime, to_char(etime, 'hh24:mi') as etime
 		  , to_char(nvl(trunc((etime-stime)*24),0))||'시간' as whour
 		  , to_char(nvl(trunc((((etime-stime)*24)-(trunc((etime-stime)*24)))*60),0))||'분' as wminute
 		  , w.status, wstatus, name 
@@ -267,7 +275,11 @@
 		group by rollup(wstatus)
 	</select>
 	
-	
+	<select id="getTimg" parameterType="String" resultType="String">
+		select img
+		from tbl_team
+		where idx = #{tidx}
+	</select>
 	
 	
 	

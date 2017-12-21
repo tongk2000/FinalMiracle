@@ -37,6 +37,8 @@ public interface InterCommuteService {
 
 	List<HashMap<String, String>> getStatistics(HashMap<String, String> map);
 
+	String getTimg(String tidx);
+
 	
 	
 }

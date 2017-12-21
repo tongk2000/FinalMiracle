@@ -62,7 +62,9 @@
 				<!-- ============================= *** 자유게시판 소개 *** =================================== -->
 				<tr style="background-color: lightblue; padding: 5px; border: 1px solid lightgray; border-left: none; border-right: none;">
 					<td colspan="2" style="padding: 5px; font-weight: bold; font-size: 10pt;">
-						<span style="vertical-align: baseline; color: blue; font-size: smaller;">[${fk_team_idx}팀]</span> 자유게시판입니다.
+
+						<span style="vertical-align: baseline; color: #667292; font-size: smaller;">[${fk_team_idx}팀]</span> 자유게시판 글쓰기 
+
 					</td>
 				</tr>
 				<tr class="title" style="border: 1px solid lightgray; border-left: none; border-right: none;">
@@ -88,7 +90,7 @@
 			<form name="writeFrm">
 				<table id="table" style="border: 1px solid lightgray; border-left: none; border-right: none;">
 					<tr style="border: 1px solid lightgray; border-left: none; border-right: none;">
-						<th style="background-color: #DFCFBE; padding: 10px;">아이디</th>
+						<th style="background-color: #92a8d1; padding: 10px;">아이디</th>
 						<td style="padding: 5px; padding-left: 10px;">
 						    <input type="text" name="userid" value="${sessionScope.loginUser.userid}" class="short" readonly />
 							<input type="hidden" name="name" value="${sessionScope.loginUser.name}" readonly />
@@ -97,14 +99,14 @@
 					</tr>
 					 
 					<tr style="border: 1px solid lightgray; border-left: none; border-right: none;">
-						<th style="background-color: #DFCFBE; padding: 10px;">글제목</th>
+						<th style="background-color: #92a8d1; padding: 10px;">글제목</th>
 						<td style="padding: 5px; padding-left: 10px;">
 							<input type="text" name="subject" id="subject" class="long" />
 						</td>
 					</tr>
 					
 					<tr style="border: 1px solid lightgray; border-left: none; border-right: none;">
-		            	<th style="background-color: #DFCFBE; padding: 10px;">글내용</th>
+		            	<th style="background-color: #92a8d1; padding: 10px;">글내용</th>
 		            	<td style="padding: 5px;">
 		            		<textarea name="content" id="content" class="summernote"></textarea>
 		            	</td>
