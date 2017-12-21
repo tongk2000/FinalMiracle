@@ -17,6 +17,8 @@
 				<input type="hidden" class="category" value="${dvo.category}" />
 				<input type="hidden" class="dayCnt" value="${dvo.dayCnt}" />
 				<input type="hidden" class="statusValue" value="${dvo.status}" />
+				<input type="hidden" class="fullStartDate" value="${dvo.fullStartDate}" />
+				<input type="hidden" class="fullLastDate" value="${dvo.fullLastDate}" />
 				<span id="span${dvo.idx}" style="margin-left:${dvo.depth*20}px;">
 					<c:if test="${dvo.category == 1}"> <!-- 폴더라면 -->
 						<span class="foldingIcon" style="cursor:default;">

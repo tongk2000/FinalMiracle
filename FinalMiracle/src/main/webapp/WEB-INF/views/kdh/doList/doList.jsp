@@ -93,7 +93,7 @@
 		background-color:blue !important;
 	}
 	.delElement {
-		background-color:red;
+		background-color:red !important;
 	}
 	
 	.line-in-middle {

@@ -28,11 +28,13 @@ public class FolderVO {
 	private int fcCnt; // 하위 요소의 갯수 받아오기용
 	private int ffCnt; // 하위 요소의 갯수 받아오기용
 	private String visible; // show/hide 값 유지용
+	private String fullStartDate;
+	private String fullLastDate;
 	
 	public FolderVO(){}
 	public FolderVO(int idx, int fk_teamwon_idx, String subject, String content, String startDate, String lastDate,
 			int fk_folder_idx, int groupNo, int depth, int category, int status, int importance, int dayCnt,
-			double importanceAvg, int downCnt, int ftCnt, int fcCnt, int ffCnt, String visible) {
+			double importanceAvg, int downCnt, int ftCnt, int fcCnt, int ffCnt, String visible, String fullStartDate, String fullLastDate) {
 		this.idx = idx;
 		this.fk_teamwon_idx = fk_teamwon_idx;
 		this.subject = subject;
@@ -167,7 +169,19 @@ public class FolderVO {
 	}
 	public void setVisible(String visible) {
 		this.visible = visible;
-	}	
+	}
+	public String getFullStartDate() {
+		return fullStartDate;
+	}
+	public void setFullStartDate(String fullStartDate) {
+		this.fullStartDate = fullStartDate;
+	}
+	public String getFullLastDate() {
+		return fullLastDate;
+	}
+	public void setFullLastDate(String fullLastDate) {
+		this.fullLastDate = fullLastDate;
+	}
 }
 
 

@@ -10,6 +10,8 @@
 		select idx, fk_teamwon_idx, subject, content
 		     , to_char(startdate, 'yy.mm.dd') as startdate
 		     , to_char(lastdate, 'yy.mm.dd') as lastdate
+		     , to_char(startdate, 'yyyy-mm-dd') as fullStartdate
+		     , to_char(lastdate, 'yyyy-mm-dd') as fullLastdate
 		     , fk_folder_idx, groupno, depth, category, status, importance
 		     , case when trunc(startdate) <![CDATA[<]]> sysdate and sysdate <![CDATA[<]]> trunc(lastdate)+1 then 1
 		            when trunc(lastdate)+1 <![CDATA[<]]> sysdate then -1
@@ -34,6 +36,8 @@
 		select idx, fk_teamwon_idx, subject, content
 		     , to_char(startdate, 'yy.mm.dd') as startdate
 		     , to_char(lastdate, 'yy.mm.dd') as lastdate
+		     , to_char(startdate, 'yyyy-mm-dd') as fullStartdate
+		     , to_char(lastdate, 'yyyy-mm-dd') as fullLastdate
 		     , fk_folder_idx, groupno, depth, category, status, importance
 		     , case when trunc(startdate) &lt; sysdate and sysdate &lt; trunc(lastdate)+1 then 1
 		            when trunc(lastdate)+1 &lt; sysdate then -1
@@ -55,6 +59,8 @@
 		select idx, fk_teamwon_idx, subject, content
 		     , to_char(startdate, 'yy.mm.dd') as startdate
 		     , to_char(lastdate, 'yy.mm.dd') as lastdate
+		     , to_char(startdate, 'yyyy-mm-dd') as fullStartdate
+		     , to_char(lastdate, 'yyyy-mm-dd') as fullLastdate
 		     , fk_folder_idx, groupno, depth, category, status, importance
 		     , case when trunc(startdate) &lt; sysdate and sysdate &lt; trunc(lastdate)+1 then 1
 		            when trunc(lastdate)+1 &lt; sysdate then -1

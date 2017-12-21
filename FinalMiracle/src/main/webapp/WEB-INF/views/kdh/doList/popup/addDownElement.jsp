@@ -45,8 +45,8 @@
  		// datePicker 설정
  		var $opener = $(".selectedLine", opener.document);
  		
-		var startDate = $opener.find(".startDateTd").text();
-		var lastDate = $opener.find(".lastDateTd").text();
+		var startDate = $opener.find(".fullStartDate").val();
+		var lastDate = $opener.find(".fullLastDate").val();
 		$("#startDate").val(startDate); // 상위요소의 시작일자를 미리 대입해줌
 		$("#lastDate").val(lastDate); // 상위요소의 마감일자를 미리 대입해줌
 		
