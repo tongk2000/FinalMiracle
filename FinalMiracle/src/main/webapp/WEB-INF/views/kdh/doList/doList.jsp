@@ -6,15 +6,16 @@
 
 <style type="text/css">
 	th, td:not(.pageDateLine){
-		border:1px solid black;
+		border:1px solid #cce6ff;
 		word-wrap:break-word; /* 글자 넘치면 자동 줄바꿈 */
 	}
 	
 	th {
+		font-weight:normal;
 		position: sticky;
 	    top: -1px;
 	    z-index: 10;
-	    background-color:lightgray;
+	    background-color:#4882ab;
     }
 	
 	.pointer{
@@ -65,13 +66,13 @@
 	}
 	
 	.selectLine {
-		background-color:lightgray;
+		background-color:#F0F0F0;
 	}
 	.selectedLine {
-		background-color:lightgray;
+		background-color:#F0F0F0;
 	}
 	.moveLine {
-		background-color:lightgray;
+		background-color:#F0F0F0;
 	}
 	.moveToLine {
 		background-color:yellow;
@@ -90,18 +91,18 @@
 		background-color:pink !important;
 	}
 	.addLine {
-		background-color:blue;
+		background-color:blue !important;
 	}
 	.delElement {
-		background-color:red;
+		background-color:red !important;
 	}
 	
 	.line-in-middle {
 	  background: linear-gradient(to right,
 	                              transparent 0%,
 	                              transparent calc(50% - 0.81px),
-	                              blue calc(50% - 0.8px),
-	                              blue calc(50% + 0.8px),
+	                              #4882ab calc(50% - 0.8px),
+	                              #4882ab calc(50% + 0.8px),
 	                              transparent calc(50% + 0.81px),
 	                              transparent 100%);
 	}
@@ -153,7 +154,7 @@
 	}
 	
 	.seperatorLine {
-		border-right:3px solid black;
+		border-right:3px solid #cce6ff;
 	}
 	
 	#teamwonList{
@@ -185,6 +186,7 @@
 	
 	$(document).ready(function(){
 		changeFlag = false; // 모달창에서 변경된 값이 있는지 체크하는 전역 변수
+		
 		$("#folderRcm").hide();
 		$("#taskRcm").hide();
 				
@@ -234,28 +236,32 @@
 				}
 				var $this2 = $this.next();
 				var depth2 = parseInt(getThirdClass($this2)); // 다음 요소의 깊이 구하기
-				
-				if(depth+1 == depth2) { // 클릭한 요소의 깊이보다 다음 요소의 깊이가 1 크다면 (클릭했을때 +1 깊이만 표시되도록 하기 위해서 구분함)
-					if($this2.is(":visible")) { // 깊이가 1 크면서 show 중이라면
-						$this2.hide();
+				var foldinged = $this2.hasClass("foldinged"); // 다음 요소의 접고 펴짐 상태 저장
+				if(depth+1 == depth2) { // 클릭한 요소의 깊이보다 다음 요소의 깊이가 1 크다면 (펼때 +1 깊이만 펴지도록 하기 위해서 구분함)
+					if(!foldinged) { // 깊이가 1 크면서 펴짐 상태라면
+						$this2.hide().addClass("foldinged");
 						foldingFlag = 1;
-					} else {  // 깊이가 1 크면서 hide 중이라면
-						$this2.show();
-						var downCnt = $this2.find(".downCnt").val(); // show 되는 요소가 하위요소를 가지고 있는지 확인
-						if(downCnt > 0) { // 하위요소가 있다면
-							$this2.find(".foldingIcon").text("▶");
+					} else {  // 깊이가 1 크면서 접힘 상태라면
+						var bool = $this2.hasClass("hided");
+						if(!bool) { // 완료된 업무 숨기기로 숨겨진게 아니라면
+							$this2.show();
+							var downCnt = $this2.find(".downCnt").val(); // show 되는 요소가 하위요소를 가지고 있는지 확인
+							if(downCnt > 0) { // 하위요소가 있다면
+								$this2.find(".foldingIcon").text("▶");
+							}
+							foldingFlag = 2;
 						}
-						foldingFlag = 2;
+						$this2.removeClass("foldinged"); // 보여주든 말든 일단 펴진 상태로 만듬
 					}
 				} else if (depth+1 < depth2) { // 클릭한 요소의 깊이보다 다음 요소의 깊이가 2 이상이라면
-					if($this2.is(":visible")) { // 깊이가 2 이상 크면서 show 중이라면(한마디로 2 이상 큰건 다 hide)
-						$this2.hide();
+					if(!foldinged) { // 깊이가 2 이상 크면서 펴짐 상태라면(한마디로 2 이상 큰건 다 접음)
+						$this2.hide().addClass("foldinged");
 						$(this).find(".foldingIcon").text("▶");
 					}
 				} else { // 클릭한것과 깊이가 같은 요소가 나오면 break
 					break;
 				}
-				$this = $this2; // 다음의 다음 요소를 찾기 위함
+				$this = $this2; // 순차적으로 다음 요소를 찾기 위함
 			}
 			
 			if(foldingFlag == 1) { // 하위 요소가 hide 되었다면.
@@ -274,19 +280,24 @@
 				$("tr").removeClass("selectedLine");
 			}
 		}); // end of $(document).mousedown(function() ------------------------------------------------------
-		
+		// 스크롤 이벤트 있으면 일단 우클릭 메뉴 없애주기
+		$("#projectDiv").scroll(function(){
+			$("#folderRcm").hide();
+			$("#taskRcm").hide();
+			$("tr").removeClass("selectedLine");
+		}); // end of $(document).mousedown(function() ------------------------------------------------------
 				
 		// 우클릭시 메뉴 보여주기
 		$(document).on("contextmenu", ".element", function(event) {
 		    event.preventDefault();
 		    $(this).addClass("selectedLine");
-		    var classname = getFirstClass($(this));
 		    
 		    var subject = $(this).find(".subject").text();
 		    $(".rcmSubject").text("["+subject+"] 메뉴(닫기:esc)");
 		    		    
 		    if($(this).find(".modalFolder").hasClass("modalFolder")) { // 폴더 우클릭이라면
 		    	$("#downElementFoldingRcm").show();
+		    	
 		    	var foldingIcon = $(this).find(".foldingIcon").text();
 		    	if(foldingIcon.trim() == "▶") {
 		    		$("#downElementFoldingRcm").text("하위요소 전체 펴기");
@@ -295,36 +306,89 @@
 		    	} else if(foldingIcon.trim() == "▷") {
 		    		$("#downElementFoldingRcm").hide();
 		    	}
-		    	$("#folderRcm").css({top:event.pageY+"px", left:event.pageX+"px"}).show();
+		    	
+		    	var folderComplete = $(this).find(".statusValue").val();
+		    	if(folderComplete == "0") {
+		    		$("#folderStatusRcm").removeClass("folderCompleteRcm").addClass("folderIncompleteRcm").text("폴더 미완료 처리");
+		    	} else {
+		    		$("#folderStatusRcm").removeClass("folderIncompleteRcm").addClass("folderCompleteRcm").text("폴더 완료 처리");
+		    	}
+		    	
+		    	var winH = window.innerHeight; // 화면에 보이는, 브라우저를 제외한 뷰단의 전체 height
+		    	var winW = window.innerWidth; // 화면에 보이는, 브라우저를 제외한 뷰단의 전체 width
+		    	var rcmH = $("#folderRcm").height(); // 우클릭메뉴의 height
+		    	var rcmW = $("#folderRcm").width(); // 우클릭메뉴의 width
+		    	var clickY = event.pageY; // 클릭 지점 Y
+		    	var clickX = event.pageX; // 클릭 지점 X
+		    	var top = clickY; // css 에 적용할 y 지점
+		    	var left = clickX; // css 에 적용할 x 지점
+		    	
+		    	if( (rcmH+clickY) > winH ) {
+		    		top = clickY - rcmH;
+		    	}
+		    	if( (rcmW+clickX) > winW ) {
+		    		left = clickX - rcmW;
+		    	}
+		    	$("#folderRcm").css({"top":top+"px", "left":left+"px"}).show();
 		    } else if($(this).find(".modalTask").hasClass("modalTask")) { // 할일 우클릭이라면
 		    	var bool = $(this).find(".status").is(":checked");
 		    	if(bool) {
-		    		$("#statusRcm").text("미완료처리");
+		    		$("#statusRcm").text("할일 미완료 처리");
 		    	} else {
-		    		$("#statusRcm").text("완료처리");
+		    		$("#statusRcm").text("할일 완료 처리");
 		    	}
-		    	$("#taskRcm").css({top:event.pageY+"px", left:event.pageX+"px"}).show();
+		    	
+		    	var winH = window.innerHeight; // 화면에 보이는, 브라우저를 제외한 뷰단의 전체 height
+		    	var winW = window.innerWidth; // 화면에 보이는, 브라우저를 제외한 뷰단의 전체 width
+		    	var rcmH = $("#taskRcm").height(); // 우클릭메뉴의 height
+		    	var rcmW = $("#taskRcm").width(); // 우클릭메뉴의 width
+		    	var clickY = event.pageY; // 클릭 지점 Y
+		    	var clickX = event.pageX; // 클릭 지점 X
+		    	var top = clickY; // css 에 적용할 y 지점
+		    	var left = clickX; // css 에 적용할 x 지점
+		    	
+		    	if( (rcmH+clickY) > winH ) {
+		    		top = clickY - rcmH;
+		    	}
+		    	if( (rcmW+clickX) > winW ) {
+		    		left = clickX - rcmW;
+		    	}
+		    	$("#taskRcm").css({"top":top+"px", "left":left+"px"}).show();
 		    }
 		    return false;
 		}); // end of $(".element").bind("contextmenu", function(event) --------------------------------------------------------------------
 				
 				
-		// 폴더 전체 닫기
+		// 최상위 요소만 남기고 나머지 전체 닫기
 		$("#allClose").click(function(){
-			$(".element").hide();
-			$(".0").show().find(".foldingIcon").text("▶");
+			$(".element").each(function(){
+				$(this).hide().addClass("foldinged");
+			});
+			$(".0").each(function(){ // 최상위 요소만 뺑뺑이~
+				var bool = $(this).hasClass("hided");
+				if(!bool) { // 완료 숨김 상태가 아니라면 보여줌
+					$(this).removeClass("foldinged").show().find(".foldingIcon").text("▶");
+				} else { // 완료 숨김 상태라면 보여주진 않고 접힌 상태만 해제해줌
+					$(this).removeClass("foldinged").find(".foldingIcon").text("▶");
+				}
+			})
 		}); // end of $("#allClose").click(function() -------------------------------------------------------------------------------------
 		
 				
-		// 폴더 전체 펴기
+		// 전체 요소 펴기
 		$("#allOpen").click(function(){ 
 			$(".element").each(function(){
 				var downCnt = $(this).find(".downCnt").val();
 				if(downCnt > 0) { // 하위요소가 있다면
 					$(this).find(".foldingIcon").text("▼");
 				}
+				var bool = $(this).hasClass("hided");
+				if(!bool) { // 완료 숨기기 상태가 아니라면
+					$(this).show().removeClass("foldinged");
+				} else { // 보여주진 않더라도 펴진 상태로 만들어줌
+					$(this).removeClass("foldinged");
+				}
 			});
-			$(".element").show();
 		}); // end of $("#allOpen").click(function() ---------------------------------------------------------------------------------------------
 		
 				
@@ -346,11 +410,16 @@
 		// 모달창에서 정보 수정 input 박스를 벗어나면 show 폼으로 변경하기
 		$(document).on("blur", ".hiddenEditInput", function(){
 			$(this).parent().removeClass("selectedLine");
-			$(this).parent(".hiddenEdit").hide();
+			$(this).parent().hide();
+			$(this).parent().parent().find(".showInfo").show();
+		}); // end of $(document).on("blur", ".hiddenEditInput", function() -------------------------------------------------------------------------
+		// 모달창에서 정보 수정 seletor 박스를 벗어나면 show 폼으로 변경하기
+		$(document).on("blur", ".hiddenEditSelector", function(){
+			$(this).parent().removeClass("selectedLine");
+			$(this).parent().hide();
 			$(this).parent().parent().find(".showInfo").show();
 		}); // end of $(document).on("blur", ".hiddenEditInput", function() -------------------------------------------------------------------------
 		
-				
 		// 모달창에서 정보 수정을 하면 그 값을 바로 show 폼에 적용시키기
 		$(document).on("keyup", ".hiddenEditInput", function(event){
 			changeFlag = true;
@@ -360,36 +429,68 @@
 			}
 		}); // end of $(document).on("keyup", ".hiddenEditInput", function() --------------------------------------------------------------------------	
 		// 모달창에서 정보 수정하는 select 태그는 따로 처리함
-		$(document).on("change", ".hiddenEditInputSelector", function(event){
+		$(document).on("change", ".hiddenEditSelector", function(event){
 			changeFlag = true;
-			$(this).parents("tr").find(".showInfo").html($(this).val());
-			$(this).parents(".hiddenEdit").hide();
-			$(this).parents("tr").find(".showInfo").show();
+			$(this).parent().parent().find(".showInfo").html($(this).val());
+			$(this).parent().hide();
+			$(this).parent().parent().find(".showInfo").show();
 		}); // end of $(document).on("change", ".hiddenEditInput", function() --------------------------------------------------------------------------
 		
-		// 요소 모달창의 정보 수정하기
+		// 요소 모달창의 정보 수정하고 페이지에 새로운 정보로 갱신해주기
 		$(document).on("click", ".modalEdit", function(){
+			var $this = $("#modalSubject");
+			if ($this.val().trim() == "") {
+				alert("제목은 필수 입력사항입니다.");
+				$this.parent().parent().find(".showInfo").hide();
+				$this.parent().show();
+				setTimeout(function() { $this.focus() }, 500); // 텀을 줘야만 focus 가 이동함;;;
+				return false;
+			}
+			
 			var bool = confirm("정말 수정하시겠습니까?");
 			if(!bool) {
 				return false;
 			}
+			
+			// 모달창 정보 새롭게 갱신해주기
 			$("#modalInfoFrm").ajaxForm({
 				url:"do_goModalEdit.mr",
-				dataType:"json",
+				dataType:"html",
 				success:function(data){
-					if(data.result == 1) {
-						alert("정보수정이 성공했습니다.");
-						$("#subject"+data.idx).text(data.subject);
-						changeFlag = false;
-					} else {
-						alert("정보수정이 실패했습니다. 관리자에게 문의하세요.");
-					}
+					alert("정보수정이 성공했습니다.");
+					$("#modalElementInfo").html(data);
 				}, error:function(request, status, error){
 	                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	                return false;
 				}
 			});
-			
 			$("#modalInfoFrm").submit();
+			
+			// 리스트 페이지에도 새로운 정보로 입력해주기
+			setTimeout(function(){ // DB지연 때문인지 반드시 지연시간 줘야만 새로운 정보를 들고옴...
+				var term = $("#term").val();
+				var page = $("#page").val();
+				var idx = $("#folder_idx").val();			
+				var frm = {"term":term, "page":page, "idx":idx};
+				$.ajax({
+					url:"do_getOneElement.mr",
+					data:frm,
+					dataType:"html",
+					success:function(data) {
+						var $this2 = $("#"+idx);
+						$this2.after(data);
+						$this2.remove();
+					}, error:function(request, status, error){
+						alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+						return false;
+					}
+				});
+				setTimeout(function(){ // 이것도 지연 줘야 제대로 돌아감;;;
+					todayLine();
+					addLine(idx);
+					changeFlag = false;
+				},300);
+			},500);
 		}); // end of function goModalEdit() -------------------------------------------------------------------------------------------------------------
 		
 		
@@ -399,34 +500,61 @@
 			var idx = $(this).attr("id").replace("modalStatus","").replace("status","");
 			var status = "";
 			
-			if(checked) {
+			if(checked) { // 미완료 -> 완료
 				$("#modalStatus").css({"color":"green"}).html("<label style='cursor:pointer;' for='modalStatus"+idx+"'>완료</label>");
 				$("#status"+idx).prop("checked", true);			
 				
-				$("#"+idx).find(".dateColor").css({"background-color":"gray"});
+				$("#"+idx).find(".dateColor").css({"background-color":"#d9d9d9"});
 				
 				status = "0";
 				
-				$("#"+idx).find("*").addClass("completeLine"); // 깜빡이는 효과
+				$("#"+idx).find("*").addClass("completeLine");
+				
 				setTimeout(function(){
 					$("#"+idx).find("*").removeClass("completeLine");
+					
+					var bool = $("#toggleComeleted").hasClass("hided");
+					if(bool) { // 만약 완료된 업무 숨기기 가 on 상태라면
+						$("#"+idx).hide().addClass("hided"); // 숨기고
+						var cnt = parseInt( $("#toggleComeletedCnt").val() ) + 1;
+						$("#toggleComeletedCnt").val(cnt);
+						$("#toggleComeleted").text("완료된 업무 "+cnt+"개 보기"); // 완료된 업무 숨기기에 +1개
+						
+						$("#toggleComeleted").addClass("completeLine");
+						setTimeout(function(){
+							$("#toggleComeleted").removeClass("completeLine");
+						},1000);
+					}
 				},500);
-			} else {
+			} else { // 완료 -> 미완료
+				// 상위폴더의 완료/미완료 상태 확인 시작(상위폴더가 완료상태라면 미완료 처리 불가함)
+				var upIdx = $("#"+idx).find(".fk_folder_idx").val();
+				var upStatus = $("#"+upIdx).find(".statusValue").val();
+				if(upStatus == 0) {
+					alert("먼저 상위요소의 완료를 해제하셔야 합니다.");
+					$("#"+upIdx).find("*").addClass("completeLine");
+					setTimeout(function(){
+						$("#"+upIdx).find("*").removeClass("completeLine");
+					},1000);
+					$(this).prop("checked", true);
+					return false;
+				}
+				// 상위폴더의 완료/미완료 상태 확인 끝 ----------------------------------------------------------------------------
+				
 				$("#modalStatus").css({"color":"red"}).html("<label style='cursor:pointer;' for='modalStatus"+idx+"'>미완료</label>");
 				$("#status"+idx).prop("checked", false);
-				
 				setDayColor(idx);
-				
 				status = "1";
+				var dayCnt = $("#"+idx).find(".dayCnt").val();
 				
 				$("#"+idx).find("*").addClass("incompleteLine"); // 깜빡이는 효과
 				setTimeout(function(){
 					$("#"+idx).find("*").removeClass("incompleteLine");
 				},500);
-			}
+			} // end of 외부 if ~ else -----------------------------------------------------------------------------------------------------------
 			
+			$("#"+idx).find(".statusValue").val(status);
 			var frm = {"idx":idx, "status":status};
-			
 			$.ajax({
 				url:"do_taskComplete.mr",
 				data:frm
@@ -443,30 +571,59 @@
 			
 			$("tr").removeClass("selectedLine");
 			
-			if(checked) { // 이건 체크박스를 직접 입력하는게 아니기 때문에 위하고는 반대로 되어야함
-				$status.prop("checked", false);
-				status = "1";
+			if(checked) {  // 완료 -> 미완료 (이건 체크박스를 직접 입력하는게 아니기 때문에 위하고는 반대로 되어야함)
+				// 상위폴더의 완료/미완료 상태 확인 시작(상위폴더가 완료상태라면 미완료 처리 불가함)
+				var upIdx = $("#"+idx).find(".fk_folder_idx").val();
+				var upStatus = $("#"+upIdx).find(".statusValue").val();
+				if(upStatus == 0) {
+					alert("먼저 상위요소의 완료를 해제하셔야 합니다.");
+					$("#taskRcm").hide();
+					$("#"+idx).removeClass("selectedLine");
+					$("#"+upIdx).find("*").addClass("completeLine");
+					setTimeout(function(){
+						$("#"+upIdx).find("*").removeClass("completeLine");
+					},1000);
+					$(this).prop("checked", true);
+					return false;
+				}
+				// 상위폴더의 완료/미완료 상태 확인 끝 ----------------------------------------------------------------------------
 				
+				$status.prop("checked", false);
 				setDayColor(idx);
+				status = "1";
 				
 				$("#"+idx).find("*").addClass("incompleteLine");
 				setTimeout(function(){ // 깜빡이는 효과
 					$("#"+idx).find("*").removeClass("incompleteLine");
 				},500);
-			} else {
+			} else {  // 미완료 -> 완료
 				$status.prop("checked", true);
 				status = "0";
 				
-				$("#"+idx).find(".dateColor").css({"background-color":"gray"});
+				$("#"+idx).find(".dateColor").css({"background-color":"#d9d9d9"});
 				
 				$("#"+idx).find("*").addClass("completeLine");
-				setTimeout(function(){ // 깜빡이는 효과
+				
+				setTimeout(function(){
 					$("#"+idx).find("*").removeClass("completeLine");
+					
+					var bool = $("#toggleComeleted").hasClass("hided");
+					if(bool) { // 만약 완료된 업무 숨기기 가 on 상태라면
+						$("#"+idx).hide().addClass("hided"); // 숨기고
+						var cnt = parseInt( $("#toggleComeletedCnt").val() ) + 1;
+						$("#toggleComeletedCnt").val(cnt);
+						$("#toggleComeleted").text("완료된 업무 "+cnt+"개 보기"); // 완료된 업무 숨기기에 +1개
+						
+						$("#toggleComeleted").addClass("completeLine");
+						setTimeout(function(){
+							$("#toggleComeleted").removeClass("completeLine");
+						},1000);
+					}
 				},500);
-			}
+			} // end of 외부 if ~ else -----------------------------------------------------------------------------------------------------------
 			
+			$("#"+idx).find(".statusValue").val(status);
 			var frm = {"idx":idx, "status":status};
-			
 			$.ajax({
 				url:"do_taskComplete.mr",
 				data:frm
@@ -474,7 +631,112 @@
 			
 			$("#taskRcm").hide();
 		}); // end of $(document).on("click", "#statusRcm", function() ------------------------------------------------------------------------------
-				
+		
+		// 폴더 완료 체크하고 DB 수정하기(오른쪽클릭 메뉴)
+		$(document).on("click", ".folderCompleteRcm", function(){
+			// 일단 하위요소 다 펴주고 하위요소 중에 미완료 있는지 체크 시작
+			var $this = $(".selectedLine");
+			var depth = parseInt(getThirdClass($this)); // 선택한 요소의 깊이 구하기
+			while(1==1) {
+				if($this.next().attr("id") == undefined) { // 다음 요소가 없을때 undefined 오류 막기 위함
+					break;
+				}
+				var $this2 = $this.next();
+				var depth2 = parseInt(getThirdClass($this2)); // 다음 요소의 깊이 구하기
+				if(depth < depth2) { // 선택한 요소의 깊이보다 다음 요소의 깊이가 크다면
+					$this2.show().removeClass("foldinged"); // 일단 다 펴줌
+					if( $this2.find(".foldingIcon").text().trim() == "▶" ) {
+						$this2.find(".foldingIcon").text("▼");
+					}
+					
+					if($this2.find(".statusValue").val() == "1") { // 하위요소 중에 완료되지 않은게 있다면
+						$this2.addClass("incomplete");
+					}
+				} else { // 선택한것과 깊이가 같거나 큰 요소가 나오면 break
+					break;
+				}
+				$this = $this2; // 순차적으로 다음 요소를 찾기 위함
+			} // 일단 하위요소 다 펴주고 하위요소 중에 미완료 있는지 체크 끝 ----------------------------------------------------------------------------
+			
+			// 하위요소 중에 완료안된게 있는지 확인해서 깜빡여고 사용자한테 알려주기 시작
+			var completeFlag = 0;
+			$(".incomplete").each(function(){
+				$(this).find("*").addClass("incompleteLine");
+				completeFlag++;
+			});			
+			setTimeout(function(){
+				$(".incomplete").each(function(){
+					$(this).removeClass("incomplete");
+					$(this).find("*").removeClass("incompleteLine"); // 깜빡이는 효과
+				});
+			},1000);
+			if(completeFlag > 0) {
+				alert("하위요소 중에 완료되지 않은 요소가 있습니다.");
+				$("#folderRcm").hide();
+				$("tr").removeClass("selectedLine");
+				return false;
+			} // 하위요소 중에 완료안된게 있는지 확인해서 깜빡여고 사용자한테 알려주기 끝 -----------------------------------------------
+			
+			// 하위요소가 전부 완료되면 선택한 요소도 완료해주기 시작
+			var $this3 = $(".selectedLine");
+			$("#folderRcm").hide();
+			$this3.removeClass("selectedLine");
+			$this3.find(".statusValue").val("0");
+			$this3.find(".dateColor").css({"background-color":"#d9d9d9"});
+			$this3.find("*").addClass("completeLine");
+			setTimeout(function(){
+				$this3.find("*").removeClass("completeLine");
+			},1000);
+			
+			var idx = $this3.attr("id");
+			var status = "0";
+			var frm = {"idx":idx, "status":status};
+			$.ajax({
+				url:"do_taskComplete.mr",
+				data:frm
+			}); // 하위요소가 전부 완료되면 선택한 요소도 완료해주기 끝 ---------------------------------------------------------------------
+		}); // end of $(document).on("click", ".folderCompleteRcm", function() ---------------------------------------------------------------
+		
+		// 폴더 미완료 체크하고 DB 수정하기(오른쪽클릭 메뉴)
+		$(document).on("click", ".folderIncompleteRcm", function(){
+			// 상위폴더의 완료/미완료 상태 확인 시작(상위폴더가 완료상태라면 미완료 처리 불가함)
+			var $this = $(".selectedLine");
+			var upIdx = $this.find(".fk_folder_idx").val();
+			var upStatus = $("#"+upIdx).find(".statusValue").val();
+			if(upStatus == 0) {
+				alert("먼저 상위요소의 완료를 해제하셔야 합니다.");
+				$("#folderRcm").hide();
+				$this.removeClass("selectedLine");
+				$("#"+upIdx).find("*").addClass("completeLine");
+				setTimeout(function(){
+					$("#"+upIdx).find("*").removeClass("completeLine");
+				},1000);
+				return false;
+			}
+			// 상위폴더의 완료/미완료 상태 확인 끝 ----------------------------------------------------------------------------
+						
+			// 상위폴더가 미완료라면 선택한 요소도 미완료해주기 시작
+			var $this2 = $(".selectedLine");
+			$("#folderRcm").hide();
+			$this2.removeClass("selectedLine");
+			$this2.find(".statusValue").val("1");
+			
+			var idx = $this2.attr("id"); 
+			setDayColor(idx);
+			$this2.find("*").addClass("incompleteLine");
+			setTimeout(function(){
+				$this2.find("*").removeClass("incompleteLine");
+			},1000);
+			
+			var status = "1";
+			var frm = {"idx":idx, "status":status};
+			$.ajax({
+				url:"do_taskComplete.mr",
+				data:frm
+			}); // 상위폴더가 미완료라면 선택한 요소도 미완료해주기 끝 ---------------------------------------------------------------------
+		}); // end of $(document).on("click", ".folderIncompleteRcm", function() ---------------------------------------------------------------
+		
+		
 		// 페이지 전체에서 esc 키를 누르면 모달창을 닫거나 이동하는 css 없애주기
 		$(document).on("keydown", function(){
 			var modalFlag = $('.modal').is(':visible');
@@ -595,7 +857,7 @@
 			changeFlag = true;
 			var userid = $(this).text();
 			var idx = $("#id"+userid).val();
-			var html = '<span id="folderTeamwon'+idx+'" class="pointer" onclick="deleteFolderTeamwon('+idx+')">'
+			var html = '<span id="folderTeamwon'+idx+'" class="pointer folderTeamwon" onclick="deleteFolderTeamwon(this)">'
 					 + '	<span id="added'+userid+'">'+userid+'</span>'
 					 + '    <input type="hidden" name="folder_teamwonIdxArr" value="'+idx+'">'
 					 + '</span>';
@@ -704,16 +966,16 @@
 	} // end of function addDownElement() -----------------------------------------------------------------------------------------------------------------------------
 	// 요소 추가되었을때 살짝 깜빡여 주기
 	function addLine(id) {
-		$("#"+id).addClass("addLine");
+		$("#"+id).find("*").addClass("addLine");
 		setTimeout(function(){
-			$("#"+id).removeClass("addLine");
-		},1000);
+			$("#"+id).find("*").removeClass("addLine");
+		},1500);
 	} // end of function addLine(id) ---------------------------------------------------------------------------------------------------------------------------------
 	
 	// 선택 요소의 아래 요소들 전부 펴고 닫기
 	function downElementFolding() {
 		$this = $(".selectedLine");
-		var bool = $this.next().is(":visible"); // 선택 요소의 바로 다음 요소의 show, hide 상태를 저장한다.
+		var bool = $this.next().hasClass("foldinged"); // 선택 요소의 바로 다음 요소의 접힘, 펴짐 상태를 저장한다.
 		var depth = parseInt(getThirdClass($this)); // 선택 요소의 깊이 구하기
 		while(1==1) {
 			if($this.next().attr("id") == undefined) { // 다음 요소가 없을때 undefined 오류 막기 위함
@@ -723,25 +985,29 @@
 			var depth2 = parseInt(getThirdClass($this2)); // 다음 요소의 깊이 구하기
 			
 			if(depth < depth2) { // 선택 요소의 하위요소는 전부 show 나 hide 상태로 변경해줄 생각임
-				if(bool) { // 선택 요소의 다음 요소가 show 상태라면
-					$this2.hide(); // 하위요소 전부 다 숨김
+				if(!bool) { // 선택 요소의 다음 요소가 펴짐 상태라면
+					$this2.hide().addClass("foldinged"); // 하위요소 전부 다 숨김
 					$(".selectedLine").find(".foldingIcon").text("▶");
 					$("#downElementFoldingRcm").text("하위요소 전체 펴기");
 					if( $this2.find(".foldingIcon").text().trim() == "▼" ) {
 						$this2.find(".foldingIcon").text("▶");
 					}
-				} else { // 선택 요소의 다음 요소가 hide 상태라면
-					$this2.show(); // 하위요소 전부 다 보여줌
-					$(".selectedLine").find(".foldingIcon").text("▼");
-					$("#downElementFoldingRcm").text("하위요소 전체 접기");
-					if( $this2.find(".foldingIcon").text().trim() == "▶" ) {
-						$this2.find(".foldingIcon").text("▼");
+				} else { // 선택 요소의 다음 요소가 접힘 상태라면
+					var bool3 = $this2.hasClass("hided");
+					if(!bool3) { // 완료된 업무 숨기기로 숨겨진게 아니라면
+						$this2.show(); // 하위요소 전부 다 보여줌
+						$(".selectedLine").find(".foldingIcon").text("▼");
+						$("#downElementFoldingRcm").text("하위요소 전체 접기");
+						if( $this2.find(".foldingIcon").text().trim() == "▶" ) {
+							$this2.find(".foldingIcon").text("▼");
+						}
 					}
+					$this2.removeClass("foldinged"); // 보여주든 말든 일단 펴진 상태로 만듬
 				}
 			} else { // 상위요소와 깊이가 같은 요소가 나오면 break
 				break;
 			}
-			$this = $this2; // 다음의 다음 요소를 찾기 위함
+			$this = $this2; // 순차적으로 다음 요소를 찾기 위함
 		} // end if while -------------------------------------------------------------------------------------------------
 	}
 	
@@ -861,20 +1127,22 @@
 		<jsp:useBean id="today" class="java.util.Date"/>
 		<fmt:formatDate value="${today}" var="now" pattern="yyMMdd"/> // 오늘 날짜를 구해서
 		var now = ${now};
-		$("."+now).addClass("line-in-middle"); // 클래스가 오늘 날짜인건 전부 가운데 줄 그어주는 css 추가
+		$("."+now).each(function(){ // 클래스가 오늘 날짜인건 전부 가운데 줄 그어주는 css 추가
+			$(this).addClass("line-in-middle");
+		});
 	} // end of function todayLine() --------------------------------------------------------------------------------------------------------------
 	
 	
 	// 완료/미완료 처리시 기간에 대한 색상을 바꿔주는 함수 
 	function setDayColor(idx) {
 		var $dateColor = $("#"+idx).find(".dateColor");
-		var dayCnt = getThirdClass($dateColor);
-		if(dayCnt == -1) {
-			$dateColor.css({"background-color":"red"});
-		} else if (dayCnt == 0) {
-			$dateColor.css({"background-color":"lightgreen"});
-		} else if (dayCnt == 1) {
-			$dateColor.css({"background-color":"green"});
+		var dayCnt = $("#"+idx).find(".dayCnt").val();
+		if(dayCnt == 0) { // 진행전이라면
+			$dateColor.css({"background-color":"#cce6ff"});
+		} else if (dayCnt == 1) { // 진행중이라면
+			$dateColor.css({"background-color":"#d6f5d6"});
+		} else if (dayCnt == -1) { // 기한경과라면
+			$dateColor.css({"background-color":"#ffcccc"});
 		}
 	} // end of function setDayColor(idx) ---------------------------------------------------------------------------------------------------------------
 
@@ -985,11 +1253,11 @@
 				type:"post",
 				dataType:"JSON",
 				success:function(data){
-					var html = "<div id='teamwonList'><table>";
+					var html = "<div id='teamwonList' style='border:1px solid #cce6ff; background-color:#4882ab; width:100px;'><table style='width:100%;'>";
 					$.each(data, function(entryIndex, entry){
 						var userid = "${sessionScope.loginUser.userid}";
 						if(entry.userid != userid) { // 현재 로그인한 팀원(한마디로 본인)이 아니라면
-							html += "<tr class='trLine'><td class='pointer teamwonElementOn' onclick='teamwonElementOn(this)' style='border:1px solid black;'>"+entry.userid
+							html += "<tr class='trLine'><td class='pointer teamwonElementOn' onclick='teamwonElementOn(this)' style='border:1px solid #cce6ff;'>"+entry.userid
 							html += "<input type='hidden' id='"+entry.userid+"' value='"+entry.idx+"'></td></tr>";
 						}
 					});
@@ -1142,6 +1410,34 @@
 		});
 	} // end of function elementSerch() ---------------------------------------------------------------------------------------------------------------
 
+	// 완료된 요소 숨기거나 보여주기 토글
+	function toggleComeleted(element) {
+		var bool1 = $(element).hasClass("hided");
+		var cnt = 0;
+		
+		if(bool1) { // 만약 숨기기 on 이라면 다시 보여줌
+			$(".element").each(function() {
+				var bool2 = $(this).find(".statusValue").val();
+				var bool3 = $(this).hasClass("foldinged");
+				
+				if( bool2 == "0" && !bool3 ) { // 완료되었으면서 접힌 상태가 아니라면
+					$(this).show().removeClass("hided");
+				} else if (bool2 == "0") { // 접힌 상태라면 보여주진 않아도 완료 숨김 클래스는 지워줄것
+					$(this).removeClass("hided");
+				}
+			});
+			$("#toggleComeleted").text("완료된 업무 숨기기").removeClass("hided");
+		} else { // 만약 숨기기 off 이라면 숨김
+			$(".statusValue").each(function(){
+				if( $(this).val() == "0" ) {
+					$(this).parents(".element").hide().addClass("hided");
+					cnt++;
+				}
+			});
+			$("#toggleComeleted").text("완료된 업무 "+cnt+"개 보기").addClass("hided");
+			$("#toggleComeletedCnt").val(cnt);
+		}
+	} // end of function toggleComeleted() ------------------------------------------------------------------------------------------------------------------------
 	
 	// 상위요소를 변경하기 전이나 esc 눌렀을때 기존에 입힌 css 지워주기
 	function delMoveCss() {
@@ -1169,7 +1465,7 @@
 			} else { // 클릭한것과 깊이가 같은 요소가 나오면 break
 				break;
 			}
-			$this = $this2; // 다음의 다음 요소를 찾기 위함
+			$this = $this2; // 순차적으로 다음 요소를 찾기 위함
 		}
 		$("#folderRcm").hide(); // 메뉴 숨겨주고
 		$("#taskRcm").hide();
@@ -1263,7 +1559,7 @@
 			} else { // 클릭한것과 깊이가 같은 요소가 나오면 break
 				break;
 			}
-			$this = $this2; // 다음의 다음 요소를 찾기 위함
+			$this = $this2; // 순차적으로 다음 요소를 찾기 위함
 		}
 		$("#folderRcm").hide(); // 메뉴 숨겨주고
 		$("#taskRcm").hide();
@@ -1332,9 +1628,9 @@
 	}
 </script>
 
-<div style="width:100%; float:left; height:100%; overflow:auto; font-family:Tahoma; font-size:10pt;">
+<div id="projectDiv" style="width:100%; float:left; height:100%; overflow:auto; font-family:Tahoma; font-size:10pt;">
 	<table style="width:100%; border:1px solid black;">
-		<thead>
+		<thead style="color:white;">
 			<tr id="firstHeaderLine">
 				<th colspan="${map.pageDateList.size() + 7}">
 					<span id="allClose" class="pointer" style="margin-left:20px;">[ 전체접기</span>  ||  <span id="allOpen" class="pointer">전체펴기</span> ]
@@ -1345,42 +1641,33 @@
 					&nbsp;&nbsp;&nbsp;
 					[ <span class="pointer" id="teamwonListView" onclick="teamwonListView()">팀원표시</span>  ||  <span class="pointer" onclick="teamwonElementOff()">해제</span> ]
 					&nbsp;&nbsp;&nbsp;
-					[ <span class="pointer" id="toggle" onclick="teamwonListView()">완료된 업무 숨기기</span>]
-					<span style="float:right;">프로젝트 검색:<input type="text" style="height:20px;" onkeyup="serchElementOn(this.value)"/></span>
+					[ <span class="pointer" id="toggleComeleted" onclick="toggleComeleted(this)">완료된 업무 숨기기</span>]
+					<input type="hidden" value="0" id="toggleComeletedCnt" />
+					<span style="float:right; color:white;">
+						<input type="text" placeholder="&nbsp;&nbsp;프로젝트 검색" style="height:20px; color:white; background-color:#154465; border:none;" onkeyup="serchElementOn(this.value)"/>
+					</span>
 			</tr>
 			
 			<tr>
-				<th colspan="7" class="seperatorLine">
-					<div style="margin-left:20px; border-left:10px solid #cccc00; height:10px; display:inline;"></div>
+				<th colspan="7" class="seperatorLine" style="border-bottom:none;">
+					<span style="margin-left:20px; border:1px solid #cce6ff; width:20px; height:10px; background-color:#cce6ff;">&nbsp;&nbsp;&nbsp;</span>
 					진행전(${map.periodCntMap.before}건
 						<span id="myBefore" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
 						<span id="teamwonBefore" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
 						<span id="searchBefore" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
 					)
-					<div style="margin-left:10px; border-left:10px solid #d6f5d6; height:10px; display:inline;"></div>
+					<span style="margin-left:15px; border:1px solid #cce6ff; width:20px; height:10px; background-color:#d6f5d6;">&nbsp;&nbsp;&nbsp;</span>
 					진행중(${map.periodCntMap.doing}건
 						<span id="myDoing" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
 						<span id="teamwonDoing" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
 						<span id="searchDoing" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
-					)
-					<div style="margin-left:10px; border-left:10px solid #ffcccc; height:10px; display:inline;"></div>
-					기한경과(${map.periodCntMap.lapse}건
-						<span id="myLapse" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
-						<span id="teamwonLapse" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
-						<span id="searchLapse" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
-					)
-					<div style="margin-left:10px; border-left:10px solid #d9d9d9; height:10px; display:inline;"></div>
-					완료(${map.periodCntMap.complete}건
-						<span id="myComplete" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
-						<span id="teamwonComplete" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
-						<span id="searchComplete" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
-					)
+					)					
 				</th>
-				<th colspan="${map.pageDateList.size()}" style="text-align:center; width:200px;">
+				<th colspan="${map.pageDateList.size()}" style="border-bottom:none; text-align:center; width:200px;">
 					<form name="pageDateFrm" method="get" action="do_changePageDate.mr">
 						<span class="pointer" onclick="beforeTerm()">◀</span>
 						<span class="pointer" onclick="beforeDate()">◁</span>
-						<select id="term" name="term" onchange="changePageDate()">
+						<select id="term" name="term" style="background-color:#4882ab; border:none;" onchange="changePageDate()">
 							<option value="7">주간</option>
 							<option value="30"
 								<c:if test="${term == 30}">selected</c:if>
@@ -1391,6 +1678,25 @@
 						<input type="hidden" id="page" name="page" value="0"/>
 						<input type="hidden" id="visibleArr" name="visibleArr">
 					</form>
+				</th>
+			</tr>
+			<tr>
+				<th colspan="7" class="seperatorLine" style="border-top:none;">
+					<span style="margin-left:20px; border:1px solid #cce6ff; width:20px; height:10px; background-color:#ffcccc;">&nbsp;&nbsp;&nbsp;</span>
+					기한경과(${map.periodCntMap.lapse}건
+						<span id="myLapse" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
+						<span id="teamwonLapse" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
+						<span id="searchLapse" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
+					)
+					<span style="margin-left:15px; border:1px solid #cce6ff; width:20px; height:10px; background-color:#d9d9d9;">&nbsp;&nbsp;&nbsp;</span>
+					완료(${map.periodCntMap.complete}건
+						<span id="myComplete" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
+						<span id="teamwonComplete" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
+						<span id="searchComplete" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
+					)
+				</th>
+				<th colspan="${map.pageDateList.size()}" style="border-top:none; text-align:center;">
+					
 				</th>
 			</tr>
 			
@@ -1411,9 +1717,9 @@
 							width:17px;
 							font-size:8pt !important;
 						</c:if>
-						<c:if test="${pageDate.dotw == '토' || pageDate.dotw == '일'}">
+						<%-- <c:if test="${pageDate.dotw == '토' || pageDate.dotw == '일'}">
 							background-color:#fff3e6;
-						</c:if>
+						</c:if> --%>
 						<c:if test="${fn:substring(pageDate.day, 4, 6) == '01'}">
 							border-left:2px solid #ff66ff;
 						</c:if>
@@ -1428,6 +1734,7 @@
 			<jsp:include page="doListLine.jsp"/> <!-- 여러번 활용하기 위해 할일 리스트는 다른 페이지로 뺏음 -->
 		</tbody>
 	</table>
+	<div style="width:100%; height:100px; background-color:white;"></div>
 </div>
 
 <div class="modal fade" id="modalElementInfo" role="dialog"></div>
@@ -1438,10 +1745,13 @@
 			<th class="rcmSubject"></th>
 		</tr>
 		<tr class="trLine">
-			<td class="rcm pointer" id="addFolderRcm" onclick="addDownElement()">하위요소추가</td>
+			<td class="rcm pointer" id="folderStatusRcm" class="folderCompleteRcm">폴더 완료 처리</td>
 		</tr>
 		<tr class="trLine">
 			<td class="rcm pointer" id="downElementFoldingRcm" onclick="downElementFolding()">하위요소 전체 펴기</td>
+		</tr>
+		<tr class="trLine">
+			<td class="rcm pointer" id="addFolderRcm" onclick="addDownElement()">하위요소추가</td>
 		</tr>
 		<tr class="trLine">
 			<td class="rcm pointer" id="modalFolderRcm">조회/수정</td>
@@ -1450,7 +1760,7 @@
 			<td class="rcm pointer" id="moveRcm" onclick="elementMove()">이동</td>
 		</tr>
 		<tr class="trLine">
-			<td class="rcm pointer" id="copyRcm" onclick="elementCopy()">복사</td>
+			<td class="rcm pointer" id="copyRcm" onclick="elementCopy()">복사(미구현)</td>
 		</tr>
 		<tr class="trLine">
 			<td class="rcm pointer" id="deleteRcm">삭제</td>
@@ -1465,7 +1775,7 @@
 			<th class="rcmSubject"></th>
 		</tr>
 		<tr class="trLine">
-			<td class="rcm pointer" id="statusRcm">완료처리</td>
+			<td class="rcm pointer" id="statusRcm">할일 완료 처리</td>
 		</tr>
 		<tr class="trLine">
 			<td class="rcm pointer" id="modalTaskRcm">조회/수정</td>
@@ -1474,7 +1784,7 @@
 			<td class="rcm pointer" id="moveRcm" onclick="elementMove()">이동</td>
 		</tr>
 		<tr class="trLine">
-			<td class="rcm pointer" id="copyRcm" onclick="elementCopy()">복사</td>
+			<td class="rcm pointer" id="copyRcm" onclick="elementCopy()">복사(미구현)</td>
 		</tr>
 		<tr class="trLine">
 			<td class="rcm pointer" id="deleteRcm">삭제</td>

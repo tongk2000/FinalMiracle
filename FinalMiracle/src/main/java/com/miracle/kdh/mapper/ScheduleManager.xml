@@ -5,11 +5,13 @@
 
 <!-- ==== #8. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->              
 <mapper namespace="do">
-	<!-- 모든 요소를 가져오는 메소드 -->
+	<!-- 모든 요소를 가져오는 메소드(to 프로젝트 리스트) -->
 	<select id="getAllDoList" resultType="com.miracle.kdh.model.FolderVO">
 		select idx, fk_teamwon_idx, subject, content
 		     , to_char(startdate, 'yy.mm.dd') as startdate
 		     , to_char(lastdate, 'yy.mm.dd') as lastdate
+		     , to_char(startdate, 'yyyy-mm-dd') as fullStartdate
+		     , to_char(lastdate, 'yyyy-mm-dd') as fullLastdate
 		     , fk_folder_idx, groupno, depth, category, status, importance
 		     , case when trunc(startdate) <![CDATA[<]]> sysdate and sysdate <![CDATA[<]]> trunc(lastdate)+1 then 1
 		            when trunc(lastdate)+1 <![CDATA[<]]> sysdate then -1
@@ -29,11 +31,13 @@
 	</select>
 	
 	
-	<!-- 방금 추가한 요소를 가져오기 -->
+	<!-- 방금 추가한 요소를 가져오기(to 프로젝트 리스트) -->
 	<select id="getAddedElement" resultType="com.miracle.kdh.model.FolderVO">
 		select idx, fk_teamwon_idx, subject, content
 		     , to_char(startdate, 'yy.mm.dd') as startdate
 		     , to_char(lastdate, 'yy.mm.dd') as lastdate
+		     , to_char(startdate, 'yyyy-mm-dd') as fullStartdate
+		     , to_char(lastdate, 'yyyy-mm-dd') as fullLastdate
 		     , fk_folder_idx, groupno, depth, category, status, importance
 		     , case when trunc(startdate) &lt; sysdate and sysdate &lt; trunc(lastdate)+1 then 1
 		            when trunc(lastdate)+1 &lt; sysdate then -1
@@ -47,6 +51,29 @@
 		     , (select count(*) from tbl_folder_file where fk_folder_idx = F.idx) as ffCnt
 		from tbl_folder F
 		where idx = (select max(idx) from tbl_folder)
+	</select>
+	
+	
+	<!-- 특정 한줄만 가져오기(to 프로젝트 리스트) -->
+	<select id="getOneElement" resultType="com.miracle.kdh.model.FolderVO">
+		select idx, fk_teamwon_idx, subject, content
+		     , to_char(startdate, 'yy.mm.dd') as startdate
+		     , to_char(lastdate, 'yy.mm.dd') as lastdate
+		     , to_char(startdate, 'yyyy-mm-dd') as fullStartdate
+		     , to_char(lastdate, 'yyyy-mm-dd') as fullLastdate
+		     , fk_folder_idx, groupno, depth, category, status, importance
+		     , case when trunc(startdate) &lt; sysdate and sysdate &lt; trunc(lastdate)+1 then 1
+		            when trunc(lastdate)+1 &lt; sysdate then -1
+		            else 0 end as dayCnt
+		     , (select count(*) from tbl_folder
+		       where status in (1, 0) and idx != F.idx
+		       start with idx = F.idx
+		       connect by prior idx = fk_folder_idx) as downCnt
+		     , (select count(*) from tbl_folder_teamwon where fk_folder_idx = F.idx) as ftCnt
+		     , (select count(*) from tbl_folder_comment where fk_folder_idx = F.idx) as fcCnt
+		     , (select count(*) from tbl_folder_file where fk_folder_idx = F.idx) as ffCnt
+		from tbl_folder F
+		where idx = #{idx}
 	</select>
 	
 	
