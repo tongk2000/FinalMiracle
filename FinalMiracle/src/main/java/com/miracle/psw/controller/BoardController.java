@@ -160,7 +160,7 @@ public class BoardController {
 		int startRno = 0;
 		int endRno = 0;
 		
-		int blockSize = 5;
+		int blockSize = 10;
 		
 		if (str_currentShowPageNo == null || str_currentShowPageNo.equals("")) {
 			currentShowPageNo = 1;
@@ -304,7 +304,7 @@ public class BoardController {
 		int startRno = 0;
 		int endRno = 0;
 		
-		int blockSize = 5;
+		int blockSize = 10;
 		
 		if (str_currentShowPageNo == null || str_currentShowPageNo.equals("")) {
 			currentShowPageNo = 1;
@@ -384,10 +384,16 @@ public class BoardController {
 	@RequestMapping(value="/freeEdit.mr", method={RequestMethod.GET})
 	public String freeEdit(HttpServletRequest req, HttpServletResponse response, HttpSession session) {
 		String idx = req.getParameter("idx"); // 수정할 게시글 글번호 받아오기
+		req.setAttribute("idx", idx);
 		// 수정해야 할 글 전체내용 가져오기
 		FreeBoardVO freevo = service.getViewWithNoReadCnt(idx);  // 글 조회수(readCnt) 증가없이 글 불러오기
 		
 		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> teamInfo =  (HashMap<String, String>)session.getAttribute("teamInfo");
+		String fk_team_idx = teamInfo.get("team_idx");
+		req.setAttribute("fk_team_idx", fk_team_idx);
 		
 		if(!loginUser.getUserid().equals(freevo.getUserid())) {
 			String msg = "다른 회원님의 글은 수정이 불가능합니다.";
@@ -418,7 +424,6 @@ public class BoardController {
 	// ======================================================================= *** 자유게시판 댓글 쓰기 *** ==============================
 	@RequestMapping(value="/freeComment.mr", method={RequestMethod.GET})
 	public String freeComment(HttpServletRequest req, HttpServletResponse response, FreeCommentVO commentvo) throws Throwable {
-		//String gobackURL = MyUtil.getCurrentURL(req);
 		String search = req.getParameter("search");
 		String colname = req.getParameter("colname");
 		String sizePerPage = req.getParameter("sizePerPage");
@@ -429,17 +434,41 @@ public class BoardController {
 		if(result > 0) {
 			req.setAttribute("msg", "댓글 쓰기 성공");
 		} else {
-			req.setAttribute("msg", "댓글 쓰기가 실패");
+			req.setAttribute("msg", "댓글 쓰기 실패");
 		}
 		String idx = String.valueOf(commentvo.getParentIdx());
 		req.setAttribute("idx", idx);
-		//req.setAttribute("gobackURL", gobackURL);
+
 		req.setAttribute("search", search);
 		req.setAttribute("colname", colname);
 		req.setAttribute("sizePerPage", sizePerPage);
 		req.setAttribute("currentShowPageNo", currentShowPageNo);
 		
 		return "psw/board/freeComment.not";
+	}
+	
+	// ===================================================================== *** 자유게시판 내가 쓴 댓글 삭제하기 *** =========================
+	@RequestMapping(value="/freeCommentDel.mr")
+	public String freeCommentDel(HttpServletRequest req, HttpSession session, FreeCommentVO commentvo) {	
+		String idx = req.getParameter("idx");
+		String userid = req.getParameter("userid");
+		req.setAttribute("idx", idx);
+		req.setAttribute("userid", userid);
+		
+		req.setAttribute("currentShowPageNo", req.getParameter("currentShowPageNo"));
+		req.setAttribute("sizePerPage", req.getParameter("sizePerPage"));
+		req.setAttribute("colname", req.getParameter("colname"));
+		req.setAttribute("search", req.getParameter("search"));
+		
+		String commentIdx = req.getParameter("commentIdx");
+		
+		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		req.setAttribute("loginUser", loginUser);
+
+		int result = service.delComment(commentIdx);
+		req.setAttribute("result", result);
+		
+		return "psw/board/freeDelCommentEnd.not";
 	}
 	
 	

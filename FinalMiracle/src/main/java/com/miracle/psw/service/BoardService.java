@@ -155,6 +155,12 @@ public class BoardService implements InterBoardService {
 		List<FreeCommentVO> list = dao.freeListComment(idx);
 		return list;
 	}
+	// ======================= *** 자유게시판 자기 댓글 삭제하기(update) *** ================
+	@Override
+	public int delComment(String commentIdx) {
+		int n = dao.delComment(commentIdx);
+		return n;
+	}
 
 	// =========================================== *** 자유게시판 목록에서 선택한 사용자 정보 보여주기 *** ======================
 	@Override
@@ -191,6 +197,8 @@ public class BoardService implements InterBoardService {
 		
 		return n;
 	}
+
+
 
 
 
