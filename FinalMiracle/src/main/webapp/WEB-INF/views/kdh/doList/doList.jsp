@@ -6,15 +6,16 @@
 
 <style type="text/css">
 	th, td:not(.pageDateLine){
-		border:1px solid black;
+		border:1px solid #cce6ff;
 		word-wrap:break-word; /* 글자 넘치면 자동 줄바꿈 */
 	}
 	
 	th {
+		font-weight:normal;
 		position: sticky;
 	    top: -1px;
 	    z-index: 10;
-	    background-color:lightgray;
+	    background-color:#4882ab;
     }
 	
 	.pointer{
@@ -65,13 +66,13 @@
 	}
 	
 	.selectLine {
-		background-color:lightgray;
+		background-color:#F0F0F0;
 	}
 	.selectedLine {
-		background-color:lightgray;
+		background-color:#F0F0F0;
 	}
 	.moveLine {
-		background-color:lightgray;
+		background-color:#F0F0F0;
 	}
 	.moveToLine {
 		background-color:yellow;
@@ -100,8 +101,8 @@
 	  background: linear-gradient(to right,
 	                              transparent 0%,
 	                              transparent calc(50% - 0.81px),
-	                              blue calc(50% - 0.8px),
-	                              blue calc(50% + 0.8px),
+	                              #4882ab calc(50% - 0.8px),
+	                              #4882ab calc(50% + 0.8px),
 	                              transparent calc(50% + 0.81px),
 	                              transparent 100%);
 	}
@@ -153,7 +154,7 @@
 	}
 	
 	.seperatorLine {
-		border-right:3px solid black;
+		border-right:3px solid #cce6ff;
 	}
 	
 	#teamwonList{
@@ -279,7 +280,12 @@
 				$("tr").removeClass("selectedLine");
 			}
 		}); // end of $(document).mousedown(function() ------------------------------------------------------
-		
+		// 스크롤 이벤트 있으면 일단 우클릭 메뉴 없애주기
+		$("#projectDiv").scroll(function(){
+			$("#folderRcm").hide();
+			$("#taskRcm").hide();
+			$("tr").removeClass("selectedLine");
+		}); // end of $(document).mousedown(function() ------------------------------------------------------
 				
 		// 우클릭시 메뉴 보여주기
 		$(document).on("contextmenu", ".element", function(event) {
@@ -308,7 +314,22 @@
 		    		$("#folderStatusRcm").removeClass("folderIncompleteRcm").addClass("folderCompleteRcm").text("폴더 완료 처리");
 		    	}
 		    	
-		    	$("#folderRcm").css({top:event.pageY+"px", left:event.pageX+"px"}).show();
+		    	var winH = window.innerHeight; // 화면에 보이는, 브라우저를 제외한 뷰단의 전체 height
+		    	var winW = window.innerWidth; // 화면에 보이는, 브라우저를 제외한 뷰단의 전체 width
+		    	var rcmH = $("#folderRcm").height(); // 우클릭메뉴의 height
+		    	var rcmW = $("#folderRcm").width(); // 우클릭메뉴의 width
+		    	var clickY = event.pageY; // 클릭 지점 Y
+		    	var clickX = event.pageX; // 클릭 지점 X
+		    	var top = clickY; // css 에 적용할 y 지점
+		    	var left = clickX; // css 에 적용할 x 지점
+		    	
+		    	if( (rcmH+clickY) > winH ) {
+		    		top = clickY - rcmH;
+		    	}
+		    	if( (rcmW+clickX) > winW ) {
+		    		left = clickX - rcmW;
+		    	}
+		    	$("#folderRcm").css({"top":top+"px", "left":left+"px"}).show();
 		    } else if($(this).find(".modalTask").hasClass("modalTask")) { // 할일 우클릭이라면
 		    	var bool = $(this).find(".status").is(":checked");
 		    	if(bool) {
@@ -316,7 +337,23 @@
 		    	} else {
 		    		$("#statusRcm").text("할일 완료 처리");
 		    	}
-		    	$("#taskRcm").css({top:event.pageY+"px", left:event.pageX+"px"}).show();
+		    	
+		    	var winH = window.innerHeight; // 화면에 보이는, 브라우저를 제외한 뷰단의 전체 height
+		    	var winW = window.innerWidth; // 화면에 보이는, 브라우저를 제외한 뷰단의 전체 width
+		    	var rcmH = $("#taskRcm").height(); // 우클릭메뉴의 height
+		    	var rcmW = $("#taskRcm").width(); // 우클릭메뉴의 width
+		    	var clickY = event.pageY; // 클릭 지점 Y
+		    	var clickX = event.pageX; // 클릭 지점 X
+		    	var top = clickY; // css 에 적용할 y 지점
+		    	var left = clickX; // css 에 적용할 x 지점
+		    	
+		    	if( (rcmH+clickY) > winH ) {
+		    		top = clickY - rcmH;
+		    	}
+		    	if( (rcmW+clickX) > winW ) {
+		    		left = clickX - rcmW;
+		    	}
+		    	$("#taskRcm").css({"top":top+"px", "left":left+"px"}).show();
 		    }
 		    return false;
 		}); // end of $(".element").bind("contextmenu", function(event) --------------------------------------------------------------------
@@ -1216,11 +1253,11 @@
 				type:"post",
 				dataType:"JSON",
 				success:function(data){
-					var html = "<div id='teamwonList'><table>";
+					var html = "<div id='teamwonList' style='border:1px solid #cce6ff; background-color:#4882ab; width:100px;'><table style='width:100%;'>";
 					$.each(data, function(entryIndex, entry){
 						var userid = "${sessionScope.loginUser.userid}";
 						if(entry.userid != userid) { // 현재 로그인한 팀원(한마디로 본인)이 아니라면
-							html += "<tr class='trLine'><td class='pointer teamwonElementOn' onclick='teamwonElementOn(this)' style='border:1px solid black;'>"+entry.userid
+							html += "<tr class='trLine'><td class='pointer teamwonElementOn' onclick='teamwonElementOn(this)' style='border:1px solid #cce6ff;'>"+entry.userid
 							html += "<input type='hidden' id='"+entry.userid+"' value='"+entry.idx+"'></td></tr>";
 						}
 					});
@@ -1591,9 +1628,9 @@
 	}
 </script>
 
-<div style="width:100%; float:left; height:100%; overflow:auto; font-family:Tahoma; font-size:10pt;">
+<div id="projectDiv" style="width:100%; float:left; height:100%; overflow:auto; font-family:Tahoma; font-size:10pt;">
 	<table style="width:100%; border:1px solid black;">
-		<thead>
+		<thead style="color:white;">
 			<tr id="firstHeaderLine">
 				<th colspan="${map.pageDateList.size() + 7}">
 					<span id="allClose" class="pointer" style="margin-left:20px;">[ 전체접기</span>  ||  <span id="allOpen" class="pointer">전체펴기</span> ]
@@ -1606,41 +1643,31 @@
 					&nbsp;&nbsp;&nbsp;
 					[ <span class="pointer" id="toggleComeleted" onclick="toggleComeleted(this)">완료된 업무 숨기기</span>]
 					<input type="hidden" value="0" id="toggleComeletedCnt" />
-					<span style="float:right;">프로젝트 검색:<input type="text" style="height:20px;" onkeyup="serchElementOn(this.value)"/></span>
+					<span style="float:right; color:white;">
+						<input type="text" placeholder="&nbsp;&nbsp;프로젝트 검색" style="height:20px; color:white; background-color:#154465; border:none;" onkeyup="serchElementOn(this.value)"/>
+					</span>
 			</tr>
 			
 			<tr>
-				<th colspan="7" class="seperatorLine">
-					<span style="margin-left:20px; border:1px solid black; width:20px; height:10px; background-color:#cce6ff;">&nbsp;&nbsp;&nbsp;</span>
+				<th colspan="7" class="seperatorLine" style="border-bottom:none;">
+					<span style="margin-left:20px; border:1px solid #cce6ff; width:20px; height:10px; background-color:#cce6ff;">&nbsp;&nbsp;&nbsp;</span>
 					진행전(${map.periodCntMap.before}건
 						<span id="myBefore" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
 						<span id="teamwonBefore" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
 						<span id="searchBefore" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
 					)
-					<span style="margin-left:15px; border:1px solid black; width:20px; height:10px; background-color:#d6f5d6;">&nbsp;&nbsp;&nbsp;</span>
+					<span style="margin-left:15px; border:1px solid #cce6ff; width:20px; height:10px; background-color:#d6f5d6;">&nbsp;&nbsp;&nbsp;</span>
 					진행중(${map.periodCntMap.doing}건
 						<span id="myDoing" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
 						<span id="teamwonDoing" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
 						<span id="searchDoing" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
-					)
-					<span style="margin-left:15px; border:1px solid black; width:20px; height:10px; background-color:#ffcccc;">&nbsp;&nbsp;&nbsp;</span>
-					기한경과(${map.periodCntMap.lapse}건
-						<span id="myLapse" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
-						<span id="teamwonLapse" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
-						<span id="searchLapse" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
-					)
-					<span style="margin-left:15px; border:1px solid black; width:20px; height:10px; background-color:#d9d9d9;">&nbsp;&nbsp;&nbsp;</span>
-					완료(${map.periodCntMap.complete}건
-						<span id="myComplete" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
-						<span id="teamwonComplete" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
-						<span id="searchComplete" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
-					)
+					)					
 				</th>
-				<th colspan="${map.pageDateList.size()}" style="text-align:center; width:200px;">
+				<th colspan="${map.pageDateList.size()}" style="border-bottom:none; text-align:center; width:200px;">
 					<form name="pageDateFrm" method="get" action="do_changePageDate.mr">
 						<span class="pointer" onclick="beforeTerm()">◀</span>
 						<span class="pointer" onclick="beforeDate()">◁</span>
-						<select id="term" name="term" onchange="changePageDate()">
+						<select id="term" name="term" style="background-color:#4882ab; border:none;" onchange="changePageDate()">
 							<option value="7">주간</option>
 							<option value="30"
 								<c:if test="${term == 30}">selected</c:if>
@@ -1651,6 +1678,25 @@
 						<input type="hidden" id="page" name="page" value="0"/>
 						<input type="hidden" id="visibleArr" name="visibleArr">
 					</form>
+				</th>
+			</tr>
+			<tr>
+				<th colspan="7" class="seperatorLine" style="border-top:none;">
+					<span style="margin-left:20px; border:1px solid #cce6ff; width:20px; height:10px; background-color:#ffcccc;">&nbsp;&nbsp;&nbsp;</span>
+					기한경과(${map.periodCntMap.lapse}건
+						<span id="myLapse" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
+						<span id="teamwonLapse" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
+						<span id="searchLapse" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
+					)
+					<span style="margin-left:15px; border:1px solid #cce6ff; width:20px; height:10px; background-color:#d9d9d9;">&nbsp;&nbsp;&nbsp;</span>
+					완료(${map.periodCntMap.complete}건
+						<span id="myComplete" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
+						<span id="teamwonComplete" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
+						<span id="searchComplete" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
+					)
+				</th>
+				<th colspan="${map.pageDateList.size()}" style="border-top:none; text-align:center;">
+					
 				</th>
 			</tr>
 			
@@ -1671,9 +1717,9 @@
 							width:17px;
 							font-size:8pt !important;
 						</c:if>
-						<c:if test="${pageDate.dotw == '토' || pageDate.dotw == '일'}">
+						<%-- <c:if test="${pageDate.dotw == '토' || pageDate.dotw == '일'}">
 							background-color:#fff3e6;
-						</c:if>
+						</c:if> --%>
 						<c:if test="${fn:substring(pageDate.day, 4, 6) == '01'}">
 							border-left:2px solid #ff66ff;
 						</c:if>
@@ -1688,6 +1734,7 @@
 			<jsp:include page="doListLine.jsp"/> <!-- 여러번 활용하기 위해 할일 리스트는 다른 페이지로 뺏음 -->
 		</tbody>
 	</table>
+	<div style="width:100%; height:100px; background-color:white;"></div>
 </div>
 
 <div class="modal fade" id="modalElementInfo" role="dialog"></div>

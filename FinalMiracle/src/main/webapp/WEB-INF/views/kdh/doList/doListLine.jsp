@@ -64,7 +64,7 @@
 				<td class="dateColor ${dvo.dayCnt}" style="background-color:#d9d9d9; text-align:center;">${dvo.startDate}</td>
 				<td class="dateColor ${dvo.dayCnt}" style="background-color:#d9d9d9; text-align:center;">${dvo.lastDate}</td>
 			</c:if>
-			<td style="border-right:3px solid black; text-align:center; height:10px;">
+			<td style="border-right:3px solid #cce6ff; text-align:center; height:10px;">
 				<div style="height:100%; width:100%; position:relative">
 					<div style="z-index:5; position:absolute; height:100%; width:${dvo.importance*10}%; background-color:hsl(300, 100%, 93%);"></div>
 					<div style="z-index:10; position:absolute; width:100%;">${dvo.importance}</div>
