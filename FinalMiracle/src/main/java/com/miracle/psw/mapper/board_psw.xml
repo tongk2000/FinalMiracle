@@ -36,7 +36,7 @@
 		  from
 		  ( select idx, category, subject, content, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
 		    from tbl_faq
-		    where status = 1  
+		    where status = 1
 		    order by idx desc 
 		  )V
 		)T
@@ -55,6 +55,8 @@
 		from tbl_faq
 		where status = 1
 	</select>
+	
+	
 	
 	<!-- FAQ 게시판 글쓰기 -->
 	<insert id="add" parameterType="com.miracle.psw.model.FaqBoardVO">
@@ -122,7 +124,7 @@
 	
 	
 	
-	<!-- 검색한 freeList 보여주기(페이징 처리 한 것) -->
+	<!-- 검색이 있는 freeList 보여주기(페이징 처리 한 것) -->
 	<select id="freeListWithSearch" parameterType="HashMap" resultType="com.miracle.psw.model.FreeBoardVO">
 		select idx, userid, name, subject, content, readCnt, commentCnt
 		     , groupno, fk_idx, depthno
@@ -148,6 +150,7 @@
 		)T
 		where T.rno >= #{startRno} and T.rno <![CDATA[<=]]> #{endRno}		
 	</select>
+	<!-- 검색이 없는 freeList 보여주기(페이징 처리 한 것) -->
 	<select id="freeListWithNoSearch" parameterType="HashMap" resultType="com.miracle.psw.model.FreeBoardVO">
 		select idx, userid, name, subject, content, readCnt, commentCnt
 		     , groupno, fk_idx, depthno
