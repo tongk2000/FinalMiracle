@@ -210,9 +210,16 @@
 		select C.idx, C.userid, C.content, C.regDate, C.parentIdx, C.status, M.name, M.img
 		from tbl_freeComment C join tbl_member M
 		on C.userid = M.userid
-		where parentIdx = #{idx}
+		where C.status = 1 
+		and C.parentIdx = #{idx}
 		order by C.idx asc
 	</select>
+	
+	<!-- 자유게시판 1개 게시글에 작성된 댓글중 자신의 댓글 삭제하기 -->
+	<update id="delComment" parameterType="String">
+		update tbl_freeComment set status = 0
+		where idx = #{commentIdx}
+	</update>
 	
 	<!-- 자유게시판 목록에서 선택한 유저정보 보여주기 -->
 	<select id="showUserInfo" parameterType="HashMap" resultType="com.miracle.psw.model.MemberVO">

@@ -49,6 +49,8 @@ public interface InterBoardService {
 
 	int delFree(String idx) throws Throwable;  // 자유게시판 글 삭제 하기(update방식)
 
+	int delComment(String commentIdx);  // 자유게시판 댓글 삭제하기(update)
+
 
 
 

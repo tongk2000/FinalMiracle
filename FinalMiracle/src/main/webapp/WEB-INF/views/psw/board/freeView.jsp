@@ -60,6 +60,11 @@
 		font-size: 10pt;
 		cursor: pointer;
 	}
+	.delMyCommentButtonCss {
+		color: red;
+		font-weight: bold;
+		font-size: 11pt;
+	}
 
 </style>
 
@@ -117,6 +122,12 @@
 			$(this).addClass("freeReplyListRowCssStyle");
 		},function(){
 			$(this).removeClass("freeReplyListRowCssStyle");
+		});
+		// ================================== *** 내 댓글 삭제 버튼 타겟시 hover 효과 주기 *** ============================
+		$(".delMyCommentButton").hover(function(){ 
+			$(this).addClass("delMyCommentButtonCss");
+		},function(){
+			$(this).removeClass("delMyCommentButtonCss");
 		});
 
 		// ============================================== *** 페이지 전체에서 esc 키를 누르면 모달창을 닫기 *** =======
@@ -181,6 +192,15 @@
 		
 		frm.method = "get";
 		frm.action = "<%= request.getContextPath() %>/freeView.mr";
+		frm.submit();
+	}
+	
+	function goDelComment(idx){
+		var frm = document.commentFrm;
+		frm.commentIdx.value = idx;
+		
+		frm.method = "get";
+		frm.action = "<%= request.getContextPath() %>/freeCommentDel.mr";
 		frm.submit();
 	}
 	
@@ -300,33 +320,52 @@
 		</div>
 		
 		<div style = "border: 0px solid pink; margin-top: 3px;">
+		
 			<!-- ======================================== *** 댓글 내용 보여주기 *** =================================================== -->
-			<c:if test="${not empty freeCommentList}">
-				<table id="comment" style="width: 700px; padding: 2px; margin-bottom: 5px;">
-					<c:forEach var="commentvo" items="${freeCommentList}" varStatus="status" >
-						<tr id="comment${commentvo.idx}" class="freeReplyListRow">
-							<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 2%;">
-								<span style="font-weight: bold; font-size: smaller;"> ${status.count}</span>
-								<input type="hidden" name="commentIdx" value="${commentvo.idx}" />
-							</td>
-							<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 2%;">
-								<img src="<%= request.getContextPath() %>/resources/images/${commentvo.img}" style="width: 28px; height: 30px; border-radius: 15px; vertical-align: middle; padding-top: 2px; padding-bottom: 2px;" align="middle">
-							</td>
-							<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 12%; padding-left: 10px;">
-								<span class="repleInfo" onClick="showUserInfo('${commentvo.userid}')" style="font-size: 9pt;">
-									${commentvo.userid} [${commentvo.name}]
-								</span>
-							</td>
-							<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 30%; padding-left: 10px;">
-								<span style="font-size: 9pt;">${commentvo.content}</span>
-							</td>
-							<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 20%; padding-left: 10px;">
-								<span style="font-size: 9pt;">${commentvo.regDate}</span>
-							</td>
-						</tr>
-					</c:forEach>
-				</table>
-			</c:if>
+			<form name="commentFrm">	
+				<c:if test="${not empty freeCommentList}">
+					<input type="hidden" name="commentIdx"/>
+					<input type="hidden" name="idx" value="${freevo.idx}" />
+					<input type="hidden" name="currentShowPageNo" value="${currentShowPageNo}" />
+					<input type="hidden" name="sizePerPage" value="${sizePerPage}" />
+					<input type="hidden" name="colname" value="${colname}" />
+					<input type="hidden" name="search" value="${search}" />
+					
+					<table id="comment" style="width: 700px; padding: 2px; margin-bottom: 5px;">
+						
+						<c:forEach var="commentvo" items="${freeCommentList}" varStatus="status" >
+							<tr class="freeReplyListRow">
+								<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 2%; padding-left: 10px;">
+									<span style="font-weight: bold; font-size: smaller;"> ${status.count}</span>
+								</td>
+								<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 2%;">
+									<img src="<%= request.getContextPath() %>/resources/images/${commentvo.img}" style="width: 28px; height: 30px; border-radius: 15px; vertical-align: middle; padding-top: 2px; padding-bottom: 2px;" align="middle">
+								</td>
+								<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 12%; padding-left: 10px;">
+									<span class="repleInfo" onClick="showUserInfo('${commentvo.userid}')" style="font-size: 9pt;">
+										${commentvo.userid} [${commentvo.name}]
+										<input type="hidden" name="userid" value="${commentvo.userid}" />
+									</span>
+								</td>
+								<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 30%; padding-left: 10px;">
+									<span style="font-size: 9pt;">${commentvo.content}</span>
+								</td>
+								<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 20%; padding-left: 10px;">
+									<span style="font-size: 9pt;">${commentvo.regDate}</span>
+								</td>
+								<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 2%; margin-right: 10px;">
+									<c:if test="${sessionScope.loginUser.userid eq commentvo.userid}">
+										<span class="delMyCommentButton" style="cursor: pointer;" onClick="goDelComment('${commentvo.idx}');">x</span>
+									</c:if>
+									<c:if test="${sessionScope.loginUser.userid ne commentvo.userid}">
+										
+									</c:if>
+								</td>
+							</tr>
+						</c:forEach>
+					</table>
+				</c:if>
+			</form>
 		</div>
 		
 	</div>

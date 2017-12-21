@@ -285,12 +285,12 @@
 				<div style="border: 0px dotted pink; float: right;" align="center">
 					<img alt="프로필사진" src="<%= request.getContextPath() %>/resources/images/${sessionScope.loginUser.img}" style="height: 150px; width: 140px;">
 					<br/>
-					<a href="#" style="text-align: center;">[대표 이미지 변경]</a>
+					<a href="#" style="text-align: center; text-decoration: none; font-family: verdana;">[이미지 변경]</a>
 				</div>
 				
-				<div style="border: 1px dotted white; width: 400px;">
+				<div style="border: 1px dotted white; width: 420px; float: left;" align="left">
 					<!-- 회원정보 수정 폼 부트스닙스 -->
-					<div class="form-group" align="left">
+					<div class="form-group" >
 					  <label class="col-sm-4 control-label" for="name">성명 &nbsp;<span class="star">*</span></label>  
 					  <div class="col-sm-4">
 					  	<input id="name" name="name" type="text" placeholder="name" class="form-control input-sm requiredInfo" value="${map.mvo.name}">
@@ -337,12 +337,12 @@
 					<div class="form-group form-inline">
 					  <label class="form-inline col-sm-4 control-label" for="hp">연락처 &nbsp;<span class="star">*</span></label>
 					  <div class="form-inline col-sm">
-					    <select id="hp1" name="hp1" class="form-control form-inline" style="height: 27px; font-size: 9pt; vertical-align: top;">
+					    <select id="hp1" name="hp1" class="form-control form-inline" style="height: 27px; width: auto; font-size: 9pt; vertical-align: top;">
 					      <option value="010" selected>010</option>
 					      <option value="011">011</option>
 					      <option value="016">016</option>
-					    </select>
-					    <input style="vertical-align: top; height: 27px;" id="hp2" name="hp2" type="text" placeholder="Hp2" size="3" maxlength="4" class="form-inline form-control input-sm" value="${map.mdvo.hp2}"> /
+					    </select> -
+					    <input style="vertical-align: top; height: 27px;" id="hp2" name="hp2" type="text" placeholder="Hp2" size="3" maxlength="4" class="form-inline form-control input-sm" value="${map.mdvo.hp2}"> -
 					  	<input style="vertical-align: top; height: 27px;" id="hp3" name="hp3" type="text" placeholder="Hp3" size="3" maxlength="4" class="form-inline form-control input-sm" value="${map.mdvo.hp3}">
 					  </div>
 					</div><br/>
