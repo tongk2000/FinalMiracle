@@ -210,7 +210,7 @@
 		</div>
 		
 		<div style="float: right;">
-			<h1>투표목록</h1>
+			<h1>진행 중</h1>
 		</div>
 	</div>
 	
@@ -222,7 +222,7 @@
 		</div>
 		
 		<div style="float: right; margin-bottom: 1%">
-			전체 <span style="color: red; font-weight: bold;">${totalCount}</span>&nbsp;
+			전체 : <span style="color: red; font-weight: bold;">${totalCount}</span>&nbsp;
 			목록 수 : 
 			<select name="sizePerPage" id="sizePerPage" class="form-control">
 				<option value="5">5</option>
@@ -357,8 +357,9 @@
 									<c:set var="votesum" value="${votesum + voteitemvo.votenum}" />
 								</c:if>
 							</c:forEach>
-							<span style="text-decoration: underline; font-size : 9pt; color: gray;">참여 인원 : <span style="color: #FA5858;"><c:out value="${votesum}"/></span>명</span>
 							<br/>
+							<span style="text-decoration: underline; font-size : 9pt; color: gray;">참여 인원 : <span style="color: #FA5858;"><c:out value="${votesum}"/></span>명</span>
+							<br/><br/>
 							<div style="text-align: center;">
 								<a href="javascript:goVote('${votevo.IDX}', '${votevo.FK_TEAMWON_IDX}', '${gobackURL}');" class="btn btn-xs btn-default">선택</a>&nbsp;
 							</div>
@@ -374,7 +375,7 @@
 				</div>
 				<br/>　<br/>　<br/>
 			</div>
-			<div style="width: 100%; height: auto; border: 1px solid lightgray; background-color: #FAFAFA; text-align: center; padding-top: 10px; padding-left: 70px;">
+			<div style="width: 100%; height: auto; border: 1px solid lightgray; background-color: #FAFAFA; padding-top: 10px; padding-left: 70px;">
 				<textarea id="commcontent${votevo.IDX}" name="commcontent${votevo.IDX}" class="form-control" style="width: 80%; resize: none;" placeholder="타인을 비방하는 댓글은 삼가해주시기 바랍니다."></textarea>
 				<a href="#" class="btn btn-lg btn-default">등록</a>&nbsp;
 				<br/><br/>
@@ -397,7 +398,7 @@
 		</c:forEach>
 	</c:if>
 	<c:if test="${empty voteList}">
-		<div style="width: 100%; height: auto; margin-top: 2%; border: 1px solid lightgray; text-align: center;">
+		<div style="width: 100%; height: auto; margin-top: 2%; padding: 50px; border: 1px solid lightgray; text-align: center;">
 			투표글이 존재하지 않습니다.
 		</div>
 	</c:if>

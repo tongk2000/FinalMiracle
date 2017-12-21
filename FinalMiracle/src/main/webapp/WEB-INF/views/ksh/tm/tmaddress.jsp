@@ -4,16 +4,15 @@
 
     
 <style type="text/css">
-	table, th, td {border: solid gray 1px;}
-	/* #table {border-collapse: collapse; width: 750px;} */
 	
 	.subjectstyle {font-weight: bold;
     	           color: navy;
     	           cursor: pointer; }
+    	           
+   	.addrInfo { font-weight: bold; }
   	
-  	/* ==== #142. 파일첨부가 되었으므로 테이블의 가로폭을 늘려보자 ==== */
   	#table {border-collapse: collaps; width: 100%;}
-  	#table th, #table td {padding: 5px;}
+  	#table th, #table td {padding: 5px; border: 1px solid lightgray;}
   	#table th {background-color: #DDDDDD;}
 	    
 </style>
@@ -170,7 +169,7 @@
 		</div>
 	</div>
 
-	<div style="margin-top: 7%;">
+	<div style="margin-top: 5%;">
 		<div style="float: right; margin-bottom: 1%">
 			전체 <span style="color: red; font-weight: bold;">${totalCount}</span>&nbsp;
 			목록 수 : 
@@ -184,8 +183,8 @@
 	</div>
 	
 	<div style="width: 100%; margin-top: 6%;">
-		<table id="table">
-			<thead>
+		<table id="table" class="table table-striped">
+			<!-- <thead>
 				<tr>
 					<th style="width: 5%;">팀원번호</th>
 					<th style="width: 5%;">팀원아이디</th>
@@ -197,22 +196,35 @@
 					<th style="width: 25%;">주소</th>
 					<th style="width: 20%;">소개글</th>
 				</tr>
-			</thead>
+			</thead> -->
 			
 			<c:if test="${not empty tmAddrList}">
 			<tbody>
+				<c:set var="i" value="0" />
+				<c:set var="j" value="3" />
 				<c:forEach var="tmAddr" items="${tmAddrList}" varStatus="status">
+					<c:if test="${i%j == 0 }">
 					<tr>
-						<td>${tmAddr.IDX}</td>
-						<td>${tmAddr.USERID}</td>
-						<td>${tmAddr.NAME}</td>
-						<td>${tmAddr.BIRTH1}년 ${tmAddr.BIRTH2}월 ${tmAddr.BIRTH3}일</td>
-						<td>${tmAddr.HP1}-${tmAddr.HP2}-${tmAddr.HP3}</td>
-						<td><a href="javascript:goEmail('${tmAddr.EMAIL}');">${tmAddr.EMAIL}</a></td>
-						<td>${tmAddr.POST1}-${tmAddr.POST2}</td>
-						<td>${tmAddr.ADDR1}<br/>${tmAddr.ADDR2}</td>
-						<td>${tmAddr.PROFILE}</td>
+					</c:if>
+						<td style="width: 33%;">
+							<div style="width: 100px; float: left; margin-left: 10px;">
+								<br/><br/>
+								<img src="<%= request.getContextPath() %>/resources/files/defaultimg2.png" style="width:100px; heigth:100px; border-radius: 50%;">
+							</div>
+							<div style="float: left; margin-left: 10px; padding-top: 10px; padding-bottom: 10px;">
+								<span style="font-weight: bold;">${tmAddr.NAME}(${tmAddr.USERID})</span><br/>
+								<span class="addrInfo">생일 : </span>${tmAddr.BIRTH1}년 ${tmAddr.BIRTH2}월 ${tmAddr.BIRTH3}일<br/>
+								<span class="addrInfo">연락처 : </span>${tmAddr.HP1}-${tmAddr.HP2}-${tmAddr.HP3}<br/>
+								<span class="addrInfo">이메일 : </span><a href="javascript:goEmail('${tmAddr.EMAIL}');">${tmAddr.EMAIL}</a><br/>
+								<span class="addrInfo">우편번호 : </span>${tmAddr.POST1}-${tmAddr.POST2}<br/>
+								<span class="addrInfo">기본주소 : </span>${tmAddr.ADDR1}<br/><span class="addrInfo">상세주소 : </span>${tmAddr.ADDR2}<br/>
+								<span class="addrInfo">소개글 : </span>${tmAddr.PROFILE}<br/>
+							</div>
+						</td>
+					<c:if test="${i%j == j-1 }">
 					</tr>
+					</c:if>
+					<c:set var="i" value="${i+1}" />
 				</c:forEach>
 			</tbody>
 			</c:if>
@@ -220,7 +232,7 @@
 			<c:if test="${empty tmAddrList}">
 			<tbody>
 				<tr>
-					<td colspan="10">팀원 목록이 존재하지 않습니다.</td>
+					<td colspan="3" style="padding: 15px; text-align: center;">팀원 목록이 존재하지 않습니다.</td>
 				</tr>
 			</tbody>
 			</c:if>

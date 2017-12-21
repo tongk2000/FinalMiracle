@@ -121,6 +121,7 @@ public class MemoController {
 
 		req.setAttribute("folderlist", folderlist);
 		req.setAttribute("gobackURL", gobackURL);
+		req.setAttribute("folder", folder);
 		
 		req.setAttribute("pagebar", pagebar);
 		req.setAttribute("colname", colname);

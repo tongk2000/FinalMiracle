@@ -4,16 +4,15 @@
 
     
 <style type="text/css">
-	table, th, td {border: solid gray 1px;}
-	/* #table {border-collapse: collapse; width: 750px;} */
-	
+
 	.subjectstyle {font-weight: bold;
     	           color: navy;
     	           cursor: pointer; }
+    	           
+   	.addrInfo { font-weight: bold; }
   	
-  	/* ==== #142. 파일첨부가 되었으므로 테이블의 가로폭을 늘려보자 ==== */
   	#table {border-collapse: collaps; width: 100%;}
-  	#table th, #table td {padding: 5px;}
+  	#table th, #table td {padding: 5px; border: 1px solid lightgray;}
   	#table th {background-color: #DDDDDD;}
 	    
 </style>
@@ -252,8 +251,8 @@
 	</div>
 	
 	<div style="width: 100%; margin-top: 6%;">
-		<table id="table">
-			<thead>
+		<table id="table" class="table table-striped">
+			<!-- <thead>
 				<tr>
 					<th style="width: 11%;">팀원번호</th>
 					<th style="width: 11%;">팀번호</th>
@@ -265,25 +264,33 @@
 					<th style="width: 11%;">요청날짜</th>
 					<th style="width: 12%;">비고</th>
 				</tr>
-			</thead>
+			</thead> -->
 			
 			<c:if test="${not empty reqwdList}">
 			<tbody>
+				<c:set var="i" value="0" />
+				<c:set var="j" value="3" />
 				<c:forEach var="req" items="${reqwdList}" varStatus="status">
+					<c:if test="${i%j == 0 }">
 					<tr>
-						<td>${req.IDX}</td>
-						<td>${req.FK_TEAM_IDX}</td>
-						<td>${req.FK_MEMBER_IDX}</td>
-						<td>${req.USERID}</td>
-						<td>${req.NAME}</td>
-						<td>${req.STATUS}</td>
-						<td>${req.REGDATE}</td>
-						<td>${req.DISDATE}</td>
-						<td>
-							<button type="button" class="btn btn-danger" id="btnWithDraw" name="btnWithDraw" onclick="goWithDraw('${req.IDX}');">탈퇴처리</button><br/>
-							<button type="button" class="btn btn-primary" id="btnWithDraw" name="btnWithDraw" onclick="goWithDrawCancle('${req.IDX}');">탈퇴취소</button>
+					</c:if>
+						<td style="width: 33%;">
+							<div style="width: 100px; float: left; margin-left: 10px;">
+								<br/><br/>
+								<img src="<%= request.getContextPath() %>/resources/files/defaultimg2.png" style="width:100px; heigth:100px; border-radius: 50%;">
+							</div>
+							<div style="float: left; margin-left: 10px; padding-top: 10px; padding-bottom: 10px;">
+								<span style="font-weight: bold;">${req.NAME}(${req.USERID})</span><br/>
+								<span class="addrInfo">가입일 : </span>${req.REGDATE}<br/>
+								<span class="addrInfo">요청일 : </span>${req.DISDATE}<br/>
+								<button type="button" class="btn btn-danger" id="btnWithDraw" name="btnWithDraw" onclick="goWithDraw('${req.IDX}');">탈퇴처리</button>
+								<button type="button" class="btn btn-primary" id="btnWithDraw" name="btnWithDraw" onclick="goWithDrawCancle('${req.IDX}');">탈퇴취소</button>
+							</div>
 						</td>
+					<c:if test="${i%j == j-1 }">
 					</tr>
+					</c:if>
+					<c:set var="i" value="${i+1}" />
 				</c:forEach>
 			</tbody>
 			</c:if>
@@ -291,7 +298,7 @@
 			<c:if test="${empty reqwdList}">
 			<tbody>
 				<tr>
-					<td colspan="10">요청 목록이 존재하지 않습니다.</td>
+					<td colspan="3" style="padding: 15px; text-align: center;">요청 목록이 존재하지 않습니다.</td>
 				</tr>
 			</tbody>
 			</c:if>
@@ -318,7 +325,7 @@
 		</div>
 	</div>
 
-<br/><br/><br/>
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 	
 	<div style="width: 100%;">
 		<div style="float: left; margin-top: 2%;">
@@ -352,8 +359,8 @@
 	</div>
 	
 	<div style="width: 100%; margin-top: 6%;">
-		<table id="table">
-			<thead>
+		<table id="table" class="table table-striped">
+			<!-- <thead>
 				<tr>
 					<th style="width: 11%;">팀원번호</th>
 					<th style="width: 11%;">팀번호</th>
@@ -365,22 +372,32 @@
 					<th style="width: 11%;">요청날짜</th>
 					<th style="width: 12%;">비고</th>
 				</tr>
-			</thead>
+			</thead> -->
 			
 			<c:if test="${not empty wdList}">
 			<tbody>
+				<c:set var="i" value="0" />
+				<c:set var="j" value="3" />
 				<c:forEach var="wd" items="${wdList}" varStatus="status">
+					<c:if test="${i%j == 0 }">
 					<tr>
-						<td>${wd.IDX}</td>
-						<td>${wd.FK_TEAM_IDX}</td>
-						<td>${wd.FK_MEMBER_IDX}</td>
-						<td>${wd.USERID}</td>
-						<td>${wd.NAME}</td>
-						<td>${wd.STATUS}</td>
-						<td>${wd.REGDATE}</td>
-						<td>${wd.DISDATE}</td>
-						<td><button type="button" class="btn btn-success" id="btnRestore" name="btnRestore" onclick="goRestore('${wd.IDX}');">복구</button></td>
+					</c:if>
+						<td style="width: 33%;">
+							<div style="width: 100px; float: left; margin-left: 10px;">
+								<br/><br/>
+								<img src="<%= request.getContextPath() %>/resources/files/defaultimg2.png" style="width:100px; heigth:100px; border-radius: 50%;">
+							</div>
+							<div style="float: left; margin-left: 10px; padding-top: 10px; padding-bottom: 10px;">
+								<span style="font-weight: bold;">${wd.NAME}(${wd.USERID})</span><br/>
+								<span class="addrInfo">가입일 : </span>${wd.REGDATE}<br/>
+								<span class="addrInfo">탈퇴일 : </span>${wd.REGDATE}<br/>
+								<button type="button" class="btn btn-success" id="btnRestore" name="btnRestore" onclick="goRestore('${wd.IDX}');">복구</button>
+							</div>
+						</td>
+					<c:if test="${i%j == j-1 }">
 					</tr>
+					</c:if>
+					<c:set var="i" value="${i+1}" />
 				</c:forEach>
 			</tbody>
 			</c:if>
@@ -388,7 +405,7 @@
 			<c:if test="${empty wdList}">
 			<tbody>
 				<tr>
-					<td colspan="10">탈퇴 목록이 존재하지 않습니다.</td>
+					<td colspan="3" style="padding: 15px; text-align: center;">탈퇴 목록이 존재하지 않습니다.</td>
 				</tr>
 			</tbody>
 			</c:if>

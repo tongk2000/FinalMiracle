@@ -4,16 +4,13 @@
 
     
 <style type="text/css">
-	table, th, td {border: solid gray 1px;}
-	/* #table {border-collapse: collapse; width: 750px;} */
 	
 	.subjectstyle {font-weight: bold;
     	           color: navy;
     	           cursor: pointer; }
   	
-  	/* ==== #142. 파일첨부가 되었으므로 테이블의 가로폭을 늘려보자 ==== */
   	#table {border-collapse: collaps; width: 100%;}
-  	#table th, #table td {padding: 5px;}
+  	#table th, #table td {padding: 5px; border: 1px solid lightgray;}
   	#table th {background-color: #DDDDDD;}
 	    
 </style>
@@ -169,7 +166,7 @@
 
 	<%-- <img src="<%= request.getContextPath() %>/resources/files/20171208183923121001009307995.jpg" style="width:200px; heigth:200px;"> --%>
 	
-	<div style="margin-top: 7%;">
+	<div style="margin-top: 5%;">
 		<div style="float: right; margin-bottom: 1%">
 			전체 <span style="color: red; font-weight: bold;">${totalCount}</span>&nbsp;
 			목록 수 : 
@@ -183,8 +180,8 @@
 	</div>
 	
 	<div style="width: 100%; margin-top: 6%;">
-		<table id="table">
-			<thead>
+		<table id="table" class="table table-striped">
+			<!-- <thead>
 				<tr>
 					<th style="width: 10%;">팀원번호</th>
 					<th style="width: 10%;">팀원아이디</th>
@@ -193,26 +190,37 @@
 					<th style="width: 15%;">팀가입날짜</th>
 					<th style="width: 10%;">팀원분류</th>
 				</tr>
-			</thead>
+			</thead> -->
 			
 			<c:if test="${not empty tmList}">
 			<tbody>
+				<c:set var="i" value="0" />
+				<c:set var="j" value="3" />
 				<c:forEach var="tmvo" items="${tmList}" varStatus="status">
+					<c:if test="${i%j == 0 }">
 					<tr>
-						<td>${tmvo.IDX}</td>
-						<td>${tmvo.USERID}</td>
-						<td>${tmvo.NAME}</td>
-						<td><img src="<%= request.getContextPath() %>/resources/files/${tmvo.IMG}" style="width:200px; heigth:200px;"></td>
-						<td>${tmvo.REGDATE}</td>
-						<td>
-							<c:if test="${tmvo.STATUS.equals('1')}">	
-								팀원
-							</c:if>
-							<c:if test="${tmvo.STATUS.equals('2')}">	
-								팀장
-							</c:if>
+					</c:if>
+						<td style="width: 33%;">
+							<div style="width: 100px; float: left;">
+								<img src="<%= request.getContextPath() %>/resources/files/${tmvo.IMG}" style="width:100px; heigth:100px; border-radius: 50%;">
+							</div>
+							<div style="float: left;">
+								<br/>
+								<span style="font-weight: bold;">${tmvo.NAME}(${tmvo.USERID})</span><br/><br/>
+								가입일 : ${tmvo.REGDATE}<br/>
+								직책 : 
+								<c:if test="${tmvo.STATUS.equals('1')}">	
+									팀원
+								</c:if>
+								<c:if test="${tmvo.STATUS.equals('2')}">	
+									<span style="font-weight: bold; text-decoration: underline;">팀장</span>
+								</c:if>
+							</div>
 						</td>
+					<c:if test="${i%j == j-1 }">
 					</tr>
+					</c:if>
+					<c:set var="i" value="${i+1}" />
 				</c:forEach>
 			</tbody>
 			</c:if>
@@ -220,7 +228,7 @@
 			<c:if test="${empty tmList}">
 			<tbody>
 				<tr>
-					<td colspan="10">팀원 목록이 존재하지 않습니다.</td>
+					<td colspan="3" style="padding: 15px; text-align: center">팀원 목록이 존재하지 않습니다.</td>
 				</tr>
 			</tbody>
 			</c:if>
