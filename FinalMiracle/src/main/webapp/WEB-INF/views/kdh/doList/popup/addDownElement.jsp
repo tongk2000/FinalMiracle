@@ -45,8 +45,8 @@
  		// datePicker 설정
  		var $opener = $(".selectedLine", opener.document);
  		
-		var startDate = $opener.find(".startDateTd").text();
-		var lastDate = $opener.find(".lastDateTd").text();
+		var startDate = $opener.find(".fullStartDate").val();
+		var lastDate = $opener.find(".fullLastDate").val();
 		$("#startDate").val(startDate); // 상위요소의 시작일자를 미리 대입해줌
 		$("#lastDate").val(lastDate); // 상위요소의 마감일자를 미리 대입해줌
 		
@@ -175,18 +175,35 @@
 			}
 		}); // end of $(document).on("keydown", function(e) ----------------------------------------------------------------------
 		
-		// 이미 선택했던 팀원을 다시 클릭하면 삭제하기
+		// 이미 선택했던 팀원을 다시 클릭하면 삭제하기(단 한명은 무조건 있어야함)
 		$(document).on("click", ".mola", function(){
-			var userid = $(this).text();
-			var bool = confirm("선택하신 "+userid+"님을 정말 제외하시겠습니까?");
-			if(bool) {
+			var userid = $(this).text().trim();
+			var cnt = 0;
+			$(".mola").each(function(){
+				cnt++;
+			});
+			if(cnt > 1) { // 담당자가 둘 이상이라면
 				$(this).remove();
+			} else { // 담당자가 하나라면
+				alert("담당자는 최소 1명 이상이여야 하므로\n"+userid+"님을 제외하실 수 없습니다.");
 			}
 		}); // end of $(document).on("click", ".mola", function() -------------------------------------------------------------------------
 		
+		// 엔터키 누르면 정보 수정하도록 하기
+		$(document).on("keydown", function(e){
+			if(e.keyCode == "13") {
+				addDownElement();
+			}
+		}); // end of $(document).on("keydown", function(e) ----------------------------------------------------------------------------------
 	}); // end of $(document).ready(function() -----------------------------------------------------------------------------------------------
 	
 	function addDownElement() {
+		if( $("#popupSubject").val().trim() == "") {
+			alert("제목은 필수 입력사항입니다.");
+			$("#popupSubject").focus();
+			return false();
+		}
+		
 		var frm = document.addDownElementFrm;
 		frm.action = "do_addDownElementEnd.mr";
 		frm.submit();
@@ -223,7 +240,7 @@
 				<td>만든사람</td> <td>${sessionScope.loginUser.userid}</td>
 			</tr>
 			<tr>
-				<td>요소제목</td> <td><input type="text" name="subject"/></td>
+				<td>요소제목</td> <td><input type="text" name="subject" id="popupSubject"/></td>
 			</tr>
 			<tr>
 				<td>요소개요</td> <td><input type="text" name="content"/></td>
@@ -232,7 +249,11 @@
 				<td>담당추가</td>
 				<td id="addTeamwon">
 					<div style="float:left; width:50px;" id="btn_add" class="pointer">추가▷</div>
-					<div style="float:left; width:250px;" id="selectedTeamwon"></div>
+					<div style="float:left; width:250px;" id="selectedTeamwon">
+						<div style='display:inline-block;' class='mola pointer'>${sessionScope.loginUser.userid}&nbsp; <!-- 일단 만든사람을 담당자 리스트에 올림 -->
+							<input type='hidden' name='teamwonIdx' id='${sessionScope.teamInfo.teamwon_idx}' value='${sessionScope.teamInfo.teamwon_idx}'/>			
+						</div>
+					</div>
 				</td>
 			</tr>
 			<tr>

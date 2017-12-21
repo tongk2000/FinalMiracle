@@ -113,7 +113,7 @@ public class ProjectMangerController {
 		return "kdh/doList/doList.all";
 	}
 	
-	// 선택한 폴더의 모든 정보를 가져오기
+	// 선택한 폴더의 모든 정보를 가져오기(to 모달)
 	@RequestMapping(value="do_getSelectFolderInfo.mr", method={RequestMethod.GET})
 	public String do_getSelectFolderInfo(HttpServletRequest req) {
 		int idx = Integer.parseInt(req.getParameter("idx"));
@@ -129,7 +129,7 @@ public class ProjectMangerController {
 		return "kdh/doList/modal/modalFolder.not";
 	} // end of String do_getSelectFolderInfo(HttpServletRequest req) -----------------------------------------------
 	
-	// 선택한 할일의 모든 정보를 가져오기
+	// 선택한 할일의 모든 정보를 가져오기(to 모달)
 	@RequestMapping(value="do_getSelectTaskInfo.mr", method={RequestMethod.GET})
 	public String do_getSelectTaskInfo(HttpServletRequest req) {
 		int idx = Integer.parseInt(req.getParameter("idx"));
@@ -145,9 +145,9 @@ public class ProjectMangerController {
 		return "kdh/doList/modal/modalTask.not";
 	} // end of String do_getSelectFolderInfo(HttpServletRequest req) -----------------------------------------------
 	
-	// 선택한 요소의 정보를 수정하기
+	// 선택한 요소의 정보를 수정하기(모달창)
 	@RequestMapping(value="do_goModalEdit.mr", method={RequestMethod.POST})
-	public String do_goModalEdit(HttpServletRequest req, HttpSession ses, MultipartHttpServletRequest freq, FolderVO fvo) {
+	public String do_goModalEdit(HttpServletRequest req, HttpSession ses, MultipartHttpServletRequest freq, FolderVO fvo, PageVO pvo) {
 		// 파일 정보 저장을 위해 세션에 있는 팀원번호 받아오기 시작
 		@SuppressWarnings("unchecked")
 		HashMap<String, String> teamInfo = (HashMap<String, String>)ses.getAttribute("teamInfo");
@@ -178,7 +178,18 @@ public class ProjectMangerController {
 		String str_json = json.toString();
 		req.setAttribute("str_json", str_json);
 		
-		return "kdh/json.not";
+		
+		// 새로 갱신된 모달 정보를 다시 받아와서 전달함.(원래 서비스단에서 해야될것 같은데...;;)
+		pvo.setShowIdx(fvo.getIdx());
+		HashMap<String, Object> map = svc.do_getSelectFolderInfo(pvo);
+		req.setAttribute("map", map);
+		
+		String modalClass = req.getParameter("modalClass");
+		if(modalClass.equals("folder")) {
+			return "kdh/doList/modal/modalFolder.not";
+		} else {
+			return "kdh/doList/modal/modalTask.not";
+		}
 	} // end of String do_goModalEdit(HttpServletRequest req, FolderVO fvo) ----------------------------------------------
 	
 	// 할일 완료, 미완료 처리하기
@@ -229,7 +240,22 @@ public class ProjectMangerController {
 		req.setAttribute("map", map);
 		
 		return "kdh/doList/popup/addDownElementEnd.not";
-	} // end of String addDownElementEnd(HttpServletRequest req, FolderVO fvo) ----------------------------------------------
+	} // end of String addDownElementEnd(HttpServletRequest req, HttpSession ses, MultipartHttpServletRequest freq, FolderVO fvo) -----------------
+	
+	// 특정 한줄만 가져오기(to 프로젝트 리스트)
+	@RequestMapping(value="do_getOneElement.mr", method={RequestMethod.GET})
+	public String getOneElement(HttpServletRequest req) {
+		String term = req.getParameter("term"); // 페이징 기간을 가져옴
+		String page = (String)req.getParameter("page"); // 페이징 이동할 페이지를 가져옴
+		String idx = req.getParameter("idx");
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map = svc.getOneElement(term, page, idx); // 트랜잭션 결과와 새로 추가된 요소의 정보를 가져옴 
+		
+		req.setAttribute("map", map);
+		
+		return "kdh/doList/doListLine.not";
+	} // end of String getOneElement(HttpServletRequest req) ----------------------------------------------
 	
 	// 팀원 아이디/팀원번호 가져오기
 	@RequestMapping(value="do_getTeamwonList.mr", method={RequestMethod.POST})

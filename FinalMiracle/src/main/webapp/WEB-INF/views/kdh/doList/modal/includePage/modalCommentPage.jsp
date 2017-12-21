@@ -11,6 +11,7 @@
 	}
 	function goCommentPage(pageNo){
 		document.getElementById("selectPage").value = pageNo;
+		document.getElementById("copySelectPage").value = pageNo; // 모달정보수정시 댓글 페이지 유지용
 		var frm = $("form[name=addCommentFrm]").serialize();
 		$.ajax({
 			url:"do_goCommentPage.mr",
