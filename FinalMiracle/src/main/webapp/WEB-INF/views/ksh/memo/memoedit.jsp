@@ -48,7 +48,7 @@
 		var content = document.getElementById("content").value;
 		var folder = document.getElementById("folder").value;
 		
-		if(subject.trim() == "" || content.trim() == ""){
+		if(subject == "" || content == ""){
 			swal("수정 실패!", "모든 항목에 빈 칸 없이 넣어주세요.", "error");
 			return
 		} else {
@@ -84,7 +84,7 @@
 </script>
 
 <div style="width:100%; font-family: verdana;" align="center">
-	<h1 style="margin: 2%;">메모 등록</h1>
+	<h1 style="margin: 2%;">메모 수정</h1>
 	
 	<form class="form-inline" name="EditFrm" action="<%= request.getContextPath() %>/memoEditEnd.mr" method="post" enctype="multipart/form-data" >
 		<div style="border: none;">

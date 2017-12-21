@@ -300,9 +300,9 @@
 
 
 <form class="form-inline" id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/memoList.mr" method="get" enctype="multipart/form-data">
-<div style="padding-left: 1%; padding-right: 1%; border: solid 0px red; width: 100%; height: 880px; overflow-y: auto; font-family: verdana; float: left;">
+<div style="padding-left: 1%; padding-right: 1%; border: solid 0px red; width: 100%; height: 840px; overflow-y: auto; font-family: verdana; float: left;">
 	<div style="width: 100%;">
-		<div style="float: left; margin-top: 2%;">
+		<div style="float: left; margin-top: 2%; overflow-x: auto;">
 			<a href="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=전체'" class="btn btn-primary">전체</a>&nbsp;
 			<a href="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=중요'" class="btn btn-primary">중요</a>&nbsp;
 			<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=전체'">전체</button>&nbsp;
@@ -315,8 +315,8 @@
 			<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=휴지통'">휴지통</button>&nbsp; --%>
 		</div>
 		
-		<div style="float: right;">
-			<h1>메모목록</h1>
+		<div style="float: right; text-align: right;">
+			<h2>${folder}</h2>
 		</div>
 	</div>
 	<br/><br/>
@@ -475,13 +475,8 @@
 		</c:forEach>
 	</c:if>
 	<c:if test="${empty memoList}">
-		<div style="width: 100%; height: 400px; margin-top: 3%; border: 1px solid lightgray;">
-			<div style="width: 5%; float: left; text-align: center; padding-top: 1%;">
-				<img src="<%= request.getContextPath() %>/resources/images/memo.png" style="width: 50px; height: 50px;">
-			</div>
-			<div style="width: 95%; float: left; text-align: center; vertical-align: center; padding-top: 1%;">
+		<div style="width: 100%; height: auto; margin-top: 2%; padding: 50px; border: 1px solid lightgray;">
 				메모가 존재하지 않습니다.
-			</div>
 		</div>
 	</c:if>
 	

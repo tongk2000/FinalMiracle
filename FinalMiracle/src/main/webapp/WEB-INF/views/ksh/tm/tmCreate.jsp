@@ -341,14 +341,14 @@ th#th {
 
 
 <body background="<%= request.getContextPath() %>/resources/images/loginbg.png">
-	<div class="content" style="width: 38%; vertical-align: middle; margin-top: 15%; margin-left: 30%;" align="center">
+	<div class="content" style="width: 38%; font-family: verdana; vertical-align: middle; margin-top: 15%; margin-left: 30%;" align="center">
 		<form name="createFrm" enctype="multipart/form-data">
 			<table id="tblMemberRegister" style="margin-bottom: 30px;">
 				<thead>
 					<tr>
-						<th colspan="2" id="th">팀 생성 (<span
-							style="font-size: 10pt; font-style: !important; color: blue;"><span
-								class="star"> *</span> 항목 기입 필수 </span>)
+						<th colspan="2" id="th" style="text-align: center; font-size: 14pt; padding: 5pt; border-radius: 5px;">팀 생성 (
+						<span style="font-size: 10pt; font-style: !important; color: blue;">
+							<span class="star"> *</span> 항목 기입 필수 </span>)
 						</th>
 					</tr>
 				</thead>
@@ -365,7 +365,7 @@ th#th {
 					<tr>
 						<td style="width: 35%; font-weight: bold;">연락처</td>
 						<td style="width: 65%; text-align: left;">
-							<div style="float: left; width: 20%">
+							<div style="float: left; width: 25%">
 								<select id="hp1" name="hp1" class="form-control">
 									<option value="010" selected>010</option>
 								</select>
@@ -374,13 +374,13 @@ th#th {
 							<div style="float: left; width: 4%" align="center">
 								-
 							</div>
-							<div style="float: left; width: 20%">
+							<div style="float: left; width: 25%">
 								<input type="text" id="hp2" name="hp2" size="4" maxlength="4" class="form-control" />
 							</div>
 							<div style="float: left; width: 4%" align="center">
 								-
 							</div>
-							<div style="float: left; width: 20%">
+							<div style="float: left; width: 25%">
 								<input type="text" id="hp3" name="hp3" size="4" maxlength="4" class="form-control" /> 
 							</div>
 							<br/>
@@ -392,19 +392,19 @@ th#th {
 					<tr>
 						<td style="width: 35%; font-weight: bold;">이미지(로고)</td>
 						<td style="width: 65%; text-align: left;">
-							<input type="file" name="attach" class="form-control" style="width: 50%;" onchange="fileCheck(this)" accept="image/gif, image/jpg, image/jpeg, image/png" />
+							<input type="file" name="attach" class="form-control" style="width: 80%;" onchange="fileCheck(this)" accept="image/gif, image/jpg, image/jpeg, image/png" />
 						</td>
 					</tr>
 					<tr>
 						<td style="width: 35%; font-weight: bold;">우편번호</td>
 						<td style="width: 65%; text-align: left;">
-							<div style="float: left; width: 15%">
+							<div style="float: left; width: 20%">
 								<input type="text" id="post1" name="post1" size="4" maxlength="3" class="form-control" />
 							</div>
 							<div style="float: left; width: 5%" align="center">
 								&nbsp;-&nbsp;
 							</div>
-							<div style="float: left; width: 15%">
+							<div style="float: left; width: 20%">
 								<input type="text" id="post2" name="post2" size="4" maxlength="3" class="form-control" />
 							</div>
 							<div style="float: left; width: 5%" align="center">
@@ -425,8 +425,8 @@ th#th {
 					<tr>
 						<td style="width: 35%; font-weight: bold; vertical-align: top"><br/>주소</td>
 						<td style="width: 65%; text-align: left;">
-							<input type="text" id="addr1" name="addr1" size="50" maxlength="150" class="form-control" style="width: 70%" />
-							<input type="text" id="addr2" name="addr2" size="50" maxlength="150" class="form-control" style="width: 70%" />
+							<input type="text" id="addr1" name="addr1" size="50" maxlength="150" class="form-control" style="width: 80%" />
+							<input type="text" id="addr2" name="addr2" size="50" maxlength="150" class="form-control" style="width: 80%" />
 						<br/><br/>
 						</td>
 					</tr>

@@ -48,6 +48,8 @@ public interface InterBoardDAO {
 	int deleteContent(String idx);
 	int deleteComment(String idx);
 
+	int delComment(String commentIdx); // 댓글 삭제하기
+
 	
 
 

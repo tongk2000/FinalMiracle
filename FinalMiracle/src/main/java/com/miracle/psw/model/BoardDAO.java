@@ -157,6 +157,12 @@ public class BoardDAO implements InterBoardDAO {
 		return n;
 	}
 
+	@Override
+	public int delComment(String commentIdx) {  // 댓글 삭제하기
+		int n = sqlsession.update("board_psw.delComment", commentIdx);
+		return n;
+	}
+
 
 
 
