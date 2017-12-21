@@ -156,7 +156,7 @@ public class ProjectManagerService {
 		} // 새로 첨부한 파일 관리하기 끝
 		
 		doList = dao.getAddedElement(); // TODO 파일 목록까지 최신화 하려고 한번 더 가져옴 ㅠㅠ 뭔가 더 효율적인 방법은..?
-		fvo = doList.get(0); // 동적으로 페이지를 재구성하기 위해 vo도 하나 넘겨줌	
+		fvo = doList.get(0); // 동적으로 페이지를 재구성하기 위해 vo도 하나 넘겨줌(그냥 뷰단 재활용을 위해서 필요함)
 		
 		List<HashMap<String, String>> pageDateList = null;
 		if(term.equals("7")) {
@@ -179,7 +179,34 @@ public class ProjectManagerService {
 		
 		return map;
 	} // end of int addDownElementEnd(FolderVO fvo, HashMap<String, Object> map) -----------------------------------------------------
-
+	
+	// 특정 한줄만 가져오기(to 프로젝트 리스트)
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public HashMap<String, Object> getOneElement(String term, String page, String idx) {		
+		List<FolderVO> doList = dao.getOneElement(idx);	
+		FolderVO fvo = doList.get(0); // 동적으로 페이지를 재구성하기 위해 vo도 하나 넘겨줌(그냥 뷰단 재활용을 위해서 필요함)
+		
+		List<HashMap<String, String>> pageDateList = null;
+		if(term.equals("7")) {
+			int result = dao.updatePageDateWeek(page); // 페이징 처리를 위해 1주간의 날짜를 동적으로 수정하기
+			if(result > 0) {
+				pageDateList = dao.getPageDateWeek(); // 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기
+			}
+		} else if(term.equals("30")) {
+			int result = dao.updatePageDateMonth(page); // 페이징 처리를 위해 1주간의 날짜를 동적으로 수정하기
+			if(result > 0) {
+				pageDateList = dao.getPageDateMonth(); // 페이징 처리를 위해 수정된 1주간의 날짜를 받아오기
+			}
+		}
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("doList", doList);
+		map.put("fvo", fvo);
+		map.put("pageDateList", pageDateList);
+		
+		return map;
+	} // end of int addDownElementEnd(FolderVO fvo, HashMap<String, Object> map) -----------------------------------------------------
+		
 	// 선택한 요소와 그 하위요소들 삭제하기
 	public HashMap<String, Integer> delElement(String idx, String fk_folder_idx) {
 		int result = dao.delElement(idx);

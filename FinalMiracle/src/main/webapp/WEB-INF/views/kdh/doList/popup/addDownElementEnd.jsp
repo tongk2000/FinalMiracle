@@ -74,9 +74,13 @@
 					var $opener2 = $opener.next();
 					var depth2 = parseInt(window.opener.getThirdClass($opener2)); // 다음 요소의 깊이 구하기
 					
-					if(depth < depth2) { // 상위요소의 하위요소는 전부 show 상태로 변경해줄 생각임
-						if(!($opener2.is(":visible"))) { // 하위요소가 hide 상태라면
-							$opener2.show(); // 그냥 다 보여줌
+					if(depth < depth2) { // 상위요소의 하위요소는 전부 펴짐 상태로 변경해줄 생각임
+						if( $opener2.hasClass("foldinged") ) { // 하위요소가 접힘 상태라면
+							if( !($opener2.hasClass("hided")) ) { // 하위요소가 접힘 상태이면서 완료숨김 off 상태라면
+								$opener2.show().removeClass("foldinged"); // 그냥 다 펴줌 상태로 바꾸고 보여줌
+							} else { // 접힘 상태이면서 완료숨김 on 상태라면
+								$opener2.removeClass("foldinged"); // 보여주진 않고 펴줌 상태로만 바꿔줌
+							}
 						}
 					} else { // 상위요소와 깊이가 같은 요소가 나오면 break
 						break;
