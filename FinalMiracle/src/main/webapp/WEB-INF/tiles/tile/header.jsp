@@ -53,15 +53,24 @@
 					url:"do_getSearchWordByAll.mr",
 					data:frm,
 					type:"get",
-					dataType:"text",
+					dataType:"xml",
 					success:function(data){
-						alert(typeof data);
-						setTimeout(function(){
-							data.replace(/searchWord.trim()/gi, "????");
-							$("#searchAllResult").html(data);
-						},1000);
+						var html = "";
+						var reg = new RegExp(searchWord, "gi");
+						
+						var projectArr = $(data).find(":root").find("project");
+						projectArr.each(function(){
+							var subject = $(this).find("subject").text().replace(reg, "<span style='color:red;'>"+searchWord+"</span>");
+							html += "<span>"+subject+"</span><br/>";
+						});
+						html += "";
+						
+						var left = $("#searchWordByAll").offset().left;
+						var top = $("#searchWordByAll").offset().top + $("#searchWordByAll").height() + 15;
+						$("#searchAllResult").css({"left":left+"px", "top":top+"px"});
+						$("#searchAllResult").html(html);
 					}
-				});/* "<span style='color:red;'>"+searchWord+"</span>" */
+				});
 			}
 		}); // end of $("#searchWordByAll").keyup(function() --------------------------------------------------------------------------------
 	}); // end of $(document).ready(function() ------------------------------------------------------------------------------------------------
@@ -77,8 +86,7 @@
 		<img src="<%= request.getContextPath() %>/resources/images/icon/14.png" class="iconPng headerIconPng" />
 	</a>
 </div>
-
-<div id="searchAllResult" style="display:inline-block; z-index:99999; position:absolute; background-color:white;">gqwrr</div>
+<div id="searchAllResult" style="display:inline-block; z-index:99999; position:absolute; padding-left:10px; background-color:white;"></div>
 
 <!-- ===== 로그인 성공한 사용자 정보 출력 ===== -->
 <c:if test="${sessionScope.loginUser != null}">

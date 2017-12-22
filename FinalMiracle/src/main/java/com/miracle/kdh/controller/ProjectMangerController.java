@@ -386,7 +386,7 @@ public class ProjectMangerController {
 		HashMap<String, List<String>> mapOfSerchAll = svc.getSearchWordByAll(searchWord);
 		req.setAttribute("mapOfSerchAll", mapOfSerchAll);
 		req.setAttribute("searchWord", searchWord);
-		return "kdh/searchAllList.not";
+		return "kdh/searchAllListXML.not";
 	} // end of String getSearchWordByAll(HttpServletRequest req) ---------------------------------------------------------------
 	
 	// ============================= ***** 파일 관련 메소드 시작 ***** =============================
