@@ -30,9 +30,10 @@
 		<result property="filesize" 		column="filesize" 			javaType="int" />
 		<result property="name" 			column="name" 				javaType="String" />
 		<result property="img" 				column="img" 				javaType="String" />
+		<result property="userid" 			column="userid" 			javaType="String" />
 	</resultMap>
 	<select id="getChattingContent" parameterType="String" resultMap="chattinglist">
-		select m.idx as midx, cc.message as message, cc.time as chattime, cc.readcount as readcount, cc.realfilename as realfilename, cc.filesize as filesize, m.name as name, m.img as img
+		select m.idx as midx, cc.message as message, cc.time as chattime, cc.readcount as readcount, cc.realfilename as realfilename, cc.filesize as filesize, m.name as name, m.img as img, m.userid as userid
 		from chat_content cc join tbl_chat_room cr
 		on cr.cr_idx = cc.fk_cr_idx
 		join tbl_member m

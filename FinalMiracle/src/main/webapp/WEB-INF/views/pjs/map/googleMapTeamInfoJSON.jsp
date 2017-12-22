@@ -7,8 +7,8 @@
 		heigth:25px;
 	} */
 	tr, td, th {
-		border:1px solid black;
-		padding:7px;
+		border:2px dotted lightgray;
+		text-align:center;
 	} 
 </style>
 <div class="modal-dialog">
@@ -23,7 +23,7 @@
 		<div class="modal-body" style="width: 100%; height: 300px;">
 			<div>
 				<div style="align: center;">
-					<table>
+					<table style="width:80%;">
 						<c:if test="${n == 1}">
 							<c:if test="${empty googleMap}">
 								<tr><td colspan="4">데이터가 없습니다.</td></tr>						
@@ -31,23 +31,23 @@
 							<c:if test="${not empty googleMap}">
 								<thead>
 									<tr>
-										<th>유저번호</th>
-										<th>유저아이디</th>
-										<th>유저이름</th>
-										<th>역활</th>
+										<th style="width:20%;">유저번호</th>
+										<th style="width:27%;">유저아이디</th>
+										<th style="width:27%;">유저이름</th>
+										<th style="width:27%;">역활</th>
 									</tr>
 								</thead>
 								<tbody>
 									<c:forEach var="google" items="${googleMap}">
 									<tr>
-										<td>${google.memberidx}</td>
-										<td><img src="<%=request.getContextPath() %>/resources/images/${google.img}" style="width:30px; height:30px;"/> ${google.userid}</td>
-										<td>${google.memberName}</td>
+										<td style="width:20%;">${google.memberidx}</td>
+										<td style="width:27%;"><img src="<%=request.getContextPath() %>/resources/images/${google.img}" style="width:35px; height:35px; word-spacing:10px;" /> ${google.userid}</td>
+										<td style="width:27%;">${google.memberName}</td>
 										<c:if test="${google.status == 1}">
-											<td>팀원</td>
+											<td style="width:27%;">팀원</td>
 										</c:if>
 										<c:if test="${google.status == 2}">
-											<td>팀장</td>
+											<td style="width:27%;">팀장</td>
 										</c:if>
 									</tr>
 									</c:forEach>
@@ -61,16 +61,16 @@
 							<c:if test="${googleMap!=null}">
 								<thead>
 									<tr>
-										<th>이미지</th>
-										<th>제목</th>
-										<th>내용</th>
+										<th style="width:33%;">이미지</th>
+										<th style="width:33%;">제목</th>
+										<th style="width:33%;">내용</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr>
-										<td><img src="<%=request.getContextPath() %>/resources/images/${googleMap.img}"/></td>
-										<td>${googleMap.subject}</td>
-										<td>${googleMap.contents}</td>
+										<td style="width:33%;"><img src="<%=request.getContextPath() %>/resources/images/${googleMap.img}" style="width:35px; height:35px;"/></td>
+										<td style="width:33%;">${googleMap.subject}</td>
+										<td style="width:33%;">${googleMap.contents}</td>
 									</tr>
 								</tbody>					
 							</c:if>

@@ -4,9 +4,9 @@
 <%
 request.setCharacterEncoding("UTF-8");
 %>
-<c:set var="map" value="${userinfo}" />
+<%-- <c:set var="map" value="${userinfo}" />
 <div class="modal-dialog">
-	<%-- Modal content --%>
+	Modal content
 	<div class="modal-content" align="center">
 		<div class="modal-header">
 			<button type="button" class="close modalClose" data-dismiss="modal">&times;</button>
@@ -52,4 +52,6 @@ request.setCharacterEncoding("UTF-8");
 				data-dismiss="modal">Close</button>
 		</div>
 	</div>
-</div>
+</div> --%>
+
+${searchJSON}

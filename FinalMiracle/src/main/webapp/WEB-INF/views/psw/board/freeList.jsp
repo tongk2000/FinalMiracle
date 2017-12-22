@@ -186,7 +186,7 @@
 					 +  "<span style='font-weight: bold;'>핸드폰 : </span>" +data.infoHp1 + "-" +data.infoHp2+"-"+data.infoHp3 +"<br/>"
 					 +  "<span style='font-weight: bold;'>생년월일 : </span>" +data.infoBirth1 + " / " + data.infoBirth2 + " / " + data.infoBirth3 + "<br/><br/>"
 					 +  "<span style='font-weight: bold;'>주소 : </span>" + data.infoAddr1 + " " + data.infoAddr2 + "</span><br/>"
-					 +  "<span style='font-weight: bold;'>이메일 : </span>" + data.infoEmail + "<br/><br/>"
+					 +  "<span style='font-weight: bold;'>이메일 : </span>" + "<a href=\"javascript:goEmail('"+data.infoEmail+"');\">" + data.infoEmail + "</a><br/><br/>"
 					 +  "<span style='font-weight: bold;'>소개 : </span>" + data.infoProfile +"</div>" ;
 				
 				$(".modal-body").html(html);
@@ -196,6 +196,11 @@
 				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 			}
 		}); // end of $.ajax()------------------------
+	}
+	
+	function goEmail(email){
+		
+		window.open("tmWriteEmail.mr?email="+email, "subwinpop", "left=500px, top=500px, width=800px, height=600px");
 	}
 	
 	// ======================================== *** 글번호와 URL을 받아서 1개 글 정보 보여주기 *** ===========================
