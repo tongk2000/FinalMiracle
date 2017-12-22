@@ -134,6 +134,12 @@ public class ChattingService implements InterChattingService {
 		return list;
 	}
 
+	@Override
+	public HashMap<String, Object> getRoomInfo(HashMap<String, Object> map) {
+		HashMap<String, Object> getRoomInfo = dao.getRoomInfo(map);
+		return getRoomInfo;
+	}
+
 	
 	
 	

@@ -5,6 +5,13 @@
 
 <style type="text/css">
 	
+/* .overFlow{overflow: auto;} */
+
+/* div.memberinfo:hover {
+	           overflow: auto;
+	       } */
+
+
 
 
 </style>
@@ -64,9 +71,23 @@
 		});
 	       
 	       
+/* 	       $("#memberinfo").mouseover(function() {
+	    	   $("#memberinfo").addClass("overFlow");
+		});
+	       
+	       $("#memberinfo").mouseout(function() {
+	    	   $("#memberinfo").removeClass("overFlow");
+		}); */
+	       
+		
+
+
+			
 	       
 	}); // $(document).ready(function()
 	
+		
+			
 	
 	
 	function getRoomList() {
@@ -115,6 +136,7 @@
 										// 그리고 data는 url주소(chattingRoomAjax.mr)로부터 리턴받은 데이터이다
 				$("#chatMessage").empty(); // 해당요소 선택자 내용을 모두 비워서 새로운 데이터를 채울 준비를 한다
 				$("#chatMessage").html(data);
+				$("#chatMessage").scrollTop($("#chatMessage")[0].scrollHeight);
 			},
 			error: function(request, status, error) {
 				alert("code: " + request.status + "\n"+"message: " + request.responseText + "\n" + "error: " + error);     
@@ -141,14 +163,32 @@
 			
 		});
 		
+		$.ajax({
+			url: "chattingRoomTitle.mr",
+			data: form_data,
+			type: "get",		
+			dataType: "html",	
+			success: function(data) { 
+				$("#roominfo").empty(); 
+				$("#roominfo").html(data);
+			},
+			error: function(request, status, error) {
+				alert("code: " + request.status + "\n"+"message: " + request.responseText + "\n" + "error: " + error);     
+			}
+			
+		});
+		
 		/*  setTimeout(function() {
 			goChatRoom();
 		},1000); */ 
 
+		
 	//	scroll();
 	//	$("#chatMessage").scrollTop($(document).height());
 		$("#chatMessage").scrollTop($("#chatMessage")[0].scrollHeight);
 		getRoomList();
+		$("#roominfo").show();
+		$("#chatMessage").css("height", "570px");
 	     
 	}
 	    /* function scroll() {
@@ -185,8 +225,8 @@
 		});
 		$("#message").hide();
 		$("#sendMessage").hide();
-		
-		
+		$("#roominfo").hide();
+		$("#chatMessage").css("height", "600px");
 		
 		
 	}
@@ -198,22 +238,21 @@
 	
 </script>
 
-<div style="width: 95%; height: 100%; border: 0px solid red; margin-left: 5%;" align="center">
+<div style="width: 90%; height: 650px; border: 0px solid red; margin-left: 5%; margin-top: 2%; margin-right: 5%; border: 3px solid black;" align="center">
 
-	<div style="float: left; width: 150px; height: 550px; border: 1px solid red; overFlow: auto;">
-
-	<div>채팅방 목록</div>
-	<div style="border: 1px solid maroon;" onclick="newChattingRoom()">채팅방 만들기</div>
-		<div style="border: 1px solid red;" id="room"></div>
-		
+	<div style="float: left; width: 16%; height: 650px; border: 0px solid red; overFlow-Y: auto; overFlow-X: hidden;">
+	<div style="height: 30px; font-size: 25px; border-bottom: 1px solid black;">채팅방 목록</div>
+	<div style="border: 0px solid maroon; font-size: 20px; vertical-align: middle; padding-top: 3px; cursor: pointer;" onclick="newChattingRoom()"><img src="<%= request.getContextPath() %>/resources/images/addchat.png" class="iconPng sideIconPng" />&nbsp;새 채팅방</div>
+		<div style="border: 0px solid red;" id="room"></div>
 	</div>
-	<div style="float: left;">
-	<div id="chatMessage" style="overFlow: auto; height: 550px; border: 1px solid blue; width: 550px; background-color: #a0c0d7;"></div>
+	<div style="float: left; width: 59%;">
+	<div id="roominfo" style="width: 100%; background-color: #a0c0d7; height: 30px; border-bottom: 1px solid black;" hidden="true"></div>
+	<div id="chatMessage" style="overFlow-Y: auto; height: 600px; width: 100%; background-color: #a0c0d7;"></div>
     <input type="text" id="message" placeholder="메시지 내용" style="width: 90%; margin-top: 5px;"/>
     <input type="button" id="sendMessage" class="btn-info" value="전송" />
     <input type="hidden" id="roomid" />
     </div>
-    <div id="memberinfo" style="overFlow: auto; width: 220px; height: 550px; border: 1px solid yellow; float: left;"></div>
+    <div id="memberinfo" style="overFlow-Y: auto; overFlow-X: hidden; width: 25%; height: 645px; border: 0px solid yellow; float: left;"></div>
     <i class="fa fa-comments"></i>
     
 </div>

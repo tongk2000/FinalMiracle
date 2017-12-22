@@ -38,14 +38,14 @@
 <tr class="trLine">
 	<td class="infoClass">시작일</td>
 	<td class="infoData">
-		<input type="text" readonly id="startDate" name="startDate" class="pointer" style="border:none;" value="${map.fvo.startDate}"/>
+		<input type="text" readonly id="startDate" class="trLine pointer" name="startDate" size="67" style="border:none; background-color:#F0F0F0;" value="${map.fvo.startDate}"/>
 	</td>
 </tr>
 
 <tr class="trLine">
 	<td class="infoClass">마감일</td>
 	<td class="infoData">
-		<input type="text" readonly id="lastDate" name="lastDate" class="pointer" style="border:none;" value="${map.fvo.lastDate}"/>
+		<input type="text" readonly id="lastDate" class="trLine pointer" name="lastDate" size="67" style="border:none; background-color:#F0F0F0;" value="${map.fvo.lastDate}"/>
 	</td>
 </tr>
 

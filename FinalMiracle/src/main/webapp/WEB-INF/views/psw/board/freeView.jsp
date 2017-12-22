@@ -167,7 +167,7 @@
 				var html = "";
 				
 				var imgPath = data.infoImg;
-				html += "<div style='font-family: verdana; font-size: 10pt;'><div style='float: right;'><img src='<%= request.getContextPath() %>/resources/images/" + imgPath + "' style='width: 100px; height: 100px; border-radius: 50px;' /></div>" + "<br/>"
+				html += "<div style='font-family: verdana; font-size: 10pt;'><div style='float: right;'><img src='<%= request.getContextPath() %>/resources/files/" + imgPath + "' style='width: 100px; height: 100px; border-radius: 50px;' /></div>" + "<br/>"
 					 +  "<span style='font-weight: bold;'>ID : </span>"+ data.infoUserid + "<br/>"
 					 +  "<span style='font-weight: bold;'>성명 : </span>"+ data.infoName + "<br/>"
 					 +  "<span style='font-weight: bold;'>핸드폰 : </span>" +data.infoHp1 + "-" +data.infoHp2+"-"+data.infoHp3 +"<br/>"
@@ -254,7 +254,7 @@
 			<table style="width: 800px; border: 1px solid darkgray; border-left: none; border-right: none;">
 				<tr>
 		           	<th style="width: 8%; padding-top: 5px;">
-						<img src="<%= request.getContextPath() %>/resources/images/${freevo.img}" style="width: 90px; height: 90px;" align="middle">
+						<img src="<%= request.getContextPath() %>/resources/files/${freevo.img}" alt="프로필사진" style="width: 90px; height: 90px;" align="middle">
 		           	</th>
 		           	<td style="border: 1px solid lightgray; border-top: none; border-left: none; border-right: none; padding-left: 20px; padding-top: 10px; padding-bottom: 10px; width: 60%;">
 			           	<input type="hidden" name="idx" value="${freevo.idx}" />
@@ -339,7 +339,7 @@
 									<span style="font-weight: bold; font-size: smaller;"> ${status.count}</span>
 								</td>
 								<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 2%;">
-									<img src="<%= request.getContextPath() %>/resources/images/${commentvo.img}" style="width: 28px; height: 30px; border-radius: 15px; vertical-align: middle; padding-top: 2px; padding-bottom: 2px;" align="middle">
+									<img src="<%= request.getContextPath() %>/resources/files/${commentvo.img}" style="width: 28px; height: 30px; border-radius: 15px; vertical-align: middle; padding-top: 2px; padding-bottom: 2px;" align="middle">
 								</td>
 								<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 12%; padding-left: 10px;">
 									<span class="repleInfo" onClick="showUserInfo('${commentvo.userid}')" style="font-size: 9pt;">

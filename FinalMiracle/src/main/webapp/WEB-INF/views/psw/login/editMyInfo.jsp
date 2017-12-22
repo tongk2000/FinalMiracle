@@ -261,6 +261,10 @@
 	        }	
 	    }).open();
 	}  // end of function openDaumPostnum()---------------------------------------------------------------------------------
+	
+	function openAlterImg() {
+		window.open("member_alterImg.mr", "alterImg", "left=500px; top=100px; width=300px; height=200px;");
+	}
 </script>
 
 
@@ -277,21 +281,21 @@
 <!-- ====================================================== *** 회원번호가 있는 경우 *** ======================================= -->
 <c:if test="${not empty map}">
 
-	<div style="width: 100%; border: 0px dotted green;" align="left">
+	<div style="width: 100%; border: 2px dotted #F5F5F5; border-radius: 20px; background-color: #F5F5F5; padding: 5px;" align="left">
 		<form name="registerFrm" action="member_editEnd.mr" method="post">
 		
-	 	
 			<fieldset>
-				<div style="border: 0px dotted pink; float: right;" align="center">
-					<img alt="프로필사진" src="<%= request.getContextPath() %>/resources/images/${sessionScope.loginUser.img}" style="height: 150px; width: 140px;">
+				<div style="border: 2px dotted #92a8d1; border-radius: 20px; background-color: #deeaee; padding: 5px; float: right;" align="center">
+					<h5 style="font-weight: bold; font-family: verdana;">프로필 이미지</h5>
+					<img alt="프로필 이미지" src="<%= request.getContextPath() %>/resources/files/${sessionScope.loginUser.img}" style="height: 130px; width: 120px; padding-bottom: 10px;">
 					<br/>
-					<a href="#" style="text-align: center; text-decoration: none; font-family: verdana;">[이미지 변경]</a>
+					<a class="btn btn-xs btn-primary" href="javascript:openAlterImg();" style="text-align: center; text-decoration: none; font-family: verdana; cursor: pointer; font-size: 10pt; color: white;">변경하기</a>
 				</div>
 				
-				<div style="border: 1px dotted white; width: 420px; float: left;" align="left">
+				<div style="border: 2px dotted white; border-radius: 20px; width: 410px; float: left;" align="left">
 					<!-- 회원정보 수정 폼 부트스닙스 -->
 					<div class="form-group" >
-					  <label class="col-sm-4 control-label" for="name">성명 &nbsp;<span class="star">*</span></label>  
+					  <label class="col-sm-4 control-label" for="name">성명 &nbsp;<span class="star">*</span></label>
 					  <div class="col-sm-4">
 					  	<input id="name" name="name" type="text" placeholder="name" class="form-control input-sm requiredInfo" value="${map.mvo.name}">
 					  	<input type="hidden" name="idx"  value="${map.mvo.idx}" />

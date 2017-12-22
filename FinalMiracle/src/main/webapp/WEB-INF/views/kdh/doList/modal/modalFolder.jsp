@@ -46,7 +46,7 @@
 				</span>
 			</h4>
 		</div>
-		<div class="modal-body" style="width: 100%; height:auto;">
+		<div class="modal-body" style="width:100%; height:auto; background-color:#F0F0F0 !important;">
 			<form name="modalInfoFrm" id="modalInfoFrm" enctype="multipart/form-data" method="post">
 			<!-- enctype="multipart/form-data" : 파일 첨부를 위해 인코딩 타입 설정 -->
 			<!-- method="post" : 파일 보낼때는 반드시 post 여야만 한다. -->
