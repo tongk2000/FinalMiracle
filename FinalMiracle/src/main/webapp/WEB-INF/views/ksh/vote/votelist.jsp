@@ -5,18 +5,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
     
 <style type="text/css">
-	table, th, td {border: solid gray 1px;}
-	/* #table {border-collapse: collapse; width: 750px;} */
-	
-	.subjectstyle {font-weight: bold;
-    	           color: navy;
-    	           cursor: pointer; }
-  	
-  	/* ==== #142. 파일첨부가 되었으므로 테이블의 가로폭을 늘려보자 ==== */
-  	#table {border-collapse: collaps; width: 100%;}
-  	#table th, #table td {padding: 5px;}
-  	#table th {background-color: #DDDDDD;}
-	    
+
 </style>
 
 <script type="text/javascript">
@@ -218,7 +207,7 @@
 	
 		<div style="float: left; margin-bottom: 1%">
 			<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/voteAdd.mr'">투표작성</button> --%>
-			<a href="javascript:location.href='<%= request.getContextPath() %>/voteAdd.mr'" class="btn btn-success">투표작성</a>&nbsp;
+			<a href="javascript:location.href='<%= request.getContextPath() %>/voteAdd.mr'" class="btn btn-success"><span class="glyphicon glyphicon-pencil"></span>&nbsp;투표작성</a>&nbsp;
 		</div>
 		
 		<div style="float: right; margin-bottom: 1%">
@@ -331,7 +320,7 @@
 	<c:if test="${not empty voteList}">
 		<c:forEach var="votevo" items="${voteList}" varStatus="status">
 			<c:set value="${votevo.IDX}" var="voteidx" />
-			<div style="width: 100%; height: auto; margin-top: 2%; border: 1px solid lightgray;">
+			<div style="width: 100%; height: auto; margin-top: 1%; border: 1px solid lightgray;">
 				<div style="width: 5%; float: left; text-align: center; padding-top: 1%;">
 					<img src="<%= request.getContextPath() %>/resources/images/ic_vote.png" style="width: 50px; height: 50px;">
 					<br/><br/><br/>
@@ -370,14 +359,14 @@
 				</div>
 				<div style="float: right; text-align: left; margin-bottom: 3%;">
 					<c:if test="${votevo.FK_TEAMWON_IDX eq sessionScope.loginUser.idx}">
-						<a href="javascript:goDel('${votevo.IDX}');" class="btn btn-danger">투표삭제</a>&nbsp;
+						<a href="javascript:goDel('${votevo.IDX}');" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span>&nbsp;투표삭제</a>&nbsp;
 					</c:if>
 				</div>
 				<br/>　<br/>　<br/>
 			</div>
 			<div style="width: 100%; height: auto; border: 1px solid lightgray; background-color: #FAFAFA; padding-top: 10px; padding-left: 70px;">
 				<textarea id="commcontent${votevo.IDX}" name="commcontent${votevo.IDX}" class="form-control" style="width: 80%; resize: none;" placeholder="타인을 비방하는 댓글은 삼가해주시기 바랍니다."></textarea>
-				<a href="#" class="btn btn-lg btn-default">등록</a>&nbsp;
+				<a href="#" class="btn btn-lg btn-default"><span class="glyphicon glyphicon-comment"></span></a>&nbsp;
 				<br/><br/>
 				<c:forEach var="votecommvo" items="${voteCommList}" varStatus="status" begin="0" end="20">
 					<c:set value="${votecommvo.FK_VOTE_IDX}" var="votecommidx" />
@@ -398,7 +387,7 @@
 		</c:forEach>
 	</c:if>
 	<c:if test="${empty voteList}">
-		<div style="width: 100%; height: auto; margin-top: 2%; padding: 50px; border: 1px solid lightgray; text-align: center;">
+		<div style="width: 100%; height: auto; margin-top: 1%; padding: 50px; border: 1px solid lightgray; text-align: center;">
 			투표글이 존재하지 않습니다.
 		</div>
 	</c:if>

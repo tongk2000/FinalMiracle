@@ -82,12 +82,12 @@ request.setCharacterEncoding("UTF-8");
 	}
 	$(document).ready(function(){
 		$("tr:has(td)").click(function(){ // tr중에서 td를 가지고 있는 tr
-			var bool = $(this).hasClass("selectLine"); // 한번 더 클릭하면 클래스 삭제
+			var bool = $(e.target).parent().hasClass("selectLine"); 
 			if(bool) {
-				$(this).removeClass("selectLine");
+				$(e.target).parent().removeClass("selectLine");
 			}
 			else {
-				$(this).addClass("selectLine");
+				$(e.target).parent().addClass("selectLine");
 			}
 		});
 		$("#del").click(function(){
@@ -195,7 +195,7 @@ request.setCharacterEncoding("UTF-8");
 					</tbody>
 				</table> --%>
 			</div>
-			<div style="border:0px solid black; padding-left:400px;">
+			<div style="border:0px solid black; float:right; margin-top:-15px; margin-right:80px; ">
 				<button type="button" id="write" class="btn btn-default">글쓰기</button>
 				<button type="button" id="del" class="btn btn-default">삭제</button>
 			</div>

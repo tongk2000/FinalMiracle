@@ -12,6 +12,27 @@
 	       } */
 
 
+::-webkit-scrollbar {
+    width: 6px;
+}
+ 
+/* Track */
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.0); 
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background:  rgba(0,0,0,0.0);
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+::-webkit-scrollbar-thumb:window-inactive {
+	background:  rgba(0,0,0,0.0);
+}
 
 
 </style>
@@ -137,6 +158,7 @@
 				$("#chatMessage").empty(); // 해당요소 선택자 내용을 모두 비워서 새로운 데이터를 채울 준비를 한다
 				$("#chatMessage").html(data);
 				$("#chatMessage").scrollTop($("#chatMessage")[0].scrollHeight);
+				getRoomList();
 			},
 			error: function(request, status, error) {
 				alert("code: " + request.status + "\n"+"message: " + request.responseText + "\n" + "error: " + error);     
@@ -242,7 +264,7 @@
 
 	<div style="float: left; width: 16%; height: 650px; border: 0px solid red; overFlow-Y: auto; overFlow-X: hidden;">
 	<div style="height: 30px; font-size: 25px; border-bottom: 1px solid black;">채팅방 목록</div>
-	<div style="border: 0px solid maroon; font-size: 20px; vertical-align: middle; padding-top: 3px; cursor: pointer;" onclick="newChattingRoom()"><img src="<%= request.getContextPath() %>/resources/images/addchat.png" class="iconPng sideIconPng" />&nbsp;새 채팅방</div>
+	<div style="border-bottom: 1px solid black; font-size: 20px; vertical-align: middle; padding-top: 3px; cursor: pointer;" onclick="newChattingRoom()"><img src="<%= request.getContextPath() %>/resources/files/addchat.png" class="iconPng sideIconPng" />&nbsp;새 채팅방</div>
 		<div style="border: 0px solid red;" id="room"></div>
 	</div>
 	<div style="float: left; width: 59%;">

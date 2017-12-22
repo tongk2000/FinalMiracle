@@ -303,15 +303,15 @@
 <div style="padding-left: 1%; padding-right: 1%; border: solid 0px red; width: 100%; height: 840px; overflow-y: auto; font-family: verdana; float: left;">
 	<div style="width: 100%;">
 		<div style="float: left; margin-top: 2%; overflow-x: auto;">
-			<a href="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=전체'" class="btn btn-primary">전체</a>&nbsp;
-			<a href="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=중요'" class="btn btn-primary">중요</a>&nbsp;
+			<a href="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=전체'" class="btn btn-primary"><span class="glyphicon glyphicon-list"></span>&nbsp;전체</a>&nbsp;
+			<a href="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=중요'" class="btn btn-primary"><span class="glyphicon glyphicon-ok-circle"></span>&nbsp;중요</a>&nbsp;
 			<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=전체'">전체</button>&nbsp;
 			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=중요'">중요</button>&nbsp; --%>
 			<c:forEach var="folder" items="${folderlist}" varStatus="status">
 				<a href="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=${folder}'" class="btn btn-primary">${folder}</a>&nbsp;
 				<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=${folder}'">${folder}</button>&nbsp; --%>
 			</c:forEach>
-			<a href="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=휴지통'" class="btn btn-primary">휴지통</a>&nbsp;
+			<a href="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=휴지통'" class="btn btn-primary"><span class="glyphicon glyphicon-trash"></span>&nbsp;휴지통</a>&nbsp;
 			<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoList.mr?folder=휴지통'">휴지통</button>&nbsp; --%>
 		</div>
 		
@@ -322,11 +322,11 @@
 	<br/><br/>
 	<div style="width: 100%; margin-top: 3%;">
 		<div style="float: left;">
-		<c:if test="${groups ne '휴지통'}">
+		<c:if test="${!folder.equals('휴지통')}">
 			전체선택 <input type="checkbox" name="chk_Allmemo" onclick="allcheck();">&nbsp;
-			<a href="javascript:location.href='<%= request.getContextPath() %>/memoAdd.mr'" class="btn btn-success">메모작성</a>&nbsp;
+			<a href="javascript:location.href='<%= request.getContextPath() %>/memoAdd.mr'" class="btn btn-success"><span class="glyphicon glyphicon-pencil"></span>&nbsp;메모작성</a>&nbsp;
 			<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoAdd.mr'">메모작성</button>&nbsp; --%>
-			<a href="javascript:goChkGarbage();" class="btn btn-warning">선택휴지통</a>&nbsp;
+			<a href="javascript:goChkGarbage();" class="btn btn-warning"><span class="glyphicon glyphicon-trash"></span>&nbsp;선택휴지통</a>&nbsp;
 			<!-- <button type="button" onClick="goChkGarbage();">선택휴지통</button>&nbsp; -->
 			<select name="upfolder" id="upfolder" class="form-control">
 				<option value="">이동할 분류 선택</option>
@@ -339,14 +339,14 @@
 			</select>
 			&nbsp;&nbsp;
 		</c:if>
-		<c:if test="${groups eq '휴지통'}">
+		<c:if test="${folder.equals('휴지통')}">
 			전체선택 <input type="checkbox" name="chk_Allmemo" onclick="allcheck();">&nbsp;
 			<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/memoAdd.mr'">메모작성</button>&nbsp;
 			<button type="button" onClick="goChkRestore();">선택복구</button>&nbsp;
 			<button type="button" onClick="goChkDel();">선택삭제</button>&nbsp; --%>
-			<a href="javascript:location.href='<%= request.getContextPath() %>/memoAdd.mr'" class="btn btn-success">메모작성</a>&nbsp;
-			<a href="javascript:goChkRestore();" class="btn btn-success">메모복구</a>&nbsp;
-			<a href="javascript:goChkDel();" class="btn btn-danger">메모삭제</a>&nbsp;
+			<a href="javascript:location.href='<%= request.getContextPath() %>/memoAdd.mr'" class="btn btn-success"><span class="glyphicon glyphicon-pencil"></span>&nbsp;메모작성</a>&nbsp;
+			<a href="javascript:goChkRestore();" class="btn btn-success"><span class="glyphicon glyphicon-refresh"></span>&nbsp;선택복구</a>&nbsp;
+			<a href="javascript:goChkDel();" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span>&nbsp;선택삭제</a>&nbsp;
 			&nbsp;&nbsp;
 		</c:if>
 		</div>
@@ -460,14 +460,14 @@
 					<c:if test="${memovo.groups ne '휴지통'}">
 						<%-- <button type="button" onClick="goEdit('${memovo.idx}');">메모수정</button>&nbsp;
 						<button type="button" onClick="goGarbage('${memovo.idx}');">휴지통</button>&nbsp; --%>
-						<a href="javascript:goEdit('${memovo.idx}');" class="btn btn-info">메모수정</a>&nbsp;
-						<a href="javascript:goGarbage('${memovo.idx}');" class="btn btn-warning">휴지통</a>&nbsp;
+						<a href="javascript:goEdit('${memovo.idx}');" class="btn btn-info"><span class="glyphicon glyphicon-edit"></span>&nbsp;메모수정</a>&nbsp;
+						<a href="javascript:goGarbage('${memovo.idx}');" class="btn btn-warning"><span class="glyphicon glyphicon-trash"></span>&nbsp;휴지통</a>&nbsp;
 					</c:if>
 					<c:if test="${memovo.groups eq '휴지통'}">
 						<%-- <button type="button" onClick="goRestore('${memovo.idx}');">메모복구</button>&nbsp;
 						<button type="button" onClick="goDel('${memovo.idx}');">메모삭제</button>&nbsp; --%>
-						<a href="javascript:goRestore('${memovo.idx}');" class="btn btn-success">메모복구</a>&nbsp;
-						<a href="javascript:goDel('${memovo.idx}');" class="btn btn-danger">메모삭제</a>&nbsp;
+						<a href="javascript:goRestore('${memovo.idx}');" class="btn btn-success"><span class="glyphicon glyphicon-refresh"></span>&nbsp;메모복구</a>&nbsp;
+						<a href="javascript:goDel('${memovo.idx}');" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span>&nbsp;메모삭제</a>&nbsp;
 					</c:if>
 				</div>
 				<br/>　<br/>　<br/>

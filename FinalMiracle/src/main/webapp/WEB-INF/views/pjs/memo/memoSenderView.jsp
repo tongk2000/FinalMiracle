@@ -71,26 +71,26 @@
 						<c:set var="sender" value="${map}"></c:set>
 						<tr> <!-- IDX, SUBJECT, CONTENT, SENDER, SSTATUS, img, w.status -->
 						<c:if test="${sender.status == 2}">
-							<th>유저 :  </th><td><img src="<%= request.getContextPath() %>/resources/images/${sender.img}" class="imgs"> ${sender.sender} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${teamNum}팀  팀장]</td> 
+							<th style="background-color:#337ab7;">유저 :  </th><td><img src="<%= request.getContextPath() %>/resources/images/${sender.img}" class="imgs"> ${sender.sender} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${teamNum}팀  팀장]</td> 
 						</c:if>
 						<c:if test="${sender.status == 1}">
-							<th>유저 :  </th><td><img src="<%= request.getContextPath() %>/resources/images/${sender.img}" class="imgs"> ${sender.sender} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${teamNum}팀   팀원]</td> 
+							<th style="background-color:#337ab7;">유저 :  </th><td><img src="<%= request.getContextPath() %>/resources/images/${sender.img}" class="imgs"> ${sender.sender} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${teamNum}팀   팀원]</td> 
 						</c:if>
 						</tr>
 						<tr>
-							<th>제목 :  </th><td><input type="text" name="subject" id="subject" readonly value="${sender.subject}"/></td>
+							<th style="background-color:#337ab7;">제목 :  </th><td><input type="text" name="subject" id="subject" readonly value="${sender.subject}"/></td>
 						</tr>
 						<tr>
-							<th>내용 :  </th><td><div style="width:700px; height:500px;">${sender.content}</div></td>
+							<th style="background-color:#337ab7;">내용 :  </th><td><div style="width:700px; height:500px;">${sender.content}</div></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 			<div style="border:1px solid gray; float:right">
 				<div style="float:left;" >
-					<button type="button" onClick="goback();">목록보기</button>
+					<button type="button" onClick="goback();" class="btn btn-default">목록보기</button>
 				</div>
-				<button type="button" onClick="goDel('${sender.idx}');">삭제</button>
+				<button type="button" onClick="goDel('${sender.idx}');" class="btn btn-default">삭제</button>
 			</div>
 		</div>
 	</div>

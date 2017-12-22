@@ -218,18 +218,21 @@
 </script>
 
 <form class="form-inline" id="listFrm" name="listFrm" action="<%= request.getContextPath() %>/tmWithdrawList.mr" method="get" enctype="multipart/form-data">
-<div style="padding-left: 1%; padding-right: 1%; border: solid 0px red; width: 100%; height: 840px; overflow-y: auto; font-family: verdana;">
+<div style="padding-left: 1%; padding-right: 1%; border: solid 0px red; width: 100%; max-height: 840px; overflow-y: auto; font-family: verdana;">
 	<div style="width: 100%;">
 		<div style="float: left; margin-top: 2%;">
-			<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmList.mr'">팀원 리스트</button>&nbsp;
-			<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmAddress.mr'">주소록</button>&nbsp;
+			<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmList.mr'"><span class="glyphicon glyphicon-list"></span>&nbsp;팀원 리스트</button>&nbsp;
+			<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmAddress.mr'"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;주소록</button>&nbsp;
 			<c:if test="${teamwon_status.equals('1')}">	
-				<button type="button" class="btn btn-danger" onClick="goWithdraw();">팀 탈퇴</button>&nbsp;
+				<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmWithdraw.mr'">팀 탈퇴</button>&nbsp; --%>
+				<button class="btn btn-danger" type="button" onClick="goWithdraw();"><span class="glyphicon glyphicon-log-out"></span>&nbsp;팀 탈퇴</button>&nbsp;
 			</c:if>
 			<c:if test="${teamwon_status.equals('2')}">
-				<button type="button" class="btn btn-primary" onClick="goInvite();">팀원 초대</button>&nbsp;
-				<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmWithdrawList.mr'">팀원 탈퇴목록</button>&nbsp;
-				<button type="button" class="btn btn-danger" onClick="goDisband();">팀 해체</button>&nbsp;
+				<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmInvite.mr'">팀원 초대</button>&nbsp; --%>
+				<button type="button" class="btn btn-primary" onClick="goInvite();"><span class="glyphicon glyphicon-log-in"></span>&nbsp;팀원 초대</button>&nbsp;
+				<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmWithdrawList.mr'"><span class="glyphicon glyphicon-th-list"></span>&nbsp;팀원 탈퇴목록</button>&nbsp;
+				<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmDisband.mr'">팀 해체</button>&nbsp; --%>
+				<button type="button" class="btn btn-danger" onClick="goDisband();"><span class="glyphicon glyphicon-warning-sign"></span>&nbsp;팀 해체</button>&nbsp;
 			</c:if>
 		</div>
 		<div style="float: right;">

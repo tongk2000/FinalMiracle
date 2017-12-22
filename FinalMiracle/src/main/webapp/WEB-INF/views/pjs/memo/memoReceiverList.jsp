@@ -74,6 +74,9 @@
 .near_by_hotel_wrapper table tr td {
     border-right: 1px solid #d2d1d1;
 }
+#pjsline {
+	position:absolute;
+}
 </style>
 <script>
 	function goView(idx, teamNum){
@@ -86,12 +89,12 @@
 	}
 	$(document).ready(function(){
 		$("tr:has(td)").click(function(){ // tr중에서 td를 가지고 있는 tr
-			var bool = $(this).hasClass("selectLine"); // 한번 더 클릭하면 클래스 삭제
+			var bool = $(e.target).parent().hasClass("selectLine"); 
 			if(bool) {
-				$(this).removeClass("selectLine");
+				$(e.target).parent().removeClass("selectLine");
 			}
 			else {
-				$(this).addClass("selectLine");
+				$(e.target).parent().addClass("selectLine");
 			}
 		});
 		$("#del").click(function(){
@@ -117,6 +120,10 @@
 		},function(){
 			$(this).removeClass("grayColor");
 		});
+		
+		/* var right=$("#tb").position().right;
+		var bottom=$("#tb").position().bottom;
+		$("#pjsline").css({"top:"+bottom+"px", "left:"+right+"px"}); */
 	});
 	
 </script>
@@ -133,10 +140,10 @@
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<a href="<%=request.getContextPath()%>/memoreceiver.mr"><span style="color:red;">받은 쪽지</span></a>
 			</div>
-			<div style="border:0px solid pink; padding:5px;">
+			<div style="border:0px solid pink; padding:5px;" >
 				<div class="near_by_hotel_wrapper">
 				<div class="near_by_hotel_container">
-				  <table class="table no-border custom_table dataTable no-footer dtr-inline">
+				  <table class="table no-border custom_table dataTable no-footer dtr-inline" id="tb">
 				    <thead style="background-color:#1f5c87;">
 				  		<tr style="background-color:#1f5c87; color:white;">
 							<th>번호</th>
@@ -217,7 +224,7 @@
 					</tbody>
 				</table> --%>
 			</div>
-			<div style="border:0px solid black; padding-left:190px;">
+			<div style="border:0px solid black; float:right; margin-top:-15px; ">
 				<button type="button" id="write" class="btn btn-default">글쓰기</button>
 				<button type="button" id="del" class="btn btn-default">삭제</button>
 			</div>
