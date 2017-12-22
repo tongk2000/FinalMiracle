@@ -61,7 +61,7 @@
 		
 		google.maps.event.addDomListener(window, 'load', initialize); // 구글사에서 그대로 따옴!!! ====== 구글맵 생성
 		function initialize(){ // 사용자가 커스텀마이즈 할 수 있다.									    ====== 구글맵 처음 시작할 때
-			alert("처음 오냐?");
+			//alert("처음 오냐?");
 		    var mapOptions = { // 구글 맵 옵션 설정
 		        zoom : 14, // 기본 확대율(줌 크기조절) , 숫자가 클수록 줌 크기가 확대되는 것이다. 숫자가 작아질 수록 광대역을 볼 수 있다.
 		        center : new google.maps.LatLng(37.531333, 126.89856710000004), // 처음 지도의 중앙 위치 세팅!!
@@ -79,7 +79,8 @@
 		        google.maps.event.trigger(map, "resize");
 		        map.setCenter(center); 
 		    });
-			var storeArr = [ // [] : 배열 	{} : 객체    // 디비서 호출한 위도, 경도, 매장이름!!! 
+			
+		    var storeArr = [ // [] : 배열 	{} : 객체    // 디비서 호출한 위도, 경도, 매장이름!!! 
 				<c:set var="cnt" value="1" />
 				<c:forEach var="obj" items="${list}" varStatus="status">					
 				     [	// 이중배열은 안쪽의 배열을 하나의 객체로 바라본다.
@@ -96,8 +97,16 @@
 				     <c:set var="cnt" value="${cnt + 1}" />   // 변수 cnt 를 1씩 증가
 				</c:forEach>
 			];
-			alert("오냐");
-			alert(storeArr.length);
+			
+			//alert("하하하호호호");
+			//alert("구글맵 뱅"+storeArr.length);
+			
+			/* for(var i=0; i<storeArr.length; i++) {
+				for(var j=0; j<storeArr[i].length; j++) {
+					alert(storeArr[i][j]);
+				}
+			} */
+			
 		    setMarkers(map, storeArr);	// 여기서 map은 지도 <div id="googleMap"	style="width: 100%; height: 360px; margin: auto;"></div>를 가리킴
 		} // end of function initialize()--------------------------------
 		var markerArr;  // 전역변수로 사용됨.
@@ -113,7 +122,7 @@
 				markerArr[i] = new google.maps.Marker({   // 마커 설정하기
 					position: myLatLng,  // 마커 위치 (위도, 경도값을 넣어줌)
 					map: map,			 // map (<div id="googleMap"	style="width: 100%; height: 360px; margin: auto;"></div>)
-					icon : image,        // 마커 이미지
+				//	icon : image,        // 마커 이미지
 					title : store[0],    // 위에서 정의한 "${store.storeName}" 임 , 즉  디비의  가계이름!! 마커에 커서를 대면 이 이름이 나온다.
 					zIndex : Number(store[3])  // Number() 함수를 꼭 사용해야 함을 잊지 말자. zIndex는 우선순위! 우선순위가 높은 마커가 
 				});
@@ -123,16 +132,17 @@
 	    var infowindowArr = new Array();  // 풍선창(풍선윈도우) 여러개를 배열로 저장하기 위한 용도 
 		function markerListener(map, marker, team_idx){  // setMarkers 함수안에서  총 세번 반복되었음     
 			// alert(marker.zIndex - 1);	//  0  1  2
-			alert("클릭 전 오냐");
+			//alert("클릭 전 오냐");
 			var infowindow = new google.maps.InfoWindow({  // 풍선창(풍선윈도우)만들기
-					  content: viewContent(marker.title), // 사용자 지정 함수 viewContent(가게이름)
+					  /* content: viewContent(marker.title), // 사용자 지정 함수 viewContent(가게이름) */
+					  content: marker.title, // 사용자 지정 함수 viewContent(가게이름)
 					  size: new google.maps.Size(100,100) 
 			});
 			infowindowArr.push(infowindow); // 풍선창(풍선윈도우)을 배열속에 집어넣기
 			google.maps.event.addListener(marker, 'click', 
 				 function(){ 
 			               //alert("team_idx"+team_idx);
-			               alert("오냐");
+			              // alert("오냐");
 			               goDetail(marker.zIndex, team_idx);  // 매장번호(marker.zIndex)를 넘겨서 매장지점 상세정보 보여주기와 같은 팝업창 띄우기
 						
 			               for(var i=0; i<markerArr.length; i++) {   // 생성된 마커의 갯수만큼 반복하여
@@ -145,7 +155,6 @@
 						}	 		
 			  });  // end of google.maps.event.addListener()-------------------
 		}// end of function markerListener(map, marker)-----------
-		
 		
 		function goDetail(map_idx, map_team_idx) // 모달창을 띄우자
 		{
@@ -176,7 +185,6 @@
 			return html;	
 		} */
 		$("#searchString").keyup(function(){
-			$("#displayList").show();
 			var data_form = {"searchString":$("#searchString").val(),
 							 "choice":$("#choice").val()};
 			$.ajax({

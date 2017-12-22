@@ -944,7 +944,7 @@ public class GeniousPjsController {
 			List<MapVO> list = service.getMapWithSearch(map); // 전체 리스트를 반환한다.
 			req.setAttribute("list", list);
 			req.setAttribute("choice", choice);
-			req.setAttribute("searchString", searchString);	
+			req.setAttribute("searchString", searchString);
 		}
 		else {
 			System.out.println("전체 구글맵 오냐===================================================");

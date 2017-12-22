@@ -435,6 +435,9 @@
 	                       left  join tbl_map_food f on m.idx =f.fk_idx
 			where w.name like '%'||#{searchString}||'%' -->
 			select * from view_map
+			<if test='!searchString.equals("")' >
+				 where name like '%'||#{searchString}||'%' or subject like '%'||#{searchString}||'%'  
+			</if>
 		</if>
 	</select>
 <!-- ============================================================================================================================================================= -->	

@@ -41,7 +41,7 @@
 									<c:forEach var="google" items="${googleMap}">
 									<tr>
 										<td>${google.memberidx}</td>
-										<td><img src="<%=request.getContextPath() %>/resources/images/${google.img}" style="width:30px; height:30px;"/> ${google.userid}</td>
+										<td><img src="<%=request.getContextPath() %>/resources/images/${google.img}" style="width:50px; height:50px;"/> ${google.userid}</td>
 										<td>${google.memberName}</td>
 										<c:if test="${google.status == 1}">
 											<td>팀원</td>
@@ -68,7 +68,7 @@
 								</thead>
 								<tbody>
 									<tr>
-										<td><img src="<%=request.getContextPath() %>/resources/images/${googleMap.img}"/></td>
+										<td><img src="<%=request.getContextPath() %>/resources/images/${googleMap.img}" style="width:50px; height:50px;"/></td>
 										<td>${googleMap.subject}</td>
 										<td>${googleMap.contents}</td>
 									</tr>
