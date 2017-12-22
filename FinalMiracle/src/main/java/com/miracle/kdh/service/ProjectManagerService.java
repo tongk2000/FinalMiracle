@@ -288,22 +288,22 @@ public class ProjectManagerService {
 		
 		String pageBar = "";
 		if(pageNo != 1) {
-			pageBar += "<span style='color:blue; font-size:10pt; cursor:pointer;' onclick='"+function+"(\""+(pageNo-10)+"\")'>[이전10페이지]&#160;</span>";
+			pageBar += "<span class='pointer' style='color:#4881aa; font-size:10pt;' onclick='"+function+"(\""+(pageNo-10)+"\")'>[이전10페이지]&#160;</span>";
 		} else {
-			pageBar += "<span>[...]&#160;</span>";
+			pageBar += "<span style='color:gray;'>[...]&#160;</span>";
 		}
 		for(int i = 0; i < blockSize && pageNo <= totalPageCnt; i++) {
 			if(pageNo == selectPage) {
-				pageBar += "<span style='color:red; font-size:10pt; cursor:pointer;'>"+pageNo+"&#160;</span>";
+				pageBar += "<span style='color:hsl(300, 100%, 60%); font-size:10pt;'>"+pageNo+"&#160;</span>";
 			} else {
-				pageBar += "<span style='color:blue; font-size:10pt; cursor:pointer;' onclick='"+function+"(\""+pageNo+"\")'>"+pageNo+"&#160;</span>";
+				pageBar += "<span class='pointer' style='color:#4881aa; font-size:10pt;' onclick='"+function+"(\""+pageNo+"\")'>"+pageNo+"&#160;</span>";
 			}
 			pageNo++;
 		}
 		if(pageNo <= totalPageCnt) {
-			pageBar += "<span style='color:blue; font-size:10pt; cursor:pointer;' onclick='"+function+"(\""+pageNo+"\")'>&#160;[다음10페이지]</span>";
+			pageBar += "<span class='pointer' style='color:#4881aa; font-size:10pt;' onclick='"+function+"(\""+pageNo+"\")'>&#160;[다음10페이지]</span>";
 		} else {
-			pageBar += "<span>&#160;[...]</span>";
+			pageBar += "<span style='color:gray;'>&#160;[...]</span>";
 		}
 		pvo.setPageBar(pageBar);
 		return pvo;

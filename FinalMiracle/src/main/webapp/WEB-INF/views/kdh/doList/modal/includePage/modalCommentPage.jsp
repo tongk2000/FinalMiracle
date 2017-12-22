@@ -42,27 +42,31 @@
 	}
 </script>
 
+<br/>
 <form name="addCommentFrm">
-	<span>댓글 작성</span><br/>
-	<input type="text" readonly name="userid" size="10" value="${sessionScope.loginUser.userid}"/>
-	<input type="text" name="content" id="modalContent" size="40" placeholder="내용을 입력해주세요."/>
-	<input type="button" value="작성" onclick="addComment()" />
+	<div style="background-color:#DCDCDC; width:100%; border-radius:10px;">
+		<div style="display:inline-block; width:80px;">&nbsp;&nbsp;${sessionScope.loginUser.userid}</div> 
+		<input type="text" name="content" id="modalContent" size="60" style="background-color:#C8C8C8; border:none;" placeholder="&nbsp;&nbsp;내용을 입력해주세요."/>
+		<div style="display:inline-block; width:40px; text-align:left;">
+			<input type="button" style="background-color:#DCDCDC; border:none;" onclick="addComment()" value="작성"/>
+		</div>
+	</div>
+	<input type="hidden" readonly name="userid" size="7" value="${sessionScope.loginUser.userid}"/>
 	<input type="hidden" name="fk_folder_idx" value="${map.pvo.showIdx}" /> <!-- 폴더번호 저장용 -->
-	
 	<input type="hidden" name="showIdx" value="${map.pvo.showIdx}" /> <!-- 페이징처리값을 vo로 쉽게 받기 위해서 글번호를 저장해둠 -->
 	<input type="hidden" name="selectPage" id="selectPage" value="${map.pvo.selectPage}" /> <!-- 현재페이지 저장용 -->
 	<input type="hidden" name="sizePerPage" value="${map.pvo.sizePerPage}" /> <!-- 사이즈 저장용 -->
 	<input type="hidden" name="blockSize" value="${map.pvo.blockSize}" /> <!-- 블록사이즈 저장용 -->
 	<input type="hidden" name="function" value="${map.pvo.function}" /> <!-- 함수 이름 저장용 -->
 </form>
-<br/>
-<table id="modalCommentTable" style="width:100%;">
+
+<table id="modalCommentTable" style="width:100%; table-layout:fixed; margin-top:10px;">
 	<thead style="width:100%;">
 		<tr style="width:100%;">
 			<th style="width:15%;">작성자</th>
-			<th style="width:50%;">댓글내용</th>
+			<th style="width:53%;">댓글내용</th>
 			<th style="width:25%;">작성일자</th>
-			<th style="width:10%;">삭제</th>
+			<th style="width:7%;">삭제</th>
 		</tr>
 	</thead>
 	<tbody id="modalCommentList">
@@ -73,7 +77,7 @@
 			<c:forEach var="fcvo" items="${map.folder_commentList}" varStatus="status">
 				<tr class="trLine">
 					<td>${fcvo.userid}</td>
-					<td>${fcvo.content}</td>
+					<td style="text-align:left;">${fcvo.content}</td>
 					<td>${fcvo.writeDate}</td>
 					<td align="center">
 						<c:if test="${sessionScope.loginUser.userid == fcvo.userid}">

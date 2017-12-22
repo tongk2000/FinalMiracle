@@ -152,7 +152,7 @@
 	
 </script>
 
-<div style="width:100%; font-family: verdana;" align="center">
+<div style="width:100%; max-height: 805px; font-family: verdana; overflow-y: auto;" align="center">
 	<h1 style="margin: 2%;">투표 등록</h1>
 	
 	 <%-- >>>> 파일첨부하기
@@ -202,10 +202,9 @@
          		</td>
          	</tr>
 		</table>
-		<br/>
 		
 		<button type="button" class="btn btn-primary" style="margin-right: 10px;" onClick="goAdd();">투표등록</button>
-		<button type="button" class="btn btn-primary" style="margin-right: 10px;" onClick="javascript:location.href='<%= request.getContextPath() %>/voteList.mr'">투표목록</button> 
+		<button type="button" class="btn btn-default" style="margin-right: 10px;" onClick="javascript:location.href='<%= request.getContextPath() %>/voteList.mr'">투표목록</button> 
 	
 	</form>
 </div>

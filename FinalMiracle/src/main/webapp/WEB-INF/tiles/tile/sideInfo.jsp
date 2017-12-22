@@ -1,19 +1,14 @@
+<<<<<<< HEAD
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+=======
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+  pageEncoding="UTF-8"%>
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 <%@ page import="java.net.InetAddress" %>
 
-<% 
-    // === 서버 IP 주소 알아오기 === ==채팅을 위해 서버 아이피를 알아옴== //
-   InetAddress inet = InetAddress.getLocalHost();
-   String serverIP = inet.getHostAddress(); 
-   int portnumber = request.getServerPort();
-   
-   String serverName = "http://"+serverIP+":"+portnumber;
-
-%>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$(document).tooltip();
 		alarm();
 		setTimeout(function(){
 				alarm();	
@@ -38,13 +33,19 @@
 				alert("=====================1111111===================");
 			}
 		});
+
 	}
+<<<<<<< HEAD
 	$(function() {
 	    $(document).tooltip();
 	});
 
 </script>
 
+=======
+</script>
+
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 <ul style="list-style-type: none; margin: 0px; padding: 0px; text-align: left;">
 	<li onclick="javascript:location.href='<%= request.getContextPath() %>/doList.mr'" title="프로젝트" id="sideDoIcon" class="iconTag sideBarLi">
 		<img src="<%= request.getContextPath() %>/resources/images/icon/01.png" class="iconPng sideIconPng" />
