@@ -2,10 +2,10 @@
     pageEncoding="UTF-8"%>
 
 <script>
-	$(document).ready(function(){
+	$(document).ready(function(){		
 		var idx = $(".selectLine").find(".fk_folder_idx").val();
-		var startDate = new Date( $("#"+idx).find(".startDateTd").text() );
-		var lastDate = new Date ( $("#"+idx).find(".lastDateTd").text() );
+		var startDate = new Date( $("#"+idx).find(".fullStartDate").val() );
+		var lastDate = new Date ( $("#"+idx).find(".fullLastDate").val() );
 		
 		$("#startDate, #lastDate").datepicker({
 			dateFormat: 'yy-mm-dd',
@@ -38,29 +38,13 @@
 <tr class="trLine">
 	<td class="infoClass">시작일</td>
 	<td class="infoData">
-		<input type="text" readonly id="startDate" class="trLine pointer" name="startDate" size="67" style="border:none; background-color:#F0F0F0;" value="${map.fvo.startDate}"/>
+		<input type="text" readonly id="startDate" class="trLine pointer" name="startDate" style="width:100%; border:none; background-color:#F0F0F0;" value="${map.fvo.startDate}"/>
 	</td>
 </tr>
 
 <tr class="trLine">
 	<td class="infoClass">마감일</td>
 	<td class="infoData">
-		<input type="text" readonly id="lastDate" class="trLine pointer" name="lastDate" size="67" style="border:none; background-color:#F0F0F0;" value="${map.fvo.lastDate}"/>
+		<input type="text" readonly id="lastDate" class="trLine pointer" name="lastDate" style="width:100%; border:none; background-color:#F0F0F0;" value="${map.fvo.lastDate}"/>
 	</td>
 </tr>
-
-<%-- <tr class="trLine">
-	<td class="infoClass">시작일</td>
-	<td class="infoData showInfo">${map.fvo.startDate}</td>
-	<td class="infoData hiddenEdit">
-		<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="startDate" value="${map.fvo.startDate}" />
-	</td>
-</tr>
-
-<tr class="trLine">
-	<td class="infoClass">마감일</td>
-	<td class="infoData showInfo">${map.fvo.lastDate}</td>
-	<td class="infoData hiddenEdit">
-		<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="lastDate" value="${map.fvo.lastDate}" />
-	</td>
-</tr> --%>

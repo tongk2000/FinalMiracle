@@ -14,7 +14,6 @@
 %>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$(document).tooltip();
 		alarm();
 		setTimeout(function(){
 				alarm();	
@@ -40,9 +39,6 @@
 			}
 		});
 	}
-	$(function() {
-	    $(document).tooltip();
-	});
 </script>
 
 <ul style="list-style-type: none; margin: 0px; padding: 0px; text-align: left;">
