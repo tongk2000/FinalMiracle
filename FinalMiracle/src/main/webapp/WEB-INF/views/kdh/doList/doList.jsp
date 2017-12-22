@@ -5,11 +5,11 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <style type="text/css">
-	th, td:not(.pageDateLine){
+	#doListTable th, #doListTable td:not(.pageDateLine){
 		border:1px solid #cce6ff;
 		word-wrap:break-word; /* 글자 넘치면 자동 줄바꿈 */
 	}
-	th {
+	#doListTable th {
 		font-weight:normal;
 		position: sticky;
 	    top: -1px;
@@ -17,19 +17,33 @@
 	    background-color:#4882ab;
     }
     
-    .rcm {
+    .rcmMenuDiv {
     	color:white;
+    	padding:0px;
+    	display:none;
+    	/* border:3px solid #cce6ff; */
+    }
+    .rcmMenuDiv tr {
+    	background-color:#4882ab;
+    }
+    .rcm {
+    	/* border:1px solid #cce6ff; */
     }
     .rcmSubject {
     	background-color:#1f5c87;
-    	color:white;
     }
 	
 	.pointer{
 		cursor:pointer;
 	}
-	.pointerOver{
+	#doListTable th .pointerOver{
+		color:lightgray;
+	}
+	#doListTable td .pointerOver{
 		color:#3366cc;
+	}
+	.rcmMenuDiv .pointerOver{
+		color:#3366cc !important;
 	}
 	
 	td.infoClass {
@@ -73,16 +87,19 @@
 	}
 	
 	.selectLine {
+		color:navy !important;
 		background-color:#E8E8E8 !important;
 	}
 	.selectedLine {
+		color:navy !important;
 		background-color:#E8E8E8 !important;
 	}
 	.moveLine {
-		background-color:#E8E8E8;
+		background-color:#DCDCDC !important;
 	}
 	.moveToLine {
-		background-color:#ffffcc;
+		background-color:#ffffcc !important;
+		color:navy !important;
 		cursor:pointer;
 	}
 	.copyToLine {
@@ -115,13 +132,16 @@
 	}
 	
 	.myElement {
-		background-color:#ffffcc;
+		background-color:#ffffcc !important;
+		color:navy !important;
 	}
 	.teamwonElement {
-		background-color:#ffccff;
+		background-color:#ffccff !important;
+		color:navy !important;
 	}
 	.searchElement {
-		background-color:hsl(180, 100%, 90%);
+		background-color:hsl(180, 100%, 90%) !important;
+		color:navy !important;
 	}
 	
 	.myAndTeamwonElement {
@@ -129,35 +149,39 @@
 								    hsl(60, 100%, 95%) 25%
 								  , hsl(300, 100%, 95%) 0, hsl(300, 100%, 95%) 50%
 								  ,	hsl(60, 100%, 95%) 0, hsl(60, 100%, 95%) 75%
-								  , hsl(300, 100%, 95%) 0);
-	    -webkit-background-size:30px 30px;
-	    background-size:30px 30px;
+								  , hsl(300, 100%, 95%) 0) !important;
+	    -webkit-background-size:30px 30px !important;
+	    background-size:30px 30px !important;
+	    color:navy !important;
 	}
 	.myAndSearchElement {
 		background: linear-gradient(45deg,
 								    hsl(60, 100%, 95%) 25%
 								  , hsl(180, 100%, 95%) 0, hsl(180, 100%, 95%) 50%
 								  , hsl(60, 100%, 95%) 0, hsl(60, 100%, 95%) 75%
-								  , hsl(180, 100%, 95%) 0);
-	    -webkit-background-size:30px 30px;
-	    background-size:30px 30px;
+								  , hsl(180, 100%, 95%) 0) !important;
+	    -webkit-background-size:30px 30px !important;
+	    background-size:30px 30px !important;
+	    color:navy !important;
 	}
 	.teamwonAndSearchElement {
 		background: linear-gradient(45deg,
 								    hsl(300, 100%, 95%) 25%
 								  , hsl(180, 100%, 95%) 0, hsl(180, 100%, 95%) 50%
 								  , hsl(300, 100%, 95%) 0, hsl(300, 100%, 95%) 75%
-								  , hsl(180, 100%, 95%) 0);
-	    -webkit-background-size:30px 30px;
-	    background-size:30px 30px;
+								  , hsl(180, 100%, 95%) 0) !important;
+	    -webkit-background-size:30px 30px !important;
+	    background-size:30px 30px !important;
+	    color:navy !important;
 	}
 	.myAndTeamwonAndSearchElement {
 		background: linear-gradient(90deg,
 								    hsl(60, 100%, 95%) 33%
 								  , hsl(300, 100%, 98%) 0, hsl(300, 100%, 98%) 66%
-								  , hsl(180, 100%, 95%) 0);
-	    -webkit-background-size:50px 50px;
-	    background-size:50px 50px;
+								  , hsl(180, 100%, 95%) 0) !important;
+	    -webkit-background-size:50px 50px !important;
+	    background-size:50px 50px !important;
+	    color:navy !important;
 	}
 	
 	.seperatorLine {
@@ -169,7 +193,6 @@
 		z-index:1000;
 		position: absolute;
 		background-color:white;
-		border:1px solid black;
 	}
 </style>
 
@@ -232,7 +255,8 @@
 			if( $(this).hasClass("moveToLine") ){ // 이동중일때는 이동 함수로 값 보내주고 끝냄
 				var fk_folder_idx = $(this).attr("id").replace("subject","");
 				var subject = $(this).find(".subject").text();
-				elementMoveEnd(fk_folder_idx, depth, groupNo, subject);
+				var fk_statusValue = $(this).find(".statusValue").val();
+				elementMoveEnd(fk_folder_idx, depth, groupNo, subject, fk_statusValue);
 				return false;
 			}
 			
@@ -291,6 +315,7 @@
 		$("#projectDiv").scroll(function(){
 			$("#folderRcm").hide();
 			$("#taskRcm").hide();
+			$("#teamwonList").hide();
 			$("tr").removeClass("selectedLine");
 		}); // end of $(document).mousedown(function() ------------------------------------------------------
 				
@@ -1264,11 +1289,11 @@
 				type:"post",
 				dataType:"JSON",
 				success:function(data){
-					var html = "<div id='teamwonList' style='border:1px solid #cce6ff; background-color:#4882ab; width:100px;'><table style='width:100%;'>";
+					var html = "<div id='teamwonList' style='border:2px solid #cce6ff; background-color:#4882ab; width:100px;'><table style='width:100%;'>";
 					$.each(data, function(entryIndex, entry){
 						var userid = "${sessionScope.loginUser.userid}";
 						if(entry.userid != userid) { // 현재 로그인한 팀원(한마디로 본인)이 아니라면
-							html += "<tr class='trLine'><td class='pointer teamwonElementOn' onclick='teamwonElementOn(this)' style='border:1px solid #cce6ff;'>"+entry.userid
+							html += "<tr class='trLine'><td class='pointer teamwonElementOn' onclick='teamwonElementOn(this)' style='border:1px solid #cce6ff;'>&nbsp;&nbsp;"+entry.userid
 							html += "<input type='hidden' id='"+entry.userid+"' value='"+entry.idx+"'></td></tr>";
 						}
 					});
@@ -1290,7 +1315,7 @@
 	// 팀원이 속한 요소에 css 입히기
 	function teamwonElementOn(element) {
 		teamwonElementOff();
-		var userid = $(element).text();
+		var userid = $(element).text().trim();
 		var idx = $("#"+userid).val();
 		var frm = {"fk_teamwon_idx":idx};
 		$("#teamwonList").remove();
@@ -1481,7 +1506,7 @@
 		$("#folderRcm").hide(); // 메뉴 숨겨주고
 		$("#taskRcm").hide();
 		
-		$("#headerLine").after("<tr id='moveHeader'><th colspan='100' style='text-align:center; color:black !important; background-color:#ffffcc ;'>이동될 요소를 선택하세요(취소:esc)</th></tr>");
+		$("#headerLine").after("<tr id='moveHeader'><th colspan='100' style='z-index:500; text-align:center; color:black !important; background-color:#ffffcc ;'>이동될 요소를 선택하세요(취소:esc)</th></tr>");
 		// 제목줄 밑에 선택하라고 띄워주고
 		
 		$(".element").each(function(){
@@ -1492,13 +1517,18 @@
 		$("#allOpen").trigger("click"); // 그리고 전체 요소를 펴준다.
 	} // end of function elementMove() --------------------------------------------------------------------------------------------------------------------------------
 	// 상위요소 변경하기(요소 이동)
-	function elementMoveEnd(fk_folder_idx, movoToDepth, groupNo, subject) {
-		var bool = confirm("정말 ["+subject+"] 폴더로 이동하시겠습니까?");
+	function elementMoveEnd(fk_folder_idx, movoToDepth, groupNo, subject, fk_statusValue) {
+		$this = $(".moveLine").first();
+		var thisStatusValue = $this.find(".statusValue").val();
+		if(thisStatusValue == "1" && fk_statusValue == "0") {
+			alert("["+subject+"] 폴더의 완료상태를 먼저 해제해주세요");
+			return false;
+		} 
+		
+		var bool = confirm("["+subject+"] 폴더로 이동 하시겠습니까?");
 		if(!bool) {
 			return false;
 		}
-		
-		$this = $(".moveLine").first();
 		var idx = $this.attr("id");
 		var term = $("#term").val();
 		var page = $("#page").val();
@@ -1546,7 +1576,7 @@
 </script>
 
 <div id="projectDiv" style="width:100%; float:left; height:100%; overflow:auto; font-family:proxima-nova-regular; font-size:10pt; background-color:hsl(220, 60%, 97%);">
-	<table style="width:100%; border:1px solid black;">
+	<table id="doListTable" style="width:100%; border:1px solid black;">
 		<thead style="color:white;">
 			<tr id="firstHeaderLine">
 				<th colspan="${map.pageDateList.size() + 7}">
@@ -1619,12 +1649,12 @@
 			
 			<tr id="headerLine">
 				<th style="text-align:center;">제목</th>
-				<th style="text-align:center; width:35px;">담당</th>
-				<th style="text-align:center; width:35px;">파일</th>
-				<th style="text-align:center; width:35px;">댓글</th>
-				<th style="text-align:center; width:70px;">시작일</th>
-				<th style="text-align:center; width:70px;">마감일</th>
-				<th style="text-align:center; width:55px;" class="seperatorLine">중요도</th>
+				<th style="text-align:center; width:35px; z-index:15;">담당</th>
+				<th style="text-align:center; width:35px; z-index:15;">파일</th>
+				<th style="text-align:center; width:35px; z-index:15;">댓글</th>
+				<th style="text-align:center; width:70px; z-index:15;">시작일</th>
+				<th style="text-align:center; width:70px; z-index:15;">마감일</th>
+				<th style="text-align:center; width:55px; z-index:15;" class="seperatorLine">중요도</th>
 				<c:forEach var="pageDate" items="${map.pageDateList}">
 					<th class="pointer" ondblClick="callToday()" style="text-align:center; font-weight:normal !important;
 						<c:if test="${map.pageDateList.size() == 7}">
@@ -1656,7 +1686,7 @@
 
 <div class="modal fade" id="modalElementInfo" role="dialog"></div>
 
-<div id="folderRcm" style="padding:0px; display:none; border:1px solid #cce6ff; background-color:#4882ab;">
+<div id="folderRcm" class="rcmMenuDiv">
 	<table>
 		<tr>
 			<th class="rcmSubject"></th>
@@ -1686,7 +1716,7 @@
 </div>
 
 
-<div id="taskRcm" style="padding:0px; display:none; border:1px solid #cce6ff; background-color:#4882ab;">
+<div id="taskRcm" class="rcmMenuDiv">
 	<table>
 		<tr>
 			<th class="rcmSubject"></th>
