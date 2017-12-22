@@ -4,13 +4,22 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
+<style type="text/css">
+	.important, .dateColor {
+		color:navy;
+	}
+</style>
+
 <c:if test="${not empty map.doList}"> <!-- 프로젝트 리스트가 있다면 -->
 	<c:forEach var="dvo" items="${map.doList}">
-		<tr id="${dvo.idx}"
+		<tr id="${dvo.idx}" style="
 			<c:if test="${dvo.category == 1}">
-				style="font-weight:bold;"
+				font-weight:bold;
+				<c:if test="${dvo.fk_folder_idx == 0}">
+					background-color:#4882ab; color:white;
+				</c:if>
 			</c:if>
-		class="element ${dvo.groupNo} ${dvo.depth} trLine">
+		" class="element ${dvo.groupNo} ${dvo.depth} trLine">
 			<td>
 				<input type="hidden" class="fk_folder_idx" value="${dvo.fk_folder_idx}" />
 				<input type="hidden" class="downCnt" value="${dvo.downCnt}" />
@@ -64,7 +73,7 @@
 				<td class="dateColor ${dvo.dayCnt}" style="background-color:#d9d9d9; text-align:center;">${dvo.startDate}</td>
 				<td class="dateColor ${dvo.dayCnt}" style="background-color:#d9d9d9; text-align:center;">${dvo.lastDate}</td>
 			</c:if>
-			<td style="border-right:3px solid #cce6ff; text-align:center; height:10px;">
+			<td style="border-right:3px solid #cce6ff; text-align:center; height:10px;" class="important">
 				<div style="height:100%; width:100%; position:relative">
 					<div style="z-index:5; position:absolute; height:100%; width:${dvo.importance*10}%; background-color:hsl(300, 100%, 93%);"></div>
 					<div style="z-index:10; position:absolute; width:100%;">${dvo.importance}</div>

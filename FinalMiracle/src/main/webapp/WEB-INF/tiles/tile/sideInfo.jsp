@@ -1,6 +1,56 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
+<<<<<<< HEAD
   pageEncoding="UTF-8"%>
+=======
+  pageEncoding="UTF-8"%>
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 <%@ page import="java.net.InetAddress" %>
+
+<% 
+    // === 서버 IP 주소 알아오기 === ==채팅을 위해 서버 아이피를 알아옴== //
+   InetAddress inet = InetAddress.getLocalHost();
+   String serverIP = inet.getHostAddress(); 
+   int portnumber = request.getServerPort();
+   
+   String serverName = "http://"+serverIP+":"+portnumber;
+
+%>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$(document).tooltip();
+		alarm();
+		setTimeout(function(){
+				alarm();	
+		},1000); 
+	});
+	function alarm() {
+		var data_form={"idx":"${sessionScope.teamInfo.team_idx}","userid":"${sessionScope.loginUser.userid}"};
+		$.ajax({
+			url:"alarm.mr",
+			type:"get",
+			data:data_form,
+			dataType:"json",
+			success: function(data) {
+				$.each(data, function(entryIndex, entry){
+					var wordstr = entry.alarm;
+					var result = "";
+						result = "<span style='color:red;'>"+wordstr+"</span>";
+					$("#alarm").after(result);
+				});	
+			},
+			error: function() {
+				alert("=====================1111111===================");
+			}
+		});
+	}
+	$(function() {
+	    $(document).tooltip();
+	});
+<<<<<<< HEAD
+</script>
+=======
+</script>
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 
 <ul style="list-style-type: none; margin: 0px; padding: 0px; text-align: left;">
 	<li onclick="javascript:location.href='<%= request.getContextPath() %>/doList.mr'" title="프로젝트" id="sideDoIcon" class="iconTag sideBarLi">

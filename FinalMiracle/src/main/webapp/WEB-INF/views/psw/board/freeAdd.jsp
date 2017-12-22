@@ -103,7 +103,7 @@
 					
 						<th style="width: 100px; background-color: #E8E8E8; padding: 10px; text-align: center;">아이디</th>
 						
-						<td style="padding: 5px; padding-left: 10px;">
+						<td style="padding: 5px; padding-left: 10px; ">
 						    <input type="text" name="userid" value="${sessionScope.loginUser.userid}" class="short" readonly />
 							<input type="hidden" name="name" value="${sessionScope.loginUser.name}" readonly />
 							<input type="hidden" name="fk_teamwon_idx" value="${sessionScope.teamInfo.teamwon_idx}" readonly />
@@ -115,7 +115,7 @@
 						<th style="background-color: #E8E8E8; padding: 10px; text-align: center;">글제목</th>
 						
 						<td style="padding: 5px; padding-left: 10px;">
-							<input type="text" name="subject" id="subject" class="long" />
+							<input type="text" name="subject" id="subject" class="long"  style="width: 500px;" />
 						</td>
 					</tr>
 					

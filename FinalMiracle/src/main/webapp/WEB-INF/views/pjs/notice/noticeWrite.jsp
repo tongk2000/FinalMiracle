@@ -19,42 +19,50 @@ request.setCharacterEncoding("UTF-8");
 		width:25px;
 		height:25px;
 	} */
+	#chk {
+		position:absolute;
+	}
 </style>
 </head>
 <body>
 <c:set var="user" value="${map}" />  <!-- teamNum , userid , teamNum , memberNum, status -->
-	<div style="border: 1px solid green; width:100%;">
-		<div style="border: 1px solid yellow;">
+	<div> <!-- style="width:700px; float:right;" -->
+		 <div style="border: 0px solid yellow; " align="center"> <!-- width:500px; -->
+			<div style=" border:3px solid #337ab7; "> <!-- width:500px; -->
+			 <span style="color:red"> 공지사항 글 </span><br/>
+			 <span style="color:lightblue;">팀 프로젝트 중요사항 입니다.</span>
+			</div><br/>
 			<form name="writeFrm" enctype="multipart/form-data">
-			<table style="border: 1px solid red; width: 80%;">
+			<table style="border: 0px solid black; width: 80%;" id="tb">
 				<thead>
-					<tr>
-						<th colspan="2">공지글</th>
+					<tr style="text-align:right; border-bottom:1px solid lightgray;">
+						<th colspan="2" style="text-align:center; color:lightgray; font_size:30px; margin-bottom:30px;">공지 글쓰기</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td width="12%">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="img"> &nbsp;&nbsp;<input type="hidden" name="userid" value="${user.userid}">${user.userid}</td>
+					<tr style="border-top:1px solid lightgray; border-bottom:1px solid lightgray; "> 
+						<td width="12%" style="text-align:center;">유저 아이디 </td>
+						<td ><img src="<%= request.getContextPath() %>/resources/images/${user.img}" style="width:100px; width:100px; height:100px; padding-left:10px;"> &nbsp;&nbsp;<input type="hidden" name="userid" value="${user.userid}">${user.userid} 님</td>
 					</tr>
 					<tr>
-						<td width="12%">팀정보 : </td><td><input type="hidden" name="teamNum" value="${user.teamNum}">${user.teamNum}<input type="hidden" name="idx" value="${idx}"></td>
+						<td width="12%" style="border-left:1px solid lightgray; border-right:1px solid lightgray; text-align:center;">팀정보  </td><td style="border-right:1px solid lightgray; padding-left:10px;"><input type="hidden" name="teamNum" value="${user.teamNum}">${user.teamNum} 팀<input type="hidden" name="idx" value="${idx}"></td>
 					</tr>
 					<tr>
-						<td width="12%">제목 : </td>
-						<td><input id="subject" type="text" name="subject"/></td>
+						<td width="12%" style="border-left:1px solid lightgray; text-align:center;">제목  </td>
+						<td style="border-left:1px solid lightgray; border-right:1px solid lightgray; padding-left:10px;"><input id="subject" type="text" name="subject"/></td>
 					</tr>
 					<tr style="min-height: 200px;">
-						<td>내용 :</td>
-						<td height="200px"><textarea name="content" id="content" class="summernote"></textarea></td>
+						<td style="border-left:1px solid lightgray; text-align:center;">내용 </td>
+						<td height="200px" style="border-left:1px solid lightgray; border-right:1px solid lightgray;"><textarea name="content" id="content" class="summernote"></textarea></td>
 					</tr>
-					<tr>
-					   <td>파일첨부</td>
-					   <td><input type="file" name="attach" /></td>
+					<tr style="1px solid lightgary;">
+					   <td style="border-left:1px solid lightgray; border-bottom:1px solid lightgray; text-align:center;">파일첨부</td>
+					   <td style="border-left:1px solid lightgray; border-bottom:1px solid lightgray; border-right:1px solid lightgray; padding-left:10px;"><input type="file" name="attach" /></td>
 					</tr>
 				</tbody>
 			</table>
 			</form>
-			<div style="display:block; float:right;"><button type="button" onClick="goWrite();">완료</button></div>
+			<div style="display:block; float:right;"><button type="button" onClick="goWrite();" id="chk">완료</button></div>
 		</div>
 	</div>
 	<!-- <form name="end">
@@ -92,6 +100,10 @@ request.setCharacterEncoding("UTF-8");
 		      focus: true,          // 페이지가 열릴때 포커스를 지정함
 		      lang: 'ko-KR'         // 한국어 지정(기본값은 en-US)
 		    });
+			
+			var left = $("#tb").position().left+930;  // 테이블 기준 , 글쓰기/삭제버튼 위치조정
+			var bottom = $("#tb").position().bottom+10;
+			$("#chk").css({"left":left+"px", "bottom":bottom+"px"}); 
 		});
 	</script>
 </body>

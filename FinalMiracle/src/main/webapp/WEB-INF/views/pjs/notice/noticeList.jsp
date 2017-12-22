@@ -10,43 +10,7 @@ request.setCharacterEncoding("UTF-8");
 <head>
 <meta charset="UTF-8">
 <style type="text/css">
-	/* table {
-		
-		border: 1px solid black;
-	}
-	tr, th, td {
-		border: 1px solid black;
-		border-collapse:none;
-		padding:7px;
-		font-family:verdana;
-	}
-	th {
-		text-align:center;
-		background-color:#337ab7;
-		color:white;
-		font-size:12pt;
-	}
-	td {
-		padding-left:5px;
-	}
-	.imgs {
-		width:25px;
-		height:25px;
-	}
-	div.min{
-		height:10px;
-		opacity:1.0;
-	} 
-	.subjectstyle {font-weight: bold;
-    	           color: #eaeaea;
-    	           cursor: pointer; }
-    .grayColor {
-    	background-color:#eaeaea;
-    	cursor: pointer;
-    }
-    .selectLine {
-    	background-color:#eaeaea;
-    } */
+
     #displayList {
     	position:absolute;
     	background-color:white; 
@@ -58,6 +22,38 @@ request.setCharacterEncoding("UTF-8");
     #adjust {
     	position:absolute;
     }
+    
+   #custom-search-input {
+	padding: 3px;
+	border: solid 1px #E4E4E4;
+	border-radius: 6px;
+	background-color: #fff;
+}
+
+#custom-search-input input {
+	border: 0;
+	box-shadow: none;
+}
+
+#custom-search-input button {
+	margin: 2px 0 0 0;
+	background: none;
+	box-shadow: none;
+	border: 0;
+	color: #666666;
+	padding: 0 8px 0 10px;
+	border-left: solid 1px #ccc;
+}
+
+#custom-search-input button:hover {
+	border: 0;
+	box-shadow: none;
+	border-left: solid 1px #ccc;
+}
+
+#custom-search-input .glyphicon-search {
+	font-size: 23px;
+}
 </style>
 <title>Notice 게시판 입니다!</title>
 </head>
@@ -150,8 +146,8 @@ request.setCharacterEncoding("UTF-8");
 					<div class="panel-heading"></div>
 					<div style=" border:3px solid #337ab7; "> <!-- width:500px; -->
 					 <span style="color:red"> 공지사항 글 </span><br/>
-					 <span style="color:skyblue;">팀 프로젝트 중요사항 입니다.</span>
-					</div><br/>
+					 <span style="color:skyblue; padding-left:130px;">팀 프로젝트 중요사항 입니다.</span><div style="float:right; padding-right:30px;">총 게시물  :  ${totalNum}</div>
+					</div>
 					<table class="table table-hover" id="dev-table">
 						<thead>
 							<tr>
@@ -167,7 +163,6 @@ request.setCharacterEncoding("UTF-8");
 							</tr>
 						</thead>
 						<tbody>
-							<tbody>
 							<c:if test="${empty list}">
 								<tr>
 									<td colspan="6">데이터가 없습니다.</td>
@@ -184,13 +179,13 @@ request.setCharacterEncoding("UTF-8");
 											</a>
 										</td>
 									<c:if test="${nt.depth == 0}">
-											<td width="35%" onClick="goView('${nt.n_idx}','${nt.fk_userid}', '${nt.t_idx}')" style=" font-family:verdana;"><span style="color:red; margin-left:10px;">${nt.subject} <span style="color:blue">&nbsp;&nbsp;&nbsp;[댓글 수 : ${nt.count}]</span></span></td><!-- 제목 -->
+											<td width="35%" onClick="goView('${nt.n_idx}','${nt.fk_userid}', '${nt.t_idx}')" style=" font-family:verdana;"><span style="color:black; margin-left:10px;">${nt.subject} <span style="color:blue">&nbsp;&nbsp;&nbsp;[댓글 수 : ${nt.count}]</span></span></td><!-- 제목 -->
 									</c:if>
 									<c:if test="${nt.depth > 0}">
 											<td width="35%" onClick="goView('${nt.n_idx}','${nt.fk_userid}','${nt.t_idx}')" style="margin-left:10px; padding-left:${nt.depth*10}px; color:black; font-weight:bold;  font-family:verdana;">└ [답글] ${nt.subject} <span style="color:blue">&nbsp;&nbsp;&nbsp;[댓글 수 : ${nt.count}]</span></td><!-- 제목 -->
 									</c:if>
 									<c:if test="${nt.file > 0}">
-										    <td width="5%" style="text-align:center; font-family:verdana;"><img src="<%=request.getContextPath() %>/resources/images/disk.gif" ></td>
+										    <td width="5%" style="text-align:center; font-family:verdana;"><a class="btn btn-default"><span class="glyphicon glyphicon-floppy-disk" ></span></a></td>
 									</c:if>	
 									<c:if test="${nt.file == 0}">
 										    <td width="8%" style="text-align:center; font-family:verdana;"></td>
@@ -198,10 +193,10 @@ request.setCharacterEncoding("UTF-8");
 										<td width="22%" style="text-align:center; font-family:verdana;">${nt.regday}</td><!-- 날짜 -->
 										<td width="7%" style="text-align:center; font-family:verdana; color:blue;">${nt.readcount}</td><!-- 조회수 -->
 									<c:if test="${team.status == 2}" >
-										<td width="8%" style="text-align:center; font-family:verdana;"><button type="button" onClick="goEdit('${nt.n_idx}','${nt.t_idx}');">글수정</button></td>
+										<td width="8%" style="text-align:center; font-family:verdana;"><button type="button" class="btn btn-default" onClick="goEdit('${nt.n_idx}','${nt.t_idx}');" style="height:30px;">수정	</button></td>
 									</c:if>	
 									</tr>
-									<input type="hidden" id="nidx"name="aidx" value="${nt.n_idx}"/>		
+									<input type="hidden" id="nidx"name="aidx" value="${nt.n_idx}"/>		  
 								</c:forEach>
 							</c:if>
 						</tbody>
@@ -210,27 +205,71 @@ request.setCharacterEncoding("UTF-8");
 			</div>	
 			<div id="adjust" style="border:0px dotted red;">
 				<c:if test="${team.status == 2}" >
-					<button type="button" onClick="goWrite();">글쓰기</button>
-					<button type="button" id="del" >삭제</button>
+					<button type="button" onClick="goWrite();" class="btn btn-default">글쓰기</button>
+					<button type="button" id="del" class="btn btn-default">삭제</button>
 				</c:if>
 			</div>
-			<br/>
 			<div style="margin: 0 auto;">
 				${pagebar}
 			</div>
 			<br/>
-			<form name="frm">
-				<select id="searchType" name="searchType" style="font-size:12pt; ">
-					<option value="fk_userid">아이디</option>
-					<option value="subject">제목</option>
-				</select>
-				<input type="text" id="searchString" name="searchString" style="width:187px"/>
-				<button type="button" id="btnClick" onClick="goSearch();">검색</button><br/>
-			</form>
+			<!-- <form name="frm">
+					<select id="searchType" name="searchType" style="font-size:12pt; ">
+						<option value="fk_userid">아이디</option>
+						<option value="subject">제목</option>
+					</select>
+					
+					<input type="text" id="searchString" name="searchString" style="width:187px"/>
+					<button class="btn btn-default" type="button" id="btnClick" onClick="goSearch();">검색</button><br/>
+			</form> -->
 			
-		    <div style="z-index:2000;">
-					<div id="displayList" ></div>
+	<form name="frm" align="center" style="border: 0px solid purple;">
+		<div align="center" style="border: 0px solid lightgray;">
+			<!-- 선택바 -->
+			<div class="col-xs-2 nav-container"
+				style="border: 0px solid lightgray; margin-left: 300px; margin-top:37px; padding-top: 5px;">
+				<div class="form-group" style="float: right;">
+					<select class="form-control nav" id="searchType" name="searchType">
+						<option value="fk_userid">아이디</option>
+						<option value="subject">제목</option>
+					</select>
+				</div>
 			</div>
+			<!-- <select id="searchType" name="searchType" style="font-size:12pt;">
+				<option value="fk_userid">아이디</option>
+				<option value="subject">제목</option>
+			</select> -->
+			<!-- <input type="text" id="searchString" name="searchString" style="width:187px;"/>
+			<button type="button" id="btnClick" onClick="goSearch();">검색</button> -->
+			<div style="display: block; margin-top: -40px; border:0px solid red;" align="center">
+				<div id="displayList"></div>
+			</div>
+			<!-- 검색바 -->
+			<div class="container">
+				<div class="row"
+					style="border: 0px solid red; height: 30px; padding-right: 420px; display:inline;">
+					<div class="col-sm-4" style="border: 0px solid green;">
+						<div id="custom-search-input"
+							style="border: 1px solid lightgray; margin-left: -15px;">
+							<div class="input-group col-sm-12" style="border: 1px solid lightgray;">
+								<input type="text" class="form-control input-xs" id="searchString1" name="searchString" /> <span
+									class="input-group-btn">
+									<button class="btn btn-info btn-xs" type="button" id="btnClick"
+										onClick="goSearch();">
+										<i class="glyphicon glyphicon-search"></i>
+									</button>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+			
+		    <!-- <div >
+				<div id="displayList" ></div>
+			</div> -->
         </div>    
 	<form name="view">
 		<input type="hidden" name="idx" />
@@ -251,14 +290,24 @@ request.setCharacterEncoding("UTF-8");
 		<input type="hidden" name="userid" />
 		<input type="hidden" name="teamNum" />
 	</form>
-	
 
 	<script type="text/javascript">
 		$(document).ready(function(){
-			var right_dev = $("#dev-table").position().right;
-			var bottom_dev = $("#dev-table").position().bottom+2;
-			$("#adjust").css({"left":right_dev+"px", "top":top_dev+"px"});
+			keep();
+			$("#displayList").hide();
+			var left_table = $("#dev-table").position().left-50;  // 테이블 기준 , 글쓰기/삭제버튼 위치조정
+			var top_table = $("#dev-table").position().top;
+			$("#adjust").css({"right":left_table+"px", "bottom":top_table+"px"}); 
+			 
+			/* var left_dev = $("#dev-table").position().left+350;   // 테이블기준  검색조건 select 태그
+			var bottom_dev = $("#dev-table").position().bottom;
+			$("#searchType").css({"left":left_dev+"px", "bottom":bottom_dev+"px"});
 			
+			var right_st = $("#searchType").position().right+10;   // 
+			var top_st = $("#searchType").position().top;
+			$("#searchbar").css({"left":right_st+"px", "top":top_st+"px"});
+			 */
+
 			$("#userid").click(function(){
 				var frm = document.frm;
 				frm.searchType.value = "fk_userid";
@@ -271,13 +320,12 @@ request.setCharacterEncoding("UTF-8");
 			});
 			
 			$("tr:has(td)").click(function(){ // tr중에서 td를 가지고 있는 tr
-				var bool = $(this).hasClass("selectLine"); // 한번 더 클릭하면 클래스 삭제
-				//alert(bool);
+				var bool = $(e.target).parent().hasClass("selectLine"); 
 				if(bool) {
-					$(this).removeClass("selectLine");
+					$(e.target).parent().removeClass("selectLine");
 				}
 				else {
-					$(this).addClass("selectLine");
+					$(e.target).parent().addClass("selectLine");
 				}
 			});
 			$("#del").click(function(){
@@ -289,8 +337,7 @@ request.setCharacterEncoding("UTF-8");
 				});
 				location.href="<%=request.getContextPath()%>/noticeDel.mr?idx="+idx;
 			});
-			keep();
-			$("#displayList").hide();
+			
 			$("#searchString").keyup(function(){
 				if($("#searchType").val()==null||$("#searchType").val()=="") {
 					$("#searchType").val("fk_userid");
@@ -312,12 +359,14 @@ request.setCharacterEncoding("UTF-8");
 								result = "<span class='first' style='color:blue;'>" +wordstr.substr(0, index)+ "</span>" + "<span class='second' style='color:red; font-weight:bold;'>" +wordstr.substr(index, len)+ "</span>" + "<span class='third' style='color:blue;'>" +wordstr.substr(index+len, wordstr.length - (index+len) )+ "</span>";  
 								resultHTML += "<span style='cursor:pointer;'>"+ result +"</span><br/>"; 
 							});
-							var left = $("#searchString").position().left-28;
-							var top = $("#searchString").position().top+5;
-							top = top + ($("#searchString").height());
+						
+							var left = $("#searchString1").position().left; // 검색창 기준
+							var top = $("#searchString1").position().top;
+							top = top + ($("#searchString1").height());
 							$("#displayList").css({"left":left+"px", "top":top+"px"});
-							$("#displayList").html(resultHTML);
 							$("#displayList").show();
+							$("#displayList").html(resultHTML);
+							
 						}
 						else {
 							// 검색된 데이터가 존재하지 않는 경우라면
@@ -397,6 +446,7 @@ request.setCharacterEncoding("UTF-8");
 		}
 		function goView(n_idx, n_userid, n_t_idx) {
 			var frm = document.view;
+			alert(n_idx);
 			frm.idx.value = n_idx;
 			frm.userid.value = n_userid; 
 			frm.teamidx.value = n_t_idx;
@@ -412,7 +462,6 @@ request.setCharacterEncoding("UTF-8");
 			frm.action="<%=request.getContextPath()%>/noticeViewEdit.mr";
 			frm.method="get";
 			frm.submit();
-			
 		}
 		function goWrite() {
 			<c:if test="${team.teamNum != null&&team.teamNum!=''}" >
@@ -432,7 +481,5 @@ request.setCharacterEncoding("UTF-8");
 		}
 	</script>
 	<div class="modal fade" id="userinfo" role="dialog"></div>
-	
-	
 </body>
 </html>

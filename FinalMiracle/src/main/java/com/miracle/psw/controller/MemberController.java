@@ -1,6 +1,8 @@
 package com.miracle.psw.controller;
 
+import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,10 +14,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.miracle.psw.model.MemberDetailVO;
 import com.miracle.psw.model.MemberVO;
 import com.miracle.psw.service.InterMemberService;
+import com.miracle.psw.util.FileManager;
 import com.miracle.psw.util.GoogleMail;
 
 @Controller
@@ -25,6 +30,8 @@ public class MemberController {
 	@Autowired  // DI
 	private InterMemberService service;	
 	
+	@Autowired // DI
+	private FileManager fileManager;
 	
 	// ====================================================================== *** 로그인 *** =============================
 	@RequestMapping(value="/member_login.mr" , method={RequestMethod.GET})
@@ -263,15 +270,15 @@ public class MemberController {
 				req.setAttribute("loc", loc);
 			} else {
 				mdvo.setFk_member_idx(idx);
-				
+
 				int n = service.updateMember(mvo, mdvo);
 				
 				if(n == 2 && loginUserid != null) {
 					session.setAttribute("loginUserid", mvo);
 				}
-				// *** 프로필 내용에 엔터("\r\n")가 들어가 있으면 엔터("\r\n")를 <br/>로 대체시켜서 넘긴다.
+				// *** 프로필 내용에 엔터("/r/n")가 들어가 있으면 엔터("/r/n")를 <br/>로 대체시켜서 넘긴다.
 				String profile = mdvo.getProfile();
-				profile = profile.replaceAll("\r\n", "<br/>");
+				profile = profile.replaceAll("/r/n", "<br/>");
 				mdvo.setProfile(profile);
 				
 				String msg = (n == 2) ? "회원정보 수정 성공 ~ !!" : "회원정보 수정 오류입니다.";
@@ -282,6 +289,81 @@ public class MemberController {
 		}
 		return "psw/msg.not";
 	}  // end of public String editMyInfoEnd(HttpServletRequest req, HttpSession session, MemberVO mvo, MemberDetailVO mdvo) ------------------
+	
+	
+	// ============================== *** 회원사진 변경하기 *** ======================
+	@RequestMapping(value="/member_alterImg.mr")
+	public String alterImg() {
+
+		return "psw/login/alterImg.not";
+	}	
+	@RequestMapping(value="/member_alterImgEnd.mr")
+	public String alterImgEnd(MultipartHttpServletRequest fileReq, HttpSession session) {
+		List<MultipartFile> img = fileReq.getFiles("img");
+		
+		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		int idx = loginUser.getIdx();
+		
+		if(img != null && !img.isEmpty()) {
+			String root = session.getServletContext().getRealPath("/");
+			String path = root + "resources" + File.separator + "files";
+			
+			// C:/FinalMiracle/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/FinalMiracle/resources/files
+			
+			String fileName = img.get(0).getOriginalFilename();
+			
+			if(fileName.toLowerCase().endsWith(".jpg") || 
+			  (fileName.toLowerCase().endsWith(".jpeg")) ||
+			  (fileName.toLowerCase().endsWith(".png")) ||
+			  (fileName.toLowerCase().endsWith(".gif")) ) {
+				String newFileName = "";
+				
+				byte[] bytes = null;
+				
+				try {
+					bytes = img.get(0).getBytes();
+					newFileName = fileManager.doFileUpload(bytes, img.get(0).getOriginalFilename(), path);
+				} catch (Exception e) {
+					
+				}
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				map.put("idx", idx);
+				map.put("newFileName", newFileName);
+				
+				int n = service.alterImg(map);
+				
+				if (n == 1) {
+					String msg = "사진 변경 성공.";
+					String loc = "javascript:history.back()";
+					fileReq.setAttribute("msg", msg);
+					fileReq.setAttribute("loc", loc);
+				} else {
+					String msg = "사진 변경 실패.";
+					String loc = "javascript:history.back()";
+					fileReq.setAttribute("msg", msg);
+					fileReq.setAttribute("loc", loc);
+				}
+			} else {
+				String msg = "이미지 파일만 프로필사진 변경 가능합니다.";
+				String loc = "javascript:history.back()";
+				fileReq.setAttribute("msg", msg);
+				fileReq.setAttribute("loc", loc);
+			} 
+		} else {
+			String msg = "이미지 파일이 선택되지 않았습니다.";
+			String loc = "javascript:history.back()";
+			fileReq.setAttribute("msg", msg);
+			fileReq.setAttribute("loc", loc);
+		}
+		return "psw/msg.not";
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

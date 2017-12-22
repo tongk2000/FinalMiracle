@@ -33,45 +33,45 @@ request.setCharacterEncoding("UTF-8");
 	.third {
 		width:20%;
 	}
-	tr, th, td {
+	/* tr, th, td {
 		border:1px solid red;
 	}
-	
+ */	
 </style>
 </head>
 <body>
 <c:set var="user" value="${map}" /> <!-- userid , teamNum , status -->
-	<div style="border: 1px solid green; width:100%;">
-		<div style="border: 1px solid yellow;">
-			<table style="border: 1px solid red; width: 80%;">
+	<div style="border: 0px solid green; width:100%;" align="center">
+		<div style="border: 0px solid yellow;">
+			<table style="border: 0px solid red; width: 80%;">
 				<thead>
 					<tr>
-						<th colspan="2">익명글</th>
+						<th colspan="2" style="border:1px solid lightgray;">익명글</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
 						<c:if test="${user.status == 2 || sessionScope.loginUser.userid == user.userid}">
-							<td width="12%">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="imgs"> &nbsp;&nbsp; ${user.userid}</td>
+							<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">유저 아이디 : </td><td style="border:1px solid lightgray;"><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="imgs"> &nbsp;&nbsp; ${user.userid}</td>
 						</c:if>
 						<c:if test="${user.status == 1 && sessionScope.loginUser.userid != user.userid}">
-							<td width="12%">익명의 유저 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${defaultimg2.img}" class="imgs"> &nbsp;&nbsp;</td>
+							<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">익명의 유저 : </td><td style="border:1px solid lightgray;"><img src="<%= request.getContextPath() %>/resources/images/${defaultimg2.img}" class="imgs"> &nbsp;&nbsp;</td>
 						</c:if>
 					</tr>
 					<tr>
-						<td width="12%">팀정보 : </td><td>${user.team_idx}</td>
+						<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">팀정보 : </td><td style="border:1px solid lightgray;">${user.team_idx}</td>
 					</tr>
 					<tr>
-						<td width="12%">제목 :</td>
-						<td><input type="text" value="${user.subject}" readonly /></td>
+						<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">제목 :</td>
+						<td style="border:1px solid lightgray;"><input type="text" value="${user.subject}" readonly /></td>
 					</tr>
 					<tr style="min-height: 200px;">
-						<td>내용 :</td>
-						<td height="200px"><div style="width:700px; height:500px;">${user.content}</div></td>
+						<td style="border:1px solid lightgray; background-color:#1f5c87">내용 :</td>
+						<td style="border:1px solid lightgray;" height="200px"><div style="width:700px; height:500px; height:auto;">${user.content}</div></td>
 					</tr>
 					<tr>
-					    <td>첨부파일</td>   <!-- USERID, IMG, SUBJECT, CONTENT, STATUS, IDX, FILENAME, ORGFILENAME, FILESIZE, FK_IDX -->
-						<td>
+					    <td style="border:1px solid lightgray; background-color:#1f5c87">첨부파일</td>   <!-- USERID, IMG, SUBJECT, CONTENT, STATUS, IDX, FILENAME, ORGFILENAME, FILESIZE, FK_IDX -->
+						<td style="border:1px solid lightgray;">
 						    <a href="<%= request.getContextPath() %>/minddownload.mr?nidx=${user.didx}&fidx=${file.idx}">${file.orgFilename}</a> 
 						</td>
 					</tr>

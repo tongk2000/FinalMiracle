@@ -109,6 +109,12 @@
 		where fk_member_idx = #{idx}
 	</update>
 	
+	<!-- 회원 프로필 사진 변경하기 -->
+	<update id="alterImg" parameterType="HashMap">
+		update tbl_member set img = #{newFileName}
+		where idx = #{idx}
+	</update>
+	
 </mapper>
 
 

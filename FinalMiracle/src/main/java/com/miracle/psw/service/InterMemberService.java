@@ -25,6 +25,8 @@ public interface InterMemberService {
 
 	int updateMember(MemberVO mvo, MemberDetailVO mdvo) throws Throwable;  // 회원정보 수정
 
+	int alterImg(HashMap<String, Object> map);  // 회원 사진 변경하기
+
 	
 
 

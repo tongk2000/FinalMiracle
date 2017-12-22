@@ -97,16 +97,16 @@
 </head>
 <body>
 	<div style="font-size: 20px; text-align: left;">
-		<div style="border: 1px solid red; text-align: center;">대화상대</div>
+		<div style="border-bottom: 1px solid black; text-align: center; height: 30px;">대화상대</div>
 			<div onclick="addPersonStart()" style="cursor: pointer; color: aqua; margin: 5px;"><span class="circle" style="vertical-align: middle; font-size: 50px;">&nbsp;+ </span>&nbsp;대화상대 초대</div>
 			<c:forEach var="member" items="${chattingMember}" varStatus="status">
-				<div style="margin: 5px;">
-					<div onclick="" style="border: 0px solid blue; cursor: pointer;"><img height="60px" width="60px" class="img-circle" src="<%=request.getContextPath() %>/resources/images/${member.img}">
+				<div style="margin: 5px; margin-bottom: 10px;">
+					<div onclick="" style="border: 0px solid blue; cursor: pointer;"><img height="60px" width="60px" class="img-circle" src="<%=request.getContextPath() %>/resources/files/${member.img}">
 					<span style="color: black;">${member.name}</span></div>
 					<input type="hidden" name="chattingRoomNum" id="chattingRoomNum" value="${member.cridx}"/>
 				</div>
 			</c:forEach>
-			<div onclick="outRoom()" style="cursor: pointer; text-align: center; margin: 10px;"><i class="glyphicon glyphicon-log-out"></i> 채팅방 나가기</div>
+			<div onclick="outRoom()" style="cursor: pointer; text-align: center; margin-top: 10px; border-top: 1px solid black;"><i class="glyphicon glyphicon-log-out"></i> 채팅방 나가기</div>
 	</div>
 </body>
 </html>

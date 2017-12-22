@@ -91,6 +91,10 @@ public class GeniousPjsController {
 			String searchType = req.getParameter("searchType");
 			String searchString = req.getParameter("searchString");
 			String teamNum = req.getParameter("teamNum");
+			if("null".equals(searchString) || "null".equals(searchType) ) {
+				searchType="";
+				searchString="";
+			}
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("searchType", searchType);
 			map.put("searchString", searchString);
@@ -117,6 +121,7 @@ public class GeniousPjsController {
 				map.put("teamNum", teamNum);
 			int totalCount = service.getNoticeCount(map); 
 			int totalPage=(int)Math.ceil((double)totalCount / sizePerPage);
+			System.out.println("페이지처리================================"+sizePerPage+" "+blockSize+" "+currentPage+" "+searchType+" "+searchString);
 			String pagebar = MyUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentPage, searchType, searchString, null, "noticeList.mr");
 			List<HashMap<String, String>> list = service.getNoticeList(map); 
 			for(int i=0; i<list.size(); i++) {
@@ -126,8 +131,9 @@ public class GeniousPjsController {
 				list.get(i).put("count", str_count);
 				String file = service.getfilenamelist(map);
 				list.get(i).put("file", file);
-				map.remove("idx");
 			}
+			String totalNum = service.getCountNum(map);
+			req.setAttribute("totalNum", totalNum);
 			req.setAttribute("list", list);
 			req.setAttribute("searchType", searchType);
 			req.setAttribute("searchString", searchString);
@@ -184,14 +190,13 @@ public class GeniousPjsController {
 		String teamNum = req.getParameter("teamNum");
 		String subject = req.getParameter("subject");
 		String content = req.getParameter("content");
-		String idx = req.getParameter("idx");
+		//String idx = req.getParameter("idx");
 		
 		HashMap<String, String> team = new HashMap<String, String>();
 		team.put("userid", userid);
 		team.put("teamidx", teamNum);
 		team.put("subject", subject);
 		team.put("content", content.replace("\r\n","<br>"));
-		team.put("idx", idx);
 		// 첨부파일이 있는지 없는지 알아오기
 		NoticeFileVO filevo = new NoticeFileVO();
 		filevo.setAttach(freq.getFile("attach"));
@@ -214,7 +219,9 @@ public class GeniousPjsController {
 					team.put("newfilename", newFileName);
 					team.put("originalfilename", filevo.getAttach().getOriginalFilename());
 					team.put("filesize", String.valueOf(fileSize));
-					//n = service.setNoticeWrite(team);
+					String num = service.getNiticefileNum();
+					String number = String.valueOf(Integer.parseInt(num)+1);
+					team.put("number", number);
 					n= service.setNoticeWriteWithFile(team);
 				}
 			} catch(Exception e){
@@ -438,6 +445,7 @@ public class GeniousPjsController {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("nidx", nidx);
 		map.put("fidx", fidx);
+		System.out.println("nidx========="+nidx+"======================="+fidx);
 		// 첨부파일이 있는 글번호
 
 		// 첨부파일이 있는 글번호에서
@@ -562,6 +570,10 @@ public class GeniousPjsController {
 			String searchString = req.getParameter("searchString");
 			String str_sizePerPage = req.getParameter("sizePerPage");
 			String str_currentPage = req.getParameter("currentShowPageNo");
+			if("null".equals(searchString) || "null".equals(searchType) ) {
+				searchType="";
+				searchString="";
+			}
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("searchType", searchType);
 			map.put("searchString", searchString);
@@ -731,6 +743,7 @@ public class GeniousPjsController {
 		//System.out.println("===========idx============="+idx);
 		String idx = req.getParameter("idx");
 		String userid = req.getParameter("userid");
+		System.out.println("userid ==========================="+userid);
 		String teamNum = req.getParameter("teamNum");
 		String subject = req.getParameter("subject");
 		String content = req.getParameter("content");
@@ -762,7 +775,6 @@ public class GeniousPjsController {
 		filevo.setAttach(freq.getFile("attach"));
 		n = 0;
 		if(!filevo.getAttach().isEmpty()) {
-			System.out.println("여기오니?????????????????????????????111111111111111");
 			String root = ses.getServletContext().getRealPath("/");
 			String path = root + "resources"+File.separator+"files";
 			String newFileName = "";
@@ -775,12 +787,13 @@ public class GeniousPjsController {
 				filevo.setOrgFilename(filevo.getAttach().getOriginalFilename()); // 강아지.jpg
 				fileSize = filevo.getAttach().getSize();
 				filevo.setFileSize(String.valueOf(fileSize));
-				System.out.println("여기오니????????????????@222222222222222222222222");
 				if(!filevo.getAttach().isEmpty()) {
 					team.put("newfilename", newFileName);
 					team.put("originalfilename", filevo.getAttach().getOriginalFilename());
 					team.put("filesize", String.valueOf(fileSize));
-					System.out.println("여기오니?????????????33333333333333333333333333"+newFileName+filevo.getAttach().getOriginalFilename()+String.valueOf(fileSize)+" ");
+					String num = service.getMindfileNum();
+					String number = String.valueOf(Integer.parseInt(num)+1);
+					team.put("number", number);
 					n = service.setMindWriteWithFile(team);
 					System.out.println("n은============================="+n);
 				}
@@ -919,7 +932,10 @@ public class GeniousPjsController {
 		String team_idx = teamInfo.get("team_idx");
 		String choice = req.getParameter("choice");
 		String searchString = req.getParameter("searchString");
+		System.out.println("searchString==========================================="+ searchString);
+		System.out.println("choice==================================================="+choice);
 		if(!(choice==null||searchString==null||!"0".equals(choice))) {
+			System.out.println("특정 구글맵 오냐==============================================-------");
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("choice", choice);
 			map.put("searchString", searchString);
@@ -931,6 +947,7 @@ public class GeniousPjsController {
 			req.setAttribute("searchString", searchString);	
 		}
 		else {
+			System.out.println("전체 구글맵 오냐===================================================");
 			List<MapVO> list = service.getMap(teamInfo); // 전체 리스트를 반환한다.
 			req.setAttribute("list", list);
 			req.setAttribute("choice", choice);
@@ -953,6 +970,7 @@ public class GeniousPjsController {
 	public String googleMapTeamInfoJSON(HttpServletRequest req) {
 		String map_team_idx = req.getParameter("map_team_idx");
 		String map_idx = req.getParameter("map_idx");
+		System.out.println("오냐??????????????????????????"+map_team_idx+"    "+map_idx);
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("map_idx", map_idx);
 		if(map_team_idx==null||"0".equals(map_team_idx)){ // null이거나 0일 때 음식점 정보를 가져온다.

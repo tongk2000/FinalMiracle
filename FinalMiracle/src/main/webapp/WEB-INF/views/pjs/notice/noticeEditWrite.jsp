@@ -19,36 +19,42 @@ request.setCharacterEncoding("UTF-8");
 		width:25px;
 		heigth:25px;
 	} */
+	#end {
+		position : absolute;	
+	}
+	.pjspadding {
+		padding:3px;
+	}
 </style>
 </head>
 <body>
 <c:set var="user" value="${map}" />  <!-- nidx, userid, teamNum --> 
-	<div style="border: 1px solid green; width:100%;">
-		<div style="border: 1px solid yellow;">
-			<table style="border: 1px solid red; width: 80%;">
+	<div style="border: 0px solid green; width:100%;" align="center">
+		<div style="border: 0px solid yellow; padding-top:20px;">
+			<table style="border: 0px solid red; width: 80%;" id="tb">
 				<thead>
 					<tr>
-						<th colspan="2">수정공지글</th>
+						<th class="pjspadding" colspan="2" style="text-align:center; border-bottom:1px solid lightgray; padding-bottom:10px;">수정공지글</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td width="12%">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="img"> &nbsp;&nbsp; ${user.userid}</td>
+						<td class="pjspadding" width="12%" style="border-bottom:1px solid lightgray;"><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="img" style="width:100px; heigth:100px;"></td><td class="pjspadding" style="border-bottom:1px solid lightgray;"> &nbsp;&nbsp; ${user.userid} 님</td>
 					</tr>
 					<tr>
-						<td width="12%">팀정보 : </td><td>${user.teamNum}</td>
+						<td  class="pjspadding" width="12%" style="border-left:1px solid lightgray; text-align:center;">팀정보  </td><td class="pjspadding" style="border-right:1px solid lightgray;"> ${user.teamNum}</td>
 					</tr>
 					<tr>
-						<td width="12%">제목 : </td>
-						<td><input id="subject" type="text"/></td>
+						<td width="12%" class="pjspadding" style="border-left:1px solid lightgray; text-align:center;"> 제목  </td>
+						<td style="border-right:1px solid lightgray;"><input id="subject" type="text" class="pjspadding" /></td>
 					</tr>
 					<tr style="min-height: 200px;">
-						<td>내용 :</td>
-						<td height="200px"><textarea name="content" id="content" class="summernote"></textarea></td>
+						<td class="pjspadding" style="border-left:1px solid lightgray; border-bottom:1px solid lightgray; text-align:center;"> 내용 </td>
+						<td height="200px" style="border-bottom:1px solid lightgray; border-right:1px solid lightgray;"><textarea name="content" id="content" class="summernote" ></textarea></td>
 					</tr>
 				</tbody>
 			</table>
-			<div style="display:block; float:right;"><button type="button" onClick="writeEnd();">완료</button></div>
+			<div id="end"><button type="button" onClick="writeEnd();">완료</button></div>
 		</div>
 	</div>
 	<form name="end">
@@ -81,6 +87,10 @@ request.setCharacterEncoding("UTF-8");
 		      focus: true,          // 페이지가 열릴때 포커스를 지정함
 		      lang: 'ko-KR'         // 한국어 지정(기본값은 en-US)
 		    });
+			
+			var left = $("#tb").position().left-50;
+			var bottom = $("#tb").position().bottom+10;
+			$("#end").css({"right":left+"px", "bottom":bottom+"px"}); 
 		});
 	</script>
 </body>

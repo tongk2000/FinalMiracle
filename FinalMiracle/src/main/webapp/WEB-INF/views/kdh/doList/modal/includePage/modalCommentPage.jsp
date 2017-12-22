@@ -2,6 +2,19 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<style type="text/css">
+	#modalCommentTable th, #modalCommentTable td {
+		border:1px solid lightgray;
+		text-align:center;
+	}
+	#modalCommentTable th {
+		
+	}
+	#modalCommentTable td {
+		
+	}
+</style>
+
 <script type="text/javascript">
 	window.onload = function(){
 		var selectPage = "${selectPage}";
@@ -43,18 +56,18 @@
 	<input type="hidden" name="function" value="${map.pvo.function}" /> <!-- 함수 이름 저장용 -->
 </form>
 <br/>
-<table>
-	<thead>
-		<tr>
-			<th>작성자</th>
-			<th>댓글내용</th>
-			<th>작성일자</th>
-			<th>삭제</th>
+<table id="modalCommentTable" style="width:100%;">
+	<thead style="width:100%;">
+		<tr style="width:100%;">
+			<th style="width:15%;">작성자</th>
+			<th style="width:50%;">댓글내용</th>
+			<th style="width:25%;">작성일자</th>
+			<th style="width:10%;">삭제</th>
 		</tr>
 	</thead>
 	<tbody id="modalCommentList">
 		<c:if test="${empty map.folder_commentList}">
-			<td colspan="4">등록된 댓글이 없습니다.</td>
+			<td colspan="4" style="text-align:center;">등록된 댓글이 없습니다.</td>
 		</c:if>
 		<c:if test="${not empty map.folder_commentList}">
 			<c:forEach var="fcvo" items="${map.folder_commentList}" varStatus="status">
