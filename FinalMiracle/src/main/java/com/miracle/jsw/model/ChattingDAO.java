@@ -156,6 +156,12 @@ public class ChattingDAO implements InterChattingDAO {
 		return list;
 	}
 
+	@Override
+	public HashMap<String, Object> getRoomInfo(HashMap<String, Object> map) {
+		HashMap<String, Object> RoomInfo = sqlsession.selectOne("chatting.getRoomInfo", map);
+		return RoomInfo;
+	}
+
 
 	
 

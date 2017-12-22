@@ -43,6 +43,8 @@ public interface InterChattingService {
 
 	List<HashMap<String, Object>> getFindNotChatMember(HashMap<String, Object> map);
 
+	HashMap<String, Object> getRoomInfo(HashMap<String, Object> map);
+
 	
 
 

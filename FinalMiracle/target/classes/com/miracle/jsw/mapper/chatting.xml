@@ -217,6 +217,16 @@
 	</select>
 	
 	
+	<resultMap type="java.util.HashMap" id="RoomInfo">
+		<result property="roomname" 	column="roomname" 	javaType="String" />
+		<result property="person" 		column="person" 	javaType="int" />
+	</resultMap>
+	<select id="getRoomInfo" parameterType="HashMap" resultMap="RoomInfo">
+		select roomname, person
+		from tbl_chat_room
+		where cr_status = 1
+		and cr_idx = #{cridx}
+	</select>
 	
 	
 	

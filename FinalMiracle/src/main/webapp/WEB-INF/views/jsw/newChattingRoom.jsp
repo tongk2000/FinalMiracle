@@ -210,23 +210,25 @@
 </head>
 <body>
 	<div style="font-size: 20px;">
-		<div style="display: inline; margin: 20px;"><span id="AllMember">전체인원 보기</span></div>
+		<div style="display: inline; margin: 20px;"><span id="AllMember" class="btn btn-lg"><span class="glyphicon glyphicon-user"></span> 전체인원 보기</span></div>
 		<div style="display: inline; margin: 20px;">팀별 보기 : 
-		  <select id="teamList">
+		  <select id="teamList" style="height: 30px;">
 		    <c:forEach var="team" items="${teamList}" varStatus="status">
 				<option value="${team.tidx}">${team.name}</option>
 			</c:forEach>
 		  </select>
 		</div>
+		<br/>
 		<div style="display: inline-block; margin: 20px; vertical-align: bottom;">
-		<select id="nameOrId">
+		<select id="nameOrId" style="height: 33px;">
 			<option value="name">이름</option>
 			<option value="userid">아이디</option>
 		</select>
-		<input id="nameORid" type="text"/>&nbsp;<span id="serchMem">찾기</span>
+		<!-- <a class="btn btn-sm btn-info" onclick="searchMonth()"><span class="glyphicon glyphicon-search"></span> 검색</a> -->
+		<input id="nameORid" type="text"/>&nbsp;<span id="serchMem" class="btn btn-info"><span class="glyphicon glyphicon-search"></span> 찾기</span>
 		</div>
 		<div id="MemberList" style="border: 1px solid teal; height : 400px; overflow: auto;"></div>
-		<div style="margin-top: 10px; vertical-align: middle;"><input type="text" id="roomname" placeholder="채팅방 이름" />&nbsp;<span id="newRoom">방만들기</span></div>
+		<div style="margin-top: 10px; vertical-align: middle;"><input type="text" id="roomname" placeholder="채팅방 이름(10자까지 입력가능)" maxlength="10" style="width: 80%;"/>&nbsp;<span id="newRoom">방만들기</span></div>
 	</div>
 	<form id="newRoomFrm">
 		<input type="hidden" name="invmemidx" />
