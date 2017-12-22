@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.google.gson.JsonObject;
 import com.miracle.pjs.model.FileVO;
 import com.miracle.pjs.model.MapVO;
 import com.miracle.pjs.model.MindFileVO;
@@ -166,7 +167,27 @@ public class GeniousPjsController {
 		// 게시판에서 유저이름, 이미지 클릭시 해당 유저정보를 보여주는 메소드
 		String id = req.getParameter("userid"); // 해당 번호의 글내용을 가져온다.
 		HashMap<String, String> userinfo = service.getViewContent(id);
-		req.setAttribute("userinfo", userinfo);
+		// userid, name, img, age, hp, addr, profile, img, email
+		JSONArray jsonList = new JSONArray();
+		if( !userinfo.get("idx").trim().isEmpty() && !userinfo.get("userid").trim().isEmpty() ) {
+			// search값에 해당하는 제목를 가져온다.
+			JSONObject jobj = new JSONObject();
+			jobj.put("infoUserid", userinfo.get("userid"));
+			jobj.put("infoName", userinfo.get("name"));
+			jobj.put("infoHp1", userinfo.get("hp"));
+			jobj.put("infoBirth1", userinfo.get("age"));
+			jobj.put("infoAddr1", userinfo.get("addr"));
+			jobj.put("infoEmail", userinfo.get("email"));
+			jobj.put("infoProfile", userinfo.get("profile"));
+			jobj.put("infoImg", userinfo.get("img"));
+			
+			jsonList.put(jobj);
+		}
+		String searchJSON = jsonList.toString(); // .toString() 변환이유 : 출력목적!!
+		//System.out.println("searchJSON 문자열값 : "+searchJSON);
+		req.setAttribute("searchJSON", searchJSON);
+		System.out.println("searchJSON="+searchJSON);
+		//req.setAttribute("userinfo", userinfo);
 		return "pjs/notice/noticeUserInfo.not";
 	}/* ================================================================================================================================================== */
 	@RequestMapping(value="noticeWrite.mr", method={RequestMethod.POST})	// 공지사항 게시판글 쓰기 
@@ -232,7 +253,6 @@ public class GeniousPjsController {
 			n = service.setNoticeWrite(team);
 		}
 		///////////////////////////
-		
 		String msg="";
 		String loc="location.href='noticeList.mr;'";
 		if(n>0) 
@@ -250,16 +270,12 @@ public class GeniousPjsController {
 		System.out.println("str_idx => " + str_idx);
 		// 46,21
 		String[] idxArr = str_idx.split(",");
-		
 		HashMap<String,String> paramap = new HashMap<String,String>();
 		for(int i=0; i<idxArr.length; i++) {
 			paramap.put("idxArr"+i, idxArr[i]);
 		}
-		
 		int n = service.delNoticeIdx(paramap, idxArr);
-		
 		String loc="location.href='noticeList.mr;'";
-		
 		if(n > 0) {
 			String msg = "삭제 성공!";
 			req.setAttribute("msg", msg);
@@ -268,7 +284,6 @@ public class GeniousPjsController {
 			String msg = "삭제 실패";
 			req.setAttribute("msg", msg);
 		}
-		
 		req.setAttribute("loc", loc);
 		return "pjs/error.not";		
 	}/* ================================================================================================================================================== */
@@ -326,28 +341,13 @@ public class GeniousPjsController {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("sNum", pvo.getsNum());
 		map.put("eNum", pvo.geteNum());
-		System.out.println("오냐 1");
 		String idx = req.getParameter("idx");				//tbl_notice의 idx
 		map.put("idx", idx);
 		pvo.setTotalCount(service.getReplyCount(map)); 
-		System.out.println("오냐 1                    "+idx);
 		pvo.setTotalPage(pvo.getTotalCount(), pvo.getSizePerPage());
 		pvo.setPagebar(pvo.getSizePerPage(), pvo.getBlockSize(), pvo.getTotalPage(), pvo.getCurrentPage(), "getnoticeReplyListajax.mr"); 
-		System.out.println("오냐 2");
 		pvo.setComment(service.getComment(map));
-		System.out.println("오냐 3");
 		System.out.println("pvo"+pvo.getTotalCount()+" "+pvo.getTotalPage()+" "+pvo.getPagebar()+" "+pvo.getComment().size());
-		for(int i =0; i<pvo.getComment().size(); i++) {
-			System.out.println("==============================================리플"+pvo.getComment().get(i).getSesid());
-			System.out.println("==============================================리플"+pvo.getComment().get(i).getIdx());
-			System.out.println("==============================================리플"+pvo.getComment().get(i).getRegday());
-			System.out.println("==============================================리플"+pvo.getComment().get(i).getReply_content());
-			System.out.println("==============================================리플"+pvo.getComment().get(i).getReply_group());
-			System.out.println("==============================================리플"+pvo.getComment().get(i).getImg());
-			System.out.println("==============================================리플"+pvo.getComment().get(i).getRef_idx());
-			System.out.println("==============================================리플"+pvo.getComment().get(i).getReply_dep());
-			
-		}
 		//String sessionid = ((MemberVO)session.getAttribute("loginUser")).getUserid();
 		req.setAttribute("idx", idx);
 		req.setAttribute("pvo", pvo);
@@ -627,16 +627,12 @@ public class GeniousPjsController {
 	public String mindView(HttpServletRequest req, HttpSession session) {
 		String userid = req.getParameter("userid");  // tbl_mind의 fk_userid
 		String idx = req.getParameter("idx");		 // tbl_mind의 idx
-		System.out.println("=============mindview의 idx================"+idx);
 		String teamidx = req.getParameter("teamNum");// 뷰단에서 받아온 team_idx
 		String sessionid = ((MemberVO)session.getAttribute("loginUser")).getUserid();
-		System.out.println("===================여기와? ===============================");
 		
 		if("1".equals((String)session.getAttribute("readCount"))&&!userid.equals(sessionid)) {
 			// 조회수를 올린다.!!!!!!!!!!!!!!!!!!!!!!!!!
-			System.out.println("===================여기와?2222222 ===============================");
 			int n = service.updateMindReadCount(idx);
-			System.out.println("================조회수 올라간다!=================="+n);
 			if(n > 0)
 				session.removeAttribute("readCount");
 		}
@@ -944,7 +940,7 @@ public class GeniousPjsController {
 			List<MapVO> list = service.getMapWithSearch(map); // 전체 리스트를 반환한다.
 			req.setAttribute("list", list);
 			req.setAttribute("choice", choice);
-			req.setAttribute("searchString", searchString);	
+			req.setAttribute("searchString", searchString);
 		}
 		else {
 			System.out.println("전체 구글맵 오냐===================================================");
@@ -1245,9 +1241,9 @@ public class GeniousPjsController {
 				jsonList.put(jsonObj);
 		}
 		String searchJSON = jsonList.toString(); // .toString() 변환이유 : 출력목적!!
-		System.out.println("searchJSON 문자열값 : "+searchJSON);
+		//System.out.println("searchJSON 문자열값 : "+searchJSON);
 		req.setAttribute("searchJSON", searchJSON);
-		System.out.println("================================1111=============================="+searchJSON);
+		//System.out.println("================================1111=============================="+searchJSON);
 		return "pjs/memo/JSON.not";
 	}/* ================================================================================================================================================== */
 	

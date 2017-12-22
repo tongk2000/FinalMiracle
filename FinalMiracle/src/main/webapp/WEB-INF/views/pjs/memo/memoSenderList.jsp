@@ -70,6 +70,22 @@ request.setCharacterEncoding("UTF-8");
 .near_by_hotel_wrapper table tr td {
     border-right: 1px solid #d2d1d1;
 }
+.modal.modal-center {
+  text-align: center;
+}
+@media screen and (min-width: 400px) { 
+  .modal.modal-center:before {
+    display: inline-block;
+    vertical-align: middle;
+    content: " ";
+    height: 100%;
+  }
+}
+.modal-dialog.modal-center {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle; 
+}	
 </style>
 <script>
 	function goView(idx, teamNum){
@@ -114,6 +130,34 @@ request.setCharacterEncoding("UTF-8");
 			$(this).removeClass("grayColor");
 		});
 	});
+	function goUserInfo(userid) {
+		var form_data = { "userInfo" : userid };
+		$.ajax({
+			url: "freeUserInfo.mr",
+			type: "GET",
+			data: form_data,  // url 요청페이지로 보내는 ajax 요청 데이터
+			dataType: "JSON", // ajax 요청에 의해 url 요청페이지로 부터 리턴받는 데이터타입. xml, json, html, text 가 있음.
+			success: function(data) {				
+				var html = "";
+				
+				var imgPath = data.infoImg;
+				html += "<div style='font-family: verdana; font-size: 10pt; border: 2px dotted #E8E8E8; border-radius: 20px; background-color: #F0F0F0; padding: 5px;'><div style='float: right;'><img src='<%= request.getContextPath() %>/resources/files/" + imgPath + "' style='width: 80px; height: 80px; border-radius: 50px;' /></div>" + "<br/>"
+					 +  "<span style='font-weight: bold;'>ID : </span>"+ data.infoUserid + "<br/>"
+					 +  "<span style='font-weight: bold;'>성명 : </span>"+ data.infoName + "<br/><br/>"
+					 +  "<span style='font-weight: bold;'>핸드폰 : </span>" +data.infoHp1 + "-" +data.infoHp2+"-"+data.infoHp3 +"<br/>"
+					 +  "<span style='font-weight: bold;'>생년월일 : </span>" +data.infoBirth1 + " / " + data.infoBirth2 + " / " + data.infoBirth3 + "<br/><br/>"
+					 +  "<span style='font-weight: bold;'>주소 : </span>" + data.infoAddr1 + " " + data.infoAddr2 + "</span><br/>"
+					 +  "<span style='font-weight: bold;'>이메일 : </span>" + data.infoEmail + "<br/><br/>"
+					 +  "<span style='font-weight: bold;'>소개 : </span>" + data.infoProfile +"</div>" ;
+				
+				$(".modal-body").html(html);
+				$("#userinfo").modal();
+			}, // end of success: function()----------
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		}); // end of $.ajax()------------------------
+	}
 	
 </script>
 <meta charset="UTF-8">
@@ -152,7 +196,7 @@ request.setCharacterEncoding("UTF-8");
 							<c:forEach var="sender" items="${list}" varStatus="status">
 								<tr class="line">
 									<td width="10%"><input type="checkbox" value="${sender.idx}"><input type="hidden" value="${sender.idx}"/></td>
-									<td width="15%"><img src="<%=request.getContextPath()%>/resources/images/${sender.img}" class="imgs"> ${sender.name}</td>
+									<td width="15%" onClick="goUserInfo('${sender.sender}')"><img src="<%=request.getContextPath()%>/resources/images/${sender.img}" class="imgs"> ${sender.name}</td>
 									<td onClick="goView('${sender.idx}', '${userTeam.teamNum}');" width="20%">${sender.subject}</td>
 									<td width="30%">${sender.names}</td>
 									<td width="20%">${sender.writedate}</td>
@@ -212,5 +256,20 @@ request.setCharacterEncoding("UTF-8");
 		<input type="hidden" name="idx">
 	</form>
 </body>
-
+<div class="modal fade modal-center" id="userinfo" role="dialog">
+	<div class="modal-dialog modal-sm modal-center">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">회원 상세 정보</h4>
+			</div>
+			<div class="modal-body">
+			<p></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
 </html>
