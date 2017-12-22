@@ -65,7 +65,7 @@
 			<img src="<%= request.getContextPath() %>/resources/images/icon/13.png" class="iconPng headerIconPng"/>
 		</div>
 		<div onclick="javascript:showMyInfo();" title="${sessionScope.loginUser.name}(${sessionScope.loginUser.userid})" style="display:inline-block; cursor:pointer;">
-			<img src="<%= request.getContextPath() %>/resources/images/${sessionScope.loginUser.img}" style="height: 50px; width: 50px;">
+			<img src="<%= request.getContextPath() %>/resources/files/${sessionScope.loginUser.img}" style="height: 50px; width: 50px;">
 		</div>
 	</div>
 </c:if>

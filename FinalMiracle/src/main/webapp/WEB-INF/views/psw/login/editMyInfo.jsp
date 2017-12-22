@@ -261,6 +261,10 @@
 	        }	
 	    }).open();
 	}  // end of function openDaumPostnum()---------------------------------------------------------------------------------
+	
+	function openAlterImg() {
+		window.open("member_alterImg.mr", "alterImg", "left=500px; top=100px; width=300px; height=200px;");
+	}
 </script>
 
 
@@ -283,9 +287,9 @@
 	 	
 			<fieldset>
 				<div style="border: 0px dotted pink; float: right;" align="center">
-					<img alt="프로필사진" src="<%= request.getContextPath() %>/resources/images/${sessionScope.loginUser.img}" style="height: 150px; width: 140px;">
+					<img alt="<%= request.getContextPath() %>/resources/resources/${sessionScope.loginUser.img}" src="<%= request.getContextPath() %>/resources/files/${sessionScope.loginUser.img}" style="height: 150px; width: 140px;">
 					<br/>
-					<a href="#" style="text-align: center; text-decoration: none; font-family: verdana;">[이미지 변경]</a>
+					<a href="javascript:openAlterImg();" style="text-align: center; text-decoration: none; font-family: verdana;">[프로필사진 변경]</a>
 				</div>
 				
 				<div style="border: 1px dotted white; width: 420px; float: left;" align="left">

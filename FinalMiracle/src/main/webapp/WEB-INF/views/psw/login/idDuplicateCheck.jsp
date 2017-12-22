@@ -54,7 +54,7 @@
 
 </head>
 <body style="background-color: #fff0f5;">
-<span style="font-size:10pt; font-weight: bold;">${method}</span>	
+
 
 <c:if test="${method == 'GET'}">
 <form name="frmIdDuplicateCheck">
@@ -86,19 +86,19 @@
 			<br style="line-height: 200%"/>   
 			<div align="center">
 				<span style="color:red; font-weight: bold;">[${userid}]는 이미 사용중입니다.</span>
-			<br/>
+				<br/>
 			
-			<form name="frmIdDuplicateCheck" action="member_idDuplicateCheck.mr" method="post">
-	          <table style="width: 95%; height: 90%;">
-		      <tr>
-			     <td style="text-align: center;">
-					아이디를 입력하세요<br style="line-height: 200%;"/>
-					<input type="text" id="userid" name="userid" size="20" class="box" /><br style="line-height: 300%;"/>
-					<button type="button" class="box" onClick="goCheck();">확인</button>
-				 </td>
-		      </tr>
-	          </table>
-            </form>
+				<form name="frmIdDuplicateCheck" action="member_idDuplicateCheck.mr" method="post">
+		          <table style="width: 95%; height: 90%;">
+			      <tr>
+				     <td style="text-align: center;">
+						아이디를 입력하세요<br style="line-height: 200%;"/>
+						<input type="text" id="userid" name="userid" size="20" class="box" /><br style="line-height: 300%;"/>
+						<button type="button" class="box" onClick="goCheck();">확인</button>
+					 </td>
+			      </tr>
+		          </table>
+	            </form>
 			</div>
 	</c:if>
 

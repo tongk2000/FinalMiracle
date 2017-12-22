@@ -109,6 +109,11 @@
 		where fk_member_idx = #{idx}
 	</update>
 	
+	<update id="alterImg" parameterType="HashMap">
+		update tbl_member set img = #{newFileName}
+		where idx = #{idx}
+	</update>
+	
 </mapper>
 
 
