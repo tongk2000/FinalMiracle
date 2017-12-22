@@ -162,16 +162,16 @@
 			dataType: "JSON", // ajax 요청에 의해 url 요청페이지로 부터 리턴받는 데이터타입. xml, json, html, text 가 있음.
 			success: function(data) {				
 				var html = "";
-				
+					 
 				var imgPath = data.infoImg;
-				html += "<div style='float: right;'><img src='<%= request.getContextPath() %>/resources/images/" + imgPath + "' style='width: 100px; height: 100px;' /></div>" + "<br/>"
+				html += "<div style='font-family: verdana; font-size: 10pt; border: 2px dotted #E8E8E8; border-radius: 20px; background-color: #F0F0F0; padding: 5px;'><div style='float: right;'><img src='<%= request.getContextPath() %>/resources/files/" + imgPath + "' style='width: 80px; height: 80px; border-radius: 50px;' /></div>" + "<br/>"
 					 +  "<span style='font-weight: bold;'>ID : </span>"+ data.infoUserid + "<br/>"
-					 +  "<span style='font-weight: bold;'>성명 : </span>"+ data.infoName + "<br/>"
+					 +  "<span style='font-weight: bold;'>성명 : </span>"+ data.infoName + "<br/><br/>"
 					 +  "<span style='font-weight: bold;'>핸드폰 : </span>" +data.infoHp1 + "-" +data.infoHp2+"-"+data.infoHp3 +"<br/>"
-					 +  "<span style='font-weight: bold;'>생년월일 : </span>" +data.infoBirth1 + " / " + data.infoBirth2 + " / " + data.infoBirth3 + "<br/>"
+					 +  "<span style='font-weight: bold;'>생년월일 : </span>" +data.infoBirth1 + " / " + data.infoBirth2 + " / " + data.infoBirth3 + "<br/><br/>"
 					 +  "<span style='font-weight: bold;'>주소 : </span>" + data.infoAddr1 + " " + data.infoAddr2 + "</span><br/>"
-					 +  "<span style='font-weight: bold;'>이메일 : </span>" + "<a href=\"javascript:goEmail('"+data.infoEmail+"');\">" + data.infoEmail + "</a><br/><br/>"
-					 +  "<span style='font-weight: bold;'>소개 : </span>" + data.infoProfile ;
+					 +  "<span style='font-weight: bold;'>이메일 : </span>"+ "<a href=\"javascript:goEmail('"+data.infoEmail+"');\">" + data.infoEmail + "</a><br/><br/>"
+					 +  "<span style='font-weight: bold;'>소개 : </span>" + data.infoProfile +"</div>" ;
 				
 				$("#InfoModalBody").html(html);
 				$("#InfoModal").modal();
@@ -183,7 +183,7 @@
 	}
 	
 	function goEmail(email){
-		
+		//console.log("이메일");
 		window.open("tmWriteEmail.mr?email="+email, "subwinpop", "left=500px, top=500px, width=800px, height=600px");
 	}
 	 
