@@ -83,11 +83,17 @@ public class ProjectManagerDAO {
 		return result;
 	} // end of int addDoTeamwon(HashMap<String, Object> map) ------------------------------------------------------------------------
 
-	// 방금 추가한 요소를 가져오기
+	// 방금 추가한 요소를 가져오기(to 프로젝트 리스트)
 	public List<FolderVO> getAddedElement() {
 		List<FolderVO> doList = sql.selectList("do.getAddedElement");
 		return doList;
 	} // end of FolderVO getAddedElement() -----------------------------------------------------------------------------------------------
+	
+	// 특정 한줄만 가져오기(to 프로젝트 리스트)
+	public List<FolderVO> getOneElement(String idx) {
+		List<FolderVO> doList = sql.selectList("do.getOneElement", idx);
+		return doList;
+	} // end of FolderVO getOneElement() -----------------------------------------------------------------------------------------------
 
 	// 선택한 요소와 그 하위요소들 삭제하기
 	public int delElement(String idx) {

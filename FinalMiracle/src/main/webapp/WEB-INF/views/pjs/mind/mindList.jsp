@@ -75,6 +75,10 @@ request.setCharacterEncoding("UTF-8");
     font-size: 23px;
 }
 </style>
+<<<<<<< HEAD
+=======
+
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 <title>Mind 게시판 입니다!</title>
 </head>
 <body>

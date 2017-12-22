@@ -24,9 +24,6 @@
 		    from tbl_faq
 		    where status = 1
 		 	and ${colname} like '%'|| #{search} || '%'
-		 	<if test="category != null">
-		 	and category = #{category}
-		 	</if>
 		    order by idx desc 
 		  )V
 		)T
@@ -39,10 +36,7 @@
 		  from
 		  ( select idx, category, subject, content, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
 		    from tbl_faq
-		    where status = 1  
-		    <if test="category != null">
-		 	and category = #{category}
-		 	</if> 
+		    where status = 1
 		    order by idx desc 
 		  )V
 		)T
@@ -55,18 +49,14 @@
 		from tbl_faq
 		where status = 1
 		and ${colname} like '%'|| #{search} ||'%'
-		<if test="category != null">
-		and category = #{category}
-		</if>
 	</select>
 	<select id="getTotalCountWithNoSearch" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_faq
 		where status = 1
-		<if test="category != null">
-		and category = #{category}
-		</if>
 	</select>
+	
+	
 	
 	<!-- FAQ 게시판 글쓰기 -->
 	<insert id="add" parameterType="com.miracle.psw.model.FaqBoardVO">
@@ -108,17 +98,17 @@
 	<!-- 자유게시판 글 1개 보여주기 (조건에 따른 글 조회수 1 증가 후) -->
 	<select id="getView" parameterType="String" resultType="com.miracle.psw.model.FreeBoardVO">
 		select v.idx, v.userid, v.name, v.subject, v.content, v.readCnt, v.commentCnt
-		          ,v.regDate, v.status, v.infoStatus, v.img
-		          ,v.groupno, v.fk_idx, v.depthno
-		          ,next_idx, pre_idx
+	          ,v.regDate, v.status, v.infoStatus, v.img
+	          ,v.groupno, v.fk_idx, v.depthno
+	          ,next_idx, pre_idx
 		from
 		(
 		  select F.idx, F.userid, F.name, F.subject, F.content, F.readCnt, F.commentCnt
-		           , to_char(F.regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
-		           , F.status, F.infoStatus, M.img
-		           , F.groupno, F.fk_idx, F.depthno
-		           , lead(F.idx, 1, 0) over(order by F.idx) next_idx
-		           , lag(F.idx, 1, -9) over(order by F.idx) pre_idx
+	           , to_char(F.regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+	           , F.status, F.infoStatus, M.img
+	           , F.groupno, F.fk_idx, F.depthno
+	           , lead(F.idx, 1, 0) over(order by F.idx) next_idx
+	           , lag(F.idx, 1, -9) over(order by F.idx) pre_idx
 		  from tbl_free F join tbl_member M
 		  on F.userid = M.userid
 		  where F.status = 1
@@ -134,7 +124,7 @@
 	
 	
 	
-	<!-- 검색한 freeList 보여주기(페이징 처리 한 것) -->
+	<!-- 검색이 있는 freeList 보여주기(페이징 처리 한 것) -->
 	<select id="freeListWithSearch" parameterType="HashMap" resultType="com.miracle.psw.model.FreeBoardVO">
 		select idx, userid, name, subject, content, readCnt, commentCnt
 		     , groupno, fk_idx, depthno
@@ -160,6 +150,7 @@
 		)T
 		where T.rno >= #{startRno} and T.rno <![CDATA[<=]]> #{endRno}		
 	</select>
+	<!-- 검색이 없는 freeList 보여주기(페이징 처리 한 것) -->
 	<select id="freeListWithNoSearch" parameterType="HashMap" resultType="com.miracle.psw.model.FreeBoardVO">
 		select idx, userid, name, subject, content, readCnt, commentCnt
 		     , groupno, fk_idx, depthno
@@ -222,9 +213,16 @@
 		select C.idx, C.userid, C.content, C.regDate, C.parentIdx, C.status, M.name, M.img
 		from tbl_freeComment C join tbl_member M
 		on C.userid = M.userid
-		where parentIdx = #{idx}
+		where C.status = 1 
+		and C.parentIdx = #{idx}
 		order by C.idx asc
 	</select>
+	
+	<!-- 자유게시판 1개 게시글에 작성된 댓글중 자신의 댓글 삭제하기 -->
+	<update id="delComment" parameterType="String">
+		update tbl_freeComment set status = 0
+		where idx = #{commentIdx}
+	</update>
 	
 	<!-- 자유게시판 목록에서 선택한 유저정보 보여주기 -->
 	<select id="showUserInfo" parameterType="HashMap" resultType="com.miracle.psw.model.MemberVO">

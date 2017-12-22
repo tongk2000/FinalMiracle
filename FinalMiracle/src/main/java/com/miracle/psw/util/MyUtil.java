@@ -145,7 +145,47 @@ public class MyUtil {
 		   }
 		   
 		   return num;
-	   }// end of getYangsu(Scanner sc)--------------	
+	   }// end of getYangsu(Scanner sc)--------------
+	   
+	   
+	   public static String getPageBarWithCategorySearch(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String colname, String search, String category, String url) {
+			String pageBar = "";
+			int loop = 1;
+			int pageNo = ((currentShowPageNo - 1)/blockSize)*blockSize + 1; // 공식임!!!
+			
+			// currentShowPageNo 가 1~10 일때 pageNo 는   1 , 11~20 일때 pageNo 는 11 , 21~30 일때 pageNo 는 21
+			
+			String str_pageNo = "";
+			
+			if (pageNo == 1) {
+				str_pageNo = "<a href='#'><span class='glyphicon glyphicon-chevron-left'></span></a>";
+			} else {
+				str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&category="+category+"\" >"+"<a href='#'><span class='glyphicon glyphicon-chevron-left'></span></a>&nbsp;"; 
+			}
+			
+			pageBar += str_pageNo;
+			
+			while(!(pageNo > totalPage || loop > blockSize)){
+				
+				if (pageNo == currentShowPageNo) {
+					str_pageNo = "&nbsp;<span style=\"color:red; font-size:12pt; font-weight:bold; text-decoration:underline;\">"+pageNo+ "</span>&nbsp;";
+				} else {
+					str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&category="+category+"\" >"+pageNo+"</a>" + "&nbsp;";
+				}
+				pageBar += str_pageNo; 
+				pageNo++;
+				loop++;
+			}
+			
+			if (pageNo > totalPage) {
+				str_pageNo = "<a href='#'><span class='glyphicon glyphicon-chevron-right'></span></a>";
+			} else {
+				str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&category="+category+"\" >"+"<span class='glyphicon glyphicon-chevron-right'></span></a>&nbsp;"; 
+			}
+			pageBar += str_pageNo;	
+			
+			return pageBar;
+		}// end of String getPageBarWithSearch(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String searchType, String searchString, String period, String url)--------------------	
 	   
 	   
 	public static String getPageBar(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String url) {
@@ -156,9 +196,9 @@ public class MyUtil {
 		String str_pageNo = "";
 		
 		if (pageNo == 1) {
-			str_pageNo = "&nbsp;[Before "+blockSize+" Page]";
+			str_pageNo = "<a href='#'><span class='glyphicon glyphicon-chevron-left'></span></a>";
 		} else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"\" >"+"[Before "+blockSize+" Page]</a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"\" >"+"<span class='glyphicon glyphicon-chevron-left'></span></a>&nbsp;"; 
 		}
 		pageBar += str_pageNo;
 		
@@ -175,53 +215,17 @@ public class MyUtil {
 		}
 		
 		if (pageNo > totalPage) {
-			str_pageNo = "&nbsp;[Next "+blockSize+" Page]";
+			str_pageNo = "<a href='#'><span class='glyphicon glyphicon-chevron-right'></span></a>";
 		} else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"\" >"+"[Next "+blockSize+" Page]</a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"\" >"+"<span class='glyphicon glyphicon-chevron-right'></span></a>&nbsp;"; 
 		}
 		pageBar += str_pageNo;	
 		
 		return pageBar;
-	}// end of String getPageBar(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String url)-----------------	 
+	}// end of String getPageBar(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String url)-----------------	  
 	
-	public static String getFAQPageBar(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String category, String url) {
-		String pageBar = "";
-		int loop = 1;
-		int pageNo = ((currentShowPageNo - 1)/blockSize)*blockSize + 1; 
-		
-		String str_pageNo = "";
-		
-		if (pageNo == 1) {
-			str_pageNo = "&nbsp;[Before "+blockSize+" Page]";
-		} else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&category="+category+"\" >"+"[Before "+blockSize+" Page]</a>&nbsp;"; 
-		}
-		pageBar += str_pageNo;
-		
-		while(!(pageNo > totalPage || loop > blockSize)){
-			if (pageNo == currentShowPageNo) {
-				str_pageNo = "&nbsp;<span style=\"color:red; font-size:13pt; font-weight:bold; text-decoration:underline;\">"+pageNo+ "</span>&nbsp;";
-			} else {
-				str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&category="+category+"\" >"+pageNo+"</a>" + "&nbsp;";
-			}
-			pageBar += str_pageNo; 
-			
-			pageNo++;
-			loop++;
-		}
-		
-		if (pageNo > totalPage) {
-			str_pageNo = "&nbsp;[Next "+blockSize+" Page]";
-		} else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"\" >"+"[Next "+blockSize+" Page]</a>&nbsp;"; 
-		}
-		pageBar += str_pageNo;	
-		
-		return pageBar;
-	}// end of String getPageBar(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String url)-----------------	 
-
 	
-	public static String getPageBarWithSearch(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String colname, String search, String category, String url) {
+	public static String getPageBarWithSearch(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String colname, String search, String period, String url) {
 		String pageBar = "";
 		int loop = 1;
 		int pageNo = ((currentShowPageNo - 1)/blockSize)*blockSize + 1; // 공식임!!!
@@ -231,9 +235,9 @@ public class MyUtil {
 		String str_pageNo = "";
 		
 		if (pageNo == 1) {
-			str_pageNo = "&nbsp;[Before "+blockSize+" Page]";
+			str_pageNo = "<a href='#'><span class='glyphicon glyphicon-chevron-left'></span></a>";
 		} else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&category="+category+"\" >"+"[Before "+blockSize+" Page]</a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" >"+"<span class='glyphicon glyphicon-chevron-left'></span></a>&nbsp;"; 
 		}
 		
 		pageBar += str_pageNo;
@@ -243,7 +247,7 @@ public class MyUtil {
 			if (pageNo == currentShowPageNo) {
 				str_pageNo = "&nbsp;<span style=\"color:red; font-size:12pt; font-weight:bold; text-decoration:underline;\">"+pageNo+ "</span>&nbsp;";
 			} else {
-				str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&category="+category+"\" >"+pageNo+"</a>" + "&nbsp;";
+				str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" >"+pageNo+"</a>" + "&nbsp;";
 			}
 			pageBar += str_pageNo; 
 			pageNo++;
@@ -251,14 +255,17 @@ public class MyUtil {
 		}
 		
 		if (pageNo > totalPage) {
-			str_pageNo = "&nbsp;[Next "+blockSize+" Page]";
+			str_pageNo = "&nbsp;<a href='#'><span class='glyphicon glyphicon-chevron-right'></span>";
 		} else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&category="+category+"\" >"+"[Next "+blockSize+" Page]</a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" >"+"<span class='glyphicon glyphicon-chevron-right'></span></a>&nbsp;"; 
 		}
 		pageBar += str_pageNo;	
 		
 		return pageBar;
-	}// end of String getPageBarWithSearch(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String searchType, String searchString, String period, String url)--------------------	
+	}// end of String getPageBarWithSearch(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String searchType, String searchString, String period, String url)--------------------
+	
+	
+	
 	
 	
 	

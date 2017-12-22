@@ -19,8 +19,18 @@
 		$(".hiddenEdit").hide();
 	});
 	
-	function deleteFolderTeamwon(idx) {
-		$("#folderTeamwon"+idx).remove();
+	function deleteFolderTeamwon(element) {
+		changeFlag = true;
+		var cnt = 0;
+		var userid = $(element).find("span").text(); 
+		$(".folderTeamwon").each(function(){
+			cnt++;
+		});
+		if(cnt > 1) { // 담당자가 둘 이상이라면
+			$(element).remove();
+		} else { // 담당자가 하나라면
+			alert("담당자는 최소 1명 이상이여야 하므로\n"+userid+"님을 제외하실 수 없습니다.");
+		}
 	}
 </script>
 
@@ -45,8 +55,8 @@
 						<tr>
 							<td class="infoClass" style="width:100px;">할일제목</td>
 							<td class="infoData showInfo" style="width:500px;">${map.fvo.subject}
-							<td class="infoData hiddenEdit">
-								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="subject" value="${map.fvo.subject}" />
+							<td class="infoData hiddenEdit" style="width:500px;">
+								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="subject" id="modalSubject" value="${map.fvo.subject}" />
 							</td>
 						</tr>
 						
@@ -67,7 +77,7 @@
 							<td class="infoData">
 								<div style="float:left; width:100%;" id="selectedTeamwon">
 								<c:forEach var="ftvo" items="${map.folder_teamwonList}" varStatus="status">
-									<span id="folderTeamwon${ftvo.fk_teamwon_idx}" class="pointer" onclick="deleteFolderTeamwon(${ftvo.fk_teamwon_idx})">
+									<span id="folderTeamwon${ftvo.fk_teamwon_idx}" class="pointer folderTeamwon" onclick="deleteFolderTeamwon(this)">
 										<span id="added${ftvo.userid}">${ftvo.userid}</span>(${ftvo.proceedingTaskCnt}:${ftvo.completeTaskCnt})
 										<input type="hidden" name="folder_teamwonIdxArr" value="${ftvo.fk_teamwon_idx}">
 									</span>
@@ -81,7 +91,7 @@
 							<td class="infoData showInfo">${map.fvo.importance}</td>
 							<td class="infoData hiddenEdit">
 								<%-- <input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="importance" value="${map.fvo.importance}" /> --%>
-								<select id="example" name="importance" class="hiddenEditInputSelector">
+								<select name="importance" class="hiddenEditSelector">
 									<%
 										@SuppressWarnings("unchecked")
 										HashMap<String, Object> map = (HashMap<String, Object>)request.getAttribute("map");
@@ -125,6 +135,15 @@
 					</tbody>
 				</table>
 				folder_idx:<input type="text" name="idx" id="folder_idx" value="${map.fvo.idx}" /> <!-- 폴더번호 저장용 -->
+				<input type="hidden" name="modalClass" value="task" /> <!-- 폴더인지 할일인지 구분용 -->
+				
+				<!-- 댓글 페이징값 저장 시작(댓글페이지에도 다음 폼이 있긴함) -->
+				<input type="hidden" name="showIdx" value="${map.pvo.showIdx}" /> <!-- 페이징처리값을 vo로 쉽게 받기 위해서 글번호를 저장해둠 -->
+				<input type="hidden" name="selectPage" id="copySelectPage" value="${map.pvo.selectPage}" /> <!-- 현재페이지 저장용 -->
+				<input type="hidden" name="sizePerPage" value="${map.pvo.sizePerPage}" /> <!-- 사이즈 저장용 -->
+				<input type="hidden" name="blockSize" value="${map.pvo.blockSize}" /> <!-- 블록사이즈 저장용 -->
+				<input type="hidden" name="function" value="${map.pvo.function}" /> <!-- 함수 이름 저장용 -->
+				<!-- 댓글 페이징값 저장 끝 -->
 			</form>
 			<br/>
 			<div id="modalCommentPage">

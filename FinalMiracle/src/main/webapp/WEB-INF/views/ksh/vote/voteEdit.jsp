@@ -10,7 +10,7 @@
 <script src="<%=request.getContextPath() %>/resources/summernote/lang/summernote-ko-KR.js"></script>
 
 <style type="text/css">
-  th {width: 25%;}
+  th {width: 15%; text-align: right; background-color: #F2F2F2;}
 </style>
 
 <script type="text/javascript">
@@ -20,9 +20,9 @@
 		var html = "";
 		
 		html += "<br/>";
-		html += "<input type='text' name='items' class='form-control' style='width: 300px;' placeholder='1번 문항' />";
+		html += "<input type='text' name='items' class='form-control' style='width: 50%;' placeholder='1번 문항' />";
 		html += "<br/>";
-		html += "<input type='text' name='items' class='form-control' style='width: 300px;' placeholder='2번 문항' />";
+		html += "<input type='text' name='items' class='form-control' style='width: 50%;' placeholder='2번 문항' />";
 		
 		$("#divbeginitems").append(html);
 		
@@ -62,7 +62,7 @@
 			{
 				for(var i=3; i<=parseInt(spinnerOqtyVal); i++) {
 					html += "<br/>";
-					html += "<input type='text' name='items' class='form-control' style='width: 300px;' placeholder='"+i+"번 문항' />";
+					html += "<input type='text' name='items' class='form-control' style='width: 50%;' placeholder='"+i+"번 문항' />";
 				}
 				
 				$("#divitems").empty();
@@ -77,15 +77,17 @@
 	}); // end of $(document).ready()-----------------------------------
 	
 
-	function goEdit() {
-		// 유효성 검사는 생략함.
-		
+	function goEdit() {		
 		var subject = document.getElementById("subject").value;
 		var content = document.getElementById("content").value;
 		var datepicker1 = document.getElementById("datepicker1").value;
 		var datepicker2 = document.getElementById("datepicker2").value;
 		
-		if(subject.trim() == "" || content.trim() == "" || datepicker1.trim() == "" || datepicker2.trim() == ""){
+		subject = subject.trim();
+		datepicker1 = datepicker1.trim();
+		datepicker2 = datepicker2.trim();
+		
+		if(subject == "" || content == "" || datepicker1 == "" || datepicker2 == ""){
 			swal("수정 실패!", "모든 항목에 빈 칸 없이 넣어주세요.", "error");
 			return;
 		} else {
@@ -96,7 +98,7 @@
 			} */
 			
 			swal({
-			  title: "수정 여부",
+			  title: "투표 수정 여부",
 			  text: "투표를 수정하시겠습니까?",
 			  type: "warning",
 			  showCancelButton: true,
@@ -128,49 +130,48 @@
 	
 </script>
 
-<div>
-	<h3 style="width: 60%; padding-top: 20px;">투표 수정</h3>
+<div style="width:100%; font-family: verdana;" align="center">
+	<h1 style="margin: 2%;">투표 수정</h1>
 	
 	 <%-- >>>> 파일첨부하기
 	 	       enctype="multipart/form-data" 을 해주어야만 파일첨부가 된다. --%>
-	<form name="EditFrm" action="<%= request.getContextPath() %>/voteEditEnd.mr" method="post" enctype="multipart/form-data" >
-		<table id="table" class="table table-bordered" style="width: 70%; margin-top: 50px;">
+	<form class="form-inline" name="EditFrm" action="<%= request.getContextPath() %>/voteEditEnd.mr" method="post" enctype="multipart/form-data" >
+		<table id="table" class="table table-bordered" style="width: 80%; margin-top: 50px;">
 			<tr>
-				<th>제목명</th>
-				<td>
-					<div style="width: 30%;">
-					  <input type="text" name="subject" id="subject" class="form-control" value="${votevo.subject}" placeholder="제목을 입력하세요" />
+				<th style="vertical-align: middle;">제목명</th>
+				<td colspan="2">
+					<div style="width: 100%;">
+					  <input type="text" name="subject" id="subject" class="form-control" style="width: 100%;" value="${votevo.subject}" placeholder="제목을 입력하세요" />
 					</div> 
 				</td>
 			</tr>
 			<tr>
-				<th>내용</th>
-				<td>
+				<th style="vertical-align: middle;">내용</th>
+				<td colspan="2">
 				    <div style="width: 100%;">
 						<%-- <input type="text" name="content" id="content" class="form-control" value="${votevo.content}" /> --%>
-						<textarea name="content" id="content" class="summernote">${votevo.content}</textarea>
+						<textarea name="content" id="content" class="summernote">
+						<c:forEach var="vote" items="${votevo}" varStatus="status">
+							${vote.content}
+						</c:forEach>
+						</textarea>
 					</div>
 				</td>
 			</tr>
 			<tr>
-				<th>시작날짜</th>
+				<th style="vertical-align: middle;">날짜</th>
 				<td>
-					<div style="width: 50%;">
-						<input type="text" id="datepicker1" name="datepicker1" class="form-control" value="${votevo.startdate}" placeholder="시작날짜를 입력하세요 (클릭)" readonly="readonly">
+					<div style="width: 100%;">
+						<input type="text" id="datepicker1" name="datepicker1" class="form-control" style="width: 100%;" value="${votevo.startdate}" placeholder="시작날짜를 입력하세요 (클릭)" readonly="readonly">
 					</div>
-				</td>
-			</tr>
-			<tr>
-				<th>종료날짜</th>
-				<td>
-					<div style="width: 50%;">
-						<input type="text" id="datepicker2" name="datepicker2" class="form-control" value="${votevo.enddate}" placeholder="종료날짜를 입력하세요 (클릭)" readonly="readonly">
+					<div style="width: 100%;">
+						<input type="text" id="datepicker2" name="datepicker2" class="form-control" style="width: 100%;" value="${votevo.enddate}" placeholder="종료날짜를 입력하세요 (클릭)" readonly="readonly">
 					</div>
 				</td>
 			</tr>
          	<tr>
-         		<th>문항</th>
-         		<td>
+         		<th style="vertical-align: middle;">문항</th>
+         		<td colspan="2">
          		    <label for="spinnerOqty">문항 수 : </label>
   		            <input id="spinnerOqty" value="2" style="width: 30px; height: 20px;">
   		            <br/>

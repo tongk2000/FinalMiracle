@@ -37,4 +37,6 @@ public interface InterCommuteDAO {
 
 	List<HashMap<String, String>> getStatistics(HashMap<String, String> map);
 
+	String getTimg(String tidx);
+
 }

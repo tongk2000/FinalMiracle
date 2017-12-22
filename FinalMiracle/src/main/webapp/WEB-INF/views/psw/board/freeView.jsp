@@ -33,11 +33,11 @@
 	}
 	
 	.freeListRowCssStyle {
-		background-color: lightgray;
+		background-color: #F0F0F0;
 	}
 	
 	.freeReplyListRowCssStyle {
-		background-color: lightgreen;
+		background-color: #F0F0F0;
 	}
 	
 	.hoverStyleCss {
@@ -59,6 +59,11 @@
 		font-weight: bold;
 		font-size: 10pt;
 		cursor: pointer;
+	}
+	.delMyCommentButtonCss {
+		color: red;
+		font-weight: bold;
+		font-size: 11pt;
 	}
 
 </style>
@@ -118,6 +123,12 @@
 		},function(){
 			$(this).removeClass("freeReplyListRowCssStyle");
 		});
+		// ================================== *** 내 댓글 삭제 버튼 타겟시 hover 효과 주기 *** ============================
+		$(".delMyCommentButton").hover(function(){ 
+			$(this).addClass("delMyCommentButtonCss");
+		},function(){
+			$(this).removeClass("delMyCommentButtonCss");
+		});
 
 		// ============================================== *** 페이지 전체에서 esc 키를 누르면 모달창을 닫기 *** =======
 		$(document).on("keydown", function(){
@@ -131,7 +142,7 @@
 		$(document).on("click", ".modalClose", function(){
 			$('.modal').modal('hide');
 		}); // end of $(".modalClose").click(function() --------------------------------------------------
-	});
+	});  // end of $(document).ready() -------------------------------------------------------------------
 	
 	// ===================================== *** 댓글 달기 폼 전송하기 *** ====================================================
     function goWrite() {
@@ -184,11 +195,20 @@
 		frm.submit();
 	}
 	
+	function goDelComment(idx){
+		var frm = document.commentFrm;
+		frm.commentIdx.value = idx;
+		
+		frm.method = "get";
+		frm.action = "<%= request.getContextPath() %>/freeCommentDel.mr";
+		frm.submit();
+	}
+	
 </script>
 
 
-<div style="height: 100%; border: 0px dotted pin; margin-top: 20px; margin-bottom: 30px; overflow-y: auto;" align="center" >
-	<div style="border: solid 0px red; width: 800px;" >
+<div style="height: 100%; border: 0px dotted pin; overflow-y: scroll;" align="center" >
+	<div style="border: solid 0px red; width: 800px; margin-top: 20px; margin-bottom: 20px;" >
 		<div style="float: left;">
 			<table id="table" style="width: 550px; border: 0px solid dimgray; border-left: none; border-right: none;">
 				<!-- ============================= *** 자유게시판 소개 *** =================================== -->
@@ -300,42 +320,70 @@
 		</div>
 		
 		<div style = "border: 0px solid pink; margin-top: 3px;">
+		
 			<!-- ======================================== *** 댓글 내용 보여주기 *** =================================================== -->
-			<c:if test="${not empty freeCommentList}">
-				<table id="comment" style="width: 700px; padding: 2px; margin-bottom: 5px;">
-					<c:forEach var="commentvo" items="${freeCommentList}" varStatus="status" >
-						<tr id="comment${commentvo.idx}" class="freeReplyListRow">
-							<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 2%;">
-								<span style="font-weight: bold; font-size: smaller;"> ${status.count}</span>
-								<input type="hidden" name="commentIdx" value="${commentvo.idx}" />
-							</td>
-							<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 2%;">
-								<img src="<%= request.getContextPath() %>/resources/images/${commentvo.img}" style="width: 28px; height: 30px; border-radius: 15px; vertical-align: middle; padding-top: 2px; padding-bottom: 2px;" align="middle">
-							</td>
-							<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 12%; padding-left: 10px;">
-								<span class="repleInfo" onClick="showUserInfo('${commentvo.userid}')" style="font-size: 9pt;">
-									${commentvo.userid} [${commentvo.name}]
-								</span>
-							</td>
-							<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 30%; padding-left: 10px;">
-								<span style="font-size: 9pt;">${commentvo.content}</span>
-							</td>
-							<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 20%; padding-left: 10px;">
-								<span style="font-size: 9pt;">${commentvo.regDate}</span>
-							</td>
-						</tr>
-					</c:forEach>
-				</table>
-			</c:if>
+			<form name="commentFrm">	
+				<c:if test="${not empty freeCommentList}">
+					<input type="hidden" name="commentIdx"/>
+					<input type="hidden" name="idx" value="${freevo.idx}" />
+					<input type="hidden" name="currentShowPageNo" value="${currentShowPageNo}" />
+					<input type="hidden" name="sizePerPage" value="${sizePerPage}" />
+					<input type="hidden" name="colname" value="${colname}" />
+					<input type="hidden" name="search" value="${search}" />
+					
+					<table id="comment" style="width: 700px; padding: 2px; margin-bottom: 5px;">
+						
+						<c:forEach var="commentvo" items="${freeCommentList}" varStatus="status" >
+							<tr class="freeReplyListRow">
+								<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 2%; padding-left: 10px;">
+									<span style="font-weight: bold; font-size: smaller;"> ${status.count}</span>
+								</td>
+								<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 2%;">
+									<img src="<%= request.getContextPath() %>/resources/images/${commentvo.img}" style="width: 28px; height: 30px; border-radius: 15px; vertical-align: middle; padding-top: 2px; padding-bottom: 2px;" align="middle">
+								</td>
+								<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 12%; padding-left: 10px;">
+									<span class="repleInfo" onClick="showUserInfo('${commentvo.userid}')" style="font-size: 9pt;">
+										${commentvo.userid} [${commentvo.name}]
+										<input type="hidden" name="userid" value="${commentvo.userid}" />
+									</span>
+								</td>
+								<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 30%; padding-left: 10px;">
+									<span style="font-size: 9pt;">${commentvo.content}</span>
+								</td>
+								<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 20%; padding-left: 10px;">
+									<span style="font-size: 9pt;">${commentvo.regDate}</span>
+								</td>
+								<td style="border: 1px solid lightgray; border-left: none; border-right: none; width: 2%; margin-right: 10px;">
+									<c:if test="${sessionScope.loginUser.userid eq commentvo.userid}">
+										<span class="delMyCommentButton" style="cursor: pointer;" onClick="goDelComment('${commentvo.idx}');">x</span>
+									</c:if>
+									<c:if test="${sessionScope.loginUser.userid ne commentvo.userid}">
+										
+									</c:if>
+								</td>
+							</tr>
+						</c:forEach>
+					</table>
+				</c:if>
+			</form>
 		</div>
 		
 	</div>
 
 
 	<!-- ==================================== *** 자유게시판 목록 *** ============================================ -->
-	<div style="border: 0px solid blue; width: 800px; padding-top: 10px;">
+	<div style="border: 0px solid blue; width: 800px; padding-top: 10px; margin-bottom: 5%;">
 		<div align="left" style="margin-left: 20px;">
-			<span style="font-weight: bold;">총 게시글 '<span style="font-size: larger; color: orange;"> ${totalCount} '</span> 개 </span>
+			<c:if test="${search == null}">
+				<span style="font-family: verdana; font-weight: bold;">총 게시물 ' 
+					<span style="color: #92a8d1; font-size: larger;">${totalCount}</span> ' 개
+				</span>
+			</c:if> 
+			<c:if test="${search != null}">
+				<span style="font-family: verdana; font-weight: bold;">검색된 게시물 ' 
+					<span style="color: #92a8d1; font-size: larger;">${totalCount}</span> ' 개
+				</span>
+			</c:if> 
 		</div>
 		<table style="width: 800px; border: 1px solid dimgray; border-left: none; border-right: none;">
 			<thead>
@@ -350,7 +398,7 @@
 			<tbody>
 				<c:forEach var="fvo" items="${freeList}" varStatus="status">
 					<c:if test="${freevo.idx == fvo.idx}">
-						<tr class="freeListRow" style="background-color:lightgray; color: #034F84; font-family: verdana; font-weight: bold;">
+						<tr class="freeListRow" style="background-color: #E0E0E0; color: #034F84; font-family: verdana; font-weight: bold;">
 					</c:if>
 					<c:if test="${freevo.idx != fvo.idx}">
 						<tr class="freeListRow">
@@ -432,7 +480,7 @@
 		
 		<!-- 페이지 바 만들기 -->
 		<div style="width: 600px; clear: both; border: 0px solid green;">
-			<div align="left">${pagebar}</div>
+			<div align="center">${pagebar}</div>
 		</div>
 		
 	</div>
