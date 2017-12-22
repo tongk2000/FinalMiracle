@@ -286,13 +286,14 @@
 		
 	 	
 			<fieldset>
-				<div style="border: 0px dotted pink; float: right;" align="center">
-					<img alt="<%= request.getContextPath() %>/resources/resources/${sessionScope.loginUser.img}" src="<%= request.getContextPath() %>/resources/files/${sessionScope.loginUser.img}" style="height: 150px; width: 140px;">
-					<br/>
-					<a href="javascript:openAlterImg();" style="text-align: center; text-decoration: none; font-family: verdana;">[프로필사진 변경]</a>
+				<div style="border: 2px dotted #92a8d1; border-radius: 20px; background-color: #deeaee; padding: 5px; float: right;" align="center">
+					<h5 style="font-weight: bold; font-family: verdana;">프로필 이미지</h5>
+					<img alt="<%= request.getContextPath() %>/resources/files/${sessionScope.loginUser.img}" src="<%= request.getContextPath() %>/resources/files/${sessionScope.loginUser.img}" style="height: 150px; width: 140px;">
+					<br/><br/>
+					<a class="btn btn-primary btn-primary" href="javascript:openAlterImg();" style="text-align: center; text-decoration: none; font-family: verdana; cursor: pointer; font-size: 10pt; color: white;">사진 변경하기</a>
 				</div>
 				
-				<div style="border: 1px dotted white; width: 420px; float: left;" align="left">
+				<div style="border: 1px dotted white; width: 410px; float: left;" align="left">
 					<!-- 회원정보 수정 폼 부트스닙스 -->
 					<div class="form-group" >
 					  <label class="col-sm-4 control-label" for="name">성명 &nbsp;<span class="star">*</span></label>  
