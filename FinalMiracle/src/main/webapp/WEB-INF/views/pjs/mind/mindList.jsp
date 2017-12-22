@@ -40,8 +40,41 @@ request.setCharacterEncoding("UTF-8");
     	border-top: 0px; 
     	border: solid gray 3px;
     }
+    #space {
+    	position:absolute;
+    }
+    #custom-search-input{
+    padding: 3px;
+    border: solid 1px #E4E4E4;
+    border-radius: 6px;
+    background-color: #fff;
+}
+
+#custom-search-input input{
+    border: 0;
+    box-shadow: none;
+}
+
+#custom-search-input button{
+    margin: 2px 0 0 0;
+    background: none;
+    box-shadow: none;
+    border: 0;
+    color: #666666;
+    padding: 0 8px 0 10px;
+    border-left: solid 1px #ccc;
+}
+
+#custom-search-input button:hover {
+    border: 0;
+    box-shadow: none;
+    border-left: solid 1px #ccc;
+}
+
+#custom-search-input .glyphicon-search {
+    font-size: 23px;
+}
 </style>
-<script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 <title>Mind 게시판 입니다!</title>
 </head>
 <body>
@@ -212,7 +245,7 @@ request.setCharacterEncoding("UTF-8");
 								<td width="20%" style="text-align:center; font-family:verdana;">${md.regday}</td>		<!-- 날짜 -->
 								
 								<c:if test="${md.file > 0}">
-								    <td width="8%" style="text-align:center; font-family:verdana;"><img src="<%=request.getContextPath() %>/resources/images/disk.gif" ></td>
+								    <td width="8%" style="text-align:center; font-family:verdana;"><a class="btn btn-default"><span class="glyphicon glyphicon-floppy-disk" ></span></a></td>
 								</c:if>
 								<c:if test="${md.file == 0}">
 								    <td width="8%" style="text-align:center; font-family:verdana;">X</td>
@@ -235,7 +268,7 @@ request.setCharacterEncoding("UTF-8");
 								</c:if>
 								</td>	<!-- 조회수-->
 								<c:if test="${md.fk_userid == sessionScope.loginUser.userid}">
-									<td width="15%" style="text-align:center; font-family:verdana;"><button type="button" onClick="goEditView('${md.d_idx}','${md.fk_userid}', '${md.t_idx}');">수정</button></td>
+									<td width="15%" style="text-align:center; font-family:verdana;"><button type="button" class="btn btn-default" onClick="goEditView('${md.d_idx}','${md.fk_userid}', '${md.t_idx}');">수정</button></td>
 								</c:if>
 								<c:if test="${md.fk_userid != sessionScope.loginUser.userid}">
 									<td width="15%" style="text-align:center; font-family:verdana;"></td>
@@ -249,31 +282,63 @@ request.setCharacterEncoding("UTF-8");
 		</div>
 	</div>	
 	</div>
+	<div id="space">
+		<c:if test="${user.status == 1}" >
+			<button type="button" id="del" class="btn btn-default">삭제</button>
+			<button type="button" onClick="goWrite();" class="btn btn-default">글쓰기</button>
+		</c:if>
+	</div>
 	<div align="center" style="padding-bottom:20px;">
 		${pagebar}
 	</div>	
-	<div style="float:right;">
-			<c:if test="${user.status == 1}" >
-				<button type="button" id="del">삭제</button>
-				<button type="button" onClick="goWrite();">글쓰기</button>
-			</c:if>
-	</div>
-	<br/><br/>
-	<form name="frm">
-		<select id="searchType" name="searchType" style="font-size:12pt;">
-			<option value="fk_userid">아이디</option>
-			<option value="subject">제목</option>
-		</select>
-		<input type="text" id="searchString" name="searchString" />
-		<button type="button" id="btnClick" onClick="goSearch();">검색</button><br/><br/><br/>
-		<div style="display:block; z-index:1000; margin-top:-40px;" align="center">
-			<div id="displayList" ></div>
+	<form name="frm" align="center" style="border:1px solid purple;">
+		<div align="center" style="border:1px solid skyblue;">
+		    <!-- 선택바 -->
+			<div class="col-xs-2 nav-container" style="border:1px solid black; margin-left:300px; padding-top:5px;">
+			    <div class="form-group" style="float:right;	">
+			        <select class="form-control nav" id="searchType" name="searchType">
+			          	<option value="fk_userid">아이디</option>
+						<option value="subject">제목</option>
+			        </select>
+			    </div>
+			 </div>
+			<!-- <select id="searchType" name="searchType" style="font-size:12pt;">
+				<option value="fk_userid">아이디</option>
+				<option value="subject">제목</option>
+			</select> -->
+			<!-- <input type="text" id="searchString" name="searchString" style="width:187px;"/>
+			<button type="button" id="btnClick" onClick="goSearch();">검색</button> -->
+			<div style="display:block; z-index:1000; margin-top:-40px;" align="center">
+				<div id="displayList" ></div>
+			</div>
+			<!-- 검색바 -->
+			<div class="container">
+				<div class="row" style="border:1px solid red; height:30px; padding-right:420px;">
+			        <div class="col-sm-4" style="border:1px solid green; ">
+			            <div id="custom-search-input" style="border:1px solid yellow; margin-left:-15px;">
+			                <div class="input-group col-sm-12" style="border:1px solid blue">
+			                    <input type="text" class="form-control input-xs" id="searchString" name="searchString"/>
+			                    <span class="input-group-btn">
+			                        <button class="btn btn-info btn-xs" type="button" id="btnClick" onClick="goSearch();">
+			                            <i class="glyphicon glyphicon-search"></i>
+			                        </button>
+			                    </span>
+			                </div>
+			            </div>
+			        </div>
+				</div>
+			</div>
 		</div>
 	</form>
 	
 	<script>
 		$(document).ready(function(){
 			keep();
+			
+			var left = $("#dev-table").position().left-50;
+			var top = $("#dev-table").position().top-10;
+			$("#space").css({"right":left+"px", "bottom":top+"px"});
+			
 			$("#del").click(function(){
 				var cnt=0;
 				var idx = new Array();
@@ -327,10 +392,10 @@ request.setCharacterEncoding("UTF-8");
 								result = "<span class='first' style='color:blue;'>" +wordstr.substr(0, index)+ "</span>" + "<span class='second' style='color:red; font-weight:bold;'>" +wordstr.substr(index, len)+ "</span>" + "<span class='third' style='color:blue;'>" +wordstr.substr(index+len, wordstr.length - (index+len) )+ "</span>";  
 								resultHTML += "<span style='cursor:pointer;'>"+ result +"</span><br/>"; 
 							});
-							var left = $("#searchString").position().left-28;
-							var top = $("#searchString").position().top+5	;
-							top = top + ($("#searchString").height());
-							$("#displayList").css({"left":left+"px", "top":top+"px"});
+							var right = $("#searchString").position().right;
+							var bottom = $("#searchString").position().bottom;
+							bottom = bottom + ($("#searchString").height());
+							$("#displayList").css({"right":right+"px", "bottom":bottom+"px"});
 							$("#displayList").html(resultHTML);
 							$("#displayList").show();
 						}
@@ -401,6 +466,7 @@ request.setCharacterEncoding("UTF-8");
 		}
 		function goView(d_idx, userid, teamNum) {
 			var frm = document.view;
+			alert(d_idx);
 			frm.idx.value = d_idx;
 			frm.userid.value = userid; 
 			frm.teamNum.value = teamNum;
@@ -427,6 +493,6 @@ request.setCharacterEncoding("UTF-8");
 			frm.submit();
 		}
 	</script>
-	<div class="modal fade" id="userinfo" role="dialog" style="z-index:1000;"></div>
+	<div class="modal fade" id="userinfo" role="dialog" ></div>
 </body>
 </html>

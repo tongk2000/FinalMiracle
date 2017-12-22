@@ -506,6 +506,24 @@ public class PjsserviceImpl implements PjsinterService {
 		HashMap<String, String> map = dao.getNoticeInfo(view);
 		return map;
 	}
+	@Override
+	public String getCountNum(HashMap<String, Object> map) {
+		// 공지사항 총 게시물 수를 반환
+		String num = dao.getCountNum(map);
+		return num;
+	}
+	@Override
+	public String getNiticefileNum() {
+		// 파일 최대값
+		String num = dao.getNiticefileNum();
+		return num;
+	}
+	@Override
+	public String getMindfileNum() {
+		// TODO Auto-generated method stub
+		String num = dao.getMindfileNum();
+		return num;
+	}
 	
 	
 	
