@@ -205,15 +205,15 @@
 			align="center">
 			<div class="panel panel-primary">
 				<div class="panel-heading"></div>
-				<div style="border: 3px solid #337ab7;">
+				<div style="border: 3px solid #337ab7; padding: 10px;">
 					<!-- width:500px; -->
-					<span style="color: red"> 마음의 소리 글 </span><br /> <span
-						style="color: skyblue;">팀 프로젝트에 대해 속마음을 털업!</span>
+					<span style="color: #034f84; font-size: 12pt; font-weight: bold;"> 마음의 소리 글 </span><br /> <span
+						style="color: #4040a1; font-size: 10pt; font-style: italic;">팀 프로젝트에 대해 속마음을 털업!</span>
 				</div>
 				<br />
 				<table class="table table-hover" id="dev-table">
 					<thead>
-						<tr>
+						<tr style="font-size: 12pt; font-weight: bold; background-color: #F0F0F0;">
 							<th style="text-align: center; font-family: verdana;">번호</th>
 							<!-- 번호 -->
 							<th style="text-align: center; font-family: verdana;">아이디</th>
