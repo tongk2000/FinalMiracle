@@ -136,6 +136,7 @@
 										// 그리고 data는 url주소(chattingRoomAjax.mr)로부터 리턴받은 데이터이다
 				$("#chatMessage").empty(); // 해당요소 선택자 내용을 모두 비워서 새로운 데이터를 채울 준비를 한다
 				$("#chatMessage").html(data);
+				$("#chatMessage").scrollTop($("#chatMessage")[0].scrollHeight);
 			},
 			error: function(request, status, error) {
 				alert("code: " + request.status + "\n"+"message: " + request.responseText + "\n" + "error: " + error);     

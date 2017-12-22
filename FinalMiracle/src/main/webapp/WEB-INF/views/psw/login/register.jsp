@@ -363,8 +363,8 @@ th#th {
 						<td style="width: 400px; text-align: left;">
 							<input type="text" id="userid" name="userid" class="requiredInfo" placeholder="User-ID" required />&nbsp;&nbsp;
 							<!-- 아이디중복체크 --> 
-							<a class="btn btn-xs btn-warning" id="idcheck">
-								<span style="color: #4F84C4;"><span class="glyphicon glyphicon-ok-circle"></span> ID검사</span>
+							<a class="btn btn-xs btn-success" id="idcheck">
+								<span style="color: white;">ID 중복확인</span>
 							</a> 
 							<span class="error">아이디는 필수입력 사항입니다.</span>
 						</td>
@@ -417,8 +417,8 @@ th#th {
 						<input type="text" id="post1" name="post1" size="4" maxlength="3" placeholder="post1" />&nbsp;-&nbsp;
 						<input type="text" id="post2" name="post2" size="4" maxlength="3" placeholder="post2" />&nbsp;&nbsp;
 						<!-- 우편번호찾기 --> 
-						<a class="btn btn-xs btn-warning" onClick="openDaumPostnum();">
-							<span style="color: #4F84C4;"><span class="glyphicon glyphicon-ok-circle"></span> 우편번호검색</span>
+						<a class="btn btn-xs btn-success" onClick="openDaumPostnum();">
+							<span style="color: #f0efef;">우편번호검색</span>
 						</a> 
 						<span class="error error_post">우편번호 형식이 아닙니다.</span></td>
 					</tr>
