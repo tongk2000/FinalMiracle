@@ -18,29 +18,29 @@ request.setCharacterEncoding("UTF-8");
 					<table>
 						<thead>
 							<tr>
-								<th colspan="2">회원정보</th>
+								<th colspan="2" style="text-align:center; font-family:verdana; border:1px solid black;">회원정보</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr>
-								<td>유저 아이디 :</td>
-								<td><img src="<%= request.getContextPath() %>/resources/images/${map.img}"> ${map.userid}</td>
+								<td style="text-align:center; font-family:verdana; border:1px solid black;">유저 아이디 :</td>
+								<td style="text-align:center; font-family:verdana; border:1px solid black;"><img src="<%= request.getContextPath() %>/resources/images/${map.img}" style="width:50px; height:50px;"> ${map.userid}</td>
 							</tr>
 							<tr>
-								<td>이름 :</td>
-								<td>${map.name}</td>
+								<td style="text-align:center; font-family:verdana; border:1px solid black;">이름 :</td>
+								<td style="text-align:center; font-family:verdana; border:1px solid black;">${map.name}</td>
 							</tr>
 							<tr>
-								<td>나이 :</td>
-								<td>${map.age}</td>
+								<td style="text-align:center; font-family:verdana; border:1px solid black;">나이 :</td>
+								<td style="text-align:center; font-family:verdana; border:1px solid black;">${map.age}</td>
 							</tr>
 							<tr>
-								<td>전화번호 :</td>
-								<td>${map.hp}</td>
+								<td style="text-align:center; font-family:verdana; border:1px solid black;">전화번호 :</td>
+								<td style="text-align:center; font-family:verdana; border:1px solid black;">${map.hp}</td>
 							</tr>
 							<tr>
-								<td>주소 :</td>
-								<td>${map.addr}</td>
+								<td style="text-align:center; font-family:verdana; border:1px solid black;">주소 :</td>
+								<td style="text-align:center; font-family:verdana; border:1px solid black;">${map.addr}</td>
 							</tr>
 						</tbody>
 					</table>

@@ -11,7 +11,10 @@
 <script src="<%=request.getContextPath() %>/resources/summernote/lang/summernote-ko-KR.js"></script>
 
 <style type="text/css">
-
+	.addButtonStyle {
+		font-weight: bold;
+		font-style: italic;
+	}
 </style>
 
 
@@ -53,18 +56,25 @@
 
 <body>
 
-<div style="width: 100%; border: 0px dotted pink; margin-top: 30px;" align="center">
+<div style="width: 100%; height: 100%; border: 0px dotted pink; padding-bottom: 100px; overflow-y: auto;" align="center">
 	<div style="width: 800px; border: 0px solid red;">
 	
-		<div style="width: 800px;" align="left">
-			<table id="table" style="width: 500px; border: 0px solid dimgray; border-left: none; border-right: none;">
+		<div style="width: 800px; padding-top: 30px;" align="left">
+			<table id="table" style="width: 600px; border: 0px solid dimgray; border-left: none; border-right: none;">
 			
-				<!-- ============================= *** 자유게시판 소개 *** =================================== -->
+				<!-- ============================= *** 자유게시판 원글쓰기 / 답변글 쓰기 *** =================================== -->
 				<tr style="background-color: lightblue; padding: 5px; border: 1px solid lightgray; border-left: none; border-right: none;">
 					<td colspan="2" style="padding: 5px; font-weight: bold; font-size: 10pt;">
 
-						<span style="vertical-align: baseline; color: #667292; font-size: smaller;">[${fk_team_idx}팀]</span> 자유게시판 글쓰기 
-
+						<span style="vertical-align: baseline; color: #034f84; font-size: smaller;">[${fk_team_idx}팀]</span> 
+						<span style="font-family: verdana; font-size: 12pt; font-weight: bold;">자유게시판 글쓰기</span> <br/>
+						<c:if test="${groupno ne null}">
+							<span style="vertical-align: baseline; color: #034f84; font-size: smaller; padding-left: 30px;">${fk_idx}번 게시글</span>
+							<span style="font-family: verdana; font-size: 9pt;">에 대한 답변글 작성하기</span>
+						</c:if>
+						<c:if test="${groupno eq null}">
+							
+						</c:if>
 					</td>
 				</tr>
 				<tr class="title" style="border: 1px solid lightgray; border-left: none; border-right: none;">
@@ -88,25 +98,31 @@
 		
 		<div style="border: 0px solid blue; width: 800px;" >
 			<form name="writeFrm">
-				<table id="table" style="border: 1px solid lightgray; border-left: none; border-right: none;">
+				<table id="table" style="border: 1px solid lightgray; width: 800px; border-left: none; border-right: none;">
 					<tr style="border: 1px solid lightgray; border-left: none; border-right: none;">
-						<th style="background-color: #92a8d1; padding: 10px;">아이디</th>
-						<td style="padding: 5px; padding-left: 10px;">
+					
+						<th style="width: 100px; background-color: #E8E8E8; padding: 10px; text-align: center;">아이디</th>
+						
+						<td style="padding: 5px; padding-left: 10px; ">
 						    <input type="text" name="userid" value="${sessionScope.loginUser.userid}" class="short" readonly />
 							<input type="hidden" name="name" value="${sessionScope.loginUser.name}" readonly />
 							<input type="hidden" name="fk_teamwon_idx" value="${sessionScope.teamInfo.teamwon_idx}" readonly />
 						</td>
 					</tr>
 					 
-					<tr style="border: 1px solid lightgray; border-left: none; border-right: none;">
-						<th style="background-color: #92a8d1; padding: 10px;">글제목</th>
+					<tr style="width: 100px; border: 1px solid lightgray; border-left: none; border-right: none;">
+					
+						<th style="background-color: #E8E8E8; padding: 10px; text-align: center;">글제목</th>
+						
 						<td style="padding: 5px; padding-left: 10px;">
-							<input type="text" name="subject" id="subject" class="long" />
+							<input type="text" name="subject" id="subject" class="long"  style="width: 500px;" />
 						</td>
 					</tr>
 					
-					<tr style="border: 1px solid lightgray; border-left: none; border-right: none;">
-		            	<th style="background-color: #92a8d1; padding: 10px;">글내용</th>
+					<tr style="width: 100px; border: 1px solid lightgray; border-left: none; border-right: none;">
+					
+		            	<th style="background-color: #E8E8E8; padding: 10px; text-align: center;">글내용</th>
+		            	
 		            	<td style="padding: 5px;">
 		            		<textarea name="content" id="content" class="summernote"></textarea>
 		            	</td>

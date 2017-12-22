@@ -9,12 +9,12 @@ public class FaqBoardVO {
 	private String regDate;       // 글쓴시간
 	private int status;           // 글삭제여부  1:사용가능한글, 0:삭제된글 
 	
-	private int category;		  // 문의 분류(범주)
+	private String category;		  // 문의 분류(범주)
 	
 	
 	public FaqBoardVO() { }
 	
-	public FaqBoardVO(int idx, String subject, String content, int readCnt, String regDate, int status, int category) {
+	public FaqBoardVO(int idx, String subject, String content, int readCnt, String regDate, int status, String category) {
 		
 		this.idx = idx;
 		this.subject = subject;
@@ -74,11 +74,11 @@ public class FaqBoardVO {
 		this.status = status;
 	}
 
-	public int getCategory() {
+	public String getCategory() {
 		return category;
 	}
 
-	public void setCategory(int category) {
+	public void setCategory(String category) {
 		this.category = category;
 	}
 	

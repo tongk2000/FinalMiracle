@@ -10,43 +10,7 @@ request.setCharacterEncoding("UTF-8");
 <head>
 <meta charset="UTF-8">
 <style type="text/css">
-	/* table {
-		
-		border: 1px solid black;
-	}
-	tr, th, td {
-		border: 1px solid black;
-		border-collapse:none;
-		padding:7px;
-		font-family:verdana;
-	}
-	th {
-		text-align:center;
-		background-color:#337ab7;
-		color:white;
-		font-size:12pt;
-	}
-	td {
-		padding-left:5px;
-	}
-	.imgs {
-		width:25px;
-		height:25px;
-	}
-	div.min{
-		height:10px;
-		opacity:1.0;
-	} 
-	.subjectstyle {font-weight: bold;
-    	           color: #eaeaea;
-    	           cursor: pointer; }
-    .grayColor {
-    	background-color:#eaeaea;
-    	cursor: pointer;
-    }
-    .selectLine {
-    	background-color:#eaeaea;
-    } */
+
     #displayList {
     	position:absolute;
     	background-color:white; 
@@ -58,6 +22,8 @@ request.setCharacterEncoding("UTF-8");
     #adjust {
     	position:absolute;
     }
+    
+   
 </style>
 <title>Notice 게시판 입니다!</title>
 </head>
@@ -150,8 +116,8 @@ request.setCharacterEncoding("UTF-8");
 					<div class="panel-heading"></div>
 					<div style=" border:3px solid #337ab7; "> <!-- width:500px; -->
 					 <span style="color:red"> 공지사항 글 </span><br/>
-					 <span style="color:skyblue;">팀 프로젝트 중요사항 입니다.</span>
-					</div><br/>
+					 <span style="color:skyblue; padding-left:130px;">팀 프로젝트 중요사항 입니다.</span><div style="float:right; padding-right:30px;">총 게시물  :  ${totalNum}</div>
+					</div>
 					<table class="table table-hover" id="dev-table">
 						<thead>
 							<tr>
@@ -167,7 +133,6 @@ request.setCharacterEncoding("UTF-8");
 							</tr>
 						</thead>
 						<tbody>
-							<tbody>
 							<c:if test="${empty list}">
 								<tr>
 									<td colspan="6">데이터가 없습니다.</td>
@@ -184,13 +149,13 @@ request.setCharacterEncoding("UTF-8");
 											</a>
 										</td>
 									<c:if test="${nt.depth == 0}">
-											<td width="35%" onClick="goView('${nt.n_idx}','${nt.fk_userid}', '${nt.t_idx}')" style=" font-family:verdana;"><span style="color:red; margin-left:10px;">${nt.subject} <span style="color:blue">&nbsp;&nbsp;&nbsp;[댓글 수 : ${nt.count}]</span></span></td><!-- 제목 -->
+											<td width="35%" onClick="goView('${nt.n_idx}','${nt.fk_userid}', '${nt.t_idx}')" style=" font-family:verdana;"><span style="color:black; margin-left:10px;">${nt.subject} <span style="color:blue">&nbsp;&nbsp;&nbsp;[댓글 수 : ${nt.count}]</span></span></td><!-- 제목 -->
 									</c:if>
 									<c:if test="${nt.depth > 0}">
 											<td width="35%" onClick="goView('${nt.n_idx}','${nt.fk_userid}','${nt.t_idx}')" style="margin-left:10px; padding-left:${nt.depth*10}px; color:black; font-weight:bold;  font-family:verdana;">└ [답글] ${nt.subject} <span style="color:blue">&nbsp;&nbsp;&nbsp;[댓글 수 : ${nt.count}]</span></td><!-- 제목 -->
 									</c:if>
 									<c:if test="${nt.file > 0}">
-										    <td width="5%" style="text-align:center; font-family:verdana;"><img src="<%=request.getContextPath() %>/resources/images/disk.gif" ></td>
+										    <td width="5%" style="text-align:center; font-family:verdana;"><a class="btn btn-default"><span class="glyphicon glyphicon-floppy-disk" ></span></a></td>
 									</c:if>	
 									<c:if test="${nt.file == 0}">
 										    <td width="8%" style="text-align:center; font-family:verdana;"></td>
@@ -198,10 +163,10 @@ request.setCharacterEncoding("UTF-8");
 										<td width="22%" style="text-align:center; font-family:verdana;">${nt.regday}</td><!-- 날짜 -->
 										<td width="7%" style="text-align:center; font-family:verdana; color:blue;">${nt.readcount}</td><!-- 조회수 -->
 									<c:if test="${team.status == 2}" >
-										<td width="8%" style="text-align:center; font-family:verdana;"><button type="button" onClick="goEdit('${nt.n_idx}','${nt.t_idx}');">글수정</button></td>
+										<td width="8%" style="text-align:center; font-family:verdana;"><button type="button" class="btn btn-default" onClick="goEdit('${nt.n_idx}','${nt.t_idx}');" style="height:30px;">수정	</button></td>
 									</c:if>	
 									</tr>
-									<input type="hidden" id="nidx"name="aidx" value="${nt.n_idx}"/>		
+									<input type="hidden" id="nidx"name="aidx" value="${nt.n_idx}"/>		  
 								</c:forEach>
 							</c:if>
 						</tbody>
@@ -210,26 +175,26 @@ request.setCharacterEncoding("UTF-8");
 			</div>	
 			<div id="adjust" style="border:0px dotted red;">
 				<c:if test="${team.status == 2}" >
-					<button type="button" onClick="goWrite();">글쓰기</button>
-					<button type="button" id="del" >삭제</button>
+					<button type="button" onClick="goWrite();" class="btn btn-default">글쓰기</button>
+					<button type="button" id="del" class="btn btn-default">삭제</button>
 				</c:if>
 			</div>
-			<br/>
 			<div style="margin: 0 auto;">
 				${pagebar}
 			</div>
 			<br/>
 			<form name="frm">
-				<select id="searchType" name="searchType" style="font-size:12pt; ">
-					<option value="fk_userid">아이디</option>
-					<option value="subject">제목</option>
-				</select>
-				<input type="text" id="searchString" name="searchString" style="width:187px"/>
-				<button type="button" id="btnClick" onClick="goSearch();">검색</button><br/>
+					<select id="searchType" name="searchType" style="font-size:12pt; ">
+						<option value="fk_userid">아이디</option>
+						<option value="subject">제목</option>
+					</select>
+					
+					<input type="text" id="searchString" name="searchString" style="width:187px"/>
+					<button class="btn btn-default" type="button" id="btnClick" onClick="goSearch();">검색</button><br/>
 			</form>
 			
-		    <div style="z-index:2000;">
-					<div id="displayList" ></div>
+		    <div >
+				<div id="displayList" ></div>
 			</div>
         </div>    
 	<form name="view">
@@ -251,14 +216,24 @@ request.setCharacterEncoding("UTF-8");
 		<input type="hidden" name="userid" />
 		<input type="hidden" name="teamNum" />
 	</form>
-	
 
 	<script type="text/javascript">
 		$(document).ready(function(){
-			var right_dev = $("#dev-table").position().right;
-			var bottom_dev = $("#dev-table").position().bottom+2;
-			$("#adjust").css({"left":right_dev+"px", "top":top_dev+"px"});
+			keep();
+			$("#displayList").hide();
+			var left_table = $("#dev-table").position().left-50;  // 테이블 기준 , 글쓰기/삭제버튼 위치조정
+			var top_table = $("#dev-table").position().top-260;
+			$("#adjust").css({"right":left_table+"px", "bottom":top_table+"px"}); 
+			 
+			/* var left_dev = $("#dev-table").position().left+350;   // 테이블기준  검색조건 select 태그
+			var bottom_dev = $("#dev-table").position().bottom;
+			$("#searchType").css({"left":left_dev+"px", "bottom":bottom_dev+"px"});
 			
+			var right_st = $("#searchType").position().right+10;   // 
+			var top_st = $("#searchType").position().top;
+			$("#searchbar").css({"left":right_st+"px", "top":top_st+"px"});
+			 */
+
 			$("#userid").click(function(){
 				var frm = document.frm;
 				frm.searchType.value = "fk_userid";
@@ -289,8 +264,7 @@ request.setCharacterEncoding("UTF-8");
 				});
 				location.href="<%=request.getContextPath()%>/noticeDel.mr?idx="+idx;
 			});
-			keep();
-			$("#displayList").hide();
+			
 			$("#searchString").keyup(function(){
 				if($("#searchType").val()==null||$("#searchType").val()=="") {
 					$("#searchType").val("fk_userid");
@@ -312,7 +286,7 @@ request.setCharacterEncoding("UTF-8");
 								result = "<span class='first' style='color:blue;'>" +wordstr.substr(0, index)+ "</span>" + "<span class='second' style='color:red; font-weight:bold;'>" +wordstr.substr(index, len)+ "</span>" + "<span class='third' style='color:blue;'>" +wordstr.substr(index+len, wordstr.length - (index+len) )+ "</span>";  
 								resultHTML += "<span style='cursor:pointer;'>"+ result +"</span><br/>"; 
 							});
-							var left = $("#searchString").position().left-28;
+							var left = $("#searchString").position().left-28; // 검색창 기준
 							var top = $("#searchString").position().top+5;
 							top = top + ($("#searchString").height());
 							$("#displayList").css({"left":left+"px", "top":top+"px"});
@@ -397,6 +371,7 @@ request.setCharacterEncoding("UTF-8");
 		}
 		function goView(n_idx, n_userid, n_t_idx) {
 			var frm = document.view;
+			alert(n_idx);
 			frm.idx.value = n_idx;
 			frm.userid.value = n_userid; 
 			frm.teamidx.value = n_t_idx;
@@ -412,7 +387,6 @@ request.setCharacterEncoding("UTF-8");
 			frm.action="<%=request.getContextPath()%>/noticeViewEdit.mr";
 			frm.method="get";
 			frm.submit();
-			
 		}
 		function goWrite() {
 			<c:if test="${team.teamNum != null&&team.teamNum!=''}" >
@@ -432,7 +406,5 @@ request.setCharacterEncoding("UTF-8");
 		}
 	</script>
 	<div class="modal fade" id="userinfo" role="dialog"></div>
-	
-	
 </body>
 </html>

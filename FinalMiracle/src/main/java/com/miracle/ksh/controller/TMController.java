@@ -937,16 +937,14 @@ public class TMController {
 		
 		String team_idx = req.getParameter("team_idx");
 		
-		int n = servicepsw.registerMember(mvo, mdvo); 
+		int n = servicepsw.registerMember(mvo, mdvo);
 
 		if(n == 2) {
 			String msg = "Miracle World 의 가족이 되신걸 환영합니다.";
-			String loc = "tminviteLogin.mr";
+			String loc = "tminviteLogin.mr?idx="+team_idx;
 			req.setAttribute("msg", msg);
 			req.setAttribute("loc", loc);
 		}
-		
-		req.setAttribute("team_idx", team_idx);
 		
 		return "ksh/msg.not";
 	}

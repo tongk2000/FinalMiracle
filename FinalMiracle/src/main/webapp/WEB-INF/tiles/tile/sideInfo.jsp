@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
   pageEncoding="UTF-8"%>
+<<<<<<< HEAD
 <%@ page import="java.net.InetAddress" %>
 
 
@@ -44,6 +45,9 @@
 	    $(document).tooltip();
 	});
 </script>
+=======
+<%@ page import="java.net.InetAddress" %>
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 
 <ul style="list-style-type: none; margin: 0px; padding: 0px; text-align: left;">
 	<li onclick="javascript:location.href='<%= request.getContextPath() %>/doList.mr'" title="프로젝트" id="sideDoIcon" class="iconTag sideBarLi">

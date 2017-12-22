@@ -124,27 +124,27 @@ public class MyUtil {
 		// currentShowPageNo 가 21~30 일때 pageNo 는 21
 		String str_pageNo = "";
 		if (pageNo == 1) {
-			str_pageNo = "&nbsp;[이전"+blockSize+"페이지]";
+			str_pageNo = "&nbsp;<a class='btn btn-default'><span class='glyphicon glyphicon-chevron-left'></span></a>";
 		}
-		else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"\" >"+"[이전"+blockSize+"페이지]</a>&nbsp;"; 
+		else {	
+			str_pageNo = "&nbsp;<a class='btn btn-default' href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"\" >"+"<span class='glyphicon glyphicon-chevron-left'></span>"+"</a>&nbsp;"; 
 		}
 		pageBar += str_pageNo;
 		while(!(pageNo > totalPage || loop > blockSize)){
 			if (pageNo == currentShowPageNo)
-				str_pageNo = "&nbsp;<span style=\"color:red; font-size:13pt; font-weight:bold; text-decoration:underline;\">"+pageNo+ "</span>&nbsp;";
-			else
-				str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"\" >"+pageNo+"</a>" + "&nbsp;";
+				str_pageNo = "&nbsp;<a class='btn btn-default'><span style=\"color:red; font-size:12pt; font-weight:bold; text-decoration:underline;\">"+pageNo+ "</a>&nbsp;";
+			else			
+				str_pageNo = "&nbsp;<a class='btn btn-default' href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"\" ><span>"+pageNo+"</span></a>";
 			pageBar += str_pageNo; 
-			pageNo++;
+			pageNo++;	
 			loop++;
 		}
 		if (pageNo > totalPage) {
-			str_pageNo = "&nbsp;[다음"+blockSize+"페이지]";
+			str_pageNo = "&nbsp;"+"<a class='btn btn-default'><span class='glyphicon glyphicon-chevron-right'></span></a>";
 		}
 		else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"\" >"+"[다음"+blockSize+"페이지]</a>&nbsp;"; 
-		}
+			str_pageNo = "&nbsp;<a class='btn btn-default' href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"\" >"+"<span class='glyphicon glyphicon-chevron-right'></span></a>&nbsp;";
+		}	
 		pageBar += str_pageNo;	
 		return pageBar;
 	}// end of String getPageBar(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String url)-----------------	   
@@ -159,31 +159,31 @@ public class MyUtil {
 		// currentShowPageNo 가 21~30 일때 pageNo 는 21
 		String str_pageNo = "";
 		if (pageNo == 1) {
-			str_pageNo = "&nbsp;[이전"+blockSize+"페이지]";
+			str_pageNo = "&nbsp;<a class='btn btn-default'><span class='glyphicon glyphicon-chevron-left'></span></a>";
 		}
-		else {
-			str_pageNo = "&nbsp;<a onClick='gourl("+(pageNo-1)+");' >"+"[이전"+blockSize+"페이지]</a>&nbsp;"; 
-		}
+		else { // "&nbsp;<a onClick='gourl("+(pageNo-1)+");' >"+"[이전"+blockSize+"페이지]</a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a class='btn btn-default' onClick='gourl("+(pageNo-1)+");' >"+"<span class='glyphicon glyphicon-chevron-left'></span>"+"</a>&nbsp;"; 
+		}			
 		pageBar += str_pageNo;
 		while(!(pageNo > totalPage || loop > blockSize)){
-			if (pageNo == currentShowPageNo)
-				str_pageNo = "&nbsp;<span style='color:red; font-size:13pt; font-weight:bold; text-decoration:underline;'>"+pageNo+ "</span>&nbsp;";
-			else
-				str_pageNo = "&nbsp;<a onClick='gourl("+pageNo+");' >"+pageNo+"</a>" + "&nbsp;";
+			if (pageNo == currentShowPageNo)  // "&nbsp;<span style='color:red; font-size:13pt; font-weight:bold; text-decoration:underline;'>"+pageNo+ "</span>&nbsp;";
+				str_pageNo = "&nbsp;<a class='btn btn-default'><span style=\"color:red; font-size:12pt; font-weight:bold; text-decoration:underline;\">"+pageNo+ "</a>&nbsp;";
+			else 
+				str_pageNo = "&nbsp;<a class='btn btn-default' onClick='gourl("+pageNo+");' ><span>"+pageNo+"</span></a>" + "&nbsp;";
 			pageBar += str_pageNo; 
-			pageNo++;
+			pageNo++;   //  "&nbsp;<a onClick='gourl("+pageNo+");' >"+pageNo+"</a>" + "&nbsp;";
 			loop++;
 		}
 		if (pageNo > totalPage) {
-			str_pageNo = "&nbsp;[다음"+blockSize+"페이지]";
+			str_pageNo = "&nbsp;"+"<a class='btn btn-default'><span class='glyphicon glyphicon-chevron-right'></span></a>";
 		}
-		else {
-			str_pageNo = "&nbsp;<a onClick='gourl("+pageNo+");' >"+"[다음"+blockSize+"페이지]</a>&nbsp;"; 
-		}
+		else {// "&nbsp;<a onClick='gourl("+pageNo+");' >"+"[다음"+blockSize+"페이지]</a>&nbsp;";
+			str_pageNo = "&nbsp;"+"<a class='btn btn-default' onClick='gourl("+pageNo+");'><span class='glyphicon glyphicon-chevron-right'></span></a>";
+		}					
 		pageBar += str_pageNo;	
 		return pageBar;
 	}// end of String getPageBar(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String url)-----------------	   
-	public static String getPageBarWithSearch(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String colname, String search, String period, String url) {
+	public static String getPageBarWithSearch(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String searchType, String searchString, String period, String url) {
 		String pageBar = "";
 		int loop = 1;
 		int pageNo = ((currentShowPageNo - 1)/blockSize)*blockSize + 1; 
@@ -193,26 +193,26 @@ public class MyUtil {
 		// currentShowPageNo 가 21~30 일때 pageNo 는 21
 		String str_pageNo = "";
 		if (pageNo == 1) {
-			str_pageNo = "&nbsp;<";
+			str_pageNo = "&nbsp;<a class='btn btn-default'><span class='glyphicon glyphicon-chevron-left'></span></a>"; // < 맨 처음엔 빈값
 		}
-		else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" >"+"<"+"</a>&nbsp;"; 
+		else {																											// < 처음 이후엔 a링크
+			str_pageNo = "&nbsp;<a class='btn btn-default' href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&searchType="+searchType+"&searchString="+searchString+"&period="+period+"\" >"+"<span class='glyphicon glyphicon-chevron-left'></span>"+"</a>&nbsp;"; 
 		}
 		pageBar += str_pageNo;
 		while(!(pageNo > totalPage || loop > blockSize)){
-			if (pageNo == currentShowPageNo)
-				str_pageNo = "&nbsp;<span style=\"color:red; font-size:12pt; font-weight:bold; text-decoration:underline;\">"+pageNo+ "</span>&nbsp;";
-			else
-				str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" >"+pageNo+"</a>" + "&nbsp;";
+			if (pageNo == currentShowPageNo)																			// 번호
+				str_pageNo = "&nbsp;<a class='btn btn-default'><span style=\"color:red; font-size:12pt; font-weight:bold; text-decoration:underline;\">"+pageNo+ "</a>&nbsp;"; // 빨간 글자
+			else																										// 번호
+				str_pageNo = "&nbsp;<a class='btn btn-default' href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&searchType="+searchType+"&searchString="+searchString+"&period="+period+"\" ><span>"+pageNo+"</span></a>" + "&nbsp;"; // 그 외의 페이징 글자
 			pageBar += str_pageNo; 
 			pageNo++;
 			loop++;
 		}
 		if (pageNo > totalPage) {
-			str_pageNo = "&nbsp;"+">";
+			str_pageNo = "&nbsp;"+"<a class='btn btn-default'><span class='glyphicon glyphicon-chevron-right'></span></a>"; // > 맨 마지막엔 빈값
 		}
-		else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\" >"+" >"+"</a>&nbsp;"; 
+		else {																												// > 맨 마지막 이전엔 a링크
+			str_pageNo = "&nbsp;<a class='btn btn-default' href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&searchType="+searchType+"&searchString="+searchString+"&period="+period+"\" >"+"<span class='glyphicon glyphicon-chevron-right'></span></a>&nbsp;"; // >
 		}
 		pageBar += str_pageNo;	
 		return pageBar;

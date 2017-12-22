@@ -157,6 +157,11 @@ public interface PjsinterDAO {
 
 	HashMap<String, String> getNoticeInfo(HashMap<String, String> view); // 공지사항 정보 가져오기
 
+	String getCountNum(HashMap<String, Object> map); // 공지사항 총 게시물 수를 반환
+
+	String getNiticefileNum(); // 파일의 최대값
+
+	String getMindfileNum();
 	
 
 	

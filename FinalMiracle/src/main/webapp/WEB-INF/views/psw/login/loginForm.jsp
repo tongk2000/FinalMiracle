@@ -196,10 +196,7 @@
    }
 </script>
 
-
 </head>
-
-
 
 <body background="<%= request.getContextPath() %>/resources/images/loginbg.png">
 

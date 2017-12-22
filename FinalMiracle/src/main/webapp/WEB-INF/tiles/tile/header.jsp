@@ -5,15 +5,6 @@
 <%-- ===== tiles 중 header 페이지 만들기  ===== --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<%
-	// === 서버 IP 주소 알아오기 === //
-	InetAddress inet = InetAddress.getLocalHost();
-	String serverIP = inet.getHostAddress();
-	int portnumber = request.getServerPort();
-
-	String serverName = "http://" + serverIP + ":" + portnumber;
-%>
-
 <style type="text/css">
 	
 	.modal.modal-center {
@@ -73,7 +64,7 @@
 		<div onclick="javascript:location.href='<%= request.getContextPath() %>/member_logout.mr'" title="로그아웃" class="iconTag headerDiv">
 			<img src="<%= request.getContextPath() %>/resources/images/icon/13.png" class="iconPng headerIconPng"/>
 		</div>
-		<div onclick="javascript:showMyInfo();" title="${sessionScope.loginUser.name}(${sessionScope.loginUser.userid})" style="display:inline-block;">
+		<div onclick="javascript:showMyInfo();" title="${sessionScope.loginUser.name}(${sessionScope.loginUser.userid})" style="display:inline-block; cursor:pointer;">
 			<img src="<%= request.getContextPath() %>/resources/images/${sessionScope.loginUser.img}" style="height: 50px; width: 50px;">
 		</div>
 	</div>

@@ -46,7 +46,7 @@ request.setCharacterEncoding("UTF-8");
 	<div style="border: 0px solid green; width:100%;">
 		<div style="border: 0px solid yellow;" align="center">
 			<div style=" border:3px solid #337ab7; heigth:100px; border-left:none; border-right:none;  width:800px; " align="center"> 
-			 <span style="color:Orange"> 공지사항 글 </span><br/>
+			 <span style="color:red"> 공지사항 글 </span><br/>
 			 <span style="color:lightblue;">팀 프로젝트 중요사항 입니다.</span>
 			</div><br/>
 			<form name="editform">
@@ -88,9 +88,9 @@ request.setCharacterEncoding("UTF-8");
 				</div>
 			<br/>
 			<br/>
-			<div id="displayList" style="background-color:white; align:center;"></div>
+			<!-- <div id="displayList" style="background-color:white; align:center;"></div>
 			<br/>
-			<div style="align:center;">댓글 :&nbsp;&nbsp;<input type="text" id="contents" name="contents"/> <button type="button" id="goClick">쓰기</button></div> <br/><br/>
+			<div style="align:center;">댓글 :&nbsp;&nbsp;<input type="text" id="contents" name="contents"/> <button type="button" id="goClick">쓰기</button></div> <br/><br/> -->
 		</div>
 	</div>
 	<!-- <form name="edit">
@@ -101,6 +101,11 @@ request.setCharacterEncoding("UTF-8");
 		<input type="hidden" name="content">
 	</form> -->
 	<!-- comment(ReplyVO), map(team_idx , userid) 받는다. -->
+	
+	
+	
+	
+	
 	<script>
 		$(document).ready(function(){
 			getReply();

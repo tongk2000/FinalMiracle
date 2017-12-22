@@ -150,6 +150,12 @@ public interface PjsinterService {
 
 	HashMap<String, String> getNoticeInfo(HashMap<String, String> view); // 공지사항 정보 가져오기
 
+	String getCountNum(HashMap<String, Object> map); // 총 게시물 수를 나타낸다.
+
+	String getNiticefileNum(); // 파일을 가져오자
+
+	String getMindfileNum(); 
+
 
 	
 

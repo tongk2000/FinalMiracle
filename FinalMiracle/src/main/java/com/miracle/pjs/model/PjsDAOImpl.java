@@ -462,6 +462,24 @@ public class PjsDAOImpl implements PjsinterDAO {
 		HashMap<String, String> map = sqlsession.selectOne("pjsfinal.getNoticeInfo", view);
 		return map;
 	}
+	@Override
+	public String getCountNum(HashMap<String, Object> map) {
+		// 게시물의 총 수를 반환
+		String num = sqlsession.selectOne("pjsfinal.getCountNum", map);
+		return num;
+	}
+	@Override
+	public String getNiticefileNum() {
+		// 파일의 최대값
+		String num = sqlsession.selectOne("pjsfinal.getNiticefileNum");
+		return num;
+	}
+	@Override
+	public String getMindfileNum() {
+		// TODO Auto-generated method stub
+		String n = sqlsession.selectOne("pjsfinal.getMindfileNum");
+		return n;
+	}
 	
 
 	
