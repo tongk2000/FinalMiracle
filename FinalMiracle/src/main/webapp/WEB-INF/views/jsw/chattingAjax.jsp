@@ -242,7 +242,7 @@
 
 	<div style="float: left; width: 16%; height: 650px; border: 0px solid red; overFlow-Y: auto; overFlow-X: hidden;">
 	<div style="height: 30px; font-size: 25px; border-bottom: 1px solid black;">채팅방 목록</div>
-	<div style="border: 0px solid maroon; font-size: 20px; vertical-align: middle; padding-top: 3px; cursor: pointer;" onclick="newChattingRoom()"><img src="<%= request.getContextPath() %>/resources/images/addchat.png" class="iconPng sideIconPng" />&nbsp;새 채팅방</div>
+	<div style="border-bottom: 1px solid black; font-size: 20px; vertical-align: middle; padding-top: 3px; cursor: pointer;" onclick="newChattingRoom()"><img src="<%= request.getContextPath() %>/resources/files/addchat.png" class="iconPng sideIconPng" />&nbsp;새 채팅방</div>
 		<div style="border: 0px solid red;" id="room"></div>
 	</div>
 	<div style="float: left; width: 59%;">

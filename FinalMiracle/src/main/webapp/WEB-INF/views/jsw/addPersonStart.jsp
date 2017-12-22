@@ -101,7 +101,7 @@
 			
 			
 		});
-		$("#inviteMember").click(function() {
+		$("#inviteMember1").click(function() {
 		var inv = $('.inv').length;
 			if(inv <= 0){
 				alert("초대할 인원을 선택해야합니다");
@@ -181,23 +181,26 @@
 </head>
 <body>
 	<div style="font-size: 20px;">
-		<div style="display: inline; margin: 20px;"><span id="AllMember">전체인원 보기</span></div>
+		<div style="display: inline; margin: 20px;"><span id="AllMember" class="btn btn-lg"><span class="glyphicon glyphicon-user"></span> 전체인원 보기</span></div>
 		<div style="display: inline; margin: 20px;">팀별 보기 : 
-		  <select id="teamList">
+		  <select id="teamList" style="height: 30px;">
 		    <c:forEach var="team" items="${teamList}" varStatus="status">
 				<option value="${team.tidx}">${team.name}</option>
 			</c:forEach>
 		  </select>
 		</div>
 		<div style="display: inline-block; margin: 20px;">
-		<select id="nameOrId">
+		<select id="nameOrId" style="height: 33px;">
 			<option value="name">이름</option>
 			<option value="userid">아이디</option>
 		</select>
-		<input id="nameORid" type="text"/>&nbsp;<span id="serchMem">찾기</span>
+		<input id="nameORid" type="text"/>&nbsp;<span id="serchMem" class="btn btn-info"><span class="glyphicon glyphicon-search"></span> 찾기</span>
 		</div>
-		<div id="MemberList" style="border: 1px solid teal; height : 400px; overflow: auto;"></div>
-		<div style="float: right;"><span id="inviteMember">초대하기</span></div>
+		<div id="MemberList" style="border: 0px solid teal; height : 400px; overflow: auto;"></div>
+		<div>
+		<span id="inviteMember1" class="btn btn-lg" style="background-color: yellow; margin-right: 20px;">초대하기</span>
+		<span class="btn btn-lg btn-danger" onclick="goChatRoom(${cridx})">취소하기</span>
+		</div>
 	</div>
 	<form id="newRoomFrm">
 		<input type="hidden" name="invmemidx" />

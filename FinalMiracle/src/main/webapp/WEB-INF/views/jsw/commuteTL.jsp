@@ -31,7 +31,7 @@
 </script>
 <div align="center" style="margin-top: 5%;">
 	<div align="center" style="border: 0px solid green; width: 50%;">
-		<img height="140px" width="140px" src="<%=request.getContextPath() %>/resources/images/${timg}">&nbsp;
+		<img height="140px" width="140px" src="<%=request.getContextPath() %>/resources/files/${timg}">&nbsp;
 		<span style="font-size: 40px; font: bold; vertical-align: middle;">팀 ${teamname}</span>
 	</div>
 
@@ -53,7 +53,7 @@
 					<c:forEach var="map" items="${teamWonList}">
 						<tr>
 							<td>${map.twidx}</td>
-							<td><a href="<%=request.getContextPath() %>/commutetw.mr?idx=${map.twidx}&username=${map.username}"><img height="70px" width="70px" src="<%=request.getContextPath() %>/resources/images/${map.img}"></a></td>
+							<td><a href="<%=request.getContextPath() %>/commutetw.mr?idx=${map.twidx}&username=${map.username}"><img height="70px" width="70px" src="<%=request.getContextPath() %>/resources/files/${map.img}"></a></td>
 							<td><a href="<%=request.getContextPath() %>/commutetw.mr?idx=${map.twidx}&username=${map.username}">${map.userid}</a></td>
 							<td><a href="<%=request.getContextPath() %>/commutetw.mr?idx=${map.twidx}&username=${map.username}">${map.username}</a></td>
 							<td>${map.regdate}</td>

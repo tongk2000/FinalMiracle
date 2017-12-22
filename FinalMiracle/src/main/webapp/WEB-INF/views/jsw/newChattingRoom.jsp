@@ -227,8 +227,8 @@
 		<!-- <a class="btn btn-sm btn-info" onclick="searchMonth()"><span class="glyphicon glyphicon-search"></span> 검색</a> -->
 		<input id="nameORid" type="text"/>&nbsp;<span id="serchMem" class="btn btn-info"><span class="glyphicon glyphicon-search"></span> 찾기</span>
 		</div>
-		<div id="MemberList" style="border: 1px solid teal; height : 400px; overflow: auto;"></div>
-		<div style="margin-top: 10px; vertical-align: middle;"><input type="text" id="roomname" placeholder="채팅방 이름(10자까지 입력가능)" maxlength="10" style="width: 80%;"/>&nbsp;<span id="newRoom">방만들기</span></div>
+		<div id="MemberList" style="border: 0px solid teal; height : 400px; overflow: auto;"></div>
+		<div style="margin-top: 10px; vertical-align: middle;"><input type="text" id="roomname" placeholder="채팅방 이름(10자까지 입력가능)" maxlength="10" style="width: 80%;"/>&nbsp;<span id="newRoom" class="btn btn-default" style="background-color: yellow;">방만들기</span></div>
 	</div>
 	<form id="newRoomFrm">
 		<input type="hidden" name="invmemidx" />
