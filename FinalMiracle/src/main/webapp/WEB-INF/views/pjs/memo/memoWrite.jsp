@@ -15,7 +15,7 @@
 		padding:10px;
 	}
 	table, td, tr, th {
-		border : 1px solid black;
+		border : 1px solid #337ab7;
 		padding:7px;
 	}
 	#content {
@@ -116,28 +116,28 @@
 </head>
 <body>
 	<c:set var="team" value="${teamNum}"></c:set>
-	<div style="border:1px solid green; padding:9px;">
-		<div style="border:1px solid red; padding:9px;">
-			<div style="border:1px solid blue; padding:9px;"  align="center">
-				<div style="border:1px solid purple;">
+	<div style="border:0px solid green; padding:9px;">
+		<div style="border:0px solid red; padding:9px;">
+			<div style="border:0px solid blue; padding:9px;"  align="center">
+				<div style="border-top:1px solid lightgray; border-bottom:1px solid lightgray; padding:10px; size:18px;">
 					<a href="<%=request.getContextPath()%>/memoWrite.mr"><span style="color:red;">쪽지 쓰기</span></a>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<a href="<%=request.getContextPath()%>/memomemory.mr"><span style="color:red;">보낸 쪽지</span></a>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<a href="<%=request.getContextPath()%>/memoreceiver.mr"><span style="color:red;">받은 쪽지</span></a>
 				</div>
-				<table>
+				<table style="margin:10px;">
 					<tbody>
 						<tr> <!--  teamNum, m.userid, m.idx as memberNum, w.status, m.img -->
 							<c:if test="${userTeam.status == 2}">
-								<th>유저   </th><td><img src="<%= request.getContextPath() %>/resources/images/${userTeam.img}" class="imgs"> ${userTeam.name} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${userTeam.teamNum}팀  팀장]</td> 
+								<th style="background-color:#1f5c87">유저   </th><td><img src="<%= request.getContextPath() %>/resources/images/${userTeam.img}" class="imgs"> ${userTeam.name} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${userTeam.teamNum}팀  팀장]</td> 
 							</c:if>
 							<c:if test="${userTeam.status == 1}">
-								<th>유저   </th><td><img src="<%= request.getContextPath() %>/resources/images/${userTeam.img}" class="imgs"> ${userTeam.name} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${userTeam.teamNum}팀   팀원]</td> 
+								<th style="background-color:#1f5c87">유저   </th><td><img src="<%= request.getContextPath() %>/resources/images/${userTeam.img}" class="imgs"> ${userTeam.name} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[${userTeam.teamNum}팀   팀원]</td> 
 							</c:if>
 						</tr>
 						<tr>
-							<th>보낼 사람</th>
+							<th style="background-color:#1f5c87">보낼 사람</th>
 			         		<td>
 			         		    <label for="spinnerOqty">선택 : </label>
 			  		            <input id="spinnerOqty" value="0" style="width: 30px; height: 20px;">
@@ -157,16 +157,16 @@
 							</td>	 --%>
 						</tr>
 						<tr>
-							<th>제목   </th><td><input type="text" id="subject"/></td>
+							<th style="background-color:#1f5c87">제목   </th><td><input type="text" id="subject"/></td>
 						</tr>
 						<tr>
-							<th>내용   </th><td><textarea name="content" id="content" class="summernote"></textarea></td>
+							<th style="background-color:#1f5c87">내용   </th><td><textarea name="content" id="content" class="summernote"></textarea></td>
 						</tr>
 					</tbody>
 				</table>
-				<div style="border:1px solid gray; display:relative">
-					<button type="reset" onClick="javascript:history.back();" id="cancel">취소</button>
-					<button type="button" onClick="goWrite();">완료</button>
+				<div style="border:0px solid gray; display:relative">
+					<button type="reset" onClick="javascript:history.back();" id="cancel"  class="btn btn-default">취소</button>
+					<button type="button" onClick="goWrite();"  class="btn btn-default">완료</button>
 				</div>
 			</div>
 		</div>

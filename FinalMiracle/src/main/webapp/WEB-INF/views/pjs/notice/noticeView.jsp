@@ -33,7 +33,7 @@ request.setCharacterEncoding("UTF-8");
 			<table style="width:80%; margin:20px;">
 				<thead>
 					<tr>
-						<th colspan="2" style="color:red; text-align:center; border-top:1px solid lightgray; "><span >공지글</span></th> <!-- style="size:20px;" -->
+						<th colspan="2" style="color:red; text-align:center; border-top:1px solid lightgray; "><span >공지글<br/><br/></span></th><!-- style="size:20px;" -->
 					</tr>
 				</thead>
 				<tbody>
@@ -47,19 +47,18 @@ request.setCharacterEncoding("UTF-8");
 							 제목 : <input type="hidden" name="subject" value="${user.subject}">${user.subject}
 						</td>
 					</tr>
-						
 				</tbody>
 			</table>
 			<table style="width:80%;">
 				<tr > <!-- style="min-height: 200px;"  -->
-					<td id="edit1"><div >${user.content}</div></td> <!-- style="width:500px; height:500px;" -->
+					<td id="edit1"><div>${user.content}</div></td> <!-- style="width:500px; height:500px;" -->
 				</tr>
 			</table>
 			<table style="width:80%; border-top:1px solid lightgray; border-bottom:1px solid lightgray; margin:10px; "> 
 				<tr >
 					<td style="padding-top:1%; padding-bottom:1%; width:20%;">첨부파일</td>   <!-- USERID, IMG, SUBJECT, CONTENT, STATUS, IDX, FILENAME, ORGFILENAME, FILESIZE, FK_IDX -->
 					<td style="padding-top:1%; padding-bottom:1%;">
-					    <a href="<%= request.getContextPath() %>/download.mr?nidx=${user.n_idx}&fidx=${file.idx}">${file.orgFilename}</a> 
+					    <a href="<%= request.getContextPath() %>/download.mr?nidx=${user.n_idx}&fidx=${file.idx}">${file.orgFilename}</a>  <!-- tbl_notice의 idx가 file.idx이다. -->
 					</td>
 				</tr>
 			</table>
@@ -69,7 +68,7 @@ request.setCharacterEncoding("UTF-8");
 			<div style="display:inline;"> <!-- " -->
 				<button type="button" onClick="goback();">목록보기</button>
 			</div> 
-			<c:if test="${sessionScope.teamInfo.teamwon_status == 2}">
+			<c:if test="${sessionScope.teamInfo.teamwon_status == 1}">
 				<div style="margin-left:80px; display:inline;" ><!--  -->
 					<button type="button" onClick="goEdit();">수정글쓰기</button>
 				</div>
@@ -128,7 +127,7 @@ request.setCharacterEncoding("UTF-8");
 			});
 			getReply();
 		}
-		<%-- function goEdit() {
+		function goEdit() {
 			var frm = document.edit;
 			frm.nidx.value="${nidx}";
 			frm.userid.value="${sessionScope.loginUser.userid}";
@@ -136,7 +135,7 @@ request.setCharacterEncoding("UTF-8");
 			frm.action="<%=request.getContextPath()%>/noticeEditWrite.mr";
 			frm.method="get";
 			frm.submit();
-		} --%>
+		}
 		function goback() {
 			location.href="<%=request.getContextPath()%>/${sessionScope.gobackURL}";
 		}

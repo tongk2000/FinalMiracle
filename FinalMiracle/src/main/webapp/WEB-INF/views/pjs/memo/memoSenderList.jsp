@@ -9,10 +9,10 @@ request.setCharacterEncoding("UTF-8");
 <head>
 <style>
 	.imgs {
-		width:25px;
-		height:25px;
+		width:30px;
+		height:30px;
 	}
-	table {
+	/* table {
 		border-top:1px solid blue;
 		padding:5px;
 		border-radius:50px;
@@ -25,7 +25,7 @@ request.setCharacterEncoding("UTF-8");
 		border:1px solid black;
 		padding:5px;
 		font-family:verdana;
-	}
+	} */
 	.selectLine {
     	background-color:#eaeaea;
     }
@@ -33,10 +33,43 @@ request.setCharacterEncoding("UTF-8");
     	background-color:#eaeaea;
     	cursor: pointer;
     }
-    th{
+   /*  th{
     	font-size:12pt;
     	background-color:#337ab7;
-    }
+    } */
+    .near_by_hotel_wrapper{
+	background:#f5f5f5;
+	}
+.custom_table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+    margin-top: -3px;
+}
+.custom_table thead tr th {
+	padding: 0px 8px;
+	font-size: 16px;
+	border: 0 none ;
+	border-top: 0 none ;
+}
+.custom_table tbody tr {
+    -moz-box-shadow: 0 2px 3px #e0e0e0;
+    -webkit-box-shadow: 0 2px 3px #e0e0e0;
+    box-shadow: 0 2px 3px #e0e0e0;
+}
+.near_by_hotel_wrapper table tr td {
+	border-right: 1px solid #d2d1d1;
+}
+
+.custom_table tbody tr td {
+	background: #fff none repeat scroll 0 0;
+	border-top: 0 none;
+	margin-bottom: 20px;
+	padding: 10px 8px;
+	font-size: 16px;
+}
+.near_by_hotel_wrapper table tr td {
+    border-right: 1px solid #d2d1d1;
+}
 </style>
 <script>
 	function goView(idx, teamNum){
@@ -87,17 +120,51 @@ request.setCharacterEncoding("UTF-8");
 <title>쪽지</title>
 </head>
 <body>
-	<div style="border:1px solid red; padding:5px;">
-		<div style="border:1px solid green; padding:5px;" align="center">
-			<div style="border:1px solid purple;">
+	<div style="border:0px solid red; padding:5px;">
+		<div style="border:0px solid green; padding:5px;" align="center">
+			<div style="border:0px solid purple;" style="border-top:1px solid lightgray; border-bottom:1px solid lightgray;">
 				<a href="<%=request.getContextPath()%>/memoWrite.mr"><span style="color:red;">쪽지 쓰기</span></a>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<a href="<%=request.getContextPath()%>/memomemory.mr"><span style="color:red;">보낸 쪽지</span></a>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<a href="<%=request.getContextPath()%>/memoreceiver.mr"><span style="color:red;">받은 쪽지</span></a>
 			</div>
-			<div style="border:1px solid pink; padding:5px;">
-				<table>
+			<div style="border:0px solid pink; padding:5px;">
+				<div class="near_by_hotel_wrapper">
+				<div class="near_by_hotel_container">
+				  <table class="table no-border custom_table dataTable no-footer dtr-inline" style="width:90%;">
+				    <thead>
+				      	<tr style="background-color:#1f5c87; color:white;" >
+							<th>번호</th>
+							<th>보낸사람</th>
+							<th>제목</th>
+							<th>받은사람</th>
+							<th>보낸 시간</th>
+							<th>상태</th>
+							<!-- <th>상태</th> 몇명 읽었는지 0:모두읽음 1:1명안읽음-->
+						</tr>
+				    </thead>
+				    <tbody>
+				      <c:if test="${empty list}">
+							<tr><td colspan="5">보낸 쪽지가 없습니다.</td></tr>
+						</c:if>
+						<c:if test="${not empty list}"> <!-- RNO, IDX, SUBJECT, CONTENT, SENDER, SSTATUS, NAME, TEAMNUM, IMG, writedate -->
+							<c:forEach var="sender" items="${list}" varStatus="status">
+								<tr class="line">
+									<td width="10%"><input type="checkbox" value="${sender.idx}"><input type="hidden" value="${sender.idx}"/></td>
+									<td width="15%"><img src="<%=request.getContextPath()%>/resources/images/${sender.img}" class="imgs"> ${sender.name}</td>
+									<td onClick="goView('${sender.idx}', '${userTeam.teamNum}');" width="20%">${sender.subject}</td>
+									<td width="30%">${sender.names}</td>
+									<td width="20%">${sender.writedate}</td>
+									<td width="5%">${sender.read}</td>
+								</tr>
+							</c:forEach>
+						</c:if>	
+				    </tbody>
+				  </table>
+				</div>
+				</div>
+				<%-- <table>
 					<thead>
 						<tr style="background-color:black; color:white;" >
 							<th>번호</th>
@@ -126,14 +193,14 @@ request.setCharacterEncoding("UTF-8");
 							</c:forEach>
 						</c:if>	
 					</tbody>
-				</table>
+				</table> --%>
 			</div>
-			<div style="border:1px solid black; padding-left:400px;">
-				<button type="button" id="write">글쓰기</button>
-				<button type="button" id="del">삭제</button>
+			<div style="border:0px solid black; padding-left:400px;">
+				<button type="button" id="write" class="btn btn-default">글쓰기</button>
+				<button type="button" id="del" class="btn btn-default">삭제</button>
 			</div>
 		</div>
-		<div style="border:1px solid gray" align="center">
+		<div style="border:0px solid gray" align="center">
 			${pagebar}
 		</div>
 	</div>
@@ -145,4 +212,5 @@ request.setCharacterEncoding("UTF-8");
 		<input type="hidden" name="idx">
 	</form>
 </body>
+
 </html>

@@ -97,7 +97,7 @@
 </head>
 <body>
 	<div style="font-size: 20px; text-align: left;">
-		<div style="border: 1px solid red; text-align: center;">대화상대</div>
+		<div style="border-bottom: 1px solid black; text-align: center; height: 29px;">대화상대</div>
 			<div onclick="addPersonStart()" style="cursor: pointer; color: aqua; margin: 5px;"><span class="circle" style="vertical-align: middle; font-size: 50px;">&nbsp;+ </span>&nbsp;대화상대 초대</div>
 			<c:forEach var="member" items="${chattingMember}" varStatus="status">
 				<div style="margin: 5px;">
@@ -106,7 +106,7 @@
 					<input type="hidden" name="chattingRoomNum" id="chattingRoomNum" value="${member.cridx}"/>
 				</div>
 			</c:forEach>
-			<div onclick="outRoom()" style="cursor: pointer; text-align: center; margin: 10px;"><i class="glyphicon glyphicon-log-out"></i> 채팅방 나가기</div>
+			<div onclick="outRoom()" style="cursor: pointer; text-align: center; margin-top: 10px; border-top: 1px solid black;"><i class="glyphicon glyphicon-log-out"></i> 채팅방 나가기</div>
 	</div>
 </body>
 </html>

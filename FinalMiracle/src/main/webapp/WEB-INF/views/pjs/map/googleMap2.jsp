@@ -289,6 +289,49 @@
 </head>
 <body>
 
+<!-- <div class="container">
+	<div class="row-fluid">
+        <div class="span8">
+        	구글맵 자리
+        	<div align="center"  style="z-index:2000; border:1px solid red;">
+				<div id="googleMap" style="width: 500px; clear:both; height: 450px; border:1px solid red" ></div> 
+			 	<form name="map">
+					<input type="hidden" name="choice">
+					<input type="hidden" name="searchString">
+				</form>
+				 
+				<select id="choice" name="choice" style="font-size:10pt;">
+					<option value="0" selected> 전체</option>
+					<option value="1" >팀정보</option>
+					<option value="-1">맛집정보</option>
+				</select>
+				
+				<input type="text" name="searchString" id="searchString" />
+				<button type="button" id="goSearch">검색</button>
+				
+			</div>
+    	</div>
+    	
+      	<div class="span4">
+    		 팀 정보 자리
+    		 <div style=" width:50%; height:250px; padding-left:300px; float: left; border:1px solid blue " align="center"> 
+				<div style=" width:100%; float: left;"> 
+					<span >회사정보</span>
+					<div id="tm" style=" margin-top:50px; width:100%; border:1px solid blue"></div>
+				</div>
+			</div>
+    	</div>
+    </div>
+</div>
+
+ -->
+
+
+
+
+
+
+
 
 <div style="width:100%; height:500px; padding-top:20px; "> 
 		
@@ -336,6 +379,6 @@
 </div>
 		<div>
 			<div id="displayList"></div>
-		</div>
+		</div> 
 </body>
 </html>

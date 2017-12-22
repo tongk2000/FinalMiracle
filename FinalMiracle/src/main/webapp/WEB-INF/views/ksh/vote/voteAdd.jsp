@@ -93,6 +93,10 @@
 		var datepicker1 = document.getElementById("datepicker1").value;
 		var datepicker2 = document.getElementById("datepicker2").value;
 		
+		subject = subject.trim();
+		datepicker1 = datepicker1.trim();
+		datepicker2 = datepicker2.trim();
+		
 		if(subject == "" || content == "" || datepicker1 == "" || datepicker2 == ""){
 			//alert("모든 항목에 빈 칸 없이 넣어주세요.");
 			swal("작성 실패!", "모든 항목에 빈 칸 없이 넣어주세요.", "error");

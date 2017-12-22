@@ -124,7 +124,7 @@
 	<select id="getfilename" parameterType="String" resultType="com.miracle.pjs.model.NoticeFileVO">
 		    select *
     		from tbl_notice n join tbl_noticefile f on n.idx = f.fk_idx
-    		where n.idx = #{nidx}
+    		where f.fk_idx = #{nidx}
 	</select>
 <!-- ============================================================================================================================================================= -->	
 	<!-- <update id="delNoticeIdx" parameterType="String">
@@ -222,14 +222,23 @@
 		from tbl_notice
 		where idx = #{nidx}
 	</select>	
+	
 	<resultMap id="info" type="HashMap">
  		<result property="regday" 		column="regday"		javaType="String"></result>
  		<result property="readcount" 	column="readcount" 	javaType="String"></result>
  	</resultMap>
 <!-- ============================================================================================================================================================= -->	
-	
-	
-	
+	<select id="getCountNum" parameterType="HashMap" resultType="String">
+		select  count(*)
+	    from noticeCount
+		where 1=1
+				<if test='searchType!=null and searchString!=null and !"".equals(searchType) and !"".equals(searchString)'>
+					  and ${searchType} like '%'||#{searchString}||'%'
+				</if>
+			  and t_idx = #{teamNum}
+	</select>
+<!-- ============================================================================================================================================================= -->	
+	<!-- 위의 두개 쿼리는 업데이트 필수 -->
 	
 	
 	
@@ -289,7 +298,7 @@
 				and m.userid = #{userid}
 		</if>
 		<if test='searchType!=null and searchString!=null and !"".equals(searchType) and !"".equals(searchString)'>
-			and where ${searchType} like '%'||#{searchString}||'%'
+			and ${searchType} like '%'||#{searchString}||'%'
 		</if>
 		and t.idx = #{teamNum}
 	</select>
@@ -336,7 +345,7 @@
  	</resultMap>
 <!-- ============================================================================================================================================================= -->	
 	<insert id="setMindWrite" parameterType="HashMap">
-		insert into tbl_mind 
+		insert into tbl_mind (IDX, FK_USERID,  SUBJECT, REGDAY, DEPTH, GROUPNO, REF_IDX, READCOUNT, STATUS, CHECKNUM, CHKID, CONTENT)
 		<if test='nidx!=null and !"".equals(nidx)'>
 			values(seq_mind.nextval,#{userid}, #{subject}, default, #{depth}, #{nidx}, #{nidx},default, default, default, #{chkid}, #{content})
 		</if>
@@ -709,20 +718,20 @@
 	<!-- === *** 쪽지를 받은 사람이 읽었는지 않 읽었는지 update *** === -->
 	<insert id="setNoticeWriteWithFile" parameterType="HashMap" >
 		insert into tbl_noticefile
-		values(seq_noticefile.nextval, #{newfilename}, #{originalfilename}, #{filesize}, #{idx})
+		values(seq_noticefile.nextval, #{newfilename}, #{originalfilename}, #{filesize}, #{number})
 	</insert>
 <!-- ============================================================================================================================================================= -->	
 <!-- === ***  *** === -->
 	<select id="getfilenamelist" parameterType="HashMap" resultType="String">
 		  select count(*)
-          from tbl_notice n join tbl_noticefile f on n.idx = f.idx
+          from tbl_notice n join tbl_noticefile f on n.idx = f.fk_idx
           where f.fk_idx= #{idx}
 	</select>
 <!-- =========================================================================================================================================================== -->	
 	<select id="getViewWithNoAddCount" parameterType="HashMap" resultType="com.miracle.pjs.model.FileVO">
 		select *
 		from tbl_noticefile
-		where idx = #{fidx}
+		where fk_idx = #{fidx}
 	</select>
 <!-- ============================================================================================================================================================= -->	
 	 <select id="getmemoReadCount" parameterType="String" resultType="String">
@@ -744,7 +753,7 @@
     <!-- === *** 쪽지를 받은 사람이 읽었는지 않 읽었는지 update *** === -->
 	<insert id="setMindWriteWithFile" parameterType="HashMap" >
 		insert into tbl_mindfile
-		values(seq_mindfile.nextval, #{newfilename}, #{originalfilename}, #{filesize}, #{idx})
+		values(seq_mindfile.nextval, #{newfilename}, #{originalfilename}, #{filesize}, #{number})
 	</insert>
 <!-- ============================================================================================================================================================= -->	
     <!-- === *** 쪽지를 받은 사람이 읽었는지 않 읽었는지 update *** === -->
@@ -779,6 +788,16 @@
 		select *
 		from tbl_mindfile
 		where fk_idx = #{fidx}
+	</select>
+<!-- ============================================================================================================================================================= -->	
+     <select id="getNiticefileNum"  resultType="String">
+		select max(idx) 
+    	from tbl_notice
+	</select>
+<!-- ============================================================================================================================================================= -->	
+     <select id="getMindfileNum"  resultType="String">
+		select max(idx) 
+    	from tbl_mind
 	</select>
 <!-- ============================================================================================================================================================= -->	
      

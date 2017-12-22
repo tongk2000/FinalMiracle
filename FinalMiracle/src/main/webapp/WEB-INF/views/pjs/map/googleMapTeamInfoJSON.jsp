@@ -8,7 +8,8 @@
 	} */
 	tr, td, th {
 		border:1px solid black;
-	}
+		padding:7px;
+	} 
 </style>
 <div class="modal-dialog">
 	<%-- Modal content --%>
@@ -40,7 +41,7 @@
 									<c:forEach var="google" items="${googleMap}">
 									<tr>
 										<td>${google.memberidx}</td>
-										<td><img src="<%=request.getContextPath() %>/resources/images/${google.img}"/> ${google.userid}</td>
+										<td><img src="<%=request.getContextPath() %>/resources/images/${google.img}" style="width:30px; height:30px;"/> ${google.userid}</td>
 										<td>${google.memberName}</td>
 										<c:if test="${google.status == 1}">
 											<td>팀원</td>
