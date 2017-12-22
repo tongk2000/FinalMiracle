@@ -89,18 +89,21 @@
 		select *
 		from
 		(
-		    select userid, name, img, birth1||'년도 '||birth2||'월생' as age, hp1||'-'||hp2||'-'||hp3 as hp, addr1||' '||addr2 as addr
+		    select userid, name, img, birth1||'년도 '||birth2||'월생' as age, hp1||'-'||hp2||'-'||hp3 as hp, addr1||' '||addr2 as addr, d.profile, m.idx, d.email
 		    from tbl_member m join tbl_member_detail d on m.idx = d.fk_member_idx
 			where m.userid = #{id}
 		) v
-	</select>
+	</select> 
 	<resultMap id="userinfo" type="HashMap">
+		<result property="idx" 					column="idx" 				javaType="String"></result>
  		<result property="userid" 				column="userid" 			javaType="String"></result>
  		<result property="name" 				column="name" 				javaType="String"></result>
  		<result property="img"		 			column="img" 				javaType="String"></result>
  		<result property="age" 					column="age" 				javaType="String"></result>
  		<result property="hp" 					column="hp" 				javaType="String"></result>
  		<result property="addr" 				column="addr" 				javaType="String"></result>
+ 		<result property="profile" 				column="profile" 			javaType="String"></result>
+ 		<result property="email" 				column="email" 				javaType="String"></result>
  	</resultMap>
  <!-- ============================================================================================================================================================= -->	
  	<!-- === *** 게시판의 idx로 해당 글의 정보를 보여주는 뷰단으로 정보전달하기 *** === -->
