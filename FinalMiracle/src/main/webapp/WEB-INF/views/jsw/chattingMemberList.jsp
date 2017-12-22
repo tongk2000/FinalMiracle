@@ -100,7 +100,7 @@
 		<div style="border-bottom: 1px solid black; text-align: center; height: 29px;">대화상대</div>
 			<div onclick="addPersonStart()" style="cursor: pointer; color: aqua; margin: 5px;"><span class="circle" style="vertical-align: middle; font-size: 50px;">&nbsp;+ </span>&nbsp;대화상대 초대</div>
 			<c:forEach var="member" items="${chattingMember}" varStatus="status">
-				<div style="margin: 5px;">
+				<div style="margin: 5px; margin-bottom: 10px;">
 					<div onclick="" style="border: 0px solid blue; cursor: pointer;"><img height="60px" width="60px" class="img-circle" src="<%=request.getContextPath() %>/resources/images/${member.img}">
 					<span style="color: black;">${member.name}</span></div>
 					<input type="hidden" name="chattingRoomNum" id="chattingRoomNum" value="${member.cridx}"/>
