@@ -180,7 +180,7 @@
 				var html = "";
 				
 				var imgPath = data.infoImg;
-				html += "<div style='font-size: 10pt; font-family: verdana;'><div style='float: right;'><img src='<%= request.getContextPath() %>/resources/images/" + imgPath + "' style='width: 100px; height: 100px; border-radius: 50px;' /></div>" + "<br/>"
+				html += "<div style='font-size: 10pt; font-family: verdana;'><div style='float: right;'><img src='<%= request.getContextPath() %>/resources/files/" + imgPath + " ' style='width: 100px; height: 100px; border-radius: 50px;' /></div>" + "<br/>"
 					 +  "<span style='font-weight: bold;'>ID : </span>"+ data.infoUserid + "<br/>"
 					 +  "<span style='font-weight: bold;'>성명 : </span>"+ data.infoName + "<br/>"
 					 +  "<span style='font-weight: bold;'>핸드폰 : </span>" +data.infoHp1 + "-" +data.infoHp2+"-"+data.infoHp3 +"<br/>"

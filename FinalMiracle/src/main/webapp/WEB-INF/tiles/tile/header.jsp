@@ -65,7 +65,7 @@
 			<img src="<%= request.getContextPath() %>/resources/images/icon/13.png" class="iconPng headerIconPng"/>
 		</div>
 		<div onclick="javascript:showMyInfo();" title="${sessionScope.loginUser.name}(${sessionScope.loginUser.userid})" style="display:inline-block; cursor:pointer;">
-			<img src="<%= request.getContextPath() %>/resources/images/${sessionScope.loginUser.img}" style="height: 50px; width: 50px;">
+			<img src="<%= request.getContextPath() %>/resources/files/${sessionScope.loginUser.img}" style="height: 50px; width: 50px;">
 		</div>
 	</div>
 </c:if>
@@ -79,7 +79,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title">내 정보 수정</h4>
+				<h3 class="modal-title" style="text-align: center;">내 정보 수정</h3>
 			</div>
 			<div class="modal-body" id="modalBody" style="height: auto;">
 			</div>

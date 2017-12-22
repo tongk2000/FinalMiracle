@@ -81,11 +81,17 @@ public class MemberService implements InterMemberService {
 
 	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
 	@Override
-	public int updateMember(MemberVO mvo, MemberDetailVO mdvo) throws Throwable {
+	public int updateMember(MemberVO mvo, MemberDetailVO mdvo) throws Throwable { // 회원 정보 변경하기 transaction
 		int n = dao.updateMember(mvo);
 		int m = dao.updateMember2(mdvo);
 		
 		return (n + m);
+	}
+
+	@Override
+	public int alterImg(HashMap<String, Object> map) {  // 회원 사진 변경하기 
+		int n = dao.alterImg(map);
+		return n;
 	}
 
 	

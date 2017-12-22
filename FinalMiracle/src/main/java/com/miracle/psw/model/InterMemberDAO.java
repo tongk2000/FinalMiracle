@@ -25,6 +25,8 @@ public interface InterMemberDAO {
 	int updateMember(MemberVO mvo);				// 회원정보 수정(tbl_member)
 	int updateMember2(MemberDetailVO mdvo);		// 회원정보 수정(tbl_member_detail)
 
+	int alterImg(HashMap<String, Object> map);  // 회원 이미지 수정(tbl_member)
+
 	
 	
 

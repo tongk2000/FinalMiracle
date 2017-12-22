@@ -85,6 +85,12 @@ public class MemberDAO implements InterMemberDAO {
 		int n = sqlsession.update("member_psw.updateMember2", mdvo);
 		return n;
 	}
+
+	@Override
+	public int alterImg(HashMap<String, Object> map) {  // 회원 이미지 변경(tbl_member)
+		int n = sqlsession.update("member_psw.alterImg", map);
+		return n;
+	}
 	
 
 	
