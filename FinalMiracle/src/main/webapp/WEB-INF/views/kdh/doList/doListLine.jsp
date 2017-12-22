@@ -6,15 +6,14 @@
 
 <c:if test="${not empty map.doList}"> <!-- 프로젝트 리스트가 있다면 -->
 	<c:forEach var="dvo" items="${map.doList}">
-		<tr id="${dvo.idx}"
+		<tr id="${dvo.idx}" style="
 			<c:if test="${dvo.category == 1}">
-				style="font-weight:bold;
-					<c:if test="${dvo.fk_folder_idx == 0}">
-						background-color:#4882ab; color:white;
-					</c:if>
-				"
+				font-weight:bold;
 			</c:if>
-		class="element ${dvo.groupNo} ${dvo.depth} trLine">
+			<c:if test="${dvo.fk_folder_idx == 0}">
+				background-color:#4882ab; color:white;
+			</c:if>
+		" class="element ${dvo.groupNo} ${dvo.depth} trLine">
 			<td>
 				<input type="hidden" class="fk_folder_idx" value="${dvo.fk_folder_idx}" />
 				<input type="hidden" class="downCnt" value="${dvo.downCnt}" />
