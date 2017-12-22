@@ -9,7 +9,6 @@
 		border:1px solid #cce6ff;
 		word-wrap:break-word; /* 글자 넘치면 자동 줄바꿈 */
 	}
-	
 	th {
 		font-weight:normal;
 		position: sticky;
@@ -17,12 +16,20 @@
 	    z-index: 10;
 	    background-color:#4882ab;
     }
+    
+    .rcm {
+    	color:white;
+    }
+    .rcmSubject {
+    	background-color:#1f5c87;
+    	color:white;
+    }
 	
 	.pointer{
 		cursor:pointer;
 	}
 	.pointerOver{
-		color:blue;
+		color:#3366cc;
 	}
 	
 	td.infoClass {
@@ -66,16 +73,16 @@
 	}
 	
 	.selectLine {
-		background-color:#F0F0F0;
+		background-color:#E8E8E8 !important;
 	}
 	.selectedLine {
-		background-color:#F0F0F0;
+		background-color:#E8E8E8 !important;
 	}
 	.moveLine {
-		background-color:#F0F0F0;
+		background-color:#E8E8E8;
 	}
 	.moveToLine {
-		background-color:yellow;
+		background-color:#ffffcc;
 		cursor:pointer;
 	}
 	.copyToLine {
@@ -114,7 +121,7 @@
 		background-color:#ffccff;
 	}
 	.searchElement {
-		background-color:#ccffff;
+		background-color:hsl(180, 100%, 90%);
 	}
 	
 	.myAndTeamwonElement {
@@ -293,25 +300,25 @@
 		    $(this).addClass("selectedLine");
 		    
 		    var subject = $(this).find(".subject").text();
-		    $(".rcmSubject").text("["+subject+"] 메뉴(닫기:esc)");
+		    $(".rcmSubject").html("&nbsp;&nbsp;["+subject+"] 메뉴(닫기:esc)&nbsp;&nbsp;");
 		    		    
 		    if($(this).find(".modalFolder").hasClass("modalFolder")) { // 폴더 우클릭이라면
 		    	$("#downElementFoldingRcm").show();
 		    	
 		    	var foldingIcon = $(this).find(".foldingIcon").text();
 		    	if(foldingIcon.trim() == "▶") {
-		    		$("#downElementFoldingRcm").text("하위요소 전체 펴기");
+		    		$("#downElementFoldingRcm").html("&nbsp;&nbsp;하위요소 전체 펴기&nbsp;&nbsp;");
 		    	} else if(foldingIcon.trim() == "▼") {
-		    		$("#downElementFoldingRcm").text("하위요소 전체 접기");
+		    		$("#downElementFoldingRcm").html("&nbsp;&nbsp;하위요소 전체 접기&nbsp;&nbsp;");
 		    	} else if(foldingIcon.trim() == "▷") {
 		    		$("#downElementFoldingRcm").hide();
 		    	}
 		    	
 		    	var folderComplete = $(this).find(".statusValue").val();
 		    	if(folderComplete == "0") {
-		    		$("#folderStatusRcm").removeClass("folderCompleteRcm").addClass("folderIncompleteRcm").text("폴더 미완료 처리");
+		    		$("#folderStatusRcm").removeClass("folderCompleteRcm").addClass("folderIncompleteRcm").html("&nbsp;&nbsp;폴더 미완료 처리&nbsp;&nbsp;");
 		    	} else {
-		    		$("#folderStatusRcm").removeClass("folderIncompleteRcm").addClass("folderCompleteRcm").text("폴더 완료 처리");
+		    		$("#folderStatusRcm").removeClass("folderIncompleteRcm").addClass("folderCompleteRcm").html("&nbsp;&nbsp;폴더 완료 처리&nbsp;&nbsp;");
 		    	}
 		    	
 		    	var winH = window.innerHeight; // 화면에 보이는, 브라우저를 제외한 뷰단의 전체 height
@@ -333,9 +340,9 @@
 		    } else if($(this).find(".modalTask").hasClass("modalTask")) { // 할일 우클릭이라면
 		    	var bool = $(this).find(".status").is(":checked");
 		    	if(bool) {
-		    		$("#statusRcm").text("할일 미완료 처리");
+		    		$("#statusRcm").html("&nbsp;&nbsp;할일 미완료 처리&nbsp;&nbsp;");
 		    	} else {
-		    		$("#statusRcm").text("할일 완료 처리");
+		    		$("#statusRcm").html("&nbsp;&nbsp;할일 완료 처리&nbsp;&nbsp;");
 		    	}
 		    	
 		    	var winH = window.innerHeight; // 화면에 보이는, 브라우저를 제외한 뷰단의 전체 height
@@ -367,14 +374,18 @@
 			$(".0").each(function(){ // 최상위 요소만 뺑뺑이~
 				var bool = $(this).hasClass("hided");
 				if(!bool) { // 완료 숨김 상태가 아니라면 보여줌
-					$(this).removeClass("foldinged").show().find(".foldingIcon").text("▶");
+					$(this).removeClass("foldinged").show()
+					if($(this).find(".foldingIcon").text().trim() == "▼") {
+						$(this).find(".foldingIcon").text("▶");
+					}
 				} else { // 완료 숨김 상태라면 보여주진 않고 접힌 상태만 해제해줌
-					$(this).removeClass("foldinged").find(".foldingIcon").text("▶");
+					$(this).removeClass("foldinged");
+					if($(this).find(".foldingIcon").text().trim() == "▼") {
+						$(this).find(".foldingIcon").text("▶");
+					}
 				}
 			})
-		}); // end of $("#allClose").click(function() -------------------------------------------------------------------------------------
-		
-				
+		}); // end of $("#allClose").click(function() -------------------------------------------------------------------------------------				
 		// 전체 요소 펴기
 		$("#allOpen").click(function(){ 
 			$(".element").each(function(){
@@ -1470,7 +1481,7 @@
 		$("#folderRcm").hide(); // 메뉴 숨겨주고
 		$("#taskRcm").hide();
 		
-		$("#headerLine").after("<tr id='moveHeader'><th colspan='100' style='text-align:center; background-color:yellow;'>이동될 요소를 선택하세요(취소:esc)</th></tr>");
+		$("#headerLine").after("<tr id='moveHeader'><th colspan='100' style='text-align:center; color:black !important; background-color:#ffffcc ;'>이동될 요소를 선택하세요(취소:esc)</th></tr>");
 		// 제목줄 밑에 선택하라고 띄워주고
 		
 		$(".element").each(function(){
@@ -1531,104 +1542,10 @@
 		
 		document.body.appendChild(frm);
 		frm.submit();
-	}
-	
-	// 상위요소를 변경하기 전이나 esc 눌렀을때 기존에 입힌 css 지워주기
-	function delMoveCss() {
-		$("#moveHeader").remove();
-		$(".element").each(function(){
-			$(this).removeClass("moveLine");
-			$(this).removeClass("moveToLine");
-		});
-	} // end of function delMoveCss() ------------------------------------------------------------------------------------------------------------------------------
-	// 상위요소 변경하는(요소 이동) css 띄우기
-	function elementMove() {
-		delMoveCss();
-		$this = $(".selectedLine");
-		$this.addClass("moveLine");
-		var depth = parseInt(getThirdClass($this)); // 클릭한 요소의 깊이 구하기
-		while(1==1) {
-			if($this.next().attr("id") == undefined) { // 다음 요소가 없을때 undefined 오류 막기 위함
-				break;
-			}
-			var $this2 = $this.next();
-			var depth2 = parseInt(getThirdClass($this2)); // 다음 요소의 깊이 구하기
-			
-			if(depth < depth2) { // 클릭한 요소의 깊이보다 다음 요소의 깊이가 1 크다면 (클릭했을때 +1 깊이만 표시되도록 하기 위해서 구분함)
-				$this2.addClass("moveLine");
-			} else { // 클릭한것과 깊이가 같은 요소가 나오면 break
-				break;
-			}
-			$this = $this2; // 순차적으로 다음 요소를 찾기 위함
-		}
-		$("#folderRcm").hide(); // 메뉴 숨겨주고
-		$("#taskRcm").hide();
-		
-		$("#headerLine").after("<tr id='moveHeader'><th colspan='100' style='text-align:center; background-color:yellow;'>이동될 요소를 선택하세요(취소:esc)</th></tr>");
-		// 제목줄 밑에 선택하라고 띄워주고
-		
-		$(".element").each(function(){
-			if( !($(this).hasClass("moveLine")) && $(this).find(".category").val() == 1) { // 폴더 요소라면
-				$(this).addClass("moveToLine"); // 이동할 수 있도록 노란줄 표시
-			}
-		});
-		$("#allOpen").trigger("click"); // 그리고 전체 요소를 펴준다.
-	} // end of function elementMove() --------------------------------------------------------------------------------------------------------------------------------
-	// 상위요소 변경하기(요소 이동)
-	function elementMoveEnd(fk_folder_idx, movoToDepth, groupNo, subject) {
-		var bool = confirm("정말 ["+subject+"] 폴더로 이동하시겠습니까?");
-		if(!bool) {
-			return false;
-		}
-		
-		$this = $(".moveLine").first();
-		var idx = $this.attr("id");
-		var term = $("#term").val();
-		var page = $("#page").val();
-		var moveDepth = parseInt(getThirdClass($this));
-		var depth = parseInt(movoToDepth) - moveDepth + 1; // 원래 요소와 변경되는 요소의 깊이 차이를 구함
-		
-		var frm = document.createElement("form");
-		frm.setAttribute("action","do_elementMove.mr");
-		frm.setAttribute("mothod","post");
-		
-		var idx_frm = document.createElement("input");
-		idx_frm.setAttribute("name","idx");
-		idx_frm.setAttribute("value",idx);
-		
-		var fk_idx_frm = document.createElement("input");
-		fk_idx_frm.setAttribute("name","fk_folder_idx");
-		fk_idx_frm.setAttribute("value",fk_folder_idx);
-		
-		var groupNo_frm = document.createElement("input");
-		groupNo_frm.setAttribute("name","groupNo");
-		groupNo_frm.setAttribute("value",groupNo);
-		
-		var depth_frm = document.createElement("input");
-		depth_frm.setAttribute("name","depth");
-		depth_frm.setAttribute("value",depth);
-		
-		var term_frm = document.createElement("input");
-		term_frm.setAttribute("name","term");
-		term_frm.setAttribute("value",term);
-		
-		var page_frm = document.createElement("input");
-		page_frm.setAttribute("name","page");
-		page_frm.setAttribute("value",page);
-		
-		frm.appendChild(idx_frm);
-		frm.appendChild(fk_idx_frm);
-		frm.appendChild(groupNo_frm);
-		frm.appendChild(depth_frm);
-		frm.appendChild(term_frm);
-		frm.appendChild(page_frm);
-		
-		document.body.appendChild(frm);
-		frm.submit();
-	}
+	} // end of function elementMoveEnd(fk_folder_idx, movoToDepth, groupNo, subject) ------------------------------------------------------------------------------
 </script>
 
-<div id="projectDiv" style="width:100%; float:left; height:100%; overflow:auto; font-family:Tahoma; font-size:10pt;">
+<div id="projectDiv" style="width:100%; float:left; height:100%; overflow:auto; font-family:proxima-nova-regular; font-size:10pt; background-color:hsl(220, 60%, 97%);">
 	<table style="width:100%; border:1px solid black;">
 		<thead style="color:white;">
 			<tr id="firstHeaderLine">
@@ -1652,15 +1569,15 @@
 				<th colspan="7" class="seperatorLine" style="border-bottom:none;">
 					<span style="margin-left:20px; border:1px solid #cce6ff; width:20px; height:10px; background-color:#cce6ff;">&nbsp;&nbsp;&nbsp;</span>
 					진행전(${map.periodCntMap.before}건
-						<span id="myBefore" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
+						<span id="myBefore" style="color:hsl(60, 100%, 40%); font-weight:bold;"></span>
 						<span id="teamwonBefore" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
-						<span id="searchBefore" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
+						<span id="searchBefore" style="color:hsl(180, 60%, 50%); font-weight:bold;"></span>
 					)
 					<span style="margin-left:15px; border:1px solid #cce6ff; width:20px; height:10px; background-color:#d6f5d6;">&nbsp;&nbsp;&nbsp;</span>
 					진행중(${map.periodCntMap.doing}건
-						<span id="myDoing" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
+						<span id="myDoing" style="color:hsl(60, 100%, 40%); font-weight:bold;"></span>
 						<span id="teamwonDoing" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
-						<span id="searchDoing" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
+						<span id="searchDoing" style="color:hsl(180, 60%, 50%); font-weight:bold;"></span>
 					)					
 				</th>
 				<th colspan="${map.pageDateList.size()}" style="border-bottom:none; text-align:center; width:200px;">
@@ -1684,15 +1601,15 @@
 				<th colspan="7" class="seperatorLine" style="border-top:none;">
 					<span style="margin-left:20px; border:1px solid #cce6ff; width:20px; height:10px; background-color:#ffcccc;">&nbsp;&nbsp;&nbsp;</span>
 					기한경과(${map.periodCntMap.lapse}건
-						<span id="myLapse" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
+						<span id="myLapse" style="color:hsl(60, 100%, 40%); font-weight:bold;"></span>
 						<span id="teamwonLapse" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
-						<span id="searchLapse" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
+						<span id="searchLapse" style="color:hsl(180, 60%, 50%); font-weight:bold;"></span>
 					)
 					<span style="margin-left:15px; border:1px solid #cce6ff; width:20px; height:10px; background-color:#d9d9d9;">&nbsp;&nbsp;&nbsp;</span>
 					완료(${map.periodCntMap.complete}건
-						<span id="myComplete" style="color:hsl(60, 100%, 30%); font-weight:bold;"></span>
+						<span id="myComplete" style="color:hsl(60, 100%, 40%); font-weight:bold;"></span>
 						<span id="teamwonComplete" style="color:hsl(300, 100%, 30%); font-weight:bold;"></span>
-						<span id="searchComplete" style="color:hsl(180, 60%, 30%); font-weight:bold;"></span>
+						<span id="searchComplete" style="color:hsl(180, 60%, 50%); font-weight:bold;"></span>
 					)
 				</th>
 				<th colspan="${map.pageDateList.size()}" style="border-top:none; text-align:center;">
@@ -1727,67 +1644,67 @@
 				</c:forEach>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody style="color:navy;">
 			<c:if test="${empty map.doList}"> <!-- 프로젝트 리스트가 비었다면 -->
 				<td colspan="9">등록된 프로젝트가 없습니다.</td>
 			</c:if>
 			<jsp:include page="doListLine.jsp"/> <!-- 여러번 활용하기 위해 할일 리스트는 다른 페이지로 뺏음 -->
 		</tbody>
 	</table>
-	<div style="width:100%; height:100px; background-color:white;"></div>
+	<div style="width:100%; height:100px; background-color:hsl(220, 60%, 97%);"></div>
 </div>
 
 <div class="modal fade" id="modalElementInfo" role="dialog"></div>
 
-<div id="folderRcm" style="padding:0px; display:none;">
+<div id="folderRcm" style="padding:0px; display:none; border:1px solid #cce6ff; background-color:#4882ab;">
 	<table>
 		<tr>
 			<th class="rcmSubject"></th>
 		</tr>
 		<tr class="trLine">
-			<td class="rcm pointer" id="folderStatusRcm" class="folderCompleteRcm">폴더 완료 처리</td>
+			<td class="rcm pointer" id="folderStatusRcm" class="folderCompleteRcm">&nbsp;&nbsp;폴더 완료 처리&nbsp;&nbsp;</td>
 		</tr>
 		<tr class="trLine">
-			<td class="rcm pointer" id="downElementFoldingRcm" onclick="downElementFolding()">하위요소 전체 펴기</td>
+			<td class="rcm pointer" id="downElementFoldingRcm" onclick="downElementFolding()">&nbsp;&nbsp;하위요소 전체 펴기&nbsp;&nbsp;</td>
 		</tr>
 		<tr class="trLine">
-			<td class="rcm pointer" id="addFolderRcm" onclick="addDownElement()">하위요소추가</td>
+			<td class="rcm pointer" id="addFolderRcm" onclick="addDownElement()">&nbsp;&nbsp;하위요소추가&nbsp;&nbsp;</td>
 		</tr>
 		<tr class="trLine">
-			<td class="rcm pointer" id="modalFolderRcm">조회/수정</td>
+			<td class="rcm pointer" id="modalFolderRcm">&nbsp;&nbsp;조회/수정&nbsp;&nbsp;</td>
 		</tr>
 		<tr class="trLine">
-			<td class="rcm pointer" id="moveRcm" onclick="elementMove()">이동</td>
+			<td class="rcm pointer" id="moveRcm" onclick="elementMove()">&nbsp;&nbsp;이동&nbsp;&nbsp;</td>
 		</tr>
 		<tr class="trLine">
-			<td class="rcm pointer" id="copyRcm" onclick="elementCopy()">복사(미구현)</td>
+			<td class="rcm pointer" id="copyRcm" onclick="elementCopy()">&nbsp;&nbsp;복사(미구현)&nbsp;&nbsp;</td>
 		</tr>
 		<tr class="trLine">
-			<td class="rcm pointer" id="deleteRcm">삭제</td>
+			<td class="rcm pointer" id="deleteRcm">&nbsp;&nbsp;삭제&nbsp;&nbsp;</td>
 		</tr>
 	</table>
 </div>
 
 
-<div id="taskRcm" style="padding:0px; display:none;">
+<div id="taskRcm" style="padding:0px; display:none; border:1px solid #cce6ff; background-color:#4882ab;">
 	<table>
 		<tr>
 			<th class="rcmSubject"></th>
 		</tr>
 		<tr class="trLine">
-			<td class="rcm pointer" id="statusRcm">할일 완료 처리</td>
+			<td class="rcm pointer" id="statusRcm">&nbsp;&nbsp;할일 완료 처리&nbsp;&nbsp;</td>
 		</tr>
 		<tr class="trLine">
-			<td class="rcm pointer" id="modalTaskRcm">조회/수정</td>
+			<td class="rcm pointer" id="modalTaskRcm">&nbsp;&nbsp;조회/수정&nbsp;&nbsp;</td>
 		</tr>
 		<tr class="trLine">
-			<td class="rcm pointer" id="moveRcm" onclick="elementMove()">이동</td>
+			<td class="rcm pointer" id="moveRcm" onclick="elementMove()">&nbsp;&nbsp;이동&nbsp;&nbsp;</td>
 		</tr>
 		<tr class="trLine">
-			<td class="rcm pointer" id="copyRcm" onclick="elementCopy()">복사(미구현)</td>
+			<td class="rcm pointer" id="copyRcm" onclick="elementCopy()">&nbsp;&nbsp;복사(미구현)&nbsp;&nbsp;</td>
 		</tr>
 		<tr class="trLine">
-			<td class="rcm pointer" id="deleteRcm">삭제</td>
+			<td class="rcm pointer" id="deleteRcm">&nbsp;&nbsp;삭제&nbsp;&nbsp;</td>
 		</tr>
 	</table>
 </div>

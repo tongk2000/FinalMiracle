@@ -24,10 +24,10 @@
 </head>
 <body>
 <c:set var="user" value="${map}" />  <!-- teamNum , userid , teamNum , memberNum, status -->
-	<div style="border: 1px solid green; width:100%;">
-		<div style="border: 1px solid yellow;">
+	<div style="border: 0px solid green; width:100%;">
+		<div style="border: 0px solid yellow;" align="center">
 			<form name="end" enctype="multipart/form-data"> 
-			<table style="border: 1px solid red; width: 80%;">
+			<table style="border: 1px solid lightgray; width: 80%;">
 				<thead>
 					<tr>
 						<th colspan="2">마음의 소리</th>
@@ -35,22 +35,22 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td width="12%">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="img"> &nbsp;&nbsp; ${user.userid}
+						<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="img"> &nbsp;&nbsp; ${user.userid}
 						<input type="hidden" name="userid" value="${user.userid}"></td>
 					</tr>
 					<tr>
-						<td width="12%">팀정보 : </td><td>${user.teamNum}<input type="hidden" name="teamNum" value="${user.teamNum}"></td>
+						<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">팀정보 : </td><td>${user.teamNum}<input type="hidden" name="teamNum" value="${user.teamNum}"></td>
 					</tr>
 					<tr>
-						<td width="12%">제목 : </td>
+						<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">제목 : </td>
 						<td><input id="subject" type="text" name="subject"/><input type="hidden" name="idx"></td>
 					</tr>
 					<tr style="min-height: 200px;">
-						<td>내용 :</td>
+						<td style="border:1px solid lightgray; background-color:#1f5c87">내용 :</td>
 						<td height="200px"><textarea name="content" id="content" class="summernote"></textarea><input type="hidden" name="chkid"></td>
 					</tr>
 					<tr>
-					   <td>파일첨부</td>
+					   <td style="border:1px solid lightgray; background-color:#1f5c87">파일첨부</td>
 					   <td><input type="file" name="attach" /></td>
 					</tr>
 				</tbody>

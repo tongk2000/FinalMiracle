@@ -32,18 +32,18 @@ request.setCharacterEncoding("UTF-8");
 				</thead>
 				<tbody>
 					<tr>
-						<td width="12%">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="img"> &nbsp;&nbsp; ${user.userid}
+						<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="img"> &nbsp;&nbsp; ${user.userid}
 						<input type="hidden" name="userid" value="${user.userid}"></td>
 					</tr>
 					<tr>
-						<td width="12%">팀정보 : </td><td>${user.teamNum}<input type="hidden" name="teamNum" value="${user.teamNum}"></td>
+						<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">팀정보 : </td><td>${user.teamNum}<input type="hidden" name="teamNum" value="${user.teamNum}"></td>
 					</tr>
 					<tr>
-						<td width="12%">제목 : </td>
+						<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">제목 : </td>
 						<td><input id="subject" type="text" name="subject" value="${user.subject}"/><input type="hidden" name="nidx" value="${user.nidx}"></td>
 					</tr>
 					<tr style="min-height: 200px;">
-						<td>내용 :</td>
+						<td style="border:1px solid lightgray; background-color:#1f5c87">내용 :</td>
 						<td height="200px"><textarea name="content" id="content" class="summernote">${user.content}</textarea>
 						<input type="hidden" name="chkid"><input type="hidden" name="idx" value="${didx}"></td>
 					</tr>

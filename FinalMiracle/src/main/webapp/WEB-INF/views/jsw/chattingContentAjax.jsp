@@ -15,7 +15,6 @@
 
 </head>
 <body>
-	
 		<c:forEach var="list" items="${chattingList}" varStatus="status">
 			<c:if test="${list.midx == sessionScope.loginUser.idx}">
 				<div onclick="" style="border: 0px solid blue; cursor: pointer; float: right; margin-right: 10px;"><img style="border: 0px solid blue;" class="img-circle" height="35px" width="35px" src="<%=request.getContextPath() %>/resources/images/${list.img}"></div>

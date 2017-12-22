@@ -28,7 +28,6 @@
 			and status = 1
 			and fk_member_idx = #{idx}
 			and trunc(sysdate)+20/24 <![CDATA[<=]]> sysdate
-			and wstatus = 0
 	</update>
 	
 	<update id="endWorkEarly" parameterType="int">	

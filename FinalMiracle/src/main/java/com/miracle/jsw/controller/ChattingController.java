@@ -88,7 +88,6 @@ public class ChattingController {
 		List<HashMap<String, Object>> chattingList = service.getChattingContent(cridx);
 		
 		service.read(map);
-		
 
 		
 		req.setAttribute("chattingList", chattingList);
@@ -427,7 +426,19 @@ public class ChattingController {
 	}
 	
 	
-	
+	@RequestMapping(value="/chattingRoomTitle.mr", method={RequestMethod.GET})
+	public String chattingRoomTitle(HttpServletRequest req, HttpServletResponse res){
+		
+		String cridx = req.getParameter("cridx");
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("cridx", cridx);
+		
+		HashMap<String, Object> roominfo = service.getRoomInfo(map);
+		req.setAttribute("roominfo", roominfo);
+		
+		return "jsw/chattingRoomTitle.not";
+	}
 	
 	
 	
