@@ -56,7 +56,7 @@
 </head>
 <body>
 	<form id="emailForm" name="emailForm" action="<%= request.getContextPath() %>/tmWriteEmailEnd.mr" method="post" enctype="multipart/form-data">
-		<div>
+		<div style="padding: 10px;">
 			<div style="height: 50px;">
 				<div style="width: 300px; float: left;">
 					받는 이 : <input type="text" name="receiveEmail" id="receiveEmail" class="form-control" style="width: 300px;" value="${receiveEmail}" readonly="readonly" />

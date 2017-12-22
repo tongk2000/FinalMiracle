@@ -86,7 +86,7 @@
 	
 </script>
 
-<div style="width:100%; font-family: verdana;" align="center">
+<div style="width:100%; max-height: 840px; font-family: verdana; overflow-y: auto;" align="center">
 	<h1 style="margin: 2%;">메모 등록</h1>
 	
 	<form class="form-inline" name="addFrm" action="<%= request.getContextPath() %>/memoAddEnd.mr" method="post" enctype="multipart/form-data" >

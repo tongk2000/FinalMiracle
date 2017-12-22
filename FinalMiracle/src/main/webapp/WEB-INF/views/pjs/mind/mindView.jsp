@@ -52,26 +52,26 @@ request.setCharacterEncoding("UTF-8");
 				<tbody>
 					<tr>
 						<c:if test="${user.status == 2 || sessionScope.loginUser.userid == user.userid}">
-							<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="imgs"> &nbsp;&nbsp; ${user.userid}</td>
+							<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">유저 아이디 : </td><td style="border:1px solid lightgray;"><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="imgs"> &nbsp;&nbsp; ${user.userid}</td>
 						</c:if>
 						<c:if test="${user.status == 1 && sessionScope.loginUser.userid != user.userid}">
-							<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">익명의 유저 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${defaultimg2.img}" class="imgs"> &nbsp;&nbsp;</td>
+							<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">익명의 유저 : </td><td style="border:1px solid lightgray;"><img src="<%= request.getContextPath() %>/resources/images/${defaultimg2.img}" class="imgs"> &nbsp;&nbsp;</td>
 						</c:if>
 					</tr>
 					<tr>
-						<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">팀정보 : </td><td>${user.team_idx}</td>
+						<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">팀정보 : </td><td style="border:1px solid lightgray;">${user.team_idx}</td>
 					</tr>
 					<tr>
 						<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">제목 :</td>
-						<td><input type="text" value="${user.subject}" readonly /></td>
+						<td style="border:1px solid lightgray;"><input type="text" value="${user.subject}" readonly /></td>
 					</tr>
 					<tr style="min-height: 200px;">
 						<td style="border:1px solid lightgray; background-color:#1f5c87">내용 :</td>
-						<td height="200px"><div style="width:700px; height:500px;">${user.content}</div></td>
+						<td style="border:1px solid lightgray;" height="200px"><div style="width:700px; height:500px; height:auto;">${user.content}</div></td>
 					</tr>
 					<tr>
 					    <td style="border:1px solid lightgray; background-color:#1f5c87">첨부파일</td>   <!-- USERID, IMG, SUBJECT, CONTENT, STATUS, IDX, FILENAME, ORGFILENAME, FILESIZE, FK_IDX -->
-						<td>
+						<td style="border:1px solid lightgray;">
 						    <a href="<%= request.getContextPath() %>/minddownload.mr?nidx=${user.didx}&fidx=${file.idx}">${file.orgFilename}</a> 
 						</td>
 					</tr>

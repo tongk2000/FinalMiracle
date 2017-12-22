@@ -1,7 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
+<<<<<<< HEAD
   pageEncoding="UTF-8"%>
+=======
+  pageEncoding="UTF-8"%>
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 <%@ page import="java.net.InetAddress" %>
-
 
 <% 
     // === 서버 IP 주소 알아오기 === ==채팅을 위해 서버 아이피를 알아옴== //
@@ -35,7 +38,7 @@
 					$("#alarm").after(result);
 				});	
 			},
-			error: function(){
+			error: function() {
 				alert("=====================1111111===================");
 			}
 		});
@@ -43,7 +46,11 @@
 	$(function() {
 	    $(document).tooltip();
 	});
+<<<<<<< HEAD
 </script>
+=======
+</script>
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 
 <ul style="list-style-type: none; margin: 0px; padding: 0px; text-align: left;">
 	<li onclick="javascript:location.href='<%= request.getContextPath() %>/doList.mr'" title="프로젝트" id="sideDoIcon" class="iconTag sideBarLi">
