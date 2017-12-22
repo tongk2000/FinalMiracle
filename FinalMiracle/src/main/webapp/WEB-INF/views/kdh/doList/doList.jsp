@@ -5,9 +5,11 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <style type="text/css">
+	td {
+		word-wrap:break-word; /* 글자 넘치면 자동 줄바꿈 */
+	}
 	#doListTable th, #doListTable td:not(.pageDateLine){
 		border:1px solid #cce6ff;
-		word-wrap:break-word; /* 글자 넘치면 자동 줄바꿈 */
 	}
 	#doListTable th {
 		font-weight:normal;
@@ -16,6 +18,13 @@
 	    z-index: 10;
 	    background-color:#4882ab;
     }
+    .important, .dateColor {
+		color:navy;
+	}
+    
+    #modalElementInfo {
+    	font-family:proxima-nova-regular;
+    }    
     
     .rcmMenuDiv {
     	color:white;
@@ -27,7 +36,7 @@
     	background-color:#4882ab;
     }
     .rcm {
-    	/* border:1px solid #cce6ff; */
+    	border:1px solid #cce6ff;
     }
     .rcmSubject {
     	background-color:#1f5c87;
@@ -36,6 +45,10 @@
 	.pointer{
 		cursor:pointer;
 	}
+	#pageBar .pointerOver{
+		font-weight:bold;
+		color:hsl(300, 100%, 60%) !important;
+	}
 	#doListTable th .pointerOver{
 		color:lightgray;
 	}
@@ -43,6 +56,9 @@
 		color:#3366cc;
 	}
 	.rcmMenuDiv .pointerOver{
+		color:#3366cc !important;
+	}
+	#modalElementInfo .pointerOver{
 		color:#3366cc !important;
 	}
 	
@@ -86,11 +102,25 @@
 		width:100%;
 	}
 	
+	
+	
 	.selectLine {
-		color:navy !important;
 		background-color:#E8E8E8 !important;
 	}
 	.selectedLine {
+		background-color:#E8E8E8 !important;
+	}
+	.elementModal .selectLine {
+		background-color:#cce5ff !important;
+	}
+	.elementModal .selectedLine {
+		background-color:#cce5ff !important;
+	}
+	#doListTable .selectLine {
+		color:navy !important;
+		background-color:#E8E8E8 !important;
+	}
+	#doListTable .selectedLine {
 		color:navy !important;
 		background-color:#E8E8E8 !important;
 	}
@@ -1024,7 +1054,7 @@
 				if(!bool) { // 선택 요소의 다음 요소가 펴짐 상태라면
 					$this2.hide().addClass("foldinged"); // 하위요소 전부 다 숨김
 					$(".selectedLine").find(".foldingIcon").text("▶");
-					$("#downElementFoldingRcm").text("하위요소 전체 펴기");
+					$("#downElementFoldingRcm").html("&nbsp;&nbsp;하위요소 전체 펴기&nbsp;&nbsp;");
 					if( $this2.find(".foldingIcon").text().trim() == "▼" ) {
 						$this2.find(".foldingIcon").text("▶");
 					}
@@ -1033,7 +1063,7 @@
 					if(!bool3) { // 완료된 업무 숨기기로 숨겨진게 아니라면
 						$this2.show(); // 하위요소 전부 다 보여줌
 						$(".selectedLine").find(".foldingIcon").text("▼");
-						$("#downElementFoldingRcm").text("하위요소 전체 접기");
+						$("#downElementFoldingRcm").html("&nbsp;&nbsp;하위요소 전체 접기&nbsp;&nbsp;");
 						if( $this2.find(".foldingIcon").text().trim() == "▶" ) {
 							$this2.find(".foldingIcon").text("▼");
 						}
@@ -1212,7 +1242,7 @@
 		        console.log(xhr.status);
 		        console.log(thrownError);
 		    }
-		});		
+		});
 	} // end of function addComment() ----------------------------------------------------------------------------------------------------------------------
 	
 	
@@ -1684,7 +1714,7 @@
 	<div style="width:100%; height:100px; background-color:hsl(220, 60%, 97%);"></div>
 </div>
 
-<div class="modal fade" id="modalElementInfo" role="dialog"></div>
+<div class="modal fade elementModal" id="modalElementInfo" role="dialog"></div>
 
 <div id="folderRcm" class="rcmMenuDiv">
 	<table>

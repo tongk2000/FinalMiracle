@@ -46,14 +46,14 @@
 				</span>
 			</h4>
 		</div>
-		<div class="modal-body" style="width: 100%; height: auto;">
+		<div class="modal-body" style="width: 100%; height: auto; background-color:#f2f3f4; border-top:1px solid lightgray; border-bottom:1px solid lightgray;">
 			<form name="modalInfoFrm" id="modalInfoFrm" enctype="multipart/form-data" method="post">
 			<!-- enctype="multipart/form-data" : 파일 첨부를 위해 인코딩 타입 설정 -->
 			<!-- method="post" : 파일 보낼때는 반드시 post 여야만 한다. -->
 				<table>
 					<tbody>
 						<tr>
-							<td class="infoClass" style="width:100px;">할일제목</td>
+							<td class="infoClass" style="width:135px;">할일제목</td>
 							<td class="infoData showInfo" style="width:500px;">${map.fvo.subject}
 							<td class="infoData hiddenEdit" style="width:500px;">
 								<input style="height: 20px; width: 100%;" type="text" class="hiddenEditInput" name="subject" id="modalSubject" value="${map.fvo.subject}" />
@@ -134,7 +134,7 @@
 						<jsp:include page="includePage/modalFileAddList.jsp"/> <!-- 파일 추가도 공통이라 따로 뺌 -->
 					</tbody>
 				</table>
-				folder_idx:<input type="text" name="idx" id="folder_idx" value="${map.fvo.idx}" /> <!-- 폴더번호 저장용 -->
+				<input type="hidden" name="idx" id="folder_idx" value="${map.fvo.idx}" /> <!-- 폴더번호 저장용 -->
 				<input type="hidden" name="modalClass" value="task" /> <!-- 폴더인지 할일인지 구분용 -->
 				
 				<!-- 댓글 페이징값 저장 시작(댓글페이지에도 다음 폼이 있긴함) -->

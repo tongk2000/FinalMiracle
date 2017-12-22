@@ -50,7 +50,7 @@
 		z-index:1000;
 		position: absolute;
 		background-color:white;
-		border:2px solid gray;
+		border:2px dotted lightgray;
 		width:209px;
 	}
 </style>
@@ -343,15 +343,10 @@
 
 
 
-
-
-
-
-
 <div style="width:100%; height:500px; margin-top:2px; "> 
 		
 	<div align="center"  style="z-index:2000; padding-top:-30px;">
-		<div id="googleMap" style="width: 900px; clear:both; height: 450px; border:1px solid #1f5c87" ></div>
+		<div id="googleMap" style="width: 1100px; clear:both; height: 450px; border:1px solid #1f5c87" ></div>
 	 	<form name="map">
 			<input type="hidden" name="choice">
 			<input type="hidden" name="searchString">

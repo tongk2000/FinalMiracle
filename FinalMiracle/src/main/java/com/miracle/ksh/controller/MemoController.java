@@ -118,6 +118,9 @@ public class MemoController {
 		pagebar += MyUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentShowPageNo, colname, search, period, "memoList.mr");	
 		
 		pagebar += "</ul>";
+		
+		//String url = this.getClass().getResource("").getPath();
+		//url = url.substring(1, url.indexOf("FinalMiracle"))+"FinalMiracleGit/FinalMiracle/FinalMiracle/src/main/webapp/resources/images";
 
 		req.setAttribute("folderlist", folderlist);
 		req.setAttribute("gobackURL", gobackURL);
