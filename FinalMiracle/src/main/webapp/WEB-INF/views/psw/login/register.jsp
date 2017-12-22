@@ -33,6 +33,10 @@ th#th {
 	background-color: darkgray;
 	font-size: 13pt;
 }
+
+td {
+	color: #303030;
+}
  
 .star {
 	color: purple;
@@ -336,7 +340,8 @@ th#th {
 <body background="<%= request.getContextPath() %>/resources/images/loginbg.png">
 	<div align="center" style="width: 100%; border: 0px dotted pink; margin-top: 3%;">
 		<div style="width: 600px; border: 2px solid #578CA9; background-color: #4F84C4; border-radius: 15px; margin-top: 20px; margin-bottom: 10px; padding: 10px;">
-		<form name="registerFrm">
+		
+		<form class="form-inline" name="registerFrm">
  
 			<table id="tblMemberRegister" style="margin-bottom: 5px;">
 				<thead>
@@ -347,12 +352,12 @@ th#th {
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
+					<tr>	
 						<td style="width: 200px; font-weight: bold;">성명&nbsp;
 							<span class="star">*</span>
 						</td>
 						<td style="width: 400px; text-align: left;">
-							<input type="text" id="name" name="name" class="requiredInfo" placeholder="Name" required />
+							<input type="text" id="name" name="name" class="form-control input-sm requiredInfo" style="width: 100px;" placeholder="Name" required />
 							<span class="error">성명은 필수입력 사항입니다.</span>
 						</td>
 					</tr>
@@ -361,11 +366,9 @@ th#th {
 							<span class="star">*</span>
 						</td>
 						<td style="width: 400px; text-align: left;">
-							<input type="text" id="userid" name="userid" class="requiredInfo" placeholder="User-ID" required />&nbsp;&nbsp;
-							<!-- 아이디중복체크 --> 
-							<a class="btn btn-xs btn-success" id="idcheck">
-								<span style="color: white;">ID 중복확인</span>
-							</a> 
+							<input type="text" id="userid" name="userid" class="form-control input-sm requiredInfo" style="width: 100px;" placeholder="User-ID" required />&nbsp;&nbsp;
+							<!-- 아이디중복체크 -->
+							<a class="btn btn-xs btn-success form-inline" id="idcheck"><span style="color: white; float: right;">ID 중복확인</span></a> 
 							<span class="error">아이디는 필수입력 사항입니다.</span>
 						</td>
 					</tr>
@@ -373,14 +376,14 @@ th#th {
 						<td style="width: 200px; font-weight: bold;">비밀번호&nbsp;<span
 							class="star">*</span></td>
 						<td style="width: 400px; text-align: left;">
-							<input type="password" id="pwd" name="pwd" class="requiredInfo" placeholder="password" required />
+							<input type="password" id="pwd" name="pwd" class="form-control input-sm requiredInfo" placeholder="password" required />
 							<span class="error">암호는 영문자, 숫자, 특수기호가 혼합된 8~15글자로만 입력가능합니다.</span></td>
 					</tr>
 					<tr>
 						<td style="width: 200px; font-weight: bold;">비밀번호확인&nbsp;<span
 							class="star">*</span></td>
 						<td style="width: 400px; text-align: left;">
-						<input type="password" id="pwdcheck" class="requiredInfo" placeholder="password-check" required />
+						<input type="password" id="pwdcheck" class="form-control input-sm requiredInfo" placeholder="password-check" required />
 						<span class="error">비밀번호가 일치하지 않습니다.</span></td>
 					</tr>
 					<!-- 생년/월/일 추가 -->
@@ -388,34 +391,34 @@ th#th {
 						<td style="width: 200px; font-weight: bold;">생년/월/일&nbsp;
 						<span class="star">*</span></td>
 						<td style="width: 400px; text-align: left;">
-						<input type="text" id="birth1" name="birth1" size="2" maxlength="2" placeholder="yy" />&nbsp;/&nbsp;
-						<input type="text" id="birth2" name="birth2" size="2" maxlength="2" placeholder="mm" />&nbsp;/&nbsp; 
-						<input type="text" id="birth3" name="birth3" size="2" maxlength="2" placeholder="dd" />
+						<input type="text" class="form-control input-sm" id="birth1" name="birth1" size="2" maxlength="2" placeholder="yy" />&nbsp;/&nbsp;
+						<input type="text" class="form-control input-sm" id="birth2" name="birth2" size="2" maxlength="2" placeholder="mm" />&nbsp;/&nbsp; 
+						<input type="text" class="form-control input-sm" id="birth3" name="birth3" size="2" maxlength="2" placeholder="dd" />
 						<span class="error error_birth">생년월일 형식이 아닙니다.</span></td>
 					</tr>
 					<tr>
 						<td style="width: 200px; font-weight: bold;">이메일&nbsp;
 						<span class="star">*</span></td>
 						<td style="width: 400px; text-align: left;">
-						<input type="text" id="email" name="email" class="requiredInfo" placeholder="abc123@naver.com" required />
+						<input type="text" class="form-control input-sm requiredInfo" id="email" name="email" placeholder="abc123@naver.com" required />
 						<span class="error">이메일형식에 맞지 않습니다.</span></td>
 					</tr>
 					<tr>
 						<td style="width: 200px; font-weight: bold;">휴대폰</td>
 						<td style="width: 400px; text-align: left;">
-							<select id="hp1" name="hp1" style="height: 25px;">
+							<select class="form-control input-sm" id="hp1" name="hp1" style="height: 28px; vertical-align: middle;">
 									<option value="010" selected>010</option>
 							</select>&nbsp;-&nbsp; 
-							<input type="text" id="hp2" name="hp2" size="4" maxlength="4" placeholder="hp2" />&nbsp;-&nbsp;
-							<input type="text" id="hp3"name="hp3" size="4" maxlength="4" placeholder="hp3" />
+							<input type="text" class="form-control input-sm requiredInfo" id="hp2" name="hp2" size="4" maxlength="4" placeholder="hp2" />&nbsp;-&nbsp;
+							<input type="text" class="form-control input-sm requiredInfo" id="hp3"name="hp3" size="4" maxlength="4" placeholder="hp3" />
 							<span class="error error_hp">휴대폰 형식이 아닙니다.</span>
 						</td>
 					</tr>
 					<tr>
 						<td style="width: 200px; font-weight: bold;">우편번호</td>
 						<td style="width: 400px; text-align: left;">
-						<input type="text" id="post1" name="post1" size="4" maxlength="3" placeholder="post1" />&nbsp;-&nbsp;
-						<input type="text" id="post2" name="post2" size="4" maxlength="3" placeholder="post2" />&nbsp;&nbsp;
+						<input type="text" class="form-control input-sm requiredInfo" id="post1" name="post1" size="4" maxlength="3" placeholder="post1" />&nbsp;-&nbsp;
+						<input type="text" class="form-control input-sm requiredInfo" id="post2" name="post2" size="4" maxlength="3" placeholder="post2" />&nbsp;&nbsp;
 						<!-- 우편번호찾기 --> 
 						<a class="btn btn-xs btn-success" onClick="openDaumPostnum();">
 							<span style="color: #f0efef;">우편번호검색</span>
@@ -425,11 +428,11 @@ th#th {
 					<tr>
 						<td style="width: 200px; font-weight: bold;">주소</td>
 						<td style="width: 400px; text-align: left;">
-						<input type="text" id="addr1" name="addr1" size="60" maxlength="150" placeholder="address" /><br style="line-height: 200%" />
-						<input type="text" id="addr2" name="addr2" size="60" maxlength="150" placeholder="address-detail" /></td>
+						<input type="text" class="form-control input-sm" id="addr1" name="addr1" size="50" maxlength="150" placeholder="address" /><br style="line-height: 200%" />
+						<input type="text" class="form-control input-sm" id="addr2" name="addr2" size="50" maxlength="150" placeholder="address-detail" /></td>
 					</tr>
 					<tr>
-						<td colspan="2"><label for="agree">이용약관에 동의합니다</label>&nbsp;
+						<td colspan="2"><label for="agree">이용약관을 확인하였으며, 이에 동의합니다.</label>&nbsp;
 						<input type="checkbox" id="agree" /></td>
 					</tr>
 					<tr>
