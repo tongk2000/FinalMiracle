@@ -276,9 +276,9 @@ public class MemberController {
 				if(n == 2 && loginUserid != null) {
 					session.setAttribute("loginUserid", mvo);
 				}
-				// *** 프로필 내용에 엔터("\r\n")가 들어가 있으면 엔터("\r\n")를 <br/>로 대체시켜서 넘긴다.
+				// *** 프로필 내용에 엔터("/r/n")가 들어가 있으면 엔터("/r/n")를 <br/>로 대체시켜서 넘긴다.
 				String profile = mdvo.getProfile();
-				profile = profile.replaceAll("\r\n", "<br/>");
+				profile = profile.replaceAll("/r/n", "<br/>");
 				mdvo.setProfile(profile);
 				
 				String msg = (n == 2) ? "회원정보 수정 성공 ~ !!" : "회원정보 수정 오류입니다.";
@@ -307,6 +307,8 @@ public class MemberController {
 		if(img != null && !img.isEmpty()) {
 			String root = session.getServletContext().getRealPath("/");
 			String path = root + "resources" + File.separator + "files";
+			
+			// C:/FinalMiracle/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/FinalMiracle/resources/files
 			
 			String fileName = img.get(0).getOriginalFilename();
 			
