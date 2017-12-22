@@ -288,9 +288,9 @@
 			<fieldset>
 				<div style="border: 2px dotted #92a8d1; border-radius: 20px; background-color: #deeaee; padding: 5px; float: right;" align="center">
 					<h5 style="font-weight: bold; font-family: verdana;">프로필 이미지</h5>
-					<img alt="프로필 이미지" src="<%= request.getContextPath() %>/resources/files/${sessionScope.loginUser.img}" style="height: 150px; width: 140px;">
+					<img alt="프로필 이미지" src="<%= request.getContextPath() %>/resources/files/${sessionScope.loginUser.img}" style="height: 130px; width: 120px;">
 					<br/><br/>
-					<a class="btn btn-primary btn-primary" href="javascript:openAlterImg();" style="text-align: center; text-decoration: none; font-family: verdana; cursor: pointer; font-size: 10pt; color: white;">사진 변경하기</a>
+					<a class="btn btn-primary btn-primary" href="javascript:openAlterImg();" style="text-align: center; text-decoration: none; font-family: verdana; cursor: pointer; font-size: 10pt; color: white;">변경하기</a>
 				</div>
 				
 				<div style="border: 1px dotted white; width: 410px; float: left;" align="left">

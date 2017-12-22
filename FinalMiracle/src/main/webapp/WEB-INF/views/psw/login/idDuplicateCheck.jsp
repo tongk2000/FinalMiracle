@@ -10,6 +10,7 @@
 <title>Miracle_아이디중복검사</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.css">
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/BootStrapStudy/js/bootstrap.js"></script>
@@ -53,20 +54,22 @@
 </script>
 
 </head>
-<body style="background-color: #fff0f5;">
+<body style="background-color: #deeaee;">
 
 
 <c:if test="${method == 'GET'}">
 <form name="frmIdDuplicateCheck">
-	<table style="width: 95%; height: 90%;">
-		<tr>
-			<td style="text-align: center;">
-					아이디를 입력하세요<br style="line-height: 200%;"/>
-					<input type="text" id="userid" name="userid" size="20" class="box" /><br style="line-height: 300%;"/>
-					<button type="button" class="box" onClick="goCheck();">확인</button>
-			</td>
-		</tr>
-	</table>
+	<div style="padding: 50px;" align="center">
+		<table style="width: 95%; height: 90%;">
+			<tr>
+				<td style="text-align: center;">
+						<span style="font-size: 12pt; font-weight: bold; color: #034f84; font-family: verdana;">아이디를 입력하세요<br style="line-height: 200%;"/></span>
+						<input type="text" id="userid" name="userid" size="20" class="box" /><br style="line-height: 300%;"/>
+						<a onClick="goCheck();" class="btn btn-sm btn-primary">중복 확인</a>
+				</td>
+			</tr>
+		</table>
+	</div>
 </form>
 </c:if>
 
@@ -76,9 +79,9 @@
 		<br style="line-height: 200%"/>
 		<br style="line-height: 200%"/>   
 		<div align="center">
-			ID로 [<span style="color:red; font-weight: bold;">${userid}</span>]를 사용할 수 있습니다.
+			<span style="font-family: verdana; font-size: 11pt; font-weight: bold;">아이디 [<span style="color:red; font-weight: bold; font-size: 14pt;">${userid}</span>] 사용 가능</span>
 			<br/><br/><br/>
-			<button type="button" onClick="setUserID('${userid}');">닫기</button>
+			<a onClick="setUserID('${userid}');" class="btn btn-sm btn-primary">닫기</a>
 		</div>
 	</c:if>
 	

@@ -320,9 +320,7 @@ public class MemberController {
 				
 				try {
 					bytes = img.get(0).getBytes();
-					
 					newFileName = fileManager.doFileUpload(bytes, img.get(0).getOriginalFilename(), path);
-					
 				} catch (Exception e) {
 					
 				}
@@ -355,7 +353,6 @@ public class MemberController {
 			fileReq.setAttribute("msg", msg);
 			fileReq.setAttribute("loc", loc);
 		}
-		
 		return "psw/msg.not";
 	}
 	
