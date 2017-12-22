@@ -4,12 +4,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<style type="text/css">
-	.important, .dateColor {
-		color:navy;
-	}
-</style>
-
 <c:if test="${not empty map.doList}"> <!-- 프로젝트 리스트가 있다면 -->
 	<c:forEach var="dvo" items="${map.doList}">
 		<tr id="${dvo.idx}" style="
