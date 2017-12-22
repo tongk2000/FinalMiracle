@@ -286,8 +286,8 @@
 								<span style="font-weight: bold;">${req.NAME}(${req.USERID})</span><br/>
 								<span class="addrInfo">가입일 : </span>${req.REGDATE}<br/>
 								<span class="addrInfo">요청일 : </span>${req.DISDATE}<br/>
-								<button type="button" class="btn btn-danger" id="btnWithDraw" name="btnWithDraw" onclick="goWithDraw('${req.IDX}');">탈퇴처리</button>
-								<button type="button" class="btn btn-primary" id="btnWithDraw" name="btnWithDraw" onclick="goWithDrawCancle('${req.IDX}');">탈퇴취소</button>
+								<button type="button" class="btn btn-danger" id="btnWithDraw" name="btnWithDraw" onclick="goWithDraw('${req.IDX}');"><span class="glyphicon glyphicon-log-out"></span>&nbsp;탈퇴처리</button>
+								<button type="button" class="btn btn-primary" id="btnWithDraw" name="btnWithDraw" onclick="goWithDrawCancle('${req.IDX}');"><span class="glyphicon glyphicon-remove-sign"></span>&nbsp;탈퇴취소</button>
 							</div>
 						</td>
 					<c:if test="${i%j == j-1 }">
@@ -324,7 +324,7 @@
 				<!-- <option value="name">글쓴이</option> -->
 			</select>
 			<input type="text" name="search1" id="search1" size="40" class="form-control" placeholder="검색할 단어를 입력해주세요" />
-			<button type="button" class="btn btn-default" onclick="goSearch1();">검색</button>
+			<button type="button" class="btn btn-default" onclick="goSearch1();"><span class="glyphicon glyphicon-search"></span></button>
 		</div>
 	</div>
 
@@ -332,15 +332,18 @@
 	
 	<div style="width: 100%;">
 		<div style="float: left; margin-top: 2%;">
-			<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmList.mr'">팀원 리스트</button>&nbsp;
-			<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmAddress.mr'">주소록</button>&nbsp;
+			<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmList.mr'"><span class="glyphicon glyphicon-list"></span>&nbsp;팀원 리스트</button>&nbsp;
+			<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmAddress.mr'"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;주소록</button>&nbsp;
 			<c:if test="${teamwon_status.equals('1')}">	
-				<button type="button" class="btn btn-danger" onClick="goWithdraw();">팀 탈퇴</button>&nbsp;
+				<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmWithdraw.mr'">팀 탈퇴</button>&nbsp; --%>
+				<button class="btn btn-danger" type="button" onClick="goWithdraw();"><span class="glyphicon glyphicon-log-out"></span>&nbsp;팀 탈퇴</button>&nbsp;
 			</c:if>
 			<c:if test="${teamwon_status.equals('2')}">
-				<button type="button" class="btn btn-primary" onClick="goInvite();">팀원 초대</button>&nbsp;
-				<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmWithdrawList.mr'">팀원 탈퇴목록</button>&nbsp;
-				<button type="button" class="btn btn-danger" onClick="javascript:location.href='<%= request.getContextPath() %>/tmDisband.mr'">팀 해체</button>&nbsp;
+				<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmInvite.mr'">팀원 초대</button>&nbsp; --%>
+				<button type="button" class="btn btn-primary" onClick="goInvite();"><span class="glyphicon glyphicon-log-in"></span>&nbsp;팀원 초대</button>&nbsp;
+				<button type="button" class="btn btn-primary" onClick="javascript:location.href='<%= request.getContextPath() %>/tmWithdrawList.mr'"><span class="glyphicon glyphicon-th-list"></span>&nbsp;팀원 탈퇴목록</button>&nbsp;
+				<%-- <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/tmDisband.mr'">팀 해체</button>&nbsp; --%>
+				<button type="button" class="btn btn-danger" onClick="goDisband();"><span class="glyphicon glyphicon-warning-sign"></span>&nbsp;팀 해체</button>&nbsp;
 			</c:if>
 		</div>
 		<div style="float: right;">
@@ -394,7 +397,7 @@
 								<span style="font-weight: bold;">${wd.NAME}(${wd.USERID})</span><br/>
 								<span class="addrInfo">가입일 : </span>${wd.REGDATE}<br/>
 								<span class="addrInfo">탈퇴일 : </span>${wd.REGDATE}<br/>
-								<button type="button" class="btn btn-success" id="btnRestore" name="btnRestore" onclick="goRestore('${wd.IDX}');">복구</button>
+								<button type="button" class="btn btn-success" id="btnRestore" name="btnRestore" onclick="goRestore('${wd.IDX}');"><span class="glyphicon glyphicon-refresh"></span>&nbsp;복구</button>
 							</div>
 						</td>
 					<c:if test="${i%j == j-1 }">
@@ -431,7 +434,7 @@
 				<!-- <option value="name">글쓴이</option> -->
 			</select>
 			<input type="text" name="search2" id="search2" size="40" class="form-control" placeholder="검색할 단어를 입력해주세요" />
-			<button type="button" class="btn btn-default" onclick="goSearch2();">검색</button>
+			<button type="button" class="btn btn-default" onclick="goSearch2();"><span class="glyphicon glyphicon-search"></span></button>
 		</div>
 	</div>
 </div>

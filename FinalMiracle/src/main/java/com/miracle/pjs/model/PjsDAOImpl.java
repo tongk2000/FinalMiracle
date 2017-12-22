@@ -216,7 +216,7 @@ public class PjsDAOImpl implements PjsinterDAO {
 	// === *** 구글맵 *** === //
 	@Override
 	public List<MapVO> getMap(HashMap<String, String> map) {
-		// 구글맵 테이블의 전체 내용을 가져온다.
+		// 구글맵 테이블의 팀 내용을 가져온다.
 		List<MapVO> list = sqlsession.selectList("pjsfinal.getMap",map);
 		return list;
 	}/* ================================================================================================================================================== */
