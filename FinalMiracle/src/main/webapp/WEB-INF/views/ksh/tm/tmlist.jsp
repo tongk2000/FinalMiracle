@@ -251,7 +251,7 @@
 				<!-- <option value="name">글쓴이</option> -->
 			</select>
 			<input type="text" name="search" id="search" size="40" class="form-control" placeholder="검색할 단어를 입력해주세요" />
-			<button type="button" class="btn btn-default" onclick="goSearch();">검색</button>
+			<button type="button" class="btn btn-default" onclick="goSearch();"><span class="glyphicon glyphicon-search"></span></button>
 		</div>
 	</div>
 	

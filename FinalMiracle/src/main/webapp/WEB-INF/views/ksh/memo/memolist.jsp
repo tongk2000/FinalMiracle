@@ -496,7 +496,7 @@
 			</select>
 			<input type="text" name="search" id="search" size="40" class="form-control" placeholder="검색할 단어를 입력해주세요" />
 			<!-- <button type="button" onclick="goSearch();">검색</button> -->
-			<a href="javascript:goSearch();" class="btn btn-default">검색</a>&nbsp;
+			<a href="javascript:goSearch();" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></a>&nbsp;
 		</div>
 	</div>
 	
