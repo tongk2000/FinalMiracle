@@ -180,13 +180,18 @@
 	
 	function goVote(idx, fidx, itemidx, gobackURL){
 		var frm = document.choiceFrm;
+		var checkedValue = $("input[type=radio][name=voteitem_info"+idx+"]:checked").val();
 		
-		frm.vote_idx.value = idx;
-		frm.teamwon_idx.value = fidx;
-		frm.voteitem_idx.value = itemidx;
-		frm.gobackURL.value = gobackURL;
-		
-		frm.submit();
+		if(checkedValue == null){
+			swal("문항을 선택하지 않았습니다.");
+		} else {
+			frm.vote_idx.value = idx;
+			frm.teamwon_idx.value = fidx;
+			frm.voteitem_idx.value = checkedValue;
+			frm.gobackURL.value = gobackURL;
+			
+			frm.submit();
+		}
 	}
 	
 	function goEdit(idx){
@@ -469,7 +474,7 @@
 				<!-- <option value="name">글쓴이</option> -->
 			</select>
 			<input type="text" name="search" id="search" size="40" class="form-control" placeholder="검색할 단어를 입력해주세요" />
-			<a href="javascript:goSearch();" class="btn btn-default">검색</a>&nbsp;
+			<a href="javascript:goSearch();" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></a>&nbsp;
 		</div>
 	</div>
 	

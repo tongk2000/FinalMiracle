@@ -263,7 +263,7 @@
 	}  // end of function openDaumPostnum()---------------------------------------------------------------------------------
 	
 	function openAlterImg() {
-		window.open("member_alterImg.mr", "alterImg", "left=500px; top=100px; width=300px; height=200px;");
+		window.open("member_alterImg.mr", "alterImg", "left=500px; top=100px; width=350px; height=150px;");
 	}
 </script>
 
