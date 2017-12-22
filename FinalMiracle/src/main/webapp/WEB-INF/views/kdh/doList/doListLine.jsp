@@ -8,7 +8,11 @@
 	<c:forEach var="dvo" items="${map.doList}">
 		<tr id="${dvo.idx}"
 			<c:if test="${dvo.category == 1}">
-				style="font-weight:bold;"
+				style="font-weight:bold;
+					<c:if test="${dvo.fk_folder_idx == 0}">
+						background-color:#4882ab; color:white;
+					</c:if>
+				"
 			</c:if>
 		class="element ${dvo.groupNo} ${dvo.depth} trLine">
 			<td>
