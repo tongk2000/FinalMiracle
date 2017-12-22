@@ -932,7 +932,10 @@ public class GeniousPjsController {
 		String team_idx = teamInfo.get("team_idx");
 		String choice = req.getParameter("choice");
 		String searchString = req.getParameter("searchString");
+		System.out.println("searchString==========================================="+ searchString);
+		System.out.println("choice==================================================="+choice);
 		if(!(choice==null||searchString==null||!"0".equals(choice))) {
+			System.out.println("특정 구글맵 오냐==============================================-------");
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("choice", choice);
 			map.put("searchString", searchString);
@@ -944,6 +947,7 @@ public class GeniousPjsController {
 			req.setAttribute("searchString", searchString);	
 		}
 		else {
+			System.out.println("전체 구글맵 오냐===================================================");
 			List<MapVO> list = service.getMap(teamInfo); // 전체 리스트를 반환한다.
 			req.setAttribute("list", list);
 			req.setAttribute("choice", choice);
@@ -966,6 +970,7 @@ public class GeniousPjsController {
 	public String googleMapTeamInfoJSON(HttpServletRequest req) {
 		String map_team_idx = req.getParameter("map_team_idx");
 		String map_idx = req.getParameter("map_idx");
+		System.out.println("오냐??????????????????????????"+map_team_idx+"    "+map_idx);
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("map_idx", map_idx);
 		if(map_team_idx==null||"0".equals(map_team_idx)){ // null이거나 0일 때 음식점 정보를 가져온다.

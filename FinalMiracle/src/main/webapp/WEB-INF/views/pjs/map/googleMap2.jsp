@@ -51,7 +51,7 @@
 		position: absolute;
 		background-color:white;
 		border:2px solid gray;
-		width:180px;
+		width:209px;
 	}
 </style>
 
@@ -61,6 +61,7 @@
 		
 		google.maps.event.addDomListener(window, 'load', initialize); // 구글사에서 그대로 따옴!!! ====== 구글맵 생성
 		function initialize(){ // 사용자가 커스텀마이즈 할 수 있다.									    ====== 구글맵 처음 시작할 때
+			alert("처음 오냐?");
 		    var mapOptions = { // 구글 맵 옵션 설정
 		        zoom : 14, // 기본 확대율(줌 크기조절) , 숫자가 클수록 줌 크기가 확대되는 것이다. 숫자가 작아질 수록 광대역을 볼 수 있다.
 		        center : new google.maps.LatLng(37.531333, 126.89856710000004), // 처음 지도의 중앙 위치 세팅!!
@@ -86,7 +87,8 @@
 				    	"${obj.latitude}",
 				    	"${obj.longitude}",
 				    	"${obj.idx}",
-				    	"${obj.team_idx}"
+				    	"${obj.team_idx}",
+				    	"${obj.subject}"
 					 ]
 				     <c:if test="${cnt != mapList.size()}">
 				     ,
@@ -94,6 +96,8 @@
 				     <c:set var="cnt" value="${cnt + 1}" />   // 변수 cnt 를 1씩 증가
 				</c:forEach>
 			];
+			alert("오냐");
+			alert(storeArr.length);
 		    setMarkers(map, storeArr);	// 여기서 map은 지도 <div id="googleMap"	style="width: 100%; height: 360px; margin: auto;"></div>를 가리킴
 		} // end of function initialize()--------------------------------
 		var markerArr;  // 전역변수로 사용됨.
@@ -119,6 +123,7 @@
 	    var infowindowArr = new Array();  // 풍선창(풍선윈도우) 여러개를 배열로 저장하기 위한 용도 
 		function markerListener(map, marker, team_idx){  // setMarkers 함수안에서  총 세번 반복되었음     
 			// alert(marker.zIndex - 1);	//  0  1  2
+			alert("클릭 전 오냐");
 			var infowindow = new google.maps.InfoWindow({  // 풍선창(풍선윈도우)만들기
 					  content: viewContent(marker.title), // 사용자 지정 함수 viewContent(가게이름)
 					  size: new google.maps.Size(100,100) 
@@ -127,9 +132,10 @@
 			google.maps.event.addListener(marker, 'click', 
 				 function(){ 
 			               //alert("team_idx"+team_idx);
+			               alert("오냐");
 			               goDetail(marker.zIndex, team_idx);  // 매장번호(marker.zIndex)를 넘겨서 매장지점 상세정보 보여주기와 같은 팝업창 띄우기
-						// 마커를 클릭하면 이전 마커의 모달창을 닫는 기능	
-						for(var i=0; i<markerArr.length; i++) {   // 생성된 마커의 갯수만큼 반복하여
+						
+			               for(var i=0; i<markerArr.length; i++) {   // 생성된 마커의 갯수만큼 반복하여
 							if(i != (marker.zIndex - 1) ) { // 마커에 클릭하여 발생된 풍선창(풍선윈도우)을 제외한 나머지 다른 마커에 달린 풍선창(풍선윈도우)은
 								infowindowArr[i].close();	 // 닫는다.
 							}
@@ -144,7 +150,7 @@
 		function goDetail(map_idx, map_team_idx) // 모달창을 띄우자
 		{
 			var data_form = {"map_idx":map_idx, "map_team_idx":map_team_idx};
-			//alert("map_idx"+map_idx+" map_team_idx"+map_team_idx);
+			alert("map_idx"+map_idx+" map_team_idx"+map_team_idx);
 			$.ajax({
 				url:"googleMapTeamInfoJSON.mr",
 				type:"get",
@@ -164,11 +170,11 @@
 				}
 			}); // end of $.ajax 
 		}
-		function viewContent(title) {
+		/* function viewContent(title) {
 			var html =  "<span style='color:red; font-weight:bold;'>"+title+"</span><br/>";
 				html += "<a href='javascript:alert(\""+title+" 입니다.\");'>상세보기</a>";
 			return html;	
-		}
+		} */
 		$("#searchString").keyup(function(){
 			$("#displayList").show();
 			var data_form = {"searchString":$("#searchString").val(),
@@ -193,7 +199,7 @@
 					else {
 					}
 					var left = $("#searchString").offset().left;
-					var top = $("#searchString").offset().top;
+					var top = $("#searchString").offset().top+14;
 					top = top + ($("#searchString").height());
 					$("#displayList").css({"left":left+"px", "top":top+"px"});
 					$("#displayList").html(resultHTML);
@@ -204,6 +210,7 @@
 			}); // end of $.ajax
 		}); // end of $("#searchString").keyup
 		$("#goSearch").click(function(){
+			alert("클릭 오냐?");
 			var frm	= document.map;
 			frm.choice.value = $("#choice").val();
 			frm.searchString.value = $("#searchString").val();
@@ -272,7 +279,7 @@
 				var html = "";
 				<%-- html <img src="<%= request.getContextPath() %>/resources/files/20171208183923121001009307995.jpg" style="width:200px; heigth:200px;" /> --%>
 				html += "<div style='float:left'><img src='<%= request.getContextPath() %>/resources/files/"+img+"' height='150px;' width='150px;'></div><br/>";
-				html += "<div style='float:right; margin-right:310px;	'>팀 이름 : " + name + "</div><br/>";
+				html += "팀 이름 : " + name + "<br/>"; //"<div style='float:right; margin-right:310px;	'>팀 이름 : " + name + "</div><br/>";
 				html += "설립자 : " + leader + "<br/>";
 				html += "전화번호 : " + tel1 + "-" + tel2 + "-" + tel3 + "<br/>";
 				html += "우편번호 : " + post1 + "-" + post2 + "<br/>";
@@ -290,10 +297,10 @@
 <body>
 
 <!-- <div class="container">
-	<div class="row-fluid">
-        <div class="span8">
-        	구글맵 자리
-        	<div align="center"  style="z-index:2000; border:1px solid red;">
+	<div class="row-fluid" style="border:1px solid blue;">
+        <div class="span8" style="float:left;"> -->
+        <!-- 구글맵 자리 -->
+        	<!-- <div align="center"  style="z-index:2000; border:1px solid red; display:inline;" >
 				<div id="googleMap" style="width: 500px; clear:both; height: 450px; border:1px solid red" ></div> 
 			 	<form name="map">
 					<input type="hidden" name="choice">
@@ -312,19 +319,17 @@
 			</div>
     	</div>
     	
-      	<div class="span4">
-    		 팀 정보 자리
-    		 <div style=" width:50%; height:250px; padding-left:300px; float: left; border:1px solid blue " align="center"> 
+      	<div class="span4" style="float:right;">
+    		 <!-- 팀 정보 자리 -->  <!--
+    		 <div style=" width:50%; height:250px; padding-left:300px; border:1px solid blue; " align="center"> 
 				<div style=" width:100%; float: left;"> 
 					<span >회사정보</span>
 					<div id="tm" style=" margin-top:50px; width:100%; border:1px solid blue"></div>
 				</div>
-			</div>
-    	</div>
+			</div> -->
+    <!-- 	</div> 
     </div>
-</div>
-
- -->
+</div> -->
 
 
 
@@ -333,52 +338,99 @@
 
 
 
-<div style="width:100%; height:500px; padding-top:20px; "> 
+
+
+<div style="width:100%; height:500px; margin-top:2px; "> 
 		
-	<div align="center"  style="z-index:2000;">
-		<div id="googleMap" style="width: 900px; clear:both; height: 450px; border:1px solid red" ></div>
+	<div align="center"  style="z-index:2000; padding-top:-30px;">
+		<div id="googleMap" style="width: 900px; clear:both; height: 450px; border:1px solid #1f5c87" ></div>
 	 	<form name="map">
 			<input type="hidden" name="choice">
 			<input type="hidden" name="searchString">
 		</form>
-		 
-		<select id="choice" name="choice" style="font-size:10pt;">
+		 <div align="center" style="border: 0px solid lightgray;">
+			<!-- 선택바 -->
+			<div class="col-xs-2 nav-container" style="border: 0px solid lightgray; margin-left: 300px; margin-top:0px; padding-top: 5px;">
+				<div class="form-group" style="float: right;">
+					<select class="form-control nav" id="choice" name="choice">
+						<option value="0" selected> 전체</option>
+						<option value="1" >팀정보</option>
+						<option value="-1">맛집정보</option>
+					</select>
+				</div>
+			</div>
+			<!-- <select id="searchType" name="searchType" style="font-size:12pt;">
+				<option value="fk_userid">아이디</option>
+				<option value="subject">제목</option>
+			</select> -->
+			<!-- <input type="text" id="searchString" name="searchString" style="width:187px;"/>
+			<button type="button" id="btnClick" onClick="goSearch();">검색</button> -->
+			<!-- 검색바 -->
+			<div class="container" style="border:0px solid red;">
+				<div class="row" style="border: 0px solid red; height: 30px; padding-right: 420px; padding-top:5px;">
+					<div class="col-sm-4" style="border: 0px solid green; padding-top:-50px;">
+						<div id="custom-search-input"
+							style="border: 0px solid lightgray; margin-left: -15px;">
+							<div class="input-group col-sm-12" style="border: 0px solid lightgray;">
+								<input type="text" class="form-control input-xs"
+									id="searchString" name="searchString" /> <span
+									class="input-group-btn">
+									<button class="btn btn-info btn-xs" type="button" id="goSearch">
+										<i class="glyphicon glyphicon-search"></i>
+									</button>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- <select id="choice" name="choice" style="font-size:10pt;">
 			<option value="0" selected> 전체</option>
 			<option value="1" >팀정보</option>
 			<option value="-1">맛집정보</option>
 		</select>
 		
 		<input type="text" name="searchString" id="searchString" />
-		<button type="button" id="goSearch">검색</button>
-		
+		<button type="button" id="goSearch">검색</button> -->
+		<!-- <div style="display: block; z-index: 1000; margin-top: -40px; border:0px solid red;" align="center">
+			<div id="displayList"></div>
+		</div> -->
 	</div>
 
 	
 	<br/><br/><br/><br/>
 	
 
-	<div style=" width:50%; height:250px; padding-left:300px; float: left;" align="center">
+	<div style=" width:50%; height:250px; padding-left:100px; float: left; margin-top:-50px;" align="center">
 		<div style=" width:100%; float: left;"> 
 			<span >회사정보</span>
 			<div id="tm" style=" margin-top:50px; width:100%;"></div>
 		</div>
 	</div>
 	
-	<div style=" width:50%; height: 250px; float: right; ">
+	<div style=" width:50%; height: 250px; float: right; margin-top:-50px; border:0px solid red;	">
 		<span style="align:center"> 당산 : 서울특별시 영등포구 선유동2로 57 이레빌딩 (구관) 19F, 20F </span>
 		<div align="center">
-			<img src="<%= request.getContextPath() %>/resources/images/당산이미지.PNG" style="width:400px; height:200px; padding-top:5px; padding-left:10px;"/>
+			<img src="<%= request.getContextPath() %>/resources/images/당산이미지.PNG" style="margin-top:40px; padding-left:10px;  width: 50%;
+    height: 200px;
+    box-shadow: 0px 0px 20px -5px rgba(0, 0, 0, 0.8);
+   "/>
 		</div>
 	</div>
 </div>
-			
+
+<!-- 모달 -->		 
 <div> 
 	<div class="modal-body" id="launchMapBody" style=" overflow-x:hidden;overflow-y:hidden" align="center">
 		<div class="modal fade" id="mapInfo" role="dialog"></div>
 	</div>
 </div>
-		<div>
-			<div id="displayList"></div>
-		</div> 
+
+<!-- 검색어 -->
+<div>
+	<div id="displayList"></div>
+</div> 
+
 </body>
 </html>
