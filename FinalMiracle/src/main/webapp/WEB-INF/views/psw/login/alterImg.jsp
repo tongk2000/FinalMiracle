@@ -32,7 +32,7 @@
 
 <body>
 
-<div style="width: 90%; height: 100%; padding: 20px; background-color: #F0F0F0" align="center">
+<div style="width: 100%; height: 100%; padding: 20px; background-color: #F0F0F0" align="center">
 
 	<form name="alterImgFrm" enctype="multipart/form-data">
 		<h4 style="text-align: center; font-weight: bold;">프로필 이미지 변경하기</h4>

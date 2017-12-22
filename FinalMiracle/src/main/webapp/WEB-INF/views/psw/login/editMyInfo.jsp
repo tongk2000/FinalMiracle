@@ -270,7 +270,7 @@
 	}  // end of function openDaumPostnum()---------------------------------------------------------------------------------
 	
 	function openAlterImg() {
-		window.open("member_alterImg.mr", "alterImg", "left=500px; top=100px; width=300px; height=200px;");
+		window.open("member_alterImg.mr", "alterImg", "left=500px; top=100px; width=350px; height=150px;");
 	}
 </script>
 
@@ -366,7 +366,7 @@
 						  <input style="vertical-align: top; height: 27px;" id="post2" name="post2" type="text" placeholder="Post2" size="3" class="form-control input-sm" value="${map.mdvo.post2}"> &nbsp;&nbsp;
 						  <!-- 우편번호 찾기 -->
 					      <a style="vertical-align: middle;" class="btn btn-xs btn-info form-inline" onClick="openDaumPostnum();">
-					      	<span style="color: white; font-size: 10pt; vertical-align: text-bottom;">검색</span>
+					      	<span style="color: white; font-size: 10pt; vertical-align: text-bottom;">우편번호검색</span>
 					      </a>
 					  </td>
 					</tr>
