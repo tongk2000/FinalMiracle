@@ -37,23 +37,48 @@
 			success: function(data) {	
 				$("#modalBody").html(data);
 				$("#memberEditModal").modal();
-			}, // end of success: function()----------
-			error: function(request, status, error){
+			}, error: function(request, status, error){
 				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 			}
-		}); // end of $.ajax()------------------------
-	}
+		});
+	} // end of function showMyInfo() ------------------------------------------------------------------------------------------------------
+	
+	// ------------------------------------------------------ ***** 통합 검색 시작 ***** ------------------------------------------------------
+	$(document).ready(function(){
+		$("#searchWordByAll").keyup(function(){
+			var searchWord = $("#searchWordByAll").val();
+			var frm = {"searchWord":searchWord};
+			if(searchWord != "") {
+				$.ajax({
+					url:"do_getSearchWordByAll.mr",
+					data:frm,
+					type:"get",
+					dataType:"text",
+					success:function(data){
+						alert(typeof data);
+						setTimeout(function(){
+							data.replace(/searchWord.trim()/gi, "????");
+							$("#searchAllResult").html(data);
+						},1000);
+					}
+				});/* "<span style='color:red;'>"+searchWord+"</span>" */
+			}
+		}); // end of $("#searchWordByAll").keyup(function() --------------------------------------------------------------------------------
+	}); // end of $(document).ready(function() ------------------------------------------------------------------------------------------------
+	// ------------------------------------------------------ ***** 통합 검색 끝 ***** ------------------------------------------------------
 </script>
 
 <!-- 통합검색메뉴 -->
 <div style="float: left; width: 30%; height: 50px;">
-	<input type="text" class="form-control input-md" style="margin-left:10px; margin-top: 7px; background-color:#154465; border-right:none;"/>
+	<input type="text" class="form-control input-md" id="searchWordByAll" style="margin-left:10px; margin-top: 7px; background-color:#154465; color:white;"/>
 </div>
 <div style="width:50px; height: 50px; display:inline-block; float:left;" align="center">
-		<a href="<%= request.getContextPath() %>/doList.mr" title="검색">
-			<img src="<%= request.getContextPath() %>/resources/images/icon/14.png" class="iconPng headerIconPng" />
-		</a>
-	</div>
+	<a href="<%= request.getContextPath() %>/doList.mr" title="검색">
+		<img src="<%= request.getContextPath() %>/resources/images/icon/14.png" class="iconPng headerIconPng" />
+	</a>
+</div>
+
+<div id="searchAllResult" style="display:inline-block; z-index:99999; position:absolute; background-color:white;">gqwrr</div>
 
 <!-- ===== 로그인 성공한 사용자 정보 출력 ===== -->
 <c:if test="${sessionScope.loginUser != null}">
@@ -69,7 +94,6 @@
 		</div>
 	</div>
 </c:if>
-
 
 <!-- 내 정보 수정 모달 창 -->
 <!-- Modal -->
@@ -90,6 +114,17 @@
 
 	</div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
 
 
 

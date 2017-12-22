@@ -135,7 +135,13 @@ public class ProjectManagerDAO {
 	public int addComment(Folder_CommentVO fcvo) {
 		int result = sql.insert("do.addComment",fcvo);
 		return result;
-	} // end of public int addComment(Folder_CommentVO fcvo) ------------------------------------------------------------------------
+	} // end of int addComment(Folder_CommentVO fcvo) ------------------------------------------------------------------------
+	
+	// 요소에 댓글 삭제하기
+	public int delComment(String delIdx) {
+		int result = sql.update("do.delComment",delIdx);
+		return result;
+	} // end of int delComment(Folder_CommentVO fcvo) ------------------------------------------------------------------------
 	
 	// 페이징 처리를 위해 해당 요소의 전체 댓글수를 가져오기
 	public int getTotalCommentCnt(int idx) {
@@ -210,6 +216,15 @@ public class ProjectManagerDAO {
 		int result = sql.update("do.elementMoveByGroup", fvo);
 		return result;
 	} // end of int elementMoveByFkIdx(FolderVO fvo) -----------------------------------------------------------------------
+
+	// ***** 통합 검색을 위한 각 메뉴별 리스트 받아오기 시작 *****
+	// 프로젝트 검색리스트 받아오기
+	public List<String> getProjectSearchList(String searchWord) {
+		List<String> projectSerchAll = sql.selectList("do.getProjectSearchList", searchWord);
+		return projectSerchAll;
+	} // end of List<String> getProjectSearchList(String searchWord) ---------------------------------------------------------
+	
+	// ***** 통합 검색을 위한 각 메뉴별 리스트 받아오기 끝 *****
 }
 
 

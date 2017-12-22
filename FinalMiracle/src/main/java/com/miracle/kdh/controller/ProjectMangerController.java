@@ -184,6 +184,10 @@ public class ProjectMangerController {
 		HashMap<String, Object> map = svc.do_getSelectFolderInfo(pvo);
 		req.setAttribute("map", map);
 		
+		// 기한 제한을 유지하기 위해 상위폴더의 날짜를 받아서 다시 넘김
+		req.setAttribute("modalEditStartDate", req.getParameter("modalEditStartDate"));
+		req.setAttribute("modalEditLastDate", req.getParameter("modalEditLastDate"));
+		
 		String modalClass = req.getParameter("modalClass");
 		if(modalClass.equals("folder")) {
 			return "kdh/doList/modal/modalFolder.not";
@@ -305,6 +309,15 @@ public class ProjectMangerController {
 		return "kdh/doList/modal/commentListXML.xml";
 	} // end of String addComment(HttpServletRequest req, HttpSession ses, Folder_CommentVO fcvo) -----------------------------------------------------
 	
+	// 요소에 댓글 삭제하고 새로운 댓글 리스트 받아오기
+	@RequestMapping(value="do_delComment.mr", method={RequestMethod.POST})
+	public String delComment(HttpServletRequest req, PageVO pvo) {		
+		String delIdx = req.getParameter("delIdx");
+		HashMap<String, Object> map = svc.delComment(delIdx, pvo);
+		req.setAttribute("map", map);
+		return "kdh/doList/modal/commentListXML.xml";
+	} // end of String delComment(HttpServletRequest req, PageVO pvo) -----------------------------------------------------
+
 	// 특정 페이지의 댓글 리스트 가져오기
 	@RequestMapping(value="do_goCommentPage.mr", method={RequestMethod.GET})
 	public String goCommentPage(HttpServletRequest req, PageVO pvo) {
@@ -365,6 +378,16 @@ public class ProjectMangerController {
 		req.setAttribute("page", page);	// 페이징 값 유지용
 		return "kdh/msg.not";
 	} // end of String elementMove(HttpServletRequest req, FolderVO fvo) ---------------------------------------------------------------
+	
+	// 통합 검색
+	@RequestMapping(value="do_getSearchWordByAll.mr", method={RequestMethod.GET})
+	public String getSearchWordByAll(HttpServletRequest req) {	
+		String searchWord = req.getParameter("searchWord").replaceAll(" ", "%");
+		HashMap<String, List<String>> mapOfSerchAll = svc.getSearchWordByAll(searchWord);
+		req.setAttribute("mapOfSerchAll", mapOfSerchAll);
+		req.setAttribute("searchWord", searchWord);
+		return "kdh/searchAllList.not";
+	} // end of String getSearchWordByAll(HttpServletRequest req) ---------------------------------------------------------------
 	
 	// ============================= ***** 파일 관련 메소드 시작 ***** =============================
 	// 파일 업로드하고 ffvo 에 파일 정보 저장하기

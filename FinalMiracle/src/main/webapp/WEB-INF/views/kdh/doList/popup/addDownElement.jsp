@@ -23,19 +23,36 @@
 	#teamwonList{
 		float:left;
 		z-index:1000;
-		position: absolute;
-		background-color:white;
-		border:1px solid black;
+		position:absolute;
+		border:1.5px solid #cce6ff;
 	}
 	
 	.pointer{
-		cursor:pointer;
+		cursor:pointer !important;
 	}
 	.pointerOver{
-		color:blue;
+		color:navy;
 	}
-	.selectLine {
-		background-color:lightgray;
+	.selectLine, .selectTeamwon {
+		color:#4882ab !important;
+		background-color:white !important;
+	}
+	th, td {
+		border:2px solid #cce6ff;
+		height:27px;
+		padding-left:5px;
+		padding-right:5px;
+	}
+	td:not(.selectTeamwon), input, select, button {
+		color:white;
+		background-color:#4882ab;
+	}
+	input:not(.addFileInput) {
+		width:100%;
+		border:none;
+	}
+	select {
+		border:none;
 	}
 	
 </style>
@@ -78,13 +95,13 @@
 		}); // end of $("#lastDate").change(function() -----------------------------------------------------------------------
  		
 		// line 클래스 마우스 오버시 백그라운드칼라로 옅은 회색 주기
-		$(document).on("mouseover", ".trLine", function(){ // $("tr:has(td)") : tr 태그 중에서 td 태그인것만 선택함. th는 제외함
-			$(this).addClass("selectLine");
+		$("tr").mouseover(function(){
+			$(this).find("*:not(.selectTeamwon)").addClass("selectLine");
 		}); // end of $(document).on("mouseover", "tr:has(td)", function() ------------------------------------------------------------------
-		$(document).on("mouseout", ".trLine", function(){
-			$(this).removeClass("selectLine");
+		$("tr").mouseout(function(){
+			$(this).find("*:not(.selectTeamwon)").removeClass("selectLine");
 		}); // end of $(document).on("mouseout", "tr:has(td)", function() ------------------------------------------------------------------
-				
+		
 		// pointer 클래스 마우스 오버시 css 바꿔주기
 		$(document).on("mouseover", ".pointer", function(){
 			$(this).addClass("pointerOver");
@@ -112,7 +129,7 @@
 						$.each(data, function(entryIndex, entry){
 							var idx = $("#"+entry.idx).val();
 							if(entry.idx != idx) { // 이미 선택했던 팀원이 아니라면
-								html += "<tr class='trLine'><td class='selectTeamwon pointer' style='border:1px solid black;'>"+entry.userid
+								html += "<tr><td class='selectTeamwon pointer' style='border:1px solid #cce6ff;'>"+entry.userid
 								html += "<input type='hidden' id='id"+entry.userid+"' value='"+entry.idx+"'></td></tr>";
 								cnt++;
 							}
@@ -120,7 +137,7 @@
 						html += "</table></div>";
 						
 						if(cnt == 0) { // 읽어온 데이터가 없거나, 이미 모든 팀원을 선택했다면
-							html = "<div id='teamwonList'>추가할 수 있는 팀원이 없습니다</div>"
+							html = "<div id='teamwonList' style='color:white; background-color:#4882ab;'>추가할 수 있는 팀원이 없습니다</div>"
 						}
 						
 						$("#addTeamwon").append(html);
@@ -217,94 +234,97 @@
 	} // end of function cancel() ------------------------------------------------------------------------------------------------------------
 </script>
 <body>
-	<form name="addDownElementFrm" id="modalInfoFrm" enctype="multipart/form-data" method="post">
-		<table style="width:700px;">
-			<tr style="width:700px;">
+	<div style="width:100%; height:100%; background-color:#4882ab; padding:10px;">
+		<form name="addDownElementFrm" id="modalInfoFrm" enctype="multipart/form-data" method="post">
+			<table style="width:100%;">
+				<tr style="width:100%;">
+					<c:if test="${upIdx == 0}">
+						<td class="firstTd" colspan="2">최상위요소 작성</td>
+					</c:if>
+					<c:if test="${upIdx != 0}">
+						<td class="firstTd" style="width:70px;">상위요소</td> <td>${map.subject}</td>
+					</c:if>
+				</tr>
+				<tr>
+					<td class="firstTd">요소</td>
+					<td>
+						<select name="category" class="pointer">
+							<option value="1" selected>폴더</option>
+							<option value="2">할일</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="firstTd">만든사람</td> <td>${sessionScope.loginUser.userid}</td>
+				</tr>
+				<tr>
+					<td class="firstTd">요소제목</td> <td><input type="text" name="subject" id="popupSubject" class="pointer"/></td>
+				</tr>
+				<tr>
+					<td class="firstTd">요소개요</td> <td><input type="text" name="content" class="pointer"/></td>
+				</tr>
+				<tr>
+					<td class="firstTd">담당추가</td>
+					<td id="addTeamwon">
+						<div style="float:left; width:50px;" id="btn_add" class="pointer">추가▷</div>
+						<div style="float:left; width:250px;" id="selectedTeamwon">
+							<div style='display:inline-block;' class='mola pointer'>${sessionScope.loginUser.userid}&nbsp; <!-- 일단 만든사람을 담당자 리스트에 올림 -->
+								<input type='hidden' name='teamwonIdx' id='${sessionScope.teamInfo.teamwon_idx}' value='${sessionScope.teamInfo.teamwon_idx}'/>			
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="firstTd">시작일</td> 
+					<td>
+						<input type="text" readonly id="startDate" name="startDate" class="pointer"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="firstTd">마감일</td>
+					<td>
+						<input type="text" readonly id="lastDate" name="lastDate" class="pointer"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="firstTd">중요도</td> 
+					<td>
+						<select id="example" name="importance" class="pointer">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+						</select>
+					</td>
+				</tr>
+				<jsp:include page="../modal/includePage/modalFileAddList.jsp"/> <!-- 파일 추가도 공통이라 따로 뺌 -->
+			</table>
+			
+			<p id="hiddenInfo">
+				<input type="hidden" name="fk_folder_idx" value="${upIdx}"/>
+				<input type="hidden" name="term" value="${term}"/>
+				<input type="hidden" name="page" value="${page}"/>
 				<c:if test="${upIdx == 0}">
-					<td colspan="2" style="width:700px;">최상위요소 작성</td>
+					<input type="hidden" name="groupNo" value="${map.groupNo}"/>
+					<input type="hidden" name="depth" value="0"/>
 				</c:if>
 				<c:if test="${upIdx != 0}">
-					<td style="width:150px;">상위요소</td> <td style="width:550px;">${map.subject}</td>
+					<input type="hidden" name="groupNo" value="${map.groupNo}"/>
+					<input type="hidden" name="depth" value="${map.depth+1}"/>
 				</c:if>
-			</tr>
-			<tr>
-				<td>요소</td>
-				<td>
-					<select name="category">
-						<option value="1" selected>폴더</option>
-						<option value="2">할일</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>만든사람</td> <td>${sessionScope.loginUser.userid}</td>
-			</tr>
-			<tr>
-				<td>요소제목</td> <td><input type="text" name="subject" id="popupSubject"/></td>
-			</tr>
-			<tr>
-				<td>요소개요</td> <td><input type="text" name="content"/></td>
-			</tr>
-			<tr>
-				<td>담당추가</td>
-				<td id="addTeamwon">
-					<div style="float:left; width:50px;" id="btn_add" class="pointer">추가▷</div>
-					<div style="float:left; width:250px;" id="selectedTeamwon">
-						<div style='display:inline-block;' class='mola pointer'>${sessionScope.loginUser.userid}&nbsp; <!-- 일단 만든사람을 담당자 리스트에 올림 -->
-							<input type='hidden' name='teamwonIdx' id='${sessionScope.teamInfo.teamwon_idx}' value='${sessionScope.teamInfo.teamwon_idx}'/>			
-						</div>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td>시작일</td> 
-				<td>
-					<input type="text" readonly id="startDate" name="startDate"/>
-				</td>
-			</tr>
-			<tr>
-				<td>마감일</td>
-				<td>
-					<input type="text" readonly id="lastDate" name="lastDate"/>
-				</td>
-			</tr>
-			<tr>
-				<td>중요도</td> 
-				<td>
-					<select id="example" name="importance">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="7">7</option>
-						<option value="8">8</option>
-						<option value="9">9</option>
-						<option value="10">10</option>
-					</select>
-				</td>
-			</tr>
-			<jsp:include page="../modal/includePage/modalFileAddList.jsp"/> <!-- 파일 추가도 공통이라 따로 뺌 -->
-		</table>
-		
-		<p id="hiddenInfo">
-			<input type="hidden" name="fk_folder_idx" value="${upIdx}"/>
-			<input type="hidden" name="term" value="${term}"/>
-			<input type="hidden" name="page" value="${page}"/>
-			<c:if test="${upIdx == 0}">
-				<input type="hidden" name="groupNo" value="${map.groupNo}"/>
-				<input type="hidden" name="depth" value="0"/>
-			</c:if>
-			<c:if test="${upIdx != 0}">
-				<input type="hidden" name="groupNo" value="${map.groupNo}"/>
-				<input type="hidden" name="depth" value="${map.depth+1}"/>
-			</c:if>
-		</p>
-	</form>
-	
-	<button onclick="addDownElement();">추가</button> <!-- form 안에 버튼이 들어가 있으면 오류 남발함. -->
-	<button onclick="cancel();">취소</button>
+			</p>
+		</form>
+		<div align="right">
+			<button onclick="addDownElement();">추가</button> <!-- form 안에 버튼이 들어가 있으면 오류 남발함. -->
+			<button onclick="cancel();">취소</button>
+		</div>
+	</div>
 </body>
 </html>
 
