@@ -4,13 +4,24 @@
 <script>
 	$(document).ready(function(){		
 		var idx = $(".selectLine").find(".fk_folder_idx").val();
-		var startDate = new Date( $("#"+idx).find(".fullStartDate").val() );
-		var lastDate = new Date ( $("#"+idx).find(".fullLastDate").val() );
+		var startDate = $("#"+idx).find(".fullStartDate").val();
+		var lastDate = $("#"+idx).find(".fullLastDate").val();
+		if(idx != "0") {
+			if(startDate == undefined) {
+				startDate = "${modalEditStartDate}";
+				lastDate = "${modalEditLastDate}";
+			}
+		}
+		$("#modalEditStartDate").val(startDate);
+		$("#modalEditLastDate").val(lastDate); // 정보 수정해도 기한 제한을 유지할 수 있도록 저장해서 넘김
+		
+		var startDateObj = new Date(startDate);
+		var lastDateObj = new Date(lastDate);
 		
 		$("#startDate, #lastDate").datepicker({
 			dateFormat: 'yy-mm-dd',
-			minDate:startDate,
-			maxDate:lastDate,
+			minDate:startDateObj,
+			maxDate:lastDateObj,
 			dayNames:['월','화','수','목','금','토','일'],
 			dayNamesMin:['월','화','수','목','금','토','일'],
 			monthNames:['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
@@ -39,6 +50,7 @@
 	<td class="infoClass">시작일</td>
 	<td class="infoData">
 		<input type="text" readonly id="startDate" class="trLine pointer" name="startDate" style="width:100%; border:none; background-color:#F0F0F0;" value="${map.fvo.startDate}"/>
+		<input type="hidden" name="modalEditStartDate" id="modalEditStartDate"/>
 	</td>
 </tr>
 
@@ -46,5 +58,21 @@
 	<td class="infoClass">마감일</td>
 	<td class="infoData">
 		<input type="text" readonly id="lastDate" class="trLine pointer" name="lastDate" style="width:100%; border:none; background-color:#F0F0F0;" value="${map.fvo.lastDate}"/>
+		<input type="hidden" name="modalEditLastDate" id="modalEditLastDate"/>
 	</td>
 </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

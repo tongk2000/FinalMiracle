@@ -376,7 +376,7 @@
 							style="border: 1px solid lightgray; margin-left: -15px;">
 							<div class="input-group col-sm-12" style="border: 1px solid lightgray;">
 								<input type="text" class="form-control input-xs"
-									id="searchString1" name="searchString" /> <span
+									id="searchString" name="searchString" /> <span
 									class="input-group-btn">
 									<button class="btn btn-info btn-xs" type="button" id="btnClick"
 										onClick="goSearch();">
@@ -451,9 +451,9 @@
 								result = "<span class='first' style='color:blue;'>" +wordstr.substr(0, index)+ "</span>" + "<span class='second' style='color:red; font-weight:bold;'>" +wordstr.substr(index, len)+ "</span>" + "<span class='third' style='color:blue;'>" +wordstr.substr(index+len, wordstr.length - (index+len) )+ "</span>";  
 								resultHTML += "<span style='cursor:pointer;'>"+ result +"</span><br/>"; 
 							});
-							var left = $("#searchString1").position();
-							var top = $("#searchString1").position().top;
-							top = top + ($("#searchString1").height());
+							var left = $("#searchString").position().left;
+							var top = $("#searchString").position().top;
+							top = top + ($("#searchString").height());
 							$("#displayList").css({"left":left+"px", "top":top+"px"});
 							$("#displayList").html(resultHTML);
 							$("#displayList").show();
