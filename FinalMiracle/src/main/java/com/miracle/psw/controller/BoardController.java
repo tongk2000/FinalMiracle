@@ -426,7 +426,7 @@ public class BoardController {
 		pagebar += MyUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentShowPageNo, colname, search, null, "freeList.mr");
 		pagebar += "</ul>";
 		
-		session.setAttribute("readCntPermission", "yes");  // f5 눌러도 조회수 안올리기 하기 위한 것.(session 에 키값 지정)
+		// session.setAttribute("readCntPermission", "yes");  // f5 눌러도 조회수 안올리기 하기 위한 것.(session 에 키값 지정)
 		
 		req.setAttribute("currentShowPageNo", currentShowPageNo);
 		req.setAttribute("sizePerPage", sizePerPage);
