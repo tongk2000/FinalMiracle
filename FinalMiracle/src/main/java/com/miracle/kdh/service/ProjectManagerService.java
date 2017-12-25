@@ -287,14 +287,20 @@ public class ProjectManagerService {
 	} // end of int elementMove(FolderVO fvo) ----------------------------------------------------------------------------------------------------
 	
 	// 통합 검색
-	public HashMap<String, List<String>> getSearchWordByAll(String searchWord) {
-		HashMap<String, List<String>> mapOfSerchAll = new HashMap<String, List<String>>();
+	public HashMap<String, List<HashMap<String, String>>> getSearchWordByAll(String searchWord) {
+		HashMap<String, List<HashMap<String, String>>> mapOfSearchAll = new HashMap<String, List<HashMap<String, String>>>();
 		
-		// 프로젝트 검색리스트 받아오기
-		List<String> projectSerchAll = dao.getProjectSearchList(searchWord);
-		mapOfSerchAll.put("projectSerchAll", projectSerchAll);
-		
-		return mapOfSerchAll;
+		List<HashMap<String, String>> projectSearchAll = dao.getProjectSearchList(searchWord); // 프로젝트 검색리스트 받아오기
+		List<HashMap<String, String>> noticeSearchAll = dao.getNoticeSearchList(searchWord); // 공지사항 검색리스트 받아오기
+		List<HashMap<String, String>> mindSearchAll = dao.getMindSearchList(searchWord); // 마음의소리 검색리스트 받아오기
+		List<HashMap<String, String>> freeSearchAll = dao.getFreeSearchList(searchWord); // 자유게시판 검색리스트 받아오기
+
+		mapOfSearchAll.put("projectSearchAll", projectSearchAll);
+		mapOfSearchAll.put("noticeSearchAll", noticeSearchAll);
+		mapOfSearchAll.put("mindSearchAll", mindSearchAll);
+		mapOfSearchAll.put("freeSearchAll", freeSearchAll);
+
+		return mapOfSearchAll;
 	} // end of HashMap<String, List<String>> getSearchWordByAll(String searchWord) --------------------------------------------------------------
 	
 	
