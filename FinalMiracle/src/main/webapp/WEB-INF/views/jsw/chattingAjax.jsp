@@ -304,22 +304,24 @@
 	
 </script>
 
-<div style="width: 90%; height: 650px; border: 0px solid red; margin-left: 5%; margin-top: 2%; margin-right: 5%; border: 3px solid black;" align="center">
+<div style="width: 100%; height: 650px; border: 0px solid red; border: 1px solid white; background-color: #ccebff;" align="center">
 
-	<div style="float: left; width: 16%; height: 650px; border: 0px solid red; overFlow-Y: auto; overFlow-X: hidden;">
-	<div style="height: 30px; font-size: 25px; border-bottom: 1px solid black;">채팅방 목록</div>
-	<div style="border-bottom: 1px solid black; font-size: 20px; vertical-align: middle; padding-top: 3px; cursor: pointer;" onclick="newChattingRoom()"><img src="<%= request.getContextPath() %>/resources/files/addchat.png" class="iconPng sideIconPng" />&nbsp;새 채팅방</div>
-		<div style="border: 0px solid red;" id="room"></div>
+	<div style="float: left; width: 200px; height: 650px; border: 0px solid red; overFlow-Y: auto; overFlow-X: hidden; display: inline-block;">
+	<div style="height: 30px; font-size: 25px; border-bottom: 1px solid white;">채팅방 목록</div>
+	<div style="border-bottom: 1px solid white; font-size: 20px; vertical-align: middle; padding-top: 3px; cursor: pointer;" onclick="newChattingRoom()"><img src="<%= request.getContextPath() %>/resources/files/addchat.png" class="iconPng sideIconPng" />&nbsp;새 채팅방</div>
+		<div style="border: 0px solid red; text-align: left;" id="room"></div>
 	</div>
-	<div style="float: left; width: 59%;">
-	<div id="roominfo" style="width: 100%; background-color: #a0c0d7; height: 30px; border-bottom: 1px solid black;" hidden="true"></div>
-	<div id="chatMessage" style="overFlow-Y: auto; height: 600px; width: 100%; background-color: #a0c0d7;"></div>
+	
+	<div style="float: left; width: 100%; display: inline-block;">
+	<div id="roominfo" style="width: 100%; background-color: #a0c0d7; height: 29px; border-left: 1px solid white; border-right: 1px solid white;" hidden="true"></div>
+	<div id="chatMessage" style="overFlow-Y: auto; height: 600px; width: 100%; background-color: #a0c0d7; border: 1px solid white;"></div>
     <input type="text" id="message" placeholder="메시지 내용" style="width: 90%; margin-top: 5px;"/>
     <input type="button" id="sendMessage" class="btn-info" value="전송" />
     <input type="hidden" id="roomid" />
     </div>
-    <div id="memberinfo" style="overFlow-Y: auto; overFlow-X: hidden; width: 25%; height: 645px; border: 0px solid yellow; float: left;"></div>
+    <div id="memberinfo" style="overFlow-Y: auto; overFlow-X: hidden; width: 220px; height: 645px; border: 0px solid yellow; float: left;"></div>
     <i class="fa fa-comments"></i>
+
     
 </div>
 
