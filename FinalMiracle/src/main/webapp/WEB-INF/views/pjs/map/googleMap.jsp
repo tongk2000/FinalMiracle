@@ -135,7 +135,7 @@
 		function goDetail(map_idx, map_team_idx) // 모달창을 띄우자
 		{
 			var data_form = {"map_idx":map_idx, "map_team_idx":map_team_idx};
-			alert("map_idx"+map_idx+" map_team_idx"+map_team_idx);
+			//alert("map_idx"+map_idx+" map_team_idx"+map_team_idx);
 			$.ajax({
 				url:"googleMapTeamInfoJSON.mr",
 				type:"get",
@@ -151,7 +151,7 @@
 					}
 				},
 				error : function() {
-					alert("에러");
+					//alert("에러");
 				}
 			}); // end of $.ajax 
 		}

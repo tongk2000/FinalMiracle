@@ -171,10 +171,6 @@ public class PjsDAOImpl implements PjsinterDAO {
 	@Override
 	public int setMindWrite(HashMap<String, String> team) {
 		// 마음의 소리 글쓰기
-		System.out.println("==========map============="+team.get("nidx"));
-		System.out.println("==========map============="+team.get("userid"));
-		System.out.println("==========map============="+team.get("subject"));
-		System.out.println("==========map============="+team.get("content"));
 		int n = sqlsession.insert("pjsfinal.setMindWrite", team);
 		return n;
 	}

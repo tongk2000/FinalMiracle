@@ -44,10 +44,10 @@
 	
 </script>
 
-<div style="color: navy; width: 100%; border: 1px solid red;" align="center" >
+<div style="color: navy; width: 100%; border: 0px solid red;" align="center" >
 	<h1>FAQ 게시판 글쓰기</h1>
 	
-	<div style="border: 1px solid blue; width: 90%;" >
+	<div style="border: 0px solid blue; width: 90%;" >
 		<form name="writeFrm">
 			<table id="table">
 				<tr>

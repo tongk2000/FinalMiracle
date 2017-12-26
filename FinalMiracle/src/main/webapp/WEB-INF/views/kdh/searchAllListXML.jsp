@@ -16,6 +16,7 @@
 		<notice>
 			<subject>${notice.subject}</subject>
 			<idx>${notice.idx}</idx>
+			<category>${notice.category}</category>
 		</notice>
 	</c:forEach>
 	
@@ -24,6 +25,7 @@
 		<mind>
 			<subject>${mind.subject}</subject>
 			<idx>${mind.idx}</idx>
+			<category>${mind.category}</category>
 		</mind>
 	</c:forEach>
 	
@@ -33,5 +35,13 @@
 			<subject>${free.subject}</subject>
 			<idx>${free.idx}</idx>
 		</free>
+	</c:forEach>
+	
+	<messageSize>${mapOfSearchAll.messageSearchAll.size()}</messageSize>
+	<c:forEach var="message" items="${mapOfSearchAll.messageSearchAll}">
+		<message>
+			<subject>${message.subject}</subject>
+			<idx>${message.idx}</idx>
+		</message>
 	</c:forEach>
 </searchAllList>

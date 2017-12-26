@@ -21,10 +21,10 @@
 	<c:forEach var="list" items="${teamwonList}" varStatus="status">
 		$("#mem"+${list.idx}).click(function() {
 			if ( $("#invite"+${list.idx}).length <= 0 ) { 
-				data += "<div id='invite${list.idx}' class='inv' style='border: 0px solid black; cursor: pointer; font-size: 20px; text-align: left;'>";
-				data += "<div style='border: 0px solid blue; cursor: pointer; float: left;'><img height='70px' width='70px' class='img-circle' src='"+path+"/resources/files/"+"${list.img}"+"'></div>";
+				data += "<div id='invite${list.idx}' class='inv' style='margin-top:5px; border-top:1px solid #cce6ff; border-bottom:1px solid #cce6ff; cursor: pointer; text-align: left;'>";
+				data += "<div style='border: 0px solid blue; cursor: pointer; float: left;'><img height='40px' width='40px' class='img-circle' src='"+path+"/resources/files/"+"${list.img}"+"'></div>";
 				data +=	"<div>아이디 : ${list.userid}</div>";
-				data +=	"<div>이름 : ${list.name}</div><br/><br/>";
+				data +=	"<div>이름 : ${list.name}</div>";
 				data +=	"<input type='hidden' id='tw${status.index}' class='twon' value='${list.idx}' />";
 				data +=	"</div>";
 				$("#memberinfo").append(data);

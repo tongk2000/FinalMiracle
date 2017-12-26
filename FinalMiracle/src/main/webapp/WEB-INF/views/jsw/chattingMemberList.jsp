@@ -1,34 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>대화상대</title>
 
 <style type="text/css">
-
-.circle {
-  width: 60px;
-  height: 60px;
-  border: 1px solid aqua;
-  border-radius: 50%;
-}
-
-
+	.circle {
+	  width: 40px;
+	  height: 40px;
+	  border: 2px solid white;
+	  border-radius:50%;
+	}
 </style>
-<script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
-
-
-
-
-
 
 <script type="text/javascript">
-	
 	function addPersonStart() {
-		
 		var cridx = $('#chattingRoomNum').val();
 		var cridx_data = {cridx : cridx};
 		
@@ -36,27 +20,27 @@
 			url: "addPersonStart.mr",
 			data: cridx_data,
 			type: "get",		
-			dataType: "html",	
-			 					
-			success: function(data) { 
-										
-										
+			dataType: "html",
+			success: function(data) {
+				$("#newChattingRoom").remove();
+				$("#roominfo").hide();
+				$("#chatMessage").hide();
+				$("#message").hide();
+				$("#sendMessage").hide();
+				
 				$("#chatMessage").empty(); 
 				$("#memberinfo").empty();
-				$("#chatMessage").html(data);
+				$("#chattingMiddle").append(data);
 			},
 			error: function(request, status, error) {
 				alert("code: " + request.status + "\n"+"message: " + request.responseText + "\n" + "error: " + error);     
 			}
 		});
 		$("#message").hide();
-		$("#sendMessage").hide();
-		
-		
+		$("#sendMessage").hide();		
 	}
 	
 	function outRoom() {
-		
 		var check = confirm("채팅방을 나가시겠습니까?\r\n(채팅방에서 나가셔도 채팅기록은 사라지지 않습니다.)");
 		var cridx = $('#chattingRoomNum').val();
 		var cridx_data = {cridx : cridx};
@@ -66,8 +50,7 @@
 				url: "outRoom.mr",
 				data: cridx_data,
 				type: "get",		
-				dataType: "html",	
-				 					
+				dataType: "html",
 				success: function(data) { 
 																	
 					$("#chatMessage").empty(); 
@@ -81,54 +64,52 @@
 				}
 			});
 		}
-		
-		
-		
-		
 	}
-	
-	
-	
-	
 </script>
 
+<div style="border-bottom:1px solid white; text-align: center; margin-top:10px; height: 30px;">
+	대화상대
+</div>
 
+<div onclick="addPersonStart()" style="cursor: pointer; margin: 5px;">
+	<span class="circle" style="vertical-align: middle; font-size: 30px;">
+		&nbsp;+
+	</span>
+	&nbsp;대화상대 초대
+</div>
 
-</head>
-<body>
-	<div style="font-size: 20px; text-align: left;">
-		<div style="border-bottom: 1px solid black; text-align: center; height: 30px;">대화상대</div>
-			<div onclick="addPersonStart()" style="cursor: pointer; color: aqua; margin: 5px;"><span class="circle" style="vertical-align: middle; font-size: 50px;">&nbsp;+ </span>&nbsp;대화상대 초대</div>
-			<c:forEach var="member" items="${chattingMember}" varStatus="status">
-				<div style="margin: 5px; margin-bottom: 10px;">
-					<div onclick="" style="border: 0px solid blue; cursor: pointer;"><img height="60px" width="60px" class="img-circle" src="<%=request.getContextPath() %>/resources/files/${member.img}">
-					<span style="color: black;">${member.name}</span></div>
-					<input type="hidden" name="chattingRoomNum" id="chattingRoomNum" value="${member.cridx}"/>
-				</div>
-			</c:forEach>
-			<div onclick="outRoom()" style="cursor: pointer; text-align: center; margin-top: 10px; border-top: 1px solid black;"><i class="glyphicon glyphicon-log-out"></i> 채팅방 나가기</div>
-	</div>
-	
-	<!-- 회원 상세정보 모달 창 -->
-<!-- Modal -->
-<!-- <div class="modal fade modal-center" id="chatModal" role="dialog">
-	<div class="modal-dialog modal-sm modal-center">
-		Modal content
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title">회원 상세 정보</h4>
+<div style="width:100%; min-height:83%; margin:5px; overFlow-Y:auto; overFlow-X:hidden;">
+	<c:forEach var="member" items="${chattingMember}" varStatus="status">
+		<div style="margin-bottom:10px;">
+			<div onclick="" style="border: 0px solid blue; cursor: pointer;">
+				<img height="40px" width="40px" class="img-circle" src="<%=request.getContextPath() %>/resources/files/${member.img}">
+				<span>${member.name}</span>
 			</div>
-			<div class="modal-body">
-			<p></p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			</div>
+			<input type="hidden" name="chattingRoomNum" id="chattingRoomNum" value="${member.cridx}"/>
 		</div>
+	</c:forEach>
+</div>
+<div onclick="outRoom()" style="cursor: pointer; text-align: center; margin-top: 10px; padding-top :13px; padding-bottom: 3px; border-top: 1px solid white;">
+	<i class="glyphicon glyphicon-log-out"></i> 채팅방 나가기
+</div>
 
-	</div>
-</div> -->
-	
-</body>
-</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

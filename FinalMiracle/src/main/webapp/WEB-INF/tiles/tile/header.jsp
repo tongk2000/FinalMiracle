@@ -33,9 +33,8 @@
 	#searchAllResult div {
 		padding-left:10px;
 		padding-right:10px;
-		border-radius:10px;
+		border-radius:5px;
 	}
-
 </style>
 
 <script type="text/javascript">
@@ -118,8 +117,8 @@
 			
 			var searchWord = $("#searchWordByAll").val();
 			// 검색어가 없다면 결과창 비우고 끝내기
-			if(searchWord.trim() == "") {
-				$("#searchAllResult").empty();
+			if(searchWord.trim() == "" || key == 27) {
+				$("#searchAllResult").empty().hide();
 				return false;
 			}
 			// 검색어가 있다면 검색결과를 받아와서 뿌려주기
@@ -131,17 +130,18 @@
 					type:"get",
 					dataType:"xml",
 					success:function(data){
-						var html = "<div id='returnAllResult' onclick='returnAllResult()' style='display:none; cursor:pointer;'>"
-								  +"&lt;- 전체 검색 결과 보기</div>";
+						var html = "<div id='returnAllResult' onclick='returnAllResult()' style='display:none; cursor:pointer; font-weigth:bold;'>"
+								  +"← 전체 검색 결과 보기</div>";
 						html += getSearchListByCategory(data, 'projectSize', '프로젝트', 'project', searchWord, 'resultOfProject', 'doList.mr', 'sideDoIcon', 'goSearchToProject');
 						html += getSearchListByCategory(data, 'noticeSize', '공지사항', 'notice', searchWord, 'resultOfNotice', 'noticeView.mr', 'sideNoticeIcon', 'goSearchToNotice');
 						html += getSearchListByCategory(data, 'mindSize', '마음의소리', 'mind', searchWord, 'resultOfMind', 'mindView.mr', 'sideMindIcon', 'goSearchToMind');
-						html += getSearchListByCategory(data, 'freeSize', '자유게시판', 'free', searchWord, 'resultOffree', 'freeView.mr', 'sideFreeIcon', 'goSearchToFree');
+						html += getSearchListByCategory(data, 'freeSize', '자유게시판', 'free', searchWord, 'resultOfFree', 'freeView.mr', 'sideFreeIcon', 'goSearchToFree');
+						html += getSearchListByCategory(data, 'messageSize', '쪽지', 'message', searchWord, 'resultOfMessage', 'memoReceiverView.mr', 'sideMassageIcon', 'goSearchToMessage');
 
 						var left = $("#searchWordByAll").offset().left;
 						var top = $("#searchWordByAll").offset().top + $("#searchWordByAll").height() + 15;
 						$("#searchAllResult").css({"left":left+"px", "top":top+"px"});
-						$("#searchAllResult").html(html);
+						$("#searchAllResult").html(html).show();
 					}, error: function (xhr, ajaxOptions, thrownError) {
 				        console.log(xhr.status);
 				        console.log(thrownError);
@@ -166,10 +166,10 @@
 		var html = "";
 		var sizeName = $(data).find(":root").find(sizeName).text(); // 카테고리별 갯수
 		if(parseInt(sizeName) > 5) {
-			html += "<div class='allSearchResult firstShowResult' onclick='showCategoryAll(\""+className+"\")' style='cursor:pointer;'>"
-			      + sizeNameKor+" 검색결과 : "+sizeName+"개 모두 보기</div>";
+			html += "<div class='allSearchResult firstShowResult' onclick='showCategoryAll(\""+className+"\")' style='cursor:pointer; font-weigth:bold;'>"
+			      + sizeNameKor+" 검색결과 : "+sizeName+"개 [모두 보기]</div>";
 		} else {
-			html += "<div class='allSearchResult firstShowResult'>"+sizeNameKor+" 검색결과 : "+sizeName+"개</div>";
+			html += "<div class='allSearchResult firstShowResult' style='font-weigth:bold;'>"+sizeNameKor+" 검색결과 : "+sizeName+"개</div>";
 		}
 		
 		var searchArr = $(data).find(":root").find(arrName); // 카테고리별 배열
@@ -181,9 +181,9 @@
 			var category = $(this).find("category").text();
 			cnt++;
 			if(cnt <= 5) { // 한 카테고리당 우선 5개까지만 보여주고 나머지는 숨김
-				html += "<div class='allSearchResult firstShowResult "+className+"' style='margin-left:15px; cursor:pointer;' onclick='"+functionName+"("+idx+", \""+url+"\", \""+icon+"\", \""+category+"\")'>"+subject+"</div>";
+				html += "<div class='allSearchResult firstShowResult "+className+"' style='margin-left:15px; margin-right:15px; cursor:pointer;' onclick='"+functionName+"("+idx+", \""+url+"\", \""+icon+"\", \""+category+"\")'>"+subject+"</div>";
 			} else {
-				html += "<div class='allSearchResult "+className+"' style='margin-left:15px; cursor:pointer; display:none;' onclick='"+functionName+"("+idx+", \""+url+"\", \""+icon+"\", \""+category+"\")'>"+subject+"</div>";
+				html += "<div class='allSearchResult "+className+"' style='margin-left:15px; margin-right:15px; cursor:pointer; display:none;' onclick='"+functionName+"("+idx+", \""+url+"\", \""+icon+"\", \""+category+"\")'>"+subject+"</div>";
 			}
 			html += "<input type='hidden' value='"+idx+"'/>";
 		});
@@ -237,16 +237,20 @@
 	} // end of function goSearchToProject(idx, url, icon, category) ---------------------------------------------------------------------------
 	function goSearchToNotice(idx, url, icon, category) {
 		keepIcon(icon);
-		location.href=url+"?idx="+idx+"&userid=${sessionScope.loginUser.userid}&teamidx=${sessionScope.teamInfo.team_idx}";
+		location.href=url+"?idx="+idx+"&userid="+category+"&teamidx=${sessionScope.teamInfo.team_idx}";
 	} // end of function goSearchToNotice(idx, url, icon, category) ---------------------------------------------------------------------------
 	function goSearchToMind(idx, url, icon, category) {
 		keepIcon(icon);
-		location.href=url+"?idx="+idx+"&userid=${sessionScope.loginUser.userid}&teamNum=${sessionScope.teamInfo.team_idx}";
-	} // end of function goSearchToNotice(idx, url, icon, category) ---------------------------------------------------------------------------
+		location.href=url+"?idx="+idx+"&userid="+category+"&teamNum=${sessionScope.teamInfo.team_idx}";
+	} // end of function goSearchToMind(idx, url, icon, category) ---------------------------------------------------------------------------
 	function goSearchToFree(idx, url, icon, category) {
 		keepIcon(icon);
 		location.href=url+"?idx="+idx;
-	} // end of function goSearchToNotice(idx, url, icon, category) ---------------------------------------------------------------------------
+	} // end of function goSearchToFree(idx, url, icon, category) ---------------------------------------------------------------------------
+	function goSearchToMessage(idx, url, icon, category) {
+		keepIcon(icon);
+		location.href=url+"?idx="+idx+"&teamNum=${sessionScope.teamInfo.team_idx}";
+	} // end of function goSearchToMessage(idx, url, icon, category) ---------------------------------------------------------------------------
 	// *** 통합검색에서 선택한 정보 보여주 끝 ***
 	// ------------------------------------------------------ ***** 통합 검색 관련 함수 끝 ***** ------------------------------------------------------
 </script>
@@ -260,7 +264,9 @@
 		<img src="<%= request.getContextPath() %>/resources/images/icon/14.png" class="iconPng headerIconPng" />
 	</a>
 </div> --%>
-<div id="searchAllResult" style="display:inline-block; z-index:99999; max-height:500px; overflow:auto; position:absolute; background-color:#154465; color:white;"></div>
+<div id="searchAllResult" style="display:inline-block; z-index:99999; max-height:500px; overflow:auto; position:absolute;
+								 background-color:#154465; color:white; border-radius:5px; border:2px solid #cce6ff; display:none;">
+</div>
 
 <!-- ===== 로그인 성공한 사용자 정보 출력 ===== -->
 <c:if test="${sessionScope.loginUser != null}">

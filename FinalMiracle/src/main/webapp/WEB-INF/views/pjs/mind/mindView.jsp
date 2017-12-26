@@ -15,10 +15,7 @@ request.setCharacterEncoding("UTF-8");
 <head>
 <meta charset="UTF-8">
 <style>
-	.imgs {
-		width:25px;
-		heigth:25px;
-	}
+	
 	div#displayList {
 		width:80%;
 		border : 1px solid black;
@@ -52,10 +49,10 @@ request.setCharacterEncoding("UTF-8");
 				<tbody>
 					<tr>
 						<c:if test="${user.status == 2 || sessionScope.loginUser.userid == user.userid}">
-							<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">유저 아이디 : </td><td style="border:1px solid lightgray;"><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="imgs"> &nbsp;&nbsp; ${user.userid}</td>
+							<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">유저 아이디 : </td><td style="border:1px solid lightgray;"><img src="<%= request.getContextPath() %>/resources/images/${user.img}" style="width:50px; height:50px;"> &nbsp;&nbsp; ${user.userid}</td>
 						</c:if>
 						<c:if test="${user.status == 1 && sessionScope.loginUser.userid != user.userid}">
-							<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">익명의 유저 : </td><td style="border:1px solid lightgray;"><img src="<%= request.getContextPath() %>/resources/images/${defaultimg2.img}" class="imgs"> &nbsp;&nbsp;</td>
+							<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">익명의 유저 : </td><td style="border:1px solid lightgray;"><img src="<%= request.getContextPath() %>/resources/images/${defaultimg2.img}" style="width:50px; height:50px;"> &nbsp;&nbsp;</td>
 						</c:if>
 					</tr>
 					<tr>
@@ -78,12 +75,12 @@ request.setCharacterEncoding("UTF-8");
 				</tbody>
 			</table>
 			<c:if test="${sessionScope.teamInfo.teamwon_status == 2}">
-				<div style="float:left;" >
-					<button type="button" onClick="goEdit();">답변글쓰기</button>
+				<div style="float:left; margin-left:350px;" >
+					<button type="button" class="btn btn-default" onClick="goEdit();">답변글쓰기</button>
 				</div> 
 			</c:if>
 			<div >
-					<button type="button" onClick="goback();">목록보기</button>
+				<button type="button" class="btn btn-default" onClick="goback();">목록보기</button>
 			</div>
 			<br/>
 			<br/>
@@ -121,11 +118,11 @@ request.setCharacterEncoding("UTF-8");
 				data:data_form,
 				dataType:"html",
 				success:function(data) {
-					alert(data);
+					//alert(data);
 					$("#displayList").html(data);
 				},
 				error:function() {
-					alert("getReply 실패");
+				//	alert("getReply 실패");
 				}
 			});
 		}
@@ -148,7 +145,7 @@ request.setCharacterEncoding("UTF-8");
 			frm.submit();
 		}
 		function goback() {
-			location.href="<%=request.getContextPath()%>/${sessionScope.gobackURL}";
+			location.href="<%=request.getContextPath()%>/${addr}";
 		}
 	</script>
 </body>

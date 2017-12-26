@@ -68,7 +68,7 @@ request.setCharacterEncoding("UTF-8");
 			<div style="display:inline;"> <!-- " -->
 				<button type="button" onClick="goback();">목록보기</button>
 			</div> 
-			<c:if test="${sessionScope.teamInfo.teamwon_status == 1}">
+			<c:if test="${sessionScope.teamInfo.teamwon_status == 2}">
 				<div style="margin-left:80px; display:inline;" ><!--  -->
 					<button type="button" onClick="goEdit();">수정글쓰기</button>
 				</div>
@@ -137,7 +137,7 @@ request.setCharacterEncoding("UTF-8");
 			frm.submit();
 		}
 		function goback() {
-			location.href="<%=request.getContextPath()%>/${sessionScope.gobackURL}";
+			location.href="<%=request.getContextPath()%>/${gobackURL}";
 		}
 		 function ajaxedit(content) {
 			var form_data={content:content};

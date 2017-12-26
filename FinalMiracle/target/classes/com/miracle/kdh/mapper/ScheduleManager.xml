@@ -168,7 +168,7 @@
 		<result property="groupNo" column="groupNo" javaType="String"/>		
 	</resultMap>
 	<select id="getMaxGroupNo" resultMap="getMaxGroupNo">
-		select max(groupNo)+1 as groupNo
+		select nvl(max(groupNo)+1, 1) as groupNo
 		from tbl_folder F
 	</select>
 	
@@ -391,33 +391,41 @@
 		<result property="idx" column="idx" javaType="String" />
 		<result property="category" column="category" javaType="String" />
 	</resultMap>
-	<select id="getProjectSearchList" resultMap="getAllSearchList">
+	<select id="getProjectSearchList" parameterType="HashMap" resultMap="getAllSearchList">
 		select subject, idx, category
 		from tbl_folder
 		where status in (0, 1)
 		  and subject like '%'||#{searchWord}||'%'
 		order by 2 desc
 	</select>
-	<select  id="getNoticeSearchList" resultMap="getAllSearchList">
-		select subject, idx
+	<select  id="getNoticeSearchList" parameterType="HashMap" resultMap="getAllSearchList">
+		select subject, idx, fk_userid as category
 		from tbl_notice
 		where status = 1
 		  and subject like '%'||#{searchWord}||'%'
 		order by 2 desc
 	</select>
-	<select  id="getMindSearchList" resultMap="getAllSearchList">
-		select subject, idx
+	<select  id="getMindSearchList" parameterType="HashMap" resultMap="getAllSearchList">
+		select subject, idx, fk_userid as category
 		from tbl_mind
 		where status = 1
 		  and subject like '%'||#{searchWord}||'%'
 		order by 2 desc
 	</select>
-	<select  id="getFreeSearchList" resultMap="getAllSearchList">
+	<select  id="getFreeSearchList" parameterType="HashMap" resultMap="getAllSearchList">
 		select subject, idx
 		from tbl_free
 		where status = 1
 		  and subject like '%'||#{searchWord}||'%'
 		order by 2 desc
+	</select>
+	<select  id="getMessageSearchList" parameterType="HashMap" resultMap="getAllSearchList">
+		select m.subject, m.idx
+		from tbl_memomemory M
+		join tbl_memoreceiver R
+		on m.idx = r.fk_idx
+		where ((sender = #{userid} or sstatus = 1) or (receiver = #{userid} and rstatus = 1))
+		  and subject like '%'||#{searchWord}||'%'
 	</select>
 	<!-- ***** 통합 검색을 위한 각 메뉴별 리스트 받아오기 끝 ***** -->
 </mapper>

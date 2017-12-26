@@ -386,8 +386,16 @@ public class ProjectMangerController {
 	// 검색결과와 이동하는데 필요한 값들을 가져와서 전달하
 	@RequestMapping(value="do_getSearchWordByAll.mr", method={RequestMethod.GET})
 	public String getSearchWordByAll(HttpServletRequest req) {	
+		HashMap<String, String> searchMap = new HashMap<String, String>();
 		String searchWord = req.getParameter("searchWord").replaceAll(" ", "%");
-		HashMap<String, List<HashMap<String, String>>> mapOfSearchAll = svc.getSearchWordByAll(searchWord);
+		HttpSession ses = req.getSession();
+		MemberVO mvo = (MemberVO)ses.getAttribute("loginUser");
+		String userid = mvo.getUserid();
+		
+		searchMap.put("searchWord", searchWord);
+		searchMap.put("userid", userid);
+		
+		HashMap<String, List<HashMap<String, String>>> mapOfSearchAll = svc.getSearchWordByAll(searchMap);
 		req.setAttribute("mapOfSearchAll", mapOfSearchAll);
 		req.setAttribute("searchWord", searchWord);
 		return "kdh/searchAllListXML.not";
