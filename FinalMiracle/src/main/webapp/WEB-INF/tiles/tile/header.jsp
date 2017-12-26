@@ -257,7 +257,7 @@
 
 <!-- 통합검색메뉴 -->
 <div style="float: left; width: 30%; height: 50px;">
-	<input type="text" class="form-control input-md" id="searchWordByAll" style="margin-left:10px; margin-top: 7px; background-color:#154465; color:white;"/>
+	<input type="text" class="form-control input-md" id="searchWordByAll" style="margin-left:10px; margin-top: 7px; background-color:#154465; color:white;" placeholder="통합검색"/>
 </div>
 <%-- <div style="width:50px; height: 50px; display:inline-block; float:left;" align="center">
 	<a href="<%= request.getContextPath() %>/doList.mr" title="검색">
