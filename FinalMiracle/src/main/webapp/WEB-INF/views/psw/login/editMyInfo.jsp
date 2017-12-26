@@ -270,7 +270,15 @@
 	}  // end of function openDaumPostnum()---------------------------------------------------------------------------------
 	
 	function openAlterImg() {
-		window.open("member_alterImg.mr", "alterImg", "left=500px; top=100px; width=350px; height=150px;");
+		var uri = 'member_alterImg.mr'
+	    var width = 350;
+	    var height = 200;
+	    var top = (screen.availHeight - height) / 2;
+	    var left = (screen.availWidth - width) / 2;
+	    var strFeature;
+	    strFeature = 'height=' + height + ',width=' + width + ',menubar=no,toolbar=no,location=no,resizable=no,status=no,scrollbars=yes,top=' + top + ',left=' + left
+	
+	    window.open(uri, "alterImg", strFeature);
 	}
 </script>
 
