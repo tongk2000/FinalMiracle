@@ -299,7 +299,7 @@ body {
 				html += "설립자 : " + leader + "<br/>";
 				html += "전화번호 : " + tel1 + "-" + tel2 + "-" + tel3 + "<br/>";
 				html += "우편번호 : " + post1 + "-" + post2 + "<br/>";
-				html += "주소 : <a onClick='launchGoogleMap();'>" + addr1 + " " + addr2 + "</a><br/>";
+				html += "주소 : " + addr1 + " " + addr2 + "<br/>";
 				html += "설립일 : " + regdate + "<br/>";
 				
 				$("#tm").html(html);

@@ -40,7 +40,7 @@ request.setCharacterEncoding("UTF-8");
 <c:set var="user" value="${map}" /> <!-- userid , teamNum , status -->
 	<div style="border: 0px solid green; width:100%;" align="center">
 		<div style="border: 0px solid yellow;">
-			<table style="border: 0px solid red; width: 80%;">
+			<table style="border: 0px solid red; width: 80%; height:700px;">
 				<thead>
 					<tr>
 						<th colspan="2" style="border:1px solid lightgray;">익명글</th>
@@ -49,22 +49,22 @@ request.setCharacterEncoding("UTF-8");
 				<tbody>
 					<tr>
 						<c:if test="${user.status == 2 || sessionScope.loginUser.userid == user.userid}">
-							<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">유저 아이디 : </td><td style="border:1px solid lightgray;"><img src="<%= request.getContextPath() %>/resources/images/${user.img}" style="width:50px; height:50px;"> &nbsp;&nbsp; ${user.userid}</td>
+							<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87; text-align:center; padding-left:20px;">유저 아이디  </td><td style="border:1px solid lightgray; padding-left:20px;"><img src="<%= request.getContextPath() %>/resources/images/${user.img}" style="width:50px; height:50px; padding-left:20px;"> &nbsp;&nbsp; ${user.userid}</td>
 						</c:if>
 						<c:if test="${user.status == 1 && sessionScope.loginUser.userid != user.userid}">
-							<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">익명의 유저 : </td><td style="border:1px solid lightgray;"><img src="<%= request.getContextPath() %>/resources/images/${defaultimg2.img}" style="width:50px; height:50px;"> &nbsp;&nbsp;</td>
+							<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87; text-align:center; padding-left:20px;">익명의 유저  </td><td style="border:1px solid lightgray; padding-left:20px;"><img src="<%= request.getContextPath() %>/resources/images/defaultimg2.png" style="width:50px; height:50px;"> &nbsp;&nbsp;</td>
 						</c:if>
 					</tr>
 					<tr>
-						<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">팀정보 : </td><td style="border:1px solid lightgray;">${user.team_idx}</td>
+						<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87; text-align:center; padding-left:20px;">팀정보  </td><td style="border:1px solid lightgray; padding-left:20px;">${user.team_idx}</td>
 					</tr>
 					<tr>
-						<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">제목 :</td>
-						<td style="border:1px solid lightgray;"><input type="text" value="${user.subject}" readonly /></td>
+						<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87; text-align:center;padding-left:20px;">제목 </td>
+						<td style="border:1px solid lightgray; padding-left:20px;"><input type="text" value="${user.subject}" readonly /></td>
 					</tr>
 					<tr style="min-height: 200px;">
-						<td style="border:1px solid lightgray; background-color:#1f5c87">내용 :</td>
-						<td style="border:1px solid lightgray;" height="200px"><div style="width:700px; height:500px; height:auto;">${user.content}</div></td>
+						<td style="border:1px solid lightgray; background-color:#1f5c87; text-align:center; padding-left:20px;">내용 </td>
+						<td style="border:1px solid lightgray; padding-left:20px;" height="200px"><div style="width:700px; height:500px; height:auto;">${user.content}</div></td>
 					</tr>
 					<tr>
 					    <td style="border:1px solid lightgray; background-color:#1f5c87">첨부파일</td>   <!-- USERID, IMG, SUBJECT, CONTENT, STATUS, IDX, FILENAME, ORGFILENAME, FILESIZE, FK_IDX -->
@@ -75,17 +75,17 @@ request.setCharacterEncoding("UTF-8");
 				</tbody>
 			</table>
 			<c:if test="${sessionScope.teamInfo.teamwon_status == 2}">
-				<div style="float:left; margin-left:350px;" >
+				<div style="float:left; margin-left:350px; margin-top:20px;" >
 					<button type="button" class="btn btn-default" onClick="goEdit();">답변글쓰기</button>
 				</div> 
 			</c:if>
-			<div >
+			<div style="padding-top:20px;">
 				<button type="button" class="btn btn-default" onClick="goback();">목록보기</button>
 			</div>
 			<br/>
-			<br/>
+			<!-- <br/>
 				<div id="displayList" style="background-color:white; align:center;"> </div>
-			<br/>
+			<br/> -->
 		</div>
 	</div>
 	<form name="edit">
