@@ -230,5 +230,10 @@
 	</select>
 	
 	
+	<update id="addMemberCntLength" parameterType="HashMap">
+		update tbl_chat_room set person = to_number(person)+ #{length}
+		where cr_idx = #{cridx}
+	</update>
+	
 	
 </mapper>

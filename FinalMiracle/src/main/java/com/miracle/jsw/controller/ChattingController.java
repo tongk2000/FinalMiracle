@@ -269,11 +269,17 @@ public class ChattingController {
 	@RequestMapping(value="/newRoomNewMember.mr", method={RequestMethod.GET})
 	public String newRoomNewMember(HttpServletRequest req, HttpServletResponse res){
 		
-		String[] midxArr = req.getParameterValues("memberidxArr");		
+		String[] midxArr = req.getParameterValues("memberidxArr");	
+		int length = midxArr.length;
 		String cridx = service.getCRidxNewRoom();
 		
 		service.newRoomNewMember2(midxArr, cridx);
-		service.addMemberCnt(cridx);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("length", length);
+		map.put("cridx", cridx);
+		
+		service.addMemberCntLength(map);
 		
 		List<HashMap<String, Object>> chattingMember = service.getChattingMember(cridx);
 		

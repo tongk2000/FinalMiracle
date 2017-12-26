@@ -165,6 +165,12 @@ public class ChattingDAO implements InterChattingDAO {
 		return RoomInfo;
 	}
 
+	@Override
+	public void addMemberCntLength(HashMap<String, Object> map) {
+		sqlsession.update("chatting.addMemberCntLength", map);
+		
+	}
+
 
 	
 
