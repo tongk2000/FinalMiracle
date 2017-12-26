@@ -93,7 +93,7 @@ public class MemberController {
 			
 			String userid = service.getUserid(map);
 			if(userid == null || userid.equals("")) {
-				userid = "입력하신 정보의 아이디가 없습니다.";
+				userid = "아이디가 없습니다.";
 			}
 			
 			JSONObject jobj = new JSONObject(); 
