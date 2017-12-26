@@ -86,10 +86,20 @@ public class ChattingService implements InterChattingService {
 		String n = dao.getCRidxNewRoom();
 		return n;
 	}
-
+	
 	@Override
 	public void newRoomNewMember(HashMap<String, Object> map) {
 		dao.newRoomNewMember(map);
+	}
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public void newRoomNewMember2(String[] midxArr, String cridx) {
+		for(int i=0; i<midxArr.length; i++) {
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("midx", midxArr[i]);
+			map.put("cridx", cridx);
+			dao.newRoomNewMember2(map);
+		}
 	}
 
 	@Override

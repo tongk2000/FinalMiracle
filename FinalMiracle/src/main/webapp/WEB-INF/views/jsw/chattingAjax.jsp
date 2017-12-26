@@ -242,7 +242,6 @@
 		
 	}    */
 	 function newChattingRoom() {
-		
 		$.ajax({
 			url: "newChatting.mr",
 		//	data: form_data,
