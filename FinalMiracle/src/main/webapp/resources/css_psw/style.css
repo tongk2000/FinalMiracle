@@ -25,11 +25,16 @@
 /*표준 글꼴 서식 스타일*/
 
  body, td, th, input, select, textarea, p {
-	font-size: 10pt;
-	font-family: 'NanumGothic', 'MalgunGothic' ; 
-	color: black;
-	padding: 4px; /* 안쪽 여백 */
-	background-color: lightgray;
+	font-size: 9pt;
+	line-height: 160%;
+	font-family: verdana; 
+	color: #303030;
+	padding: 5px; /* 안쪽 여백 */
+	background-color: #cfe0e8;
+}
+
+.agreeTitle {
+	font-weight: bold;
 }
 
 /* 표준 링크 스타일 */
@@ -75,10 +80,10 @@ table.outline { width: 95%;
 	            border-top: 4px double navy;
 	            border-bottom: 4px double navy; }
 	             
-table.outline th {background-color: #e6e6e6;}	             
+table.outline th {background-color: #cfe0e8;}	             
 
 .error { color: red; padding-left: 10px; margin-bottom: 5px;}
 
 img { border: 0px; }
 
-.bgcol {background-color: LightGray;}
+.bgcol {background-color: #cfe0e8;}

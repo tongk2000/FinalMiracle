@@ -39,7 +39,7 @@
 #displayList {
 	position: absolute;
 	background-color: white;
-	width: 189px;
+	width: 300px;
 	margin-left: 28px;
 	border-top: 0px;
 	border: solid gray 3px;
@@ -277,7 +277,7 @@
 										<td width="35%"
 											onClick="goView('${md.d_idx}','${md.fk_userid}', '${md.t_idx}')"
 											style="text-align: left; padding-left: 10px; font-family: verdana;"><span
-											style="color: red;">${md.subject}</span></td>
+											style="color: black;">${md.subject}</span></td>
 										<!-- 제목 -->
 									</c:if>
 									<c:if test="${md.depth > 0}">
@@ -316,8 +316,8 @@
 										답변완료
 									</c:if>
 										</c:if> <c:if test="${md.depth > 0}">
-									답변
-								</c:if></td>
+										답변
+									</c:if></td>
 									<!-- 조회수-->
 									<c:if test="${md.fk_userid == sessionScope.loginUser.userid}">
 										<td width="15%"
@@ -393,9 +393,10 @@
 
 	<script>
 		$(document).ready(function(){
+			$("#displayList").hide();
 			keep();
 			var left = $("#dev-table").position().left-45;
-			var top = $("#dev-table").position().top-40;
+			var top = $("#dev-table").position().top-80;
 			$("#space").css({"right":left+"px", "bottom":top+"px"});
 			
 			$("#del").click(function(){
@@ -404,7 +405,7 @@
 				$(".selectLine").each(function(){
 					idx[cnt] = $(this).find("input").val();
 					cnt++;
-					alert("idx"+$(this).find("input").val());
+					//alert("idx"+$(this).find("input").val());
 				});
 				location.href="<%=request.getContextPath()%>/mindDel.mr?idx="+idx;
 			});
@@ -429,7 +430,7 @@
 					$(e.target).parent().addClass("selectLine");
 				}
 			}); // 이부분이 문제!!! */
-			$("#displayList").hide();
+			
 			$("#searchString").keyup(function(){
 				if($("#searchType").val()==null||$("#searchType").val()=="") {
 					$("#searchType").val("fk_userid");
@@ -451,8 +452,8 @@
 								result = "<span class='first' style='color:blue;'>" +wordstr.substr(0, index)+ "</span>" + "<span class='second' style='color:red; font-weight:bold;'>" +wordstr.substr(index, len)+ "</span>" + "<span class='third' style='color:blue;'>" +wordstr.substr(index+len, wordstr.length - (index+len) )+ "</span>";  
 								resultHTML += "<span style='cursor:pointer;'>"+ result +"</span><br/>"; 
 							});
-							var left = $("#searchString").position().left;
-							var top = $("#searchString").position().top;
+							var left = $("#searchString").offset().left-30;
+							var top = $("#searchString").offset().top+16;
 							top = top + ($("#searchString").height());
 							$("#displayList").css({"left":left+"px", "top":top+"px"});
 							$("#displayList").html(resultHTML);
@@ -516,10 +517,10 @@
 						$("#userinfo").modal();
 					}
 					else {
-						alert("ajax결과"+data);
+						//alert("ajax결과"+data);
 					}
 				},error : function() {
-					alert("실패!");
+					//alert("실패!");
 				}
 			});
 		} */
@@ -553,7 +554,7 @@
 		}
 		function goView(d_idx, userid, teamNum) {
 			var frm = document.view;
-			alert(d_idx);
+			//alert(d_idx);
 			frm.idx.value = d_idx;
 			frm.userid.value = userid; 
 			frm.teamNum.value = teamNum;

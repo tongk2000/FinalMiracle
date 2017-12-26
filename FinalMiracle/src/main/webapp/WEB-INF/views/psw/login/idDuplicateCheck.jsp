@@ -54,7 +54,7 @@
 </script>
 
 </head>
-<body style="background-color: #deeaee;">
+<body style="background-color: #deeaee; height: 100%; width: 100%;">
 
 
 <c:if test="${method == 'GET'}">
