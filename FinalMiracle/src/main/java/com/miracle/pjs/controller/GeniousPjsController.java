@@ -695,7 +695,6 @@ public class GeniousPjsController {
 	@RequestMapping(value="mindReplyWrite.mr", method={RequestMethod.GET})	// 마음의 소리 답변글 쓰기
 	public String mindReplyWrite(HttpServletRequest req) {
 		String nidx = req.getParameter("nidx");
-		System.out.println("nidx========================="+nidx);
 		String userid = req.getParameter("userid");
 		String teamNum = req.getParameter("teamNum");
 		String chkid = req.getParameter("chkid");
@@ -767,17 +766,10 @@ public class GeniousPjsController {
 	public String mindWriteEnd(HttpServletRequest req, HttpSession ses, MultipartHttpServletRequest freq) {
 		// 게시판을 클릭해서 글을 쓸 경우 // nidx, subject, content ,userid, teanNum
 		String nidx = req.getParameter("nidx");
-		System.out.println("===========nidx============="+nidx);
-		/*String idx = req.getParameter("idx");
-		System.out.println("===========idx============="+idx);*/
 		String userid = req.getParameter("userid");
-		System.out.println("userid ==========================="+userid);
 		String teamNum = req.getParameter("teamNum");
-		System.out.println("teamNum ==========================="+teamNum);
 		String subject = req.getParameter("subject");
-		System.out.println("subject ==========================="+subject);
 		String content = req.getParameter("content");
-		System.out.println("content ==========================="+content);
 		HashMap<String, String> team = new HashMap<String, String>();
 		//team.put("idx", idx);
 		team.put("nidx", nidx);
@@ -793,12 +785,8 @@ public class GeniousPjsController {
 		//int setMindWrite(HashMap<String, String> team); // 마음의 소리 글쓰기
 		//int setMindWriteWithFile(HashMap<String, String> team); // 마음의 소리 글쓰기 파일첨부
 		
-		int n=service.setMindWrite(team); 
-		if(n > 0) {
-			int num = service.updateMindCheckNum(nidx);
-			System.out.println("==========================확인완료 업데이트 완료====================="+num);
-		}
-	        
+		/*int n=service.setMindWrite(team); */
+		int n=0;
 	    // **** 첨부파일이 있는지 없는지 알아오기 끝 **** //
 	    /*int n = service.add(boardvo);*/                // 파라미터로 vo가 오면 req로 오는 정보를 다 받는다.
 	    /*=== #136. 파일첨부가 없는 경우 또는 파일첨부가 있는 경우 service 단으로 호출하기 , 먼저 위의 int n = service.add(boardvo); 주석처리 */
@@ -827,13 +815,21 @@ public class GeniousPjsController {
 					n = service.setMindWriteWithFile(team);
 					System.out.println("n은============================="+n);
 				}
-				else {
-					n = service.setMindWrite(team);
-				}
 			} catch(Exception e){
 				n=0;
 				e.printStackTrace();
 			}
+		}
+		else {
+			n=service.setMindWrite(team); 
+			if(n > 0) {
+				int num = service.updateMindCheckNum(nidx);
+				System.out.println("==========================확인완료 업데이트 완료====================="+num);
+			}
+		}
+		if(n > 0) {
+			int num = service.updateMindCheckNum(nidx);
+			System.out.println("==========================확인완료 업데이트 완료====================="+num);
 		}
 		String msg="";
 		String loc="location.href='mindList.mr;'";
