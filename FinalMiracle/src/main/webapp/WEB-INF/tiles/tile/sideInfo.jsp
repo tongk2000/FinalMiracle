@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 <%@ page language="java" contentType="text/html; charset=UTF-8"
   pageEncoding="UTF-8"%>
 <%@ page import="java.net.InetAddress" %>
@@ -89,12 +82,4 @@
       <span class="toggleText">쪽지</span>
    </li>
 </ul>
-<<<<<<< HEAD
-=======
-
-=======
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-  pageEncoding="UTF-8"%>
-<%@ page import="java.net.InetAddress" %>
->>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 

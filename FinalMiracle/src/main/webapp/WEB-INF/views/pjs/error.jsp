@@ -5,6 +5,8 @@ request.setCharacterEncoding("UTF-8");
 %>
 
 <script type="text/javascript">
-	alert("${msg}");
+	var msg = "${msg}";
+	alert(msg);
 	${loc};
+	swal("msg");
 </script>

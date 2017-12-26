@@ -62,7 +62,8 @@ request.setCharacterEncoding("UTF-8");
 				</tbody>
 			</table>
 			</form>
-			<div style="display:block; float:right;"><button type="button" onClick="goWrite();" id="chk">완료</button></div>
+			<div style="display:inline; float:right;"><button type="button" onClick="goWrite();" id="chk">완료</button></div>
+			<div style="display:inline; float:right;"><button type="button" onClick="goback();" id="chk">목록보기</button></div>
 		</div>
 	</div>
 	<!-- <form name="end">
@@ -91,6 +92,9 @@ request.setCharacterEncoding("UTF-8");
 			frm.subject.value = subject;
 			frm.content.value = content;
 			 */
+		}
+		function goback() {
+			location.href="<%=request.getContextPath()%>/${gobackURL}";
 		}
 		$(document).ready(function(){
 			$('.summernote').summernote({

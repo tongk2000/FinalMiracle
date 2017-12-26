@@ -101,8 +101,8 @@
 		});
 		var frm = document.write;
 		frm.idx.value = arr;
-		alert($("#subject").val());
-		alert($("#content").val());
+		//alert($("#subject").val());
+		//alert($("#content").val());
 		frm.subject.value = $("#subject").val();
 		frm.content.value = $("#content").val();
 		frm.userid.value = "${sessionScope.loginUser.userid}";

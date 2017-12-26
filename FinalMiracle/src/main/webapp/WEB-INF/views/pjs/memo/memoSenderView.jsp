@@ -56,10 +56,10 @@
 <title>쪽지쓰기</title>
 </head>
 <body>
-	<div style="border:1px solid green; padding:9px;">
-		<div style="border:1px solid red; padding:9px;">
-			<div style="border:1px solid blue; padding:9px;"  align="center">
-				<div style="border:1px solid purple;">
+	<div style="border:0px solid green; padding:9px;">
+		<div style="border:0px solid red; padding:9px;">
+			<div style="border:0px solid blue; padding:9px;"  align="center">
+				<div style="border:0px solid purple;">
 					<a href="<%=request.getContextPath()%>/memoWrite.mr"><span style="color:red;">쪽지 쓰기</span></a>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<a href="<%=request.getContextPath()%>/memomemory.mr"><span style="color:red;">보낸 쪽지</span></a>

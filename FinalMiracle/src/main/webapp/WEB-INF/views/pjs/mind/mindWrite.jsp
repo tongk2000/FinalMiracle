@@ -75,7 +75,7 @@
 			
 			<div style="display:block; float:right; margin-right: 10%; margin-top: 10px;">
 				<button type="button" onClick="writeEnd();">완료</button>
-				<button type="button" onClick="javascript:history.back();">취소</button>
+				<button type="button" onClick="goback();">취소</button>
 			</div>
 		</div>
 	</div>
@@ -107,6 +107,9 @@
 			frm.action="<%=request.getContextPath()%>/mindWriteEnd.mr";
 			frm.method="post";
 			frm.submit();
+		}
+		function goback() {
+			location.href="<%=request.getContextPath()%>/${gobackURL}";
 		}
 		$(document).ready(function(){
 			$('.summernote').summernote({
