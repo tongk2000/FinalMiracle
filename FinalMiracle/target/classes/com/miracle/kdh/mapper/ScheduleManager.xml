@@ -27,7 +27,7 @@
 		where status in (0, 1) and fk_teamwon_idx in (select idx from tbl_teamwon where fk_team_idx = #{team_idx})
 		start with fk_folder_idx = 0
 		connect by prior idx = fk_folder_idx
-		order siblings by category asc
+		order siblings by category asc, startdate, lastdate, importance desc, idx
 	</select>
 	
 	

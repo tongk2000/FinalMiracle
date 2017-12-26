@@ -155,8 +155,8 @@
 	  background: linear-gradient(to right,
 	                              transparent 0%,
 	                              transparent calc(50% - 0.81px),
-	                              #4882ab calc(50% - 0.8px),
-	                              #4882ab calc(50% + 0.8px),
+	                              #c6ffb3 calc(50% - 0.8px),
+	                              #c6ffb3 calc(50% + 0.8px),
 	                              transparent calc(50% + 0.81px),
 	                              transparent 100%);
 	}
@@ -223,6 +223,10 @@
 		z-index:1000;
 		position: absolute;
 		background-color:white;
+	}
+	
+	.pageDateLine {
+		
 	}
 </style>
 
@@ -897,7 +901,7 @@
 						$.each(data, function(entryIndex, entry){
 							var userid = $("#added"+entry.userid).text();
 							if(entry.userid != userid) { // 이미 선택했던 팀원이 아니라면 */
-								html += "<tr><td class='selectTeamwon pointer' style='border:1px solid black;'>"+entry.userid
+								html += "<tr><td class='selectTeamwon pointer' style='padding-left:5px; padding-right:5px; padding-bottom:2px; border:1px solid black;'>"+entry.userid
 								html += "<input type='hidden' id='id"+entry.userid+"' value='"+entry.idx+"'></td></tr>";
 								cnt++;
 							}

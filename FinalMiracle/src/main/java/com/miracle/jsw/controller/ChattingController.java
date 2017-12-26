@@ -271,7 +271,7 @@ public class ChattingController {
 		
 		String[] midxArr = req.getParameterValues("memberidxArr");		
 		String cridx = service.getCRidxNewRoom();
-		
+				
 		service.newRoomNewMember2(midxArr, cridx);
 		service.addMemberCnt(cridx);
 		
