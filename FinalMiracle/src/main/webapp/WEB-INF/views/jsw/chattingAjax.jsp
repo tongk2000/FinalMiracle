@@ -292,9 +292,9 @@
 			<tr style="width:100%; height:100%;">
 				<td style="width:300px; border-right:3px solid #cce6ff;">
 					<div style="width:100%; height:100%; overFlow-Y:auto; overFlow-X:hidden;">
-						<div class="inChattingElement" style="width:100%; height:40px; font-size: 25px;">채팅방 목록</div>
+						<div class="inChattingElement" style="width:100%; height:40px; font-size: 25px; text-align: center;">채팅방 목록</div>
 						<div class="inChattingElement" style="width:100%; font-size:20px; vertical-align:middle; padding-top:3px; cursor:pointer;" onclick="newChattingRoom()">
-							<img src="<%= request.getContextPath() %>/resources/files/addchat.png" class="iconPng sideIconPng" />&nbsp;새 채팅방
+							<span class="glyphicon glyphicon-plus" style="margin-left: 10px;"></span>&nbsp;새 채팅방
 						</div>
 						<div style="width:100%; text-align:left;" id="room"></div>
 					</div>
