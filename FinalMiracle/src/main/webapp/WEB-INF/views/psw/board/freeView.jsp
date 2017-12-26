@@ -379,12 +379,12 @@
 	<!-- ==================================== *** 자유게시판 목록 *** ============================================ -->
 	<div style="border: 0px solid blue; width: 800px; padding-top: 10px; margin-bottom: 5%;">
 		<div align="left" style="margin-left: 20px;">
-			<c:if test="${search == null}">
+			<c:if test="${search == 'null' || search == null || search == ' '}">
 				<span style="font-family: verdana; font-weight: bold;">총 게시물 ' 
 					<span style="color: #92a8d1; font-size: larger;">${totalCount}</span> ' 개
 				</span>
 			</c:if> 
-			<c:if test="${search != null}">
+			<c:if test="${search != 'null' && search != null && search != ' '}">
 				<span style="font-family: verdana; font-weight: bold;">검색된 게시물 ' 
 					<span style="color: #92a8d1; font-size: larger;">${totalCount}</span> ' 개
 				</span>
