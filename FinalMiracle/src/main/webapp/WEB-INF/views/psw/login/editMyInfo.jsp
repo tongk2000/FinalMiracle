@@ -312,7 +312,7 @@
 					<tr>
 					  <th>성명 &nbsp;<span class="star">*</span></th>
 					  <td style="padding: 5px; margin-left: 15px;">
-					  	<input id="name" name="name" type="text" placeholder="name" class="form-control input-sm requiredInfo" value="${map.mvo.name}">
+					  	<input id="name" name="name" type="text" placeholder="name" class="form-control input-sm requiredInfo" value="${map.mvo.name}" required >
 					  	<input type="hidden" name="idx"  value="${map.mvo.idx}" />
 					  </td>
 					</tr>
@@ -320,7 +320,7 @@
 					<tr>
 					  <th>아이디 &nbsp;<span class="star">*</span></th>  
 					  <td style="padding: 5px; margin-left: 15px;">
-					  	<input id="userid" name="userid" type="text" class="form-control input-sm requiredInfo" value="${map.mvo.userid}" >  
+					  	<input id="userid" name="userid" type="text" class="form-control input-sm requiredInfo" value="${map.mvo.userid}" readonly>  
 					  </td>
 					</tr>
 					
@@ -341,16 +341,16 @@
 					<tr>
 					  <th>생년월일 &nbsp;<span class="star">*</span></th>  
 					  <td style="padding: 5px; margin-left: 15px;">
-					  	<input style="vertical-align: top; height: 27px;" id="birth1" name="birth1" type="text" placeholder="YY" size="2" maxlength="2" class="form-inline form-control input-sm" value="${map.mdvo.birth1}"> / 
-					  	<input style="vertical-align: top; height: 27px;" id="birth2" name="birth2" type="text" placeholder="MM" size="2" maxlength="2" class="form-inline form-control input-sm" value="${map.mdvo.birth2}"> /
-					  	<input style="vertical-align: top; height: 27px;" id="birth3" name="birth3" type="text" placeholder="DD" size="2" maxlength="2" class="form-inline form-control input-sm" value="${map.mdvo.birth3}">
+					  	<input style="vertical-align: top; height: 27px;" id="birth1" name="birth1" type="text" placeholder="YY" size="2" maxlength="2" class="form-inline form-control input-sm" value="${map.mdvo.birth1}" required> / 
+					  	<input style="vertical-align: top; height: 27px;" id="birth2" name="birth2" type="text" placeholder="MM" size="2" maxlength="2" class="form-inline form-control input-sm" value="${map.mdvo.birth2}" required> /
+					  	<input style="vertical-align: top; height: 27px;" id="birth3" name="birth3" type="text" placeholder="DD" size="2" maxlength="2" class="form-inline form-control input-sm" value="${map.mdvo.birth3}" required>
 					  </td>
 					</tr>
 					
 					<tr>
 					  <th>이메일 &nbsp;<span class="star">*</span></th>  
 					  <td style="padding: 5px; margin-left: 15px;">
-					  	<input style="vertical-align: top; height: 27px;" id="email" name="email" type="text" placeholder="이메일" class="form-control input-sm requiredInfo" value="${map.mdvo.email}">
+					  	<input style="vertical-align: top; height: 27px;" id="email" name="email" type="text" placeholder="이메일" class="form-control input-sm requiredInfo" value="${map.mdvo.email}" required>
 					  </td>
 					</tr>
 					
@@ -370,8 +370,8 @@
 					<tr>
 					  <th>우편번호</th>  
 					  <td style="padding: 5px; margin-left: 15px;">
-						  <input style="vertical-align: top; height: 27px;" id="post1" name="post1" type="text" placeholder="Post1" size="3" class="form-control input-sm" value="${map.mdvo.post1}"> - 
-						  <input style="vertical-align: top; height: 27px;" id="post2" name="post2" type="text" placeholder="Post2" size="3" class="form-control input-sm" value="${map.mdvo.post2}"> &nbsp;&nbsp;
+						  <input style="vertical-align: top; height: 27px;" id="post1" name="post1" type="text" placeholder="Post1" size="3" class="form-control input-sm" value="${map.mdvo.post1}" required> - 
+						  <input style="vertical-align: top; height: 27px;" id="post2" name="post2" type="text" placeholder="Post2" size="3" class="form-control input-sm" value="${map.mdvo.post2}" required> &nbsp;&nbsp;
 						  <!-- 우편번호 찾기 -->
 					      <a style="vertical-align: middle;" class="btn btn-xs btn-info form-inline" onClick="openDaumPostnum();">
 					      	<span style="color: white; font-size: 10pt; vertical-align: text-bottom;">우편번호검색</span>
@@ -382,14 +382,14 @@
 					<tr>
 					  <th>기본주소</th>  
 					  <td style="padding: 5px; margin-left: 15px;" >
-					  	<input id="addr1" name="addr1" type="text" placeholder="기본주소" class="form-control input-sm" style="width: 250px; font-size: 9pt;" value="${map.mdvo.addr1}">  
+					  	<input id="addr1" name="addr1" type="text" placeholder="기본주소" class="form-control input-sm" style="width: 250px; font-size: 9pt;" value="${map.mdvo.addr1}" required>  
 					  </td>
 					</tr>
 					
 					<tr>
 					  <th>상세주소</th>  
 					  <td style="padding: 5px; margin-left: 15px;">
-					  	<input id="addr2" name="addr2" type="text" placeholder="상세주소" class="form-control input-sm" style="width: 250px; font-size: 9pt;" value="${map.mdvo.addr2}">  
+					  	<input id="addr2" name="addr2" type="text" placeholder="상세주소" class="form-control input-sm" style="width: 250px; font-size: 9pt;" value="${map.mdvo.addr2}" required>  
 					  </td>
 					</tr>
 					
