@@ -1636,7 +1636,7 @@
 				<th colspan="${map.pageDateList.size() + 7}">
 					<span id="allClose" class="pointer" style="margin-left:20px;">[ 전체접기</span>  ||  <span id="allOpen" class="pointer">전체펴기</span> ]
 					&nbsp;&nbsp;&nbsp;
-					[ <span class="pointer" onclick="addUpElement()">최상위 폴더 만들기</span> ]
+					[ <span class="pointer" onclick="addUpElement()">최상위 요소 만들기</span> ]
 					&nbsp;&nbsp;&nbsp;
 					[ <span class="pointer" onclick="myElementOn()">내할일표시</span>  ||  <span class="pointer" onclick="myElementOff()">해제</span> ]
 					&nbsp;&nbsp;&nbsp;
