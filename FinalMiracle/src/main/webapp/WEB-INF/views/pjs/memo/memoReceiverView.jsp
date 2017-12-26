@@ -53,10 +53,10 @@
 <title>쪽지쓰기</title>
 </head>
 <body>
-	<div style="border:1px solid green; padding:9px;">
-		<div style="border:1px solid red; padding:9px;">
-			<div style="border:1px solid blue; padding:9px;"  align="center">
-				<div style="border:1px solid purple;">
+	<div style="border:0px solid green; padding:9px;">
+		<div style="border:0px solid red; padding:9px;">
+			<div style="border:0px solid blue; padding:9px;"  align="center">
+				<div style="border:0px solid purple;">
 					<a href="<%=request.getContextPath()%>/memoWrite.mr"><span style="color:red;">쪽지 쓰기</span></a>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<a href="<%=request.getContextPath()%>/memomemory.mr"><span style="color:red;">보낸 쪽지</span></a>
@@ -83,11 +83,11 @@
 					</tbody>
 				</table>
 			</div>
-			<div style="border:1px solid gray; float:right">
+			<div style="border:0px solid gray; float:right; margin-right:200px;">
 				<div style="float:left;" >
-					<button type="button" onClick="goback();" class="btn btn-default">목록보기</button>
+					<button type="button" onClick="goback();" class="btn btn-default" style="margin-right:10px;">목록보기</button>
 				</div>
-				<button type="button" onClick="goDel('${receiver.idx}');" class="btn btn-default">삭제</button>
+				<button type="button" onClick="goDel('${receiver.idx}');" class="btn btn-default" style="margin-left:10px;">삭제</button>
 			</div>
 		</div>
 	</div>

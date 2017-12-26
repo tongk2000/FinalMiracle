@@ -15,36 +15,38 @@ request.setCharacterEncoding("UTF-8");
 <meta charset="UTF-8">
 <title>마음의 소리 글</title>
 <style>
-	
+	td, tr, th {
+		border:1px solid lightgray;
+	}
 	
 </style>
 </head>
 <body>
 <c:set var="user" value="${map}" />  <!-- teamNum , userid , teamNum , memberNum, status -->
-	<div style="border: 1px solid green; width:100%;">
-		<div style="border: 1px solid yellow;">
+	<div style="border: 0px solid green; width:100%;" align="center">
+		<div style="border: 0px solid yellow;">
 			<form name="end" enctype="multipart/form-data"> 
-			<table style="border: 1px solid red; width: 80%;">
+			<table style="border: 0px solid red; width: 80%;">
 				<thead>
 					<tr>
-						<th colspan="2">마음의 소리</th>
+						<th colspan="2" style="border-bottom:1px solid lightgray;">마음의 소리</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="img"> &nbsp;&nbsp; ${user.userid}
+						<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87; border-right:1px solid lightgray;">유저 아이디 : </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="img"> &nbsp;&nbsp; ${user.userid}
 						<input type="hidden" name="userid" value="${user.userid}"></td>
 					</tr>
 					<tr>
-						<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">팀정보 : </td><td>${user.teamNum}<input type="hidden" name="teamNum" value="${user.teamNum}"></td>
+						<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87; border-right:1px solid lightgray;">팀정보 : </td><td>${user.teamNum}<input type="hidden" name="teamNum" value="${user.teamNum}"></td>
 					</tr>
 					<tr>
-						<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87">제목 : </td>
+						<td width="12%" style="border:1px solid lightgray; background-color:#1f5c87; border-right:1px solid lightgray;">제목 : </td>
 						<td><input id="subject" type="text" name="subject" value="${user.subject}"/><input type="hidden" name="nidx" value="${user.nidx}"></td>
 					</tr>
 					<tr style="min-height: 200px;">
 						<td style="border:1px solid lightgray; background-color:#1f5c87">내용 :</td>
-						<td height="200px"><textarea name="content" id="content" class="summernote">${user.content}</textarea>
+						<td height="200px" style="border-right:1px solid lightgray;"><textarea name="content" id="content" class="summernote">${user.content}</textarea>
 						<input type="hidden" name="chkid"><input type="hidden" name="idx" value="${didx}"></td>
 					</tr>
 					<tr>
@@ -54,7 +56,7 @@ request.setCharacterEncoding("UTF-8");
 				</tbody>
 			</table>
 			</form>
-			<div style="display:block; float:right;"><button type="button" onClick="writeEnd();">완료</button></div>
+			<div style="display:block; float:right; margin-right:140px;"><button type="button" onClick="writeEnd();" class="btn btn-default">완료</button></div>
 		</div>
 	</div>
 	<!-- <form name="end" enctype="multipart/form-data"> 
@@ -64,7 +66,7 @@ request.setCharacterEncoding("UTF-8");
 	<script>
 		function writeEnd() {
 			var frm = document.end; 
-			alert("오니");// nidx, subject, content ,userid, teanNum
+			//alert("오니");// nidx, subject, content ,userid, teanNum
 			/* var subject = $("#subject").val();
 			var content = $("#content").val();
 			var nidx = "${nidx}"; //? 뭐냐?

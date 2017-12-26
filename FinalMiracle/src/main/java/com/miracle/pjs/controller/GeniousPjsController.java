@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.google.gson.JsonObject;
 import com.miracle.pjs.model.FileVO;
 import com.miracle.pjs.model.MapVO;
 import com.miracle.pjs.model.MindFileVO;
@@ -191,7 +190,7 @@ public class GeniousPjsController {
 		return "pjs/notice/noticeUserInfo.not";
 	}/* ================================================================================================================================================== */
 	@RequestMapping(value="noticeWrite.mr", method={RequestMethod.POST})	// 공지사항 게시판글 쓰기 
-	public String noticeWrite(HttpServletRequest req) {
+	public String noticeWrite(HttpServletRequest req, HttpSession session) {
 		// 게시판을 클릭해서 글을 쓸 경우
 		String idx = req.getParameter("idx");
 		String userid = req.getParameter("userid");
@@ -200,6 +199,14 @@ public class GeniousPjsController {
 		team.put("userid", userid);
 		team.put("teamidx", teamNum);
 		HashMap<String, String> map = service.getUserTeam(team); // teamNum , userid , teamNum , memberNum, status 받는다.  ******************************
+
+		String addr="";
+		if(session.getAttribute("gobackURL")!=null) {
+			addr = (String) session.getAttribute("gobackURL");
+			session.removeAttribute("gobackURL");
+		}
+		
+		req.setAttribute("gobackURL", addr);
 		req.setAttribute("map", map);
 		req.setAttribute("idx", idx);
 		return "pjs/notice/noticeWrite.all";
@@ -392,6 +399,14 @@ public class GeniousPjsController {
 		//List<ReplyVO> comment = service.getComment(nidx); // 해당 nidx에 해당하는 comment를 가져온다.
 		//req.setAttribute("sessionid", sessionid);
 		//req.setAttribute("comment", comment);
+		
+		String addr = "";
+		if(session.getAttribute("gobackURL")!=null) {
+			addr = (String) session.getAttribute("gobackURL");
+			session.removeAttribute("gobackURL");
+		}
+		
+		req.setAttribute("gobackURL", addr);
 		req.setAttribute("info", info);
 		req.setAttribute("file", file);
 		req.setAttribute("map", map);
@@ -471,6 +486,7 @@ public class GeniousPjsController {
 		// /addEnd.action 에서 설정해두었던 경로와 똑같아야 한다.
 		// WAS 의 webapp 의 절대경로를 알아와야 한다.
 		String root = session.getServletContext().getRealPath("/");
+		System.out.println("root================================"+root);
 		String path = root + "resources" + File.separator + "files";
 		// path 가 첨부파일들을 저장할 WAS(톰캣)의 폴더가 된다.
 
@@ -642,14 +658,20 @@ public class GeniousPjsController {
 		HashMap<String, String> map =  service.getMindIdxTeam(view); 
 		MindFileVO file = service.getMindfilename(idx);
 		// team_idx, userid, img, subject, content status 받는다.
+		String addr="";
 		if(file != null) 
 			req.setAttribute("file", file);
+		if(session.getAttribute("gobackURL")!=null) {
+			addr = (String) session.getAttribute("gobackURL");
+			session.removeAttribute("gobackURL");
+		}
+		req.setAttribute("addr", addr);
 		req.setAttribute("map", map);
 		req.setAttribute("didx",idx);
 		return "pjs/mind/mindView.all";
 	}/* ================================================================================================================================================== */
 	@RequestMapping(value="mindWrite.mr", method={RequestMethod.POST})	// 마음의 소리 게시판글 쓰기 
-	public String mindWrite(HttpServletRequest req) {
+	public String mindWrite(HttpServletRequest req, HttpSession session) {
 		String idx = req.getParameter("idx"); // 수정글의 idx
 		System.out.println("idx====================="+idx);
 		String userid = req.getParameter("userid");
@@ -658,6 +680,14 @@ public class GeniousPjsController {
 		team.put("userid", userid);
 		team.put("teamidx", teamNum);
 		HashMap<String, String> map = service.getUserTeam(team); // teamNum , userid , teamNum , status 받는다.  ******************************
+		
+		String addr = "";
+		if(session.getAttribute("gobackURL")!=null) {
+			addr = (String) session.getAttribute("gobackURL");
+			session.removeAttribute("gobackURL");
+		}
+		
+		req.setAttribute("gobackURL", addr);
 		req.setAttribute("map", map);
 		req.setAttribute("idx", idx);
 		return "pjs/mind/mindWrite.all";
@@ -665,6 +695,7 @@ public class GeniousPjsController {
 	@RequestMapping(value="mindReplyWrite.mr", method={RequestMethod.GET})	// 마음의 소리 답변글 쓰기
 	public String mindReplyWrite(HttpServletRequest req) {
 		String nidx = req.getParameter("nidx");
+		System.out.println("nidx========================="+nidx);
 		String userid = req.getParameter("userid");
 		String teamNum = req.getParameter("teamNum");
 		String chkid = req.getParameter("chkid");
@@ -735,23 +766,27 @@ public class GeniousPjsController {
 	@RequestMapping(value="mindWriteEnd.mr", method={RequestMethod.POST})	// 마음의 소리 게시판글 쓰기 
 	public String mindWriteEnd(HttpServletRequest req, HttpSession ses, MultipartHttpServletRequest freq) {
 		// 게시판을 클릭해서 글을 쓸 경우 // nidx, subject, content ,userid, teanNum
-		//String idx = req.getParameter("idx");
-		//System.out.println("===========idx============="+idx);
-		String idx = req.getParameter("idx");
+		String nidx = req.getParameter("nidx");
+		System.out.println("===========nidx============="+nidx);
+		/*String idx = req.getParameter("idx");
+		System.out.println("===========idx============="+idx);*/
 		String userid = req.getParameter("userid");
 		System.out.println("userid ==========================="+userid);
 		String teamNum = req.getParameter("teamNum");
+		System.out.println("teamNum ==========================="+teamNum);
 		String subject = req.getParameter("subject");
+		System.out.println("subject ==========================="+subject);
 		String content = req.getParameter("content");
+		System.out.println("content ==========================="+content);
 		HashMap<String, String> team = new HashMap<String, String>();
 		//team.put("idx", idx);
-		team.put("nidx", idx);
+		team.put("nidx", nidx);
 		team.put("userid", userid);
 		team.put("teamidx", teamNum);
 		team.put("subject", subject);
 		team.put("content", content.replace("\r\n","<br>"));
-		if(idx != null && !"".equals(idx)) {
-			HashMap<String, String> depth = service.getMindDepth(idx);
+		if(nidx != null && !"".equals(nidx)) {
+			HashMap<String, String> depth = service.getMindDepth(nidx);
 			team.put("depth", String.valueOf(Integer.parseInt(depth.get("depth"))+1) );
 			team.put("chkid", req.getParameter("chkid"));
 		}
@@ -760,7 +795,7 @@ public class GeniousPjsController {
 		
 		int n=service.setMindWrite(team); 
 		if(n > 0) {
-			int num = service.updateMindCheckNum(idx);
+			int num = service.updateMindCheckNum(nidx);
 			System.out.println("==========================확인완료 업데이트 완료====================="+num);
 		}
 	        
@@ -769,7 +804,6 @@ public class GeniousPjsController {
 	    /*=== #136. 파일첨부가 없는 경우 또는 파일첨부가 있는 경우 service 단으로 호출하기 , 먼저 위의 int n = service.add(boardvo); 주석처리 */
         MindFileVO filevo = new MindFileVO();
 		filevo.setAttach(freq.getFile("attach"));
-		n = 0;
 		if(!filevo.getAttach().isEmpty()) {
 			String root = ses.getServletContext().getRealPath("/");
 			String path = root + "resources"+File.separator+"files";
@@ -866,7 +900,7 @@ public class GeniousPjsController {
 	@RequestMapping(value="mindViewEditEnd.mr", method={RequestMethod.POST})	// 마음의 소리 게시판글 쓰기 
 	public String mindViewEditEnd(HttpServletRequest req, HttpSession ses, MultipartHttpServletRequest freq) {
 		// 게시판을 클릭해서 글을 쓸 경우 // nidx, subject, content ,userid, teanNum
-		System.out.println("여기온다.!!!!!!!!!!!!!!!!ㄴ");
+		//System.out.println("여기온다.!!!!!!!!!!!!!!!!ㄴ");
 		String idx = req.getParameter("idx");
 		String nidx = req.getParameter("nidx");
 		String userid = req.getParameter("userid");
@@ -1152,8 +1186,10 @@ public class GeniousPjsController {
 			String msg = "입력 실패";
 			req.setAttribute("msg", msg);
 		}
+		req.setAttribute("list", list);
+		req.setAttribute("n", n);
 		req.setAttribute("loc", loc);
-		return "pjs/error.not";	
+		return "pjs/alarm.not";
 	}/* ================================================================================================================================================== */
 	@RequestMapping(value="memoSenderView.mr", method={RequestMethod.GET})
 	public String memoSenderView(HttpServletRequest req, HttpSession ses) {

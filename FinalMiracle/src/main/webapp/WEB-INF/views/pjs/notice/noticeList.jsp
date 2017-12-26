@@ -14,7 +14,7 @@ request.setCharacterEncoding("UTF-8");
     #displayList {
     	position:absolute;
     	background-color:white; 
-    	width:187px; 
+    	width:300px; 
     	margin-left: 28px; 
     	border-top: 0px; 
     	border: solid gray 3px;
@@ -268,7 +268,7 @@ request.setCharacterEncoding("UTF-8");
 						<div id="custom-search-input"
 							style="border: 1px solid lightgray; margin-left: -15px;">
 							<div class="input-group col-sm-12" style="border: 1px solid lightgray;">
-								<input type="text" class="form-control input-xs" id="searchString1" name="searchString" /> <span
+								<input type="text" class="form-control input-xs" id="searchString" name="searchString" /> <span
 									class="input-group-btn">
 									<button class="btn btn-info btn-xs" type="button" id="btnClick"
 										onClick="goSearch();">
@@ -282,7 +282,6 @@ request.setCharacterEncoding("UTF-8");
 			</div>
 		</div>
 	</form>
-			
 		    <!-- <div >
 				<div id="displayList" ></div>
 			</div> -->
@@ -375,14 +374,12 @@ request.setCharacterEncoding("UTF-8");
 								result = "<span class='first' style='color:blue;'>" +wordstr.substr(0, index)+ "</span>" + "<span class='second' style='color:red; font-weight:bold;'>" +wordstr.substr(index, len)+ "</span>" + "<span class='third' style='color:blue;'>" +wordstr.substr(index+len, wordstr.length - (index+len) )+ "</span>";  
 								resultHTML += "<span style='cursor:pointer;'>"+ result +"</span><br/>"; 
 							});
-						
-							var left = $("#searchString1").position().left; // 검색창 기준
-							var top = $("#searchString1").position().top;
-							top = top + ($("#searchString1").height());
+							var left = $("#searchString").offset().left-30;
+							var top = $("#searchString").offset().top+16;
+							top = top + ($("#searchString").height());
 							$("#displayList").css({"left":left+"px", "top":top+"px"});
-							$("#displayList").show();
 							$("#displayList").html(resultHTML);
-							
+							$("#displayList").show();
 						}
 						else {
 							// 검색된 데이터가 존재하지 않는 경우라면
@@ -484,13 +481,13 @@ request.setCharacterEncoding("UTF-8");
 					$("#userinfo").modal();
 				}, // end of success: function()----------
 				error: function(request, status, error){
-					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+					//alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 				}
 			}); // end of $.ajax()------------------------
 		}
 		function goView(n_idx, n_userid, n_t_idx) {
 			var frm = document.view;
-			alert(n_idx);
+			//alert(n_idx);
 			frm.idx.value = n_idx;
 			frm.userid.value = n_userid; 
 			frm.teamidx.value = n_t_idx;

@@ -219,25 +219,30 @@ public class ProjectManagerDAO {
 
 	// ***** 통합 검색을 위한 각 메뉴별 리스트 받아오기 시작 *****
 	// 프로젝트 검색리스트 받아오기
-	public List<HashMap<String, String>> getProjectSearchList(String searchWord) {
-		List<HashMap<String, String>> projectSearchAll = sql.selectList("do.getProjectSearchList", searchWord);
+	public List<HashMap<String, String>> getProjectSearchList(HashMap<String, String> searchMap) {
+		List<HashMap<String, String>> projectSearchAll = sql.selectList("do.getProjectSearchList", searchMap);
 		return projectSearchAll;
 	} // end of List<String> getProjectSearchList(String searchWord) ---------------------------------------------------------
 	// 공지사항 검색리스트 받아오기
-	public List<HashMap<String, String>> getNoticeSearchList(String searchWord) {
-		List<HashMap<String, String>> noticeSearchAll = sql.selectList("do.getNoticeSearchList", searchWord);
+	public List<HashMap<String, String>> getNoticeSearchList(HashMap<String, String> searchMap) {
+		List<HashMap<String, String>> noticeSearchAll = sql.selectList("do.getNoticeSearchList", searchMap);
 		return noticeSearchAll;
 	} // end of List<String> getNoticeSearchList(String searchWord) ---------------------------------------------------------
 	// 마음의소리 검색리스트 받아오기
-	public List<HashMap<String, String>> getMindSearchList(String searchWord) {
-		List<HashMap<String, String>> mindSearchAll = sql.selectList("do.getMindSearchList", searchWord);
+	public List<HashMap<String, String>> getMindSearchList(HashMap<String, String> searchMap) {
+		List<HashMap<String, String>> mindSearchAll = sql.selectList("do.getMindSearchList", searchMap);
 		return mindSearchAll;
 	} // end of List<String> getMindSearchList(String searchWord) ---------------------------------------------------------
 	// 자유게시판 검색리스트 받아오기
-	public List<HashMap<String, String>> getFreeSearchList(String searchWord) {
-		List<HashMap<String, String>> freeSearchAll = sql.selectList("do.getFreeSearchList", searchWord);
+	public List<HashMap<String, String>> getFreeSearchList(HashMap<String, String> searchMap) {
+		List<HashMap<String, String>> freeSearchAll = sql.selectList("do.getFreeSearchList", searchMap);
 		return freeSearchAll;
 	} // end of List<String> getFreeSearchList(String searchWord) ---------------------------------------------------------
+	// 쪽지 검색리스트 받아오기
+	public List<HashMap<String, String>> getMessageSearchList(HashMap<String, String> searchMap) {
+		List<HashMap<String, String>> messageSearchAll = sql.selectList("do.getMessageSearchList", searchMap);
+		return messageSearchAll;
+	} // end of List<String> getMessageSearchList(String searchWord) ---------------------------------------------------------
 	// ***** 통합 검색을 위한 각 메뉴별 리스트 받아오기 끝 *****
 }
 

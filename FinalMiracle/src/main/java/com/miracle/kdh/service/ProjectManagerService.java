@@ -287,18 +287,20 @@ public class ProjectManagerService {
 	} // end of int elementMove(FolderVO fvo) ----------------------------------------------------------------------------------------------------
 	
 	// 통합 검색
-	public HashMap<String, List<HashMap<String, String>>> getSearchWordByAll(String searchWord) {
+	public HashMap<String, List<HashMap<String, String>>> getSearchWordByAll(HashMap<String, String> searchMap) {
 		HashMap<String, List<HashMap<String, String>>> mapOfSearchAll = new HashMap<String, List<HashMap<String, String>>>();
 		
-		List<HashMap<String, String>> projectSearchAll = dao.getProjectSearchList(searchWord); // 프로젝트 검색리스트 받아오기
-		List<HashMap<String, String>> noticeSearchAll = dao.getNoticeSearchList(searchWord); // 공지사항 검색리스트 받아오기
-		List<HashMap<String, String>> mindSearchAll = dao.getMindSearchList(searchWord); // 마음의소리 검색리스트 받아오기
-		List<HashMap<String, String>> freeSearchAll = dao.getFreeSearchList(searchWord); // 자유게시판 검색리스트 받아오기
+		List<HashMap<String, String>> projectSearchAll = dao.getProjectSearchList(searchMap); // 프로젝트 검색리스트 받아오기
+		List<HashMap<String, String>> noticeSearchAll = dao.getNoticeSearchList(searchMap); // 공지사항 검색리스트 받아오기
+		List<HashMap<String, String>> mindSearchAll = dao.getMindSearchList(searchMap); // 마음의소리 검색리스트 받아오기
+		List<HashMap<String, String>> freeSearchAll = dao.getFreeSearchList(searchMap); // 자유게시판 검색리스트 받아오기
+		List<HashMap<String, String>> messageSearchAll = dao.getMessageSearchList(searchMap); // 자유게시판 검색리스트 받아오기
 
 		mapOfSearchAll.put("projectSearchAll", projectSearchAll);
 		mapOfSearchAll.put("noticeSearchAll", noticeSearchAll);
 		mapOfSearchAll.put("mindSearchAll", mindSearchAll);
 		mapOfSearchAll.put("freeSearchAll", freeSearchAll);
+		mapOfSearchAll.put("messageSearchAll", messageSearchAll);
 
 		return mapOfSearchAll;
 	} // end of HashMap<String, List<String>> getSearchWordByAll(String searchWord) --------------------------------------------------------------
