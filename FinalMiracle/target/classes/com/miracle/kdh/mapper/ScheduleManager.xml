@@ -168,7 +168,7 @@
 		<result property="groupNo" column="groupNo" javaType="String"/>		
 	</resultMap>
 	<select id="getMaxGroupNo" resultMap="getMaxGroupNo">
-		select max(groupNo)+1 as groupNo
+		select nvl(max(groupNo)+1, 1) as groupNo
 		from tbl_folder F
 	</select>
 	

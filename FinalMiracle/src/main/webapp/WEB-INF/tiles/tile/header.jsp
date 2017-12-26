@@ -117,7 +117,7 @@
 			
 			var searchWord = $("#searchWordByAll").val();
 			// 검색어가 없다면 결과창 비우고 끝내기
-			if(searchWord.trim() == "") {
+			if(searchWord.trim() == "" || key == 27) {
 				$("#searchAllResult").empty().hide();
 				return false;
 			}
