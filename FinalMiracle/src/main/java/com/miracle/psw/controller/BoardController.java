@@ -342,7 +342,7 @@ public class BoardController {
 		req.setAttribute("fk_team_idx", fk_team_idx);
 		
 		// ==================================== *** F5 클릭시 글 조회수 증가 안하게 하기 위해 조건문 걸기 *** ===========================
-		if(session.getAttribute("readCntPermission") != null && "yes".equals(session.getAttribute("readCntPermission")) ) {
+		if( session.getAttribute("readCntPermission") != null && "yes".equals(session.getAttribute("readCntPermission")) ) {
 			MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
 			String userid = null;
 			
@@ -425,8 +425,6 @@ public class BoardController {
 		String pagebar = "<ul>";
 		pagebar += MyUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentShowPageNo, colname, search, null, "freeList.mr");
 		pagebar += "</ul>";
-		
-		// session.setAttribute("readCntPermission", "yes");  // f5 눌러도 조회수 안올리기 하기 위한 것.(session 에 키값 지정)
 		
 		req.setAttribute("currentShowPageNo", currentShowPageNo);
 		req.setAttribute("sizePerPage", sizePerPage);
