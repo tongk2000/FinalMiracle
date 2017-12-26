@@ -32,7 +32,8 @@
 			var html = $("#addDownElementEndLine").html();
 			
 			if("${map.fvo.fk_folder_idx}" == "0") { // 추가된 요소가 최상위 요소라면
-				$(".element", opener.document).last().after(html); // 그냥 맨 끝에 붙여넣음
+				$("#notExistElement", opener.document).remove();
+				$("#doListTable", opener.document).append(html); // 그냥 맨 끝에 붙여넣음
 			} else { // 하위요소라면 상위요소의 다음에 넣는 작업 시작
 				var $opener = $(".selectedLine", opener.document); // 추가요소의 상위요소 선택자를 잡음
 				var category = "${map.fvo.category}"; // 추가요소의 분류(1:폴더, 2:할일)을 저장함

@@ -67,7 +67,6 @@ public class ChattingController {
 		cridx = req.getParameter("cridx");
 		else if(req.getParameter("cridx1")!=null)
 		cridx = req.getParameter("cridx1");
-		System.out.println(cridx);
 		
 		String message = req.getParameter("message");
 		
@@ -270,14 +269,10 @@ public class ChattingController {
 	@RequestMapping(value="/newRoomNewMember.mr", method={RequestMethod.GET})
 	public String newRoomNewMember(HttpServletRequest req, HttpServletResponse res){
 		
-		String midx = req.getParameter("memberidx");
+		String[] midxArr = req.getParameterValues("memberidxArr");		
 		String cridx = service.getCRidxNewRoom();
 		
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("cridx", cridx);
-		map.put("midx", midx);
-		
-		service.newRoomNewMember(map);
+		service.newRoomNewMember2(midxArr, cridx);
 		service.addMemberCnt(cridx);
 		
 		List<HashMap<String, Object>> chattingMember = service.getChattingMember(cridx);
