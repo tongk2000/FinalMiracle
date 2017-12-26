@@ -451,8 +451,13 @@
 								result = "<span class='first' style='color:blue;'>" +wordstr.substr(0, index)+ "</span>" + "<span class='second' style='color:red; font-weight:bold;'>" +wordstr.substr(index, len)+ "</span>" + "<span class='third' style='color:blue;'>" +wordstr.substr(index+len, wordstr.length - (index+len) )+ "</span>";  
 								resultHTML += "<span style='cursor:pointer;'>"+ result +"</span><br/>"; 
 							});
+<<<<<<< HEAD
 							var left = $("#searchString").offset().left-30;
 							var top = $("#searchString").offset().top+16;
+=======
+							var left = $("#searchString").position().left;
+							var top = $("#searchString").position().top;
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
 							top = top + ($("#searchString").height());
 							$("#displayList").css({"left":left+"px", "top":top+"px"});
 							$("#displayList").html(resultHTML);

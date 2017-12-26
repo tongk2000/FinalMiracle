@@ -7,12 +7,6 @@
 		border:1px solid lightgray;
 		text-align:center;
 	}
-	#modalCommentTable th {
-		
-	}
-	#modalCommentTable td {
-		
-	}
 </style>
 
 <script type="text/javascript">
@@ -22,6 +16,8 @@
 			document.getElementById("selectPage").value = selectPage;
 		}
 	}
+	
+	// 댓글 페이징
 	function goCommentPage(pageNo){
 		document.getElementById("selectPage").value = pageNo;
 		document.getElementById("copySelectPage").value = pageNo; // 모달정보수정시 댓글 페이지 유지용
@@ -36,10 +32,46 @@
 				alert(request.status+"에러!!\n관리자에게 문의하세요.");
 			}
 		});
-	}
+	} // end of function goCommentPage(pageNo) ------------------------------------------------------------------------------------
+	
+	// 댓글 삭제하고 새로운 댓글리스트 가져오기
 	function commentDelete(idx) {
-		alert(idx);
-	}
+		var bool = confirm("정말 삭제하시겠습니까?");
+		if(!bool) {
+			return false;
+		}
+		
+		$("#delIdx").val(idx);
+		var frm = $("form[name=addCommentFrm]").serialize();
+		$.ajax({
+			url:"do_delComment.mr",
+			type:"post",
+			data:frm,
+			dataType:"xml",
+			success:function(data){
+				alert("댓글 삭제에 성공했습니다.");
+				var commentArr = $(data).find(":root").find("comment");
+				var html = "";
+				commentArr.each(function(){
+					html += "<tr class='trLine'>";
+					html += "	<td>"+$(this).find("userid").text()+"</td>";
+					html += "	<td style='text-align:left;'>"+$(this).find("content").text()+"</td>";
+					html += "	<td>"+$(this).find("writeDate").text()+"</td>";
+					html += "	<td align='center'><span style='cursor:pointer;' onclick='commentDelete("+$(this).find("idx").text()+")'>x</span><td>";
+					html += "</tr>";
+				});
+				$("#modalCommentList").html(html);
+				
+				var pageBar = $(data).find(":root").find("pageBar").html();
+				$("#pageBar").html(pageBar);
+				
+			}, error: function (xhr, ajaxOptions, thrownError) {
+		        console.log(xhr.status);
+		        console.log(thrownError);
+		    }
+		});
+		return false;
+	} // end of function commentDelete(idx) ---------------------------------------------------------------------------------------------------
 </script>
 
 <br/>
@@ -58,6 +90,7 @@
 	<input type="hidden" name="sizePerPage" value="${map.pvo.sizePerPage}" /> <!-- 사이즈 저장용 -->
 	<input type="hidden" name="blockSize" value="${map.pvo.blockSize}" /> <!-- 블록사이즈 저장용 -->
 	<input type="hidden" name="function" value="${map.pvo.function}" /> <!-- 함수 이름 저장용 -->
+	<input type="hidden" name="delIdx" id="delIdx" /> <!-- 지울 함수 저장용 -->
 </form>
 
 <table id="modalCommentTable" style="width:100%; table-layout:fixed; margin-top:10px;">

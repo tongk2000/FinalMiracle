@@ -81,5 +81,9 @@
       <img src="<%= request.getContextPath() %>/resources/images/icon/11.png" class="iconPng sideIconPng" />
       <span class="toggleText">쪽지</span>
    </li>
+<<<<<<< HEAD
 </ul>
 
+=======
+</ul>
+>>>>>>> branch 'master' of https://github.com/tongk2000/FinalMiracle.git
