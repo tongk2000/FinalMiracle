@@ -118,7 +118,7 @@
 			var searchWord = $("#searchWordByAll").val();
 			// 검색어가 없다면 결과창 비우고 끝내기
 			if(searchWord.trim() == "") {
-				$("#searchAllResult").empty();
+				$("#searchAllResult").empty().hide();
 				return false;
 			}
 			// 검색어가 있다면 검색결과를 받아와서 뿌려주기
@@ -141,7 +141,7 @@
 						var left = $("#searchWordByAll").offset().left;
 						var top = $("#searchWordByAll").offset().top + $("#searchWordByAll").height() + 15;
 						$("#searchAllResult").css({"left":left+"px", "top":top+"px"});
-						$("#searchAllResult").html(html);
+						$("#searchAllResult").html(html).show();
 					}, error: function (xhr, ajaxOptions, thrownError) {
 				        console.log(xhr.status);
 				        console.log(thrownError);
@@ -265,7 +265,7 @@
 	</a>
 </div> --%>
 <div id="searchAllResult" style="display:inline-block; z-index:99999; max-height:500px; overflow:auto; position:absolute;
-								 background-color:#154465; color:white; border-radius:5px; border:2px solid #cce6ff;">
+								 background-color:#154465; color:white; border-radius:5px; border:2px solid #cce6ff; display:none;">
 </div>
 
 <!-- ===== 로그인 성공한 사용자 정보 출력 ===== -->
