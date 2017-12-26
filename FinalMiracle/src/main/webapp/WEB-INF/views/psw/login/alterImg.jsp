@@ -36,8 +36,8 @@
 
 	<form name="alterImgFrm" enctype="multipart/form-data">
 		<h4 style="text-align: center; font-weight: bold;">프로필 이미지 변경하기</h4>
-		<div>
-			<input style="padding-left: 30px;" type="file" name="img" id="img" accept="images/jpg, images/jpeg, images/png, images/gif" /><br/>
+		<div style="padding-top: 30px;">
+			<input style="margin-left: 50px;" type="file" name="img" id="img" accept="images/jpg, images/jpeg, images/png, images/gif" /><br/>
 		
 			<a class="btn btn-primary btn-success" style="text-align: center;" href="javascript:goAlterImgEnd();">확인</a>
 		</div>

@@ -30,12 +30,12 @@ table#tblMemberRegister td {
 }
 
 th#th {
-	background-color: darkgray;
+	background-color: #deeaee;
 	font-size: 13pt;
 }
 
 td {
-	color: #303030;
+	color: #202020;
 }
  
 .star {
@@ -291,7 +291,15 @@ td {
 
 		$("#idcheck").click(function() {
 			// 팝업창 띄우기
-			window.open("member_idDuplicateCheck.mr", "idcheck", "left=500px; top=100px; width=300px; height=200px;");
+			var uri = 'member_idDuplicateCheck.mr'
+		    var width = 350;
+		    var height = 230;
+		    var top = (screen.availHeight - height) / 2;
+		    var left = (screen.availWidth - width) / 2;
+		    var strFeature;
+		    strFeature = 'height=' + height + ',width=' + width + ',menubar=no,toolbar=no,location=no,resizable=no,status=no,scrollbars=yes,top=' + top + ',left=' + left
+
+			window.open(uri, "idDuplicateCheck", strFeature);
 		});
 	}); // end of $(document).ready()------------------
 
@@ -322,7 +330,7 @@ td {
 
 	}// end of goRegister(event)-----------------------
 
-	function openDaumPostnum() {
+	function openDaumPostnum() {	    
 		new daum.Postcode({
 			oncomplete : function(data) {
 				document.getElementById("post1").value = data.postcode1;
@@ -339,15 +347,15 @@ td {
 
 <body background="<%= request.getContextPath() %>/resources/images/loginbg.png">
 	<div align="center" style="width: 100%; border: 0px dotted pink; margin-top: 3%;">
-		<div style="width: 600px; border: 2px solid #578CA9; background-color: #4F84C4; border-radius: 15px; margin-top: 20px; margin-bottom: 10px; padding: 10px;">
+		<div style="width: 600px; border: 2px solid #578CA9; background-color: #4F84C4; border-radius: 20px; margin-top: 20px; margin-bottom: 10px; padding: 10px;">
 		
 		<form class="form-inline" name="registerFrm">
  
 			<table id="tblMemberRegister" style="margin-bottom: 5px;">
 				<thead>
 					<tr>
-						<th colspan="2" id="th" style="text-align: center; font-size: 14pt; padding: 5pt; border-radius: 5px;">회원 가입 (
-							<span style="font-size: 10pt; font-family: verdana; color: blue;"><span class="star"> *</span> 항목 기입 필수 </span>)
+						<th colspan="2" id="th" style="text-align: center; font-size: 14pt; padding: 5pt; border-radius: 10px;">회원 가입 (
+							<span style="font-size: 10pt; font-family: verdana; color: #034f84;"><span class="star"> *</span> 항목 기입 필수 </span>)
 						</th>
 					</tr>
 				</thead>

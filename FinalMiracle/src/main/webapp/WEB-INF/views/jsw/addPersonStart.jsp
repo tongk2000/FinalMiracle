@@ -1,18 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title></title>
-
-<style type="text/css">
-
-
-</style>
-
-<script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -172,38 +160,62 @@
 		
 		
 	});
-	
-
-
-	
 </script>
 
-</head>
-<body>
-	<div style="font-size: 20px;">
-		<div style="display: inline; margin: 20px;"><span id="AllMember" class="btn btn-lg"><span class="glyphicon glyphicon-user"></span> 전체인원 보기</span></div>
-		<div style="display: inline; margin: 20px;">팀별 보기 : 
-		  <select id="teamList" style="height: 30px;">
-		    <c:forEach var="team" items="${teamList}" varStatus="status">
+<div id="addPerson" style="font-size: 20px; height:100%;">
+	<div style="display: inline; margin: 20px;">
+		<span id="AllMember" class="btn btn-lg">
+			<span class="glyphicon glyphicon-user"></span>
+			전체인원 보기
+		</span>
+	</div>
+	<div style="display: inline; margin: 20px;">
+		팀별 보기 : 
+		<select id="teamList" style="height: 30px;">
+			<c:forEach var="team" items="${teamList}" varStatus="status">
 				<option value="${team.tidx}">${team.name}</option>
 			</c:forEach>
-		  </select>
-		</div>
-		<div style="display: inline-block; margin: 20px;">
+		</select>
+	</div>
+	<div style="display: inline-block; margin: 20px;">
 		<select id="nameOrId" style="height: 33px;">
 			<option value="name">이름</option>
 			<option value="userid">아이디</option>
 		</select>
-		<input id="nameORid" type="text"/>&nbsp;<span id="serchMem" class="btn btn-info"><span class="glyphicon glyphicon-search"></span> 찾기</span>
-		</div>
-		<div id="MemberList" style="border: 0px solid teal; height : 400px; overflow: auto;"></div>
-		<div>
+		<input id="nameORid" type="text"/>
+		&nbsp;
+		<span id="serchMem" class="btn btn-info">
+			<span class="glyphicon glyphicon-search"></span>
+			찾기
+		</span>
+	</div>
+	<div id="MemberList" style="border: 0px solid teal; min-height:78%; overflow: auto;"></div>
+	<div style="text-align:center;">
 		<span id="inviteMember1" class="btn btn-lg" style="background-color: yellow; margin-right: 20px;">초대하기</span>
 		<span class="btn btn-lg btn-danger" onclick="goChatRoom(${cridx})">취소하기</span>
-		</div>
 	</div>
-	<form id="newRoomFrm">
-		<input type="hidden" name="invmemidx" />
-	</form>
-</body>
-</html>
+</div>
+<form id="newRoomFrm">
+	<input type="hidden" name="invmemidx" />
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
