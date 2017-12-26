@@ -150,6 +150,12 @@ public class ChattingService implements InterChattingService {
 		return getRoomInfo;
 	}
 
+	@Override
+	public void addMemberCntLength(HashMap<String, Object> map) {
+		dao.addMemberCntLength(map);
+		
+	}
+
 	
 	
 	

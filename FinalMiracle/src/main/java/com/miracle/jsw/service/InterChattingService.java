@@ -46,6 +46,8 @@ public interface InterChattingService {
 
 	HashMap<String, Object> getRoomInfo(HashMap<String, Object> map);
 
+	void addMemberCntLength(HashMap<String, Object> map);
+
 	
 
 

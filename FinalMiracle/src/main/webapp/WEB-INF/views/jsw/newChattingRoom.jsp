@@ -127,35 +127,37 @@
 					}
 				});
 				
-				var memberidxArr = [];
-				$('.inv').each(function(i){
-					var id = document.getElementsByClassName('twon')[i].id;
-					var memberidx = $('#'+id).val();
-					memberidxArr[i] = memberidx;
-				});
-				jQuery.ajaxSettings.traditional = true;
-				$.ajax({
-					url: "newRoomNewMember.mr",
-					data: {"memberidxArr":memberidxArr},
-					type: "get",		// 위의 url주소로 보내어질 요청대이터이다
-					dataType: "html",	// ajax 요청에의해 url주소(chattingRoomAjax.mr)로 리턴받는 데이터 타입이다
-					 					// 종류가 xml, json, html, script, text
-					success: function(data) { // success => url주소(chattingRoomAjax.mr)로 부터 받은 응답이 요청에 성공했다는 것을 말한다
-												// function(data) {}를 콜백함수라고 부르는데 성공한 다음에 실행할것들을 여기에 서술한다
-												// 그리고 data는 url주소(chattingRoomAjax.mr)로부터 리턴받은 데이터이다
-					//	$("#MemberList").empty(); // 해당요소 선택자 내용을 모두 비워서 새로운 데이터를 채울 준비를 한다
-						$("#memberinfo").empty();
-						$("#memberinfo").html(data);
-					},
-					error: function(request, status, error) {
-						alert("code: " + request.status + "\n"+"message: " + request.responseText + "\n" + "error: " + error);     
-					}
-				});
-				
-				$("#message").show();
-				$("#sendMessage").show();
-				alert("채팅방 만들기 성공");
-				getRoomList();
+				setTimeout(function(){
+					var memberidxArr = [];
+					$('.inv').each(function(i){
+						var id = document.getElementsByClassName('twon')[i].id;
+						var memberidx = $('#'+id).val();
+						memberidxArr[i] = memberidx;
+					});
+					jQuery.ajaxSettings.traditional = true;
+					$.ajax({
+						url: "newRoomNewMember.mr",
+						data: {"memberidxArr":memberidxArr},
+						type: "get",		// 위의 url주소로 보내어질 요청대이터이다
+						dataType: "html",	// ajax 요청에의해 url주소(chattingRoomAjax.mr)로 리턴받는 데이터 타입이다
+						 					// 종류가 xml, json, html, script, text
+						success: function(data) { // success => url주소(chattingRoomAjax.mr)로 부터 받은 응답이 요청에 성공했다는 것을 말한다
+													// function(data) {}를 콜백함수라고 부르는데 성공한 다음에 실행할것들을 여기에 서술한다
+													// 그리고 data는 url주소(chattingRoomAjax.mr)로부터 리턴받은 데이터이다
+						//	$("#MemberList").empty(); // 해당요소 선택자 내용을 모두 비워서 새로운 데이터를 채울 준비를 한다
+							$("#memberinfo").empty();
+							$("#memberinfo").html(data);
+							
+							$("#message").show();
+							$("#sendMessage").show();
+							alert("채팅방 만들기 성공");
+							getRoomList();
+						},
+						error: function(request, status, error) {
+							alert("code: " + request.status + "\n"+"message: " + request.responseText + "\n" + "error: " + error);     
+						}
+					});
+				},1000);
 		}		
 		/* var form_data = {roomname : roomname};
 		$.ajax({
