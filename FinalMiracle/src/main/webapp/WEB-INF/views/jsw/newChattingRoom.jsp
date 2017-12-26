@@ -112,7 +112,12 @@
 					//	$("#MemberList").empty(); // 해당요소 선택자 내용을 모두 비워서 새로운 데이터를 채울 준비를 한다
 					//	$("#memberinfo").empty();
 					//	$("#MemberList").html(data);
-						$("#chatMessage").empty();
+						$("#newChattingRoom").remove();
+						$("#addPerson").remove();
+						$("#roominfo").show();
+						$("#chatMessage").show();
+						$("#message").show();
+						$("#sendMessage").show();
 						$("#chatMessage").html(data);
 					
 					},
