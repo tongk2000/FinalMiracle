@@ -4,6 +4,7 @@
 <comments>
 	<c:forEach var="fcvo" items="${map.folder_commentList}">
 		<comment>
+			<idx>${fcvo.idx}</idx>
 			<userid>${fcvo.userid}</userid>
 			<content>${fcvo.content}</content>
 			<writeDate>${fcvo.writeDate}</writeDate>

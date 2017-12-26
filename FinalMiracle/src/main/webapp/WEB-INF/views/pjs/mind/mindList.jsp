@@ -80,6 +80,22 @@
 #custom-search-input .glyphicon-search {
 	font-size: 23px;
 }
+.modal.modal-center {
+  text-align: center;
+}
+@media screen and (min-width: 400px) { 
+  .modal.modal-center:before {
+    display: inline-block;
+    vertical-align: middle;
+    content: " ";
+    height: 100%;
+  }
+}
+.modal-dialog.modal-center {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle; 
+}	
 </style>
 
 <title>Mind 게시판 입니다!</title>
@@ -360,7 +376,7 @@
 							style="border: 1px solid lightgray; margin-left: -15px;">
 							<div class="input-group col-sm-12" style="border: 1px solid lightgray;">
 								<input type="text" class="form-control input-xs"
-									id="searchString1" name="searchString" /> <span
+									id="searchString" name="searchString" /> <span
 									class="input-group-btn">
 									<button class="btn btn-info btn-xs" type="button" id="btnClick"
 										onClick="goSearch();">
@@ -404,7 +420,7 @@
 			 	$('#userinfo').modal('hide');
 			}); // end of $(".modalClose").click(function() ------------------------------------------------------------------------------------------------------
 
-			$("tr:has(td)").click(function(e){ // tr중에서 td를 가지고 있는 tr
+			$("#dev-table tr:has(td)").click(function(e){ // tr중에서 td를 가지고 있는 tr
 				var bool = $(e.target).parent().hasClass("selectLine"); 
 				if(bool) {
 					$(e.target).parent().removeClass("selectLine");
@@ -435,9 +451,9 @@
 								result = "<span class='first' style='color:blue;'>" +wordstr.substr(0, index)+ "</span>" + "<span class='second' style='color:red; font-weight:bold;'>" +wordstr.substr(index, len)+ "</span>" + "<span class='third' style='color:blue;'>" +wordstr.substr(index+len, wordstr.length - (index+len) )+ "</span>";  
 								resultHTML += "<span style='cursor:pointer;'>"+ result +"</span><br/>"; 
 							});
-							var left = $("#searchString1").position();
-							var top = $("#searchString1").position().top;
-							top = top + ($("#searchString1").height());
+							var left = $("#searchString").position().left;
+							var top = $("#searchString").position().top;
+							top = top + ($("#searchString").height());
 							$("#displayList").css({"left":left+"px", "top":top+"px"});
 							$("#displayList").html(resultHTML);
 							$("#displayList").show();
@@ -487,7 +503,7 @@
 			frm.method="get";
 			frm.submit();
 		}
-		function goUserInfo(id) {
+		/* function goUserInfo(id) {
 			var userid = {"userid":id};
 			$.ajax({
 				url:"mindUserInfo.mr",
@@ -506,6 +522,34 @@
 					alert("실패!");
 				}
 			});
+		} */
+		function goUserInfo(userid) {
+			var form_data = { "userInfo" : userid };
+			$.ajax({
+				url: "freeUserInfo.mr",
+				type: "GET",
+				data: form_data,  // url 요청페이지로 보내는 ajax 요청 데이터
+				dataType: "JSON", // ajax 요청에 의해 url 요청페이지로 부터 리턴받는 데이터타입. xml, json, html, text 가 있음.
+				success: function(data) {				
+					var html = "";
+					
+					var imgPath = data.infoImg;
+					html += "<div style='font-family: verdana; font-size: 10pt; border: 2px dotted #E8E8E8; border-radius: 20px; background-color: #F0F0F0; padding: 5px;'><div style='float: right;'><img src='<%= request.getContextPath() %>/resources/files/" + imgPath + "' style='width: 80px; height: 80px; border-radius: 50px;' /></div>" + "<br/>"
+						 +  "<span style='font-weight: bold;'>ID : </span>"+ data.infoUserid + "<br/>"
+						 +  "<span style='font-weight: bold;'>성명 : </span>"+ data.infoName + "<br/><br/>"
+						 +  "<span style='font-weight: bold;'>핸드폰 : </span>" +data.infoHp1 + "-" +data.infoHp2+"-"+data.infoHp3 +"<br/>"
+						 +  "<span style='font-weight: bold;'>생년월일 : </span>" +data.infoBirth1 + " / " + data.infoBirth2 + " / " + data.infoBirth3 + "<br/><br/>"
+						 +  "<span style='font-weight: bold;'>주소 : </span>" + data.infoAddr1 + " " + data.infoAddr2 + "</span><br/>"
+						 +  "<span style='font-weight: bold;'>이메일 : </span>" + data.infoEmail + "<br/><br/>"
+						 +  "<span style='font-weight: bold;'>소개 : </span>" + data.infoProfile +"</div>" ;
+					
+					$(".modal-body").html(html);
+					$("#userinfo").modal();
+				}, // end of success: function()----------
+				error: function(request, status, error){
+					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+				}
+			}); // end of $.ajax()------------------------
 		}
 		function goView(d_idx, userid, teamNum) {
 			var frm = document.view;
@@ -536,6 +580,22 @@
 			frm.submit();
 		}
 	</script>
-	<div class="modal fade" id="userinfo" role="dialog"></div>
+	<!-- <div class="modal fade" id="userinfo" role="dialog"></div> -->
+	<div class="modal fade modal-center" id="userinfo" role="dialog">
+	<div class="modal-dialog modal-sm modal-center">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">회원 상세 정보</h4>
+			</div>
+			<div class="modal-body">
+			<p></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
