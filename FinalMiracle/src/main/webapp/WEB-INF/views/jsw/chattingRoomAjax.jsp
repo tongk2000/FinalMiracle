@@ -16,9 +16,12 @@
 <body>
 	<div style="font-size: 20px;">
 		<c:forEach var="room" items="${roomList}" varStatus="status">
-			<div onclick="goChatRoom(${room.cridx}); scroll();" style="border-bottom: 1px solid white; cursor: pointer; vertical-align: middle; padding: 5px; padding-left: 20px;">${room.roomname} <span style="color: gray;">[${room.personnum}]</span>
+			<div class="inChattingElement" onclick="goChatRoom(${room.cridx}); scroll();" 
+						style="cursor: pointer; padding-left:20px; vertical-align: middle; padding-top:5px; padding-bottom:5px;">
+				${room.roomname} 
+				<span style="color:gray;">[${room.personnum}]</span>
 				<c:if test="${room.notreadmessage != 0}">
-					<span style="background-color: red; color: white;">${room.notreadmessage}</span>
+					<span style="background-color:red; color:white;">${room.notreadmessage}</span>
 				</c:if>
 				<input type="hidden" value="${room.cridx}" id="cridx${status.count}" name="cridx${status.count}"/>
 			</div>

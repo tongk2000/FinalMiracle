@@ -1037,11 +1037,10 @@
 		var upIdx = $(".selectedLine").attr("id");
 		var term = $("#term").val();
 		var page = $("#page").val();
-		window.open("do_addDownElement.mr?upIdx="+upIdx+"&term="+term+"&page="+page, "subwinpop", "left=100px, top=100px, width=450px, height=345px");
+		window.open("do_addDownElement.mr?upIdx="+upIdx+"&term="+term+"&page="+page, "subwinpop", "left=100px, top=100px, width=450px, height=330px");
 	} // end of function addDownElement() -----------------------------------------------------------------------------------------------------------------------------
 	// 최상위 요소 추가
 	function addUpElement() {
-		var upIdx = $(".selectedLine").attr("id");
 		var term = $("#term").val();
 		var page = $("#page").val();
 		window.open("do_addDownElement.mr?upIdx="+0+"&term="+term+"&page="+page, "subwinpop", "left=100px, top=100px, width=450px, height=330px");
@@ -1727,7 +1726,7 @@
 		</thead>
 		<tbody style="color:navy;">
 			<c:if test="${empty map.doList}"> <!-- 프로젝트 리스트가 비었다면 -->
-				<td colspan="9">등록된 프로젝트가 없습니다.</td>
+				<tr id="notExistElement"><td colspan="${map.pageDateList.size() + 7}" style="text-align:center;">등록된 프로젝트가 없습니다.</td></tr>
 			</c:if>
 			<jsp:include page="doListLine.jsp"/> <!-- 여러번 활용하기 위해 할일 리스트는 다른 페이지로 뺏음 -->
 		</tbody>

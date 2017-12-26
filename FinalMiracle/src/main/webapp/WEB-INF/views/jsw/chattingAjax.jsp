@@ -172,7 +172,12 @@
 			success: function(data) { // success => url주소(chattingRoomAjax.mr)로 부터 받은 응답이 요청에 성공했다는 것을 말한다
 										// function(data) {}를 콜백함수라고 부르는데 성공한 다음에 실행할것들을 여기에 서술한다
 										// 그리고 data는 url주소(chattingRoomAjax.mr)로부터 리턴받은 데이터이다
-				$("#chatMessage").empty(); // 해당요소 선택자 내용을 모두 비워서 새로운 데이터를 채울 준비를 한다
+				$("#newChattingRoom").remove();
+				$("#addPerson").remove();
+				$("#roominfo").show();
+				$("#chatMessage").show();
+				$("#message").show();
+				$("#sendMessage").show();
 				$("#chatMessage").html(data);
 				$("#chatMessage").scrollTop($("#chatMessage")[0].scrollHeight);
 				getRoomList();
@@ -237,7 +242,6 @@
 		
 	}    */
 	 function newChattingRoom() {
-		
 		$.ajax({
 			url: "newChatting.mr",
 		//	data: form_data,
@@ -247,13 +251,14 @@
 			success: function(data) { // success => url주소(chattingRoomAjax.mr)로 부터 받은 응답이 요청에 성공했다는 것을 말한다
 										// function(data) {}를 콜백함수라고 부르는데 성공한 다음에 실행할것들을 여기에 서술한다
 										// 그리고 data는 url주소(chattingRoomAjax.mr)로부터 리턴받은 데이터이다
-				$("#chatMessage").empty(); // 해당요소 선택자 내용을 모두 비워서 새로운 데이터를 채울 준비를 한다
+				$("#addPerson").remove();
 				$("#memberinfo").empty();
-				$("#chatMessage").html(data);
-				
-				
-				
-				
+				$("#chattingMiddle").empty();
+				$("#roominfo").hide();
+				$("#chatMessage").hide();
+				$("#message").hide();
+				$("#sendMessage").hide();
+				$("#chattingMiddle").append(data);
 			},
 			error: function(request, status, error) {
 				alert("code: " + request.status + "\n"+"message: " + request.responseText + "\n" + "error: " + error);     
@@ -267,34 +272,48 @@
 	
 </script>
 
-<div style="width: 100%; height: 100%; background-color: #ccebff;" align="center">
+<style type="text/css">
+	#chattingDiv {
+		border:2px solid #cce6ff;
+	}
+	
+	.inChattingElement {
+		border-top:1px solid #cce6ff;
+		border-bottom:1px solid #cce6ff;
+	}
+	.chattingList {
+		padding-left:10px;
+		padding-right:10px;
+	}
+</style>
+
+<div id="chattingDiv" style="width: 100%; height: 100%; background-color:#1f5c87; color:white;" align="center">
 	<div style="float:left; width:82%; height:100%;">
 		<table style="width:100%; height:100%;">
 			<tr style="width:100%; height:100%;">
-				<td style="width:300px;">
+				<td style="width:300px; border-right:3px solid #cce6ff;">
 					<div style="width:100%; height:100%; overFlow-Y:auto; overFlow-X:hidden;">
-						<div style="width:100%; height:30px; font-size: 25px;">채팅방 목록</div>
-						<div style="width:100%; font-size:20px; vertical-align:middle; padding-top:3px; cursor:pointer;" onclick="newChattingRoom()">
+						<div class="inChattingElement" style="width:100%; height:40px; font-size: 25px;">채팅방 목록</div>
+						<div class="inChattingElement" style="width:100%; font-size:20px; vertical-align:middle; padding-top:3px; cursor:pointer;" onclick="newChattingRoom()">
 							<img src="<%= request.getContextPath() %>/resources/files/addchat.png" class="iconPng sideIconPng" />&nbsp;새 채팅방
 						</div>
 						<div style="width:100%; text-align:left;" id="room"></div>
 					</div>
 				</td>
-				<td style="width:80%;">
-					<div style="width:100%; height:100%; background-color: #a0c0d7; overFlow-Y:auto;">
-						<div id="roominfo" style="width:100%; height:30px;" hidden="true"></div>
-						<div id="chatMessage" style="width:100%; max-height:90%; overFlow-Y:auto;"></div>
-				    	<input type="text" id="message" placeholder="메시지 내용" style="width:90%; margin-top:5px;"/>
-				    	<input type="button" id="sendMessage" class="btn-info" value="전송" />
+				<td style="width:80%; border-right:3px solid #cce6ff; color:black;">
+					<div id="chattingMiddle" style="width:100%; height:100%; background-color: #a0c0d7; overFlow-Y:auto;">
+						<div class="inChattingElement chattingList" id="roominfo" style="width:100%; height:40px; background-color: #a3c3da" hidden="true"></div>
+						<div class="inChattingElement chattingList" id="chatMessage" style="width:100%; min-height:90%; max-height:90%; overFlow-Y:auto;"></div>
+				    	<input type="text" id="message" placeholder="메시지 내용" style="width:90%; margin-left:10px; margin-top:13px;"/>
+				    	<input type="button" id="sendMessage" class="btn-info" style="margin-top:13px;" value="전송" />
 				    	<input type="hidden" id="roomid" /> <!-- 보내는방 idx 저장용 -->
 				    </div>
 		    	</td>
 			</tr>
 	    </table>
     </div>
-    <div style="float:left; width:18%; height:100%;">
-    	<div id="memberinfo" style="width:100%; height: 100%; overFlow-Y:auto; overFlow-X:hidden;"></div>
-	 	<i class="fa fa-comments"></i>
+    <div id="memberinfo" style="float:left; width:18%; height:100%; color:white; overFlow-X:hidden; font-size:15px; text-align:left; padding-left:10px;">
+	 	<!-- <i class="fa fa-comments"></i> -->
     </div>
 </div>
 

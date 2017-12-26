@@ -130,7 +130,7 @@
 	
 </script>
 
-<div style="width:100%; max-height: 805px; font-family: verdana; overflow-y: auto;" align="center">
+<div style="width:100%; max-height: 840px; font-family: verdana; overflow-y: auto;" align="center">
 	<h1 style="margin: 2%;">투표 수정</h1>
 	
 	 <%-- >>>> 파일첨부하기
@@ -151,9 +151,10 @@
 				    <div style="width: 100%;">
 						<%-- <input type="text" name="content" id="content" class="form-control" value="${votevo.content}" /> --%>
 						<textarea name="content" id="content" class="summernote">
-						<c:forEach var="vote" items="${votevo}" varStatus="status">
+						<%-- <c:forEach var="vote" items="${votevo}" varStatus="status">
 							${vote.content}
-						</c:forEach>
+						</c:forEach> --%>
+							${votevo.content}
 						</textarea>
 					</div>
 				</td>
@@ -183,15 +184,17 @@
          	</tr>
 		</table>
 		
+		<div>
+			<button type="button" class="btn btn-primary" style="margin-right: 10px;" onClick="goEdit();">투표수정</button>
+			<button type="button" class="btn btn-default" style="margin-right: 10px;" onClick="javascript:location.href='${gobackURL}'">투표목록</button> 
+		</div>
+		
 		<input type="hidden" name="idx" value="${idx}" />
 		<input type="hidden" name="gobackURL" value="${gobackURL}" />
 		
 		<c:forEach var="itemvo" items="${voteitemvo}">
 			<input type="hidden" name="itemidx" value="${itemvo.idx}" />
 		</c:forEach>
-		
-		<button type="button" class="btn btn-primary" style="margin-right: 10px;" onClick="goEdit();">투표수정</button>
-		<button type="button" class="btn btn-default" style="margin-right: 10px;" onClick="javascript:location.href='<%= request.getContextPath() %>/voteList.mr'">투표목록</button> 
-	
+
 	</form>
 </div>

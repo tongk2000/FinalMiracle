@@ -28,6 +28,7 @@ public interface InterChattingService {
 	String getCRidxNewRoom();
 
 	void newRoomNewMember(HashMap<String, Object> map);
+	void newRoomNewMember2(String[] midxArr, String cridx);
 
 	void addMemberCnt(String cridx);
 

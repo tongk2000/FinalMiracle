@@ -94,7 +94,10 @@ public class ChattingDAO implements InterChattingDAO {
 	@Override
 	public void newRoomNewMember(HashMap<String, Object> map) {
 		sqlsession.insert("chatting.newRoomNewMember", map);
-		
+	}
+	@Override
+	public void newRoomNewMember2(HashMap<String, String> map) {
+		sqlsession.insert("chatting.newRoomNewMember", map);
 	}
 
 	@Override
