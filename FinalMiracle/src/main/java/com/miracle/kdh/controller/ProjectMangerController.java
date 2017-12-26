@@ -77,6 +77,9 @@ public class ProjectMangerController {
 		
 		HashMap<String, Object> map = svc.getAllDoList(team_idx, page, term); // 할일리스트와 페이징처리를 위한 날짜를 받아옴
 		req.setAttribute("map", map);
+
+		req.setAttribute("searchAllIdx", req.getParameter("searchAllIdx")); // 통합검색에서 넘어왔다면 해당 값을 넘겨줌		
+		req.setAttribute("searchAllCategory", req.getParameter("searchAllCategory")); // 통합검색에서 넘어왔다면 해당 값을 넘겨줌
 		
 		return "kdh/doList/doList.all";
 	} // end of String doList (HttpServletRequest req) ----------------------------------------------------------------
@@ -379,15 +382,21 @@ public class ProjectMangerController {
 		return "kdh/msg.not";
 	} // end of String elementMove(HttpServletRequest req, FolderVO fvo) ---------------------------------------------------------------
 	
-	// 통합 검색
+	// **** 통합 검색 관련 함수 시작 ****
+	// 검색결과와 이동하는데 필요한 값들을 가져와서 전달하
 	@RequestMapping(value="do_getSearchWordByAll.mr", method={RequestMethod.GET})
 	public String getSearchWordByAll(HttpServletRequest req) {	
 		String searchWord = req.getParameter("searchWord").replaceAll(" ", "%");
-		HashMap<String, List<String>> mapOfSerchAll = svc.getSearchWordByAll(searchWord);
-		req.setAttribute("mapOfSerchAll", mapOfSerchAll);
+		HashMap<String, List<HashMap<String, String>>> mapOfSearchAll = svc.getSearchWordByAll(searchWord);
+		req.setAttribute("mapOfSearchAll", mapOfSearchAll);
 		req.setAttribute("searchWord", searchWord);
 		return "kdh/searchAllListXML.not";
 	} // end of String getSearchWordByAll(HttpServletRequest req) ---------------------------------------------------------------
+	
+	// 프로젝트만 이 클래스에 있는것 재활용하고 나머지는 복사해서 할것
+	
+	// **** 통합 검색 관련 함수  ****
+	
 	
 	// ============================= ***** 파일 관련 메소드 시작 ***** =============================
 	// 파일 업로드하고 ffvo 에 파일 정보 저장하기
