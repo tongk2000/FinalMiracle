@@ -700,8 +700,6 @@ public class GeniousPjsController {
 		String teamNum = req.getParameter("teamNum");
 		String chkid = req.getParameter("chkid");
 		HashMap<String, String> team = new HashMap<String, String>();
-		if(nidx != null || !"".equals(nidx) )
-			team.put("nidx", nidx);
 		team.put("userid", userid);
 		team.put("teamidx", teamNum);
 		HashMap<String, String> map = service.getUserTeam(team); // teamNum , userid , memberNum, status 받는다.  ******************************
@@ -768,22 +766,27 @@ public class GeniousPjsController {
 	@RequestMapping(value="mindWriteEnd.mr", method={RequestMethod.POST})	// 마음의 소리 게시판글 쓰기 
 	public String mindWriteEnd(HttpServletRequest req, HttpSession ses, MultipartHttpServletRequest freq) {
 		// 게시판을 클릭해서 글을 쓸 경우 // nidx, subject, content ,userid, teanNum
-		String idx = req.getParameter("idx");
-		System.out.println("===========idx============="+idx);
+		String nidx = req.getParameter("nidx");
+		System.out.println("===========nidx============="+nidx);
+		/*String idx = req.getParameter("idx");
+		System.out.println("===========idx============="+idx);*/
 		String userid = req.getParameter("userid");
 		System.out.println("userid ==========================="+userid);
 		String teamNum = req.getParameter("teamNum");
+		System.out.println("teamNum ==========================="+teamNum);
 		String subject = req.getParameter("subject");
+		System.out.println("subject ==========================="+subject);
 		String content = req.getParameter("content");
+		System.out.println("content ==========================="+content);
 		HashMap<String, String> team = new HashMap<String, String>();
 		//team.put("idx", idx);
-		team.put("nidx", idx);
+		team.put("nidx", nidx);
 		team.put("userid", userid);
 		team.put("teamidx", teamNum);
 		team.put("subject", subject);
 		team.put("content", content.replace("\r\n","<br>"));
-		if(idx != null && !"".equals(idx)) {
-			HashMap<String, String> depth = service.getMindDepth(idx);
+		if(nidx != null && !"".equals(nidx)) {
+			HashMap<String, String> depth = service.getMindDepth(nidx);
 			team.put("depth", String.valueOf(Integer.parseInt(depth.get("depth"))+1) );
 			team.put("chkid", req.getParameter("chkid"));
 		}
@@ -792,7 +795,7 @@ public class GeniousPjsController {
 		
 		int n=service.setMindWrite(team); 
 		if(n > 0) {
-			int num = service.updateMindCheckNum(idx);
+			int num = service.updateMindCheckNum(nidx);
 			System.out.println("==========================확인완료 업데이트 완료====================="+num);
 		}
 	        

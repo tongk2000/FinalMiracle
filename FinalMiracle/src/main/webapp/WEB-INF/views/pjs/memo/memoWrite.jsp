@@ -164,7 +164,7 @@
 						</tr>
 					</tbody>
 				</table>
-				<div style="border:0px solid gray; display:relative">
+				<div style="border:0px solid gray; display:relative; margin-right:100px;">
 					<button type="reset" onClick="javascript:history.back();" id="cancel"  class="btn btn-default">취소</button>
 					<button type="button" onClick="goWrite();"  class="btn btn-default">완료</button>
 				</div>

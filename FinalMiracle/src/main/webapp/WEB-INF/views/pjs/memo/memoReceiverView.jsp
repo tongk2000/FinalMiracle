@@ -83,11 +83,11 @@
 					</tbody>
 				</table>
 			</div>
-			<div style="border:1px solid gray; float:right">
+			<div style="border:0px solid gray; float:right; margin-right:200px;">
 				<div style="float:left;" >
-					<button type="button" onClick="goback();" class="btn btn-default">목록보기</button>
+					<button type="button" onClick="goback();" class="btn btn-default" style="margin-right:10px;">목록보기</button>
 				</div>
-				<button type="button" onClick="goDel('${receiver.idx}');" class="btn btn-default">삭제</button>
+				<button type="button" onClick="goDel('${receiver.idx}');" class="btn btn-default" style="margin-left:10px;">삭제</button>
 			</div>
 		</div>
 	</div>

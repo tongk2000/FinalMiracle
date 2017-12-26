@@ -52,14 +52,14 @@
 					<tbody>
 						<tr>
 							<td width="12%" style="border:1px solid lightgray; background-color:#E0E0E0; font-size: 12pt; font-weight: bold;">유저 아이디 </td><td><img src="<%= request.getContextPath() %>/resources/images/${user.img}" class="img"> &nbsp;&nbsp; ${user.userid}
-							<input type="hidden" name="userid" value="${user.userid}"></td>
+							<input type="hidden" name="userid" value="${user.userid}"><input type="hidden" name="nidx"></td>
 						</tr>
 						<tr>
 							<td width="12%" style="border:1px solid lightgray; background-color:#E0E0E0; font-size: 12pt; font-weight: bold;">팀정보 </td><td>${user.teamNum}<input type="hidden" name="teamNum" value="${user.teamNum}"></td>
 						</tr>
 						<tr>
 							<td width="12%" style="border:1px solid lightgray; background-color:#E0E0E0; font-size: 12pt; font-weight: bold;">제목 </td>
-							<td><input id="subject" type="text" name="subject"/><input type="hidden" name="idx"></td>
+							<td><input id="subject" type="text" name="subject"/></td>
 						</tr>
 						<tr style="min-height: 200px;">
 							<td style="border:1px solid lightgray; background-color:#E0E0E0; font-size: 12pt; font-weight: bold;">내용 </td>
@@ -67,43 +67,35 @@
 						</tr>
 						<tr>
 						   <td style="border:1px solid lightgray; background-color:#E0E0E0; font-size: 12pt; font-weight: bold;">파일첨부</td>
-						   <td><input type="file" name="attach" /></td>
+						   <td><input type="file" name="attach" id="attach"/></td>
 						</tr>
 					</tbody>
 				</table>
 			</form>
 			
 			<div style="display:block; float:right; margin-right: 10%; margin-top: 10px;">
-				<button type="button" onClick="writeEnd();">완료</button>
-				<button type="button" onClick="goback();">취소</button>
+				<button type="button" onClick="writeEnd();"  class="btn btn-default">완료</button>
+				<button type="button" onClick="goback();"  class="btn btn-default">취소</button>
 			</div>
 		</div>
 	</div>
-	<!-- <form name="end" enctype="multipart/form-data"> 
-		<input type="hidden" name="content">
-		<input type="hidden" name="nidx">
-	</form> -->
 	<script>
 		function writeEnd() {
 			var frm = document.end; // nidx, subject, content ,userid, teanNum
 			/* var subject = $("#subject").val();
 			var content = $("#content").val(); */
 			
-			var idx = "${idx}";  // 수정글의 idx
-			//frm.nidx.value = "${nidx}"; 
-			if(idx == null || idx=="") { // 일반글쓰기 //if(nidx == null || nidx=="") {
+			var nidx = "${nidx}";  // 수정글의 idx
+			frm.nidx.value = "${nidx}"; 
+			if(nidx == null || nidx=="") { // 일반글쓰기 //if(nidx == null || nidx=="") {
 				frm.userid.value = "${user.userid}";
 			}
-			if(idx!=null && idx!=""){ // 답변글쓰기 // if(nidx!=null && nidx!=""){
+			if(nidx!=null && nidx!=""){ // 답변글쓰기 // if(nidx!=null && nidx!=""){
 				frm.userid.value = "${sessionScope.loginUser.userid}";
 				frm.chkid.value = "${chkid}";
 			}
-			/* frm.teamNum.value = "${user.teamNum}";
-			frm.subject.value = subject;
-			frm.content.value = content;
-			frm.attach.value = $("#attach").val(); */
-			//frm.idx.value="${idx}";
-			alert(idx);
+			//frm.idx.value=idx;
+			//alert(idx);
 			frm.action="<%=request.getContextPath()%>/mindWriteEnd.mr";
 			frm.method="post";
 			frm.submit();

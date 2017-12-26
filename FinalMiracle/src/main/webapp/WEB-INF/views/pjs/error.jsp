@@ -8,5 +8,4 @@ request.setCharacterEncoding("UTF-8");
 	var msg = "${msg}";
 	alert(msg);
 	${loc};
-	swal("msg");
 </script>
