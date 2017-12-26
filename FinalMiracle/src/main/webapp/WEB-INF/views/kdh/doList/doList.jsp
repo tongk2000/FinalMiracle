@@ -242,6 +242,16 @@
 		
 		document.getElementById("page").value = "${page}"; // 페이징 값 유지하기
 		todayLine(); // 오늘 날짜에는 가운데 선 그어주는 함수
+		
+		var searchAllIdx = "${searchAllIdx}";
+		var searchAllCategory = "${searchAllCategory}";
+		if(searchAllIdx != "") {
+			if (searchAllCategory == "1") {
+				selectFolderInfo(searchAllIdx);
+			} else if (searchAllCategory == "2") {
+				selectTaskInfo(searchAllIdx);
+			}
+		}
 	} // end of window.onload = function() ----------------------------------------------------------------------------
 	
 	$(document).ready(function(){
@@ -1422,7 +1432,7 @@
 	} // end of function myElementOff() ---------------------------------------------------------------------------------------------------------------------------
 	
 	// 검색한 요소에 css 입히기
-	function serchElementOn(searchWord) {
+	function searchElementOn(searchWord) {
 		// 일단 다 지우고
 		$(".element").each(function() {
 			if ($(this).hasClass("myAndSearchElement")) {
@@ -1632,7 +1642,7 @@
 					[ <span class="pointer" id="toggleComeleted" onclick="toggleComeleted(this)">완료된 업무 숨기기</span>]
 					<input type="hidden" value="0" id="toggleComeletedCnt" />
 					<span style="float:right; color:white;">
-						<input type="text" placeholder="&nbsp;&nbsp;프로젝트 검색" style="height:20px; color:white; background-color:#154465; border:none;" onkeyup="serchElementOn(this.value)"/>
+						<input type="text" placeholder="&nbsp;&nbsp;프로젝트 검색" style="height:20px; color:white; background-color:#154465; border:none;" onkeyup="searchElementOn(this.value)"/>
 					</span>
 			</tr>
 			
