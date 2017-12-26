@@ -264,6 +264,11 @@
 		values(seq_folder_comment.nextval, #{fk_folder_idx}, #{fk_teamwon_idx}, #{content}, default, default)
 	</insert>
 	
+	<!-- 요소에 댓글 삭제하기 -->
+	<update id="delComment">
+		update tbl_folder_comment set status = 0  
+		where idx = #{delIdx}
+	</update>
 	
 	<!-- 요소 수정시 팀원 목록 수정하기 시작 -->
 	<!-- 1. 먼저 해당 요소의 팀원을 전부 탈퇴상태로 업데이트 후 -->
@@ -380,6 +385,41 @@
 		              connect by prior idx = fk_folder_idx)
 	</update>
 	
+	<!-- ***** 통합 검색을 위한 각 메뉴별 리스트 받아오기 시작 ***** -->
+	<resultMap id="getAllSearchList" type="HashMap">
+		<result property="subject" column="subject" javaType="String" />
+		<result property="idx" column="idx" javaType="String" />
+		<result property="category" column="category" javaType="String" />
+	</resultMap>
+	<select id="getProjectSearchList" resultMap="getAllSearchList">
+		select subject, idx, category
+		from tbl_folder
+		where status in (0, 1)
+		  and subject like '%'||#{searchWord}||'%'
+		order by 2 desc
+	</select>
+	<select  id="getNoticeSearchList" resultMap="getAllSearchList">
+		select subject, idx
+		from tbl_notice
+		where status = 1
+		  and subject like '%'||#{searchWord}||'%'
+		order by 2 desc
+	</select>
+	<select  id="getMindSearchList" resultMap="getAllSearchList">
+		select subject, idx
+		from tbl_mind
+		where status = 1
+		  and subject like '%'||#{searchWord}||'%'
+		order by 2 desc
+	</select>
+	<select  id="getFreeSearchList" resultMap="getAllSearchList">
+		select subject, idx
+		from tbl_free
+		where status = 1
+		  and subject like '%'||#{searchWord}||'%'
+		order by 2 desc
+	</select>
+	<!-- ***** 통합 검색을 위한 각 메뉴별 리스트 받아오기 끝 ***** -->
 </mapper>
 
 

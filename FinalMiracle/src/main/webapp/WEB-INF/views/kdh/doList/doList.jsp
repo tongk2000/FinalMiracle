@@ -5,8 +5,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <style type="text/css">
-	td {
-		word-wrap:break-word; /* 글자 넘치면 자동 줄바꿈 */
+ 	td {
+		word-wrap:break-all; /* 글자 넘치면 자동 줄바꿈 */
 	}
 	#doListTable th, #doListTable td:not(.pageDateLine){
 		border:1px solid #cce6ff;
@@ -43,23 +43,23 @@
     }
 	
 	.pointer{
-		cursor:pointer;
-	}
-	#pageBar .pointerOver{
-		font-weight:bold;
-		color:hsl(300, 100%, 60%) !important;
+		cursor:pointer !important;
 	}
 	#doListTable th .pointerOver{
 		color:lightgray;
 	}
-	#doListTable td .pointerOver{
+	 .pointerOver{
 		color:#3366cc;
 	}
 	.rcmMenuDiv .pointerOver{
 		color:#3366cc !important;
 	}
-	#modalElementInfo .pointerOver{
+	#modalElementInfo td .pointerOver{
 		color:#3366cc !important;
+	}
+	#pageBar .pointerOver{
+		font-weight:bold;
+		color:hsl(300, 100%, 60%) !important;
 	}
 	
 	td.infoClass {
@@ -242,6 +242,16 @@
 		
 		document.getElementById("page").value = "${page}"; // 페이징 값 유지하기
 		todayLine(); // 오늘 날짜에는 가운데 선 그어주는 함수
+		
+		var searchAllIdx = "${searchAllIdx}";
+		var searchAllCategory = "${searchAllCategory}";
+		if(searchAllIdx != "") {
+			if (searchAllCategory == "1") {
+				selectFolderInfo(searchAllIdx);
+			} else if (searchAllCategory == "2") {
+				selectTaskInfo(searchAllIdx);
+			}
+		}
 	} // end of window.onload = function() ----------------------------------------------------------------------------
 	
 	$(document).ready(function(){
@@ -543,9 +553,7 @@
 					data:frm,
 					dataType:"html",
 					success:function(data) {
-						var $this2 = $("#"+idx);
-						$this2.after(data);
-						$this2.remove();
+						$("#"+idx).replaceWith(data);
 					}, error:function(request, status, error){
 						alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 						return false;
@@ -889,7 +897,7 @@
 						$.each(data, function(entryIndex, entry){
 							var userid = $("#added"+entry.userid).text();
 							if(entry.userid != userid) { // 이미 선택했던 팀원이 아니라면 */
-								html += "<tr class='trLine'><td class='selectTeamwon pointer' style='border:1px solid black;'>"+entry.userid
+								html += "<tr><td class='selectTeamwon pointer' style='border:1px solid black;'>"+entry.userid
 								html += "<input type='hidden' id='id"+entry.userid+"' value='"+entry.idx+"'></td></tr>";
 								cnt++;
 							}
@@ -957,6 +965,14 @@
 		}); // end of $(document).on("keydown", function(e) ----------------------------------------------------------------------
 		// 팀원 추가, 삭제 끝 -------------------------------------------------------------------------------------------------------------
 		
+		// 댓글 인풋박스에서 엔터키 누르면 댓글 추가하는 함수 부르기
+		$(document).on("keydown", "#modalContent", function(e){
+			if(e.keyCode == "13") {
+				addComment();
+				return false;
+			}
+		}); // end of $(document).on("keydown", "#modalContent", function(e) --------------------------------------------------------------
+		
 	}); // end of $(document).ready(function() ---------------------------------------------------------------------------------------------------------
 	
 	// 선택한 요소를 삭제해주는 함수
@@ -1021,14 +1037,14 @@
 		var upIdx = $(".selectedLine").attr("id");
 		var term = $("#term").val();
 		var page = $("#page").val();
-		window.open("do_addDownElement.mr?upIdx="+upIdx+"&term="+term+"&page="+page, "subwinpop", "left=100px, top=100px, width=700px, height=500px");
+		window.open("do_addDownElement.mr?upIdx="+upIdx+"&term="+term+"&page="+page, "subwinpop", "left=100px, top=100px, width=450px, height=345px");
 	} // end of function addDownElement() -----------------------------------------------------------------------------------------------------------------------------
 	// 최상위 요소 추가
 	function addUpElement() {
 		var upIdx = $(".selectedLine").attr("id");
 		var term = $("#term").val();
 		var page = $("#page").val();
-		window.open("do_addDownElement.mr?upIdx="+0+"&term="+term+"&page="+page, "subwinpop", "left=100px, top=100px, width=700px, height=500px");
+		window.open("do_addDownElement.mr?upIdx="+0+"&term="+term+"&page="+page, "subwinpop", "left=100px, top=100px, width=450px, height=330px");
 	} // end of function addDownElement() -----------------------------------------------------------------------------------------------------------------------------
 	// 요소 추가되었을때 살짝 깜빡여 주기
 	function addLine(id) {
@@ -1211,10 +1227,14 @@
 			$dateColor.css({"background-color":"#ffcccc"});
 		}
 	} // end of function setDayColor(idx) ---------------------------------------------------------------------------------------------------------------
-
 	
 	// 요소에 댓글 추가하고 새로운 댓글 리스트 받아오기(xml)
 	function addComment() {
+		if($("#modalContent").val().trim() == "") {
+			alert("댓글 내용을 입력해주세요!");
+			$("#modalContent").focus();
+		}
+		
 		var frm = $("form[name=addCommentFrm]").serialize();
 		$.ajax({
 			url:"do_addComment.mr",
@@ -1226,11 +1246,11 @@
 				var commentArr = $(data).find(":root").find("comment");
 				var html = "";
 				commentArr.each(function(){
-					html += "<tr>";
+					html += "<tr class='trLine'>";
 					html += "	<td>"+$(this).find("userid").text()+"</td>";
-					html += "	<td>"+$(this).find("content").text()+"</td>";
+					html += "	<td style='text-align:left;'>"+$(this).find("content").text()+"</td>";
 					html += "	<td>"+$(this).find("writeDate").text()+"</td>";
-					html += "	<td>x<td>";
+					html += "	<td align='center'><span style='cursor:pointer;' onclick='commentDelete("+$(this).find("idx").text()+")'>x</span><td>";
 					html += "</tr>";
 				});
 				$("#modalCommentList").html(html);
@@ -1243,6 +1263,7 @@
 		        console.log(thrownError);
 		    }
 		});
+		return false;
 	} // end of function addComment() ----------------------------------------------------------------------------------------------------------------------
 	
 	
@@ -1411,7 +1432,7 @@
 	} // end of function myElementOff() ---------------------------------------------------------------------------------------------------------------------------
 	
 	// 검색한 요소에 css 입히기
-	function serchElementOn(searchWord) {
+	function searchElementOn(searchWord) {
 		// 일단 다 지우고
 		$(".element").each(function() {
 			if ($(this).hasClass("myAndSearchElement")) {
@@ -1621,7 +1642,7 @@
 					[ <span class="pointer" id="toggleComeleted" onclick="toggleComeleted(this)">완료된 업무 숨기기</span>]
 					<input type="hidden" value="0" id="toggleComeletedCnt" />
 					<span style="float:right; color:white;">
-						<input type="text" placeholder="&nbsp;&nbsp;프로젝트 검색" style="height:20px; color:white; background-color:#154465; border:none;" onkeyup="serchElementOn(this.value)"/>
+						<input type="text" placeholder="&nbsp;&nbsp;프로젝트 검색" style="height:20px; color:white; background-color:#154465; border:none;" onkeyup="searchElementOn(this.value)"/>
 					</span>
 			</tr>
 			

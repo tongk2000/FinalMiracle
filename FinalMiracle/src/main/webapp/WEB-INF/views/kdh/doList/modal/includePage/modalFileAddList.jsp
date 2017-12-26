@@ -26,14 +26,14 @@
 </script>
 
 <tr>
-	<td class="infoClass">파일추가</td>
-	<td class="infoData">
+	<td class="infoClass firstTd">파일추가</td>
+	<td class="infoData" style="padding-left:0px;">
 		<table style="width:100%;"> <!-- trLine 효과를 각 tr마다 주고 싶어서 이렇게 따로 테이블로 뺌 -->
 			<tr class="fileInput trLine">
-				<td style="border:none;">
+				<td style="border:none; padding-left:0px;">
 					<input type="button" value="+" class="addFileInput" onclick="addFileInput(this)"/>
-					<input type="file" name="attach" id="attach" style="display:inline-block;" onclick="javascript:changeFlag=true;"/>
-					<input type="button" value="-" style="display:inline-block;" onclick="minusFileInput(this)" />
+					<input type="file" name="attach" class="addFileInput" id="attach" style="display:inline-block; cursor:pointer;" onclick="javascript:changeFlag=true;"/>
+					<input type="button" value="-" class="addFileInput" style="display:inline-block;" onclick="minusFileInput(this)" />
 				</td>
 			</tr>
 		</table>

@@ -229,7 +229,21 @@ public class ProjectManagerService {
 			map.put("pvo", pvo);
 		}
 		return map;
-	} // end of List<Folder_CommentVO> addComment(Folder_CommentVO fcvo, String teamwon_idx) --------------------------------------------------------
+	} // end of HashMap<String, Object> addComment(Folder_CommentVO fcvo, PageVO pvo) --------------------------------------------------------
+	
+	// 요소에 댓글 삭제하고 새로운 댓글 리스트 받아오기
+	public HashMap<String, Object> delComment(String delIdx, PageVO pvo) {
+		int result = dao.delComment(delIdx);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		if(result > 0) {
+			List<Folder_CommentVO> folder_commentList = dao.getFolder_commentInfo(pvo);
+			map.put("folder_commentList", folder_commentList);
+			pvo = getCommentPagingBar(pvo);
+			map.put("pvo", pvo);
+		}
+		return map;
+	} // end of HashMap<String, Object> delComment(String delIdx, PageVO pvo) --------------------------------------------------------
 	
 	// 특정 페이지의 댓글 리스트 가져오기
 	public HashMap<String, Object> getFolder_commentInfo(PageVO pvo) {
@@ -271,6 +285,23 @@ public class ProjectManagerService {
 		int result = dao.elementMoveByGroup(fvo); // 2. 이동하는 모든 요소의 groupNo, depth 변경해주기
 		return result;
 	} // end of int elementMove(FolderVO fvo) ----------------------------------------------------------------------------------------------------
+	
+	// 통합 검색
+	public HashMap<String, List<HashMap<String, String>>> getSearchWordByAll(String searchWord) {
+		HashMap<String, List<HashMap<String, String>>> mapOfSearchAll = new HashMap<String, List<HashMap<String, String>>>();
+		
+		List<HashMap<String, String>> projectSearchAll = dao.getProjectSearchList(searchWord); // 프로젝트 검색리스트 받아오기
+		List<HashMap<String, String>> noticeSearchAll = dao.getNoticeSearchList(searchWord); // 공지사항 검색리스트 받아오기
+		List<HashMap<String, String>> mindSearchAll = dao.getMindSearchList(searchWord); // 마음의소리 검색리스트 받아오기
+		List<HashMap<String, String>> freeSearchAll = dao.getFreeSearchList(searchWord); // 자유게시판 검색리스트 받아오기
+
+		mapOfSearchAll.put("projectSearchAll", projectSearchAll);
+		mapOfSearchAll.put("noticeSearchAll", noticeSearchAll);
+		mapOfSearchAll.put("mindSearchAll", mindSearchAll);
+		mapOfSearchAll.put("freeSearchAll", freeSearchAll);
+
+		return mapOfSearchAll;
+	} // end of HashMap<String, List<String>> getSearchWordByAll(String searchWord) --------------------------------------------------------------
 	
 	
 	// 페이징 처리하기(PageVO 를 받아서 setPageBar 후에 해당 PagaVO 를 반환하는 방식)
