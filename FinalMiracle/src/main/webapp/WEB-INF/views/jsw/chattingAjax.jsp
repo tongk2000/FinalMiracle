@@ -254,6 +254,7 @@
 										// 그리고 data는 url주소(chattingRoomAjax.mr)로부터 리턴받은 데이터이다
 				$("#addPerson").remove();
 				$("#memberinfo").empty();
+				$("#chattingMiddle").empty();
 				$("#roominfo").hide();
 				$("#chatMessage").hide();
 				$("#message").hide();
