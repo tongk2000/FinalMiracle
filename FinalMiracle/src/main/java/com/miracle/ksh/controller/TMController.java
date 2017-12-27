@@ -191,8 +191,8 @@ public class TMController {
 	
 	@Transactional(propagation=Propagation.REQUIRED, isolation= Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
 	@RequestMapping(value="/tmCreateEnd.mr", method={RequestMethod.POST})
-	public String tmCreateEnd(MultipartHttpServletRequest req, HttpSession session){
-		
+	public String tmCreateEnd(HttpServletRequest sreq, MultipartHttpServletRequest req, HttpSession session){
+		// ## 김대헌 : HttpServletRequest sreq 이 부분 추가함(AOP 전달용)
 		MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
 		
 		String fk_member_idx = String.valueOf(loginUser.getIdx());

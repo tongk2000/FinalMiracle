@@ -335,6 +335,7 @@ public class MemberController {
 				if (n == 1) {
 					String msg = "사진 변경 성공.";
 					String loc = "javascript:history.back()";
+					loginUser.setImg(newFileName);
 					fileReq.setAttribute("msg", msg);
 					fileReq.setAttribute("loc", loc);
 				} else {

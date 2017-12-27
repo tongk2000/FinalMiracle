@@ -660,8 +660,8 @@ public class VoteController {
 	
 	//투표글을 최종적으로 수정해보자
 	@RequestMapping(value="/voteEditEnd.mr", method={RequestMethod.POST})
-	public String voteEditEnd(MultipartHttpServletRequest req) throws Throwable{
-		
+	public String voteEditEnd(HttpServletRequest sreq, MultipartHttpServletRequest req) throws Throwable{
+		// ## 김대헌 : HttpServletRequest sreq 이 부분 추가함(AOP 전달용)
 		String idx = req.getParameter("idx"); //투표글 idx
 		String subject = req.getParameter("subject"); //제목
 		String content = req.getParameter("content"); //내용

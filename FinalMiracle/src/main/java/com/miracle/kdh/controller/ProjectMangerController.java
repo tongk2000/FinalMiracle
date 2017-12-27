@@ -171,7 +171,7 @@ public class ProjectMangerController {
 		String[] delFileArr = req.getParameterValues("delFileArr");
 		
 		// 서버폴더에 파일저장하고 DB에 저장할 파일 정보 가져오기
-		List<Folder_FileVO> ffList = doFileUpdate(freq, ses, fvo.getIdx(), Integer.parseInt(fk_teamwon_idx));
+		List<Folder_FileVO> ffList = doFileUpdate(req, freq, ses, fvo.getIdx(), Integer.parseInt(fk_teamwon_idx));
 		int result = svc.do_goModalEdit(ses, fvo, ftList, ffList, delFileArr);
 		
 		JSONObject json = new JSONObject();
@@ -240,7 +240,7 @@ public class ProjectMangerController {
 		String page = (String)req.getParameter("page"); // 페이징 이동할 페이지를 가져옴
 		
 		// 서버폴더에 파일저장하고 DB에 저장할 파일 정보 가져오기
-		List<Folder_FileVO> ffList = doFileUpdate(freq, ses, fvo.getIdx(), fk_teamwon_idx);
+		List<Folder_FileVO> ffList = doFileUpdate(req, freq, ses, fvo.getIdx(), fk_teamwon_idx);
 		
 		map = svc.addDownElementEnd(fvo, map, term, page, ffList); // 트랜잭션 결과와 새로 추가된 요소의 정보를 가져옴 
 		
@@ -408,7 +408,7 @@ public class ProjectMangerController {
 	
 	// ============================= ***** 파일 관련 메소드 시작 ***** =============================
 	// 파일 업로드하고 ffvo 에 파일 정보 저장하기
-	public List<Folder_FileVO> doFileUpdate(MultipartHttpServletRequest freq, HttpSession ses, int fk_folder_idx, int fk_teamwon_idx) {
+	public List<Folder_FileVO> doFileUpdate(HttpServletRequest req, MultipartHttpServletRequest freq, HttpSession ses, int fk_folder_idx, int fk_teamwon_idx) {
 		List<MultipartFile> attachList = freq.getFiles("attach");
 		List<Folder_FileVO> ffList = null;  
 		if(attachList != null && attachList.size() != 0) { // attach 가 비어있지 않다면(즉, 첨부된 파일이 있다면)
