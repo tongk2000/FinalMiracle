@@ -11,7 +11,6 @@
 
 
 </style>
-<script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 <script type="text/javascript">
 	if ( $("#inviteMember").length <= 0 ) {
 		$("#memberinfo").append("<div id='inviteMember' style='font-size: 20px; font-weight: bold;'>초대할 인원</div>");

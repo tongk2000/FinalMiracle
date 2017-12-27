@@ -94,7 +94,10 @@ public class ChattingDAO implements InterChattingDAO {
 	@Override
 	public void newRoomNewMember(HashMap<String, Object> map) {
 		sqlsession.insert("chatting.newRoomNewMember", map);
-		
+	}
+	@Override
+	public void newRoomNewMember2(HashMap<String, String> map) {
+		sqlsession.insert("chatting.newRoomNewMember", map);
 	}
 
 	@Override
@@ -160,6 +163,12 @@ public class ChattingDAO implements InterChattingDAO {
 	public HashMap<String, Object> getRoomInfo(HashMap<String, Object> map) {
 		HashMap<String, Object> RoomInfo = sqlsession.selectOne("chatting.getRoomInfo", map);
 		return RoomInfo;
+	}
+
+	@Override
+	public void addMemberCntLength(HashMap<String, Object> map) {
+		sqlsession.update("chatting.addMemberCntLength", map);
+		
 	}
 
 

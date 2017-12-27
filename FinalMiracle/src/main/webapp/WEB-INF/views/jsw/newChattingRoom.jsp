@@ -87,6 +87,7 @@
 		$("#newRoom").click(function() {
 		//	var inv = $('.inv').length;
 		//	alert(inv);
+		
 		var inv = $('.inv').length;
 		var roomname = $("#roomname").val().trim();
 		if(roomname.trim() == ""){
@@ -125,16 +126,18 @@
 						alert("code: " + request.status + "\n"+"message: " + request.responseText + "\n" + "error: " + error);     
 					}
 				});
-
 				
-				$('.inv').each(function(i) {
-					var id = document.getElementsByClassName('twon')[i].id;
-					var memberidx = $('#'+id).val();
-					
-					var midx_data = {memberidx : memberidx};
+				setTimeout(function(){
+					var memberidxArr = [];
+					$('.inv').each(function(i){
+						var id = document.getElementsByClassName('twon')[i].id;
+						var memberidx = $('#'+id).val();
+						memberidxArr[i] = memberidx;
+					});
+					jQuery.ajaxSettings.traditional = true;
 					$.ajax({
 						url: "newRoomNewMember.mr",
-						data: midx_data,
+						data: {"memberidxArr":memberidxArr},
 						type: "get",		// 위의 url주소로 보내어질 요청대이터이다
 						dataType: "html",	// ajax 요청에의해 url주소(chattingRoomAjax.mr)로 리턴받는 데이터 타입이다
 						 					// 종류가 xml, json, html, script, text
@@ -144,21 +147,17 @@
 						//	$("#MemberList").empty(); // 해당요소 선택자 내용을 모두 비워서 새로운 데이터를 채울 준비를 한다
 							$("#memberinfo").empty();
 							$("#memberinfo").html(data);
+							
+							$("#message").show();
+							$("#sendMessage").show();
+							alert("채팅방 만들기 성공");
+							getRoomList();
 						},
 						error: function(request, status, error) {
 							alert("code: " + request.status + "\n"+"message: " + request.responseText + "\n" + "error: " + error);     
 						}
 					});
-					
-					
-				});// end of each
-				
-				
-				
-				$("#message").show();
-				$("#sendMessage").show();
-				alert("채팅방 만들기 성공");
-				getRoomList();
+				},500);
 		}		
 		/* var form_data = {roomname : roomname};
 		$.ajax({

@@ -254,12 +254,12 @@
 				<tr style="border: 0px solid lightgray;">
 					<td colspan="2" style="padding-left: 20px;"> 
 						<br/>
-						<c:if test="${search == 'null' || search == null}">
+						<c:if test="${search == 'null' || search == null || search == ' '}">
 							<span style="font-family: verdana; font-weight: bold;">총 게시물 ' 
 								<span style="color: #92a8d1; font-size: larger;">${totalCount}</span> ' 개
 							</span>
 						</c:if> 
-						<c:if test="${search != 'null' && search != null}">
+						<c:if test="${search != 'null' && search != null && search != ' '}">
 							<span style="font-family: verdana; font-weight: bold;">검색된 게시물 ' 
 								<span style="color: #92a8d1; font-size: larger;">${totalCount}</span> ' 개
 							</span>

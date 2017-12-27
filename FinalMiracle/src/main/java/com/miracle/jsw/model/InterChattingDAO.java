@@ -32,6 +32,7 @@ public interface InterChattingDAO {
 	String getCRidxNewRoom();
 
 	void newRoomNewMember(HashMap<String, Object> map);
+	void newRoomNewMember2(HashMap<String, String> map);
 
 	int addMemberCount(HashMap<String, Object> map);
 
@@ -50,6 +51,8 @@ public interface InterChattingDAO {
 	List<HashMap<String, Object>> getFindNotChatMember(HashMap<String, Object> map);
 
 	HashMap<String, Object> getRoomInfo(HashMap<String, Object> map);
+
+	void addMemberCntLength(HashMap<String, Object> map);
 
 
 }
