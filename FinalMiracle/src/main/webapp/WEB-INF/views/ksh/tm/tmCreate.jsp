@@ -301,7 +301,7 @@ th#th {
 			  showCancelButton: true,
 			  confirmButtonClass: "btn-success",
 			  confirmButtonText: "삭제",
-			  cancelButtonText: "취소",
+			  cancelButtonText: "생성",
 			  closeOnConfirm: false,
 			  closeOnCancel: true
 			},
