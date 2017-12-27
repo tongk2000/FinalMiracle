@@ -233,8 +233,8 @@
 		} 
 	} // end of function cancel() ------------------------------------------------------------------------------------------------------------
 </script>
-<body>
-	<div style="width:100%; height:100%; background-color:#4882ab; padding:10px;">
+<body style="background-color:#4882ab;">
+	<div style="width:100%; height:100%; padding:10px;">
 		<form name="addDownElementFrm" id="modalInfoFrm" enctype="multipart/form-data" method="post">
 			<table style="width:100%;">
 				<tr style="width:100%;">

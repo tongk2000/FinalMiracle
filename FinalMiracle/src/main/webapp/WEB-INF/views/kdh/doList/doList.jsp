@@ -155,8 +155,8 @@
 	  background: linear-gradient(to right,
 	                              transparent 0%,
 	                              transparent calc(50% - 0.81px),
-	                              #c6ffb3 calc(50% - 0.8px),
-	                              #c6ffb3 calc(50% + 0.8px),
+	                              #00ff55 calc(50% - 0.8px),
+	                              #00ff55 calc(50% + 0.8px),
 	                              transparent calc(50% + 0.81px),
 	                              transparent 100%);
 	}
@@ -992,6 +992,7 @@
 					var depth = parseInt(getThirdClass($this)); // 클릭한 요소의 깊이 구하기
 					var groupNo = getSecondClass($this);
 					
+					$("#"+idx).removeClass("selectedLine").removeClass("selectLine");
 					$("#"+idx).addClass("delElement");
 					while(1==1) { // 선택한 요소와 그 하위요소를 모두 삭제하기 위해 반복문 돌림
 						if($this.next().attr("id") == undefined) { // 다음 요소가 없을때 undefined 오류 막기 위함
@@ -1011,7 +1012,7 @@
 						$(".delElement").hide(1000);
 					},1000);
 					setTimeout(function(){
-						$(".delElement").remove();
+						$(".delElement").remove(1000);
 					},2500);
 					$("#folderRcm").hide();
 					$("#taskRcm").hide();
