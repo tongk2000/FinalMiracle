@@ -383,7 +383,7 @@
 			</div>
 			<div style="width: 100%; height: auto; border: 1px solid lightgray; background-color: #FAFAFA; padding-top: 10px; padding-left: 70px;">
 				<textarea id="commcontent${votevo.IDX}" name="commcontent${votevo.IDX}" class="form-control" style="width: 80%; resize: none;" placeholder="타인을 비방하는 댓글은 삼가해주시기 바랍니다."></textarea>
-				<a href="#" class="btn btn-lg btn-default"><span class="glyphicon glyphicon-comment"></span></a>&nbsp;
+				<a href="javascript:goCommAdd('${votevo.IDX}');" class="btn btn-lg btn-default"><span class="glyphicon glyphicon-comment"></span></a>&nbsp;
 				<br/><br/>
 				<c:forEach var="votecommvo" items="${voteCommList}" varStatus="status" begin="0" end="20">
 					<c:set value="${votecommvo.FK_VOTE_IDX}" var="votecommidx" />
