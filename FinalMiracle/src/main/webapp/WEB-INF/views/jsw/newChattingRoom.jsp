@@ -157,7 +157,7 @@
 							alert("code: " + request.status + "\n"+"message: " + request.responseText + "\n" + "error: " + error);     
 						}
 					});
-				},1000);
+				},500);
 		}		
 		/* var form_data = {roomname : roomname};
 		$.ajax({

@@ -294,10 +294,26 @@ th#th {
 			swal("필수입력란은 모두 입력하셔야 합니다.", '', 'info');
 			event.preventDefault();
 		} else {
-			var frm = document.createFrm;
-			frm.method = "post";
-			frm.action = "tmCreateEnd.mr";
-			frm.submit();
+			swal({
+			  title: "팀 생성 여부",
+			  text: "팀 생성을 하시겠습니까?",
+			  type: "warning",
+			  showCancelButton: true,
+			  confirmButtonClass: "btn-success",
+			  confirmButtonText: "생성",
+			  cancelButtonText: "취소",
+			  closeOnConfirm: false,
+			  closeOnCancel: true
+			},
+			function(isConfirm) {
+			  if (isConfirm) {
+				var frm = document.createFrm;
+				frm.method = "post";
+				frm.action = "tmCreateEnd.mr";
+				frm.submit();
+			  }
+			});
+			
 		}
 
 	}

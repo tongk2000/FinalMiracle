@@ -9,6 +9,15 @@
 
 <style type="text/css">
 
+.notreadmessage {
+	  width: 20px;
+	  height: 20px;
+	  border-radius:50%;
+	  background-color: red;
+	  padding: 5px;
+	  vertical-align: middle;
+	  text-align: center;
+	}
 
 </style>
 
@@ -21,7 +30,7 @@
 				${room.roomname} 
 				<span style="color:gray;">[${room.personnum}]</span>
 				<c:if test="${room.notreadmessage != 0}">
-					<span style="background-color:red; color:white;">${room.notreadmessage}</span>
+					<div style="color:white; display: inline;" align="center" class="notreadmessage">${room.notreadmessage}</div>
 				</c:if>
 				<input type="hidden" value="${room.cridx}" id="cridx${status.count}" name="cridx${status.count}"/>
 			</div>
