@@ -13,8 +13,8 @@
 		     , to_char(startdate, 'yyyy-mm-dd') as fullStartdate
 		     , to_char(lastdate, 'yyyy-mm-dd') as fullLastdate
 		     , fk_folder_idx, groupno, depth, category, status, importance
-		     , case when trunc(startdate) <![CDATA[<]]> sysdate and sysdate <![CDATA[<]]> trunc(lastdate)+1 then 1
-		            when trunc(lastdate)+1 <![CDATA[<]]> sysdate then -1
+		     , case when trunc(startdate) <![CDATA[<=]]> trunc(sysdate) and trunc(sysdate) <![CDATA[<=]]> trunc(lastdate) then 1
+		            when trunc(lastdate) <![CDATA[<]]> trunc(sysdate) then -1
 		            else 0 end as dayCnt
 		     , (select count(*) from tbl_folder
 		       where status in (1, 0) and idx != F.idx
@@ -39,8 +39,8 @@
 		     , to_char(startdate, 'yyyy-mm-dd') as fullStartdate
 		     , to_char(lastdate, 'yyyy-mm-dd') as fullLastdate
 		     , fk_folder_idx, groupno, depth, category, status, importance
-		     , case when trunc(startdate) &lt; sysdate and sysdate &lt; trunc(lastdate)+1 then 1
-		            when trunc(lastdate)+1 &lt; sysdate then -1
+		     , case when trunc(startdate) &lt;= trunc(sysdate) and trunc(sysdate) &lt;= trunc(lastdate) then 1
+		            when trunc(lastdate) &lt; trunc(sysdate) then -1
 		            else 0 end as dayCnt
 		     , (select count(*) from tbl_folder
 		       where status in (1, 0) and idx != F.idx
@@ -62,8 +62,8 @@
 		     , to_char(startdate, 'yyyy-mm-dd') as fullStartdate
 		     , to_char(lastdate, 'yyyy-mm-dd') as fullLastdate
 		     , fk_folder_idx, groupno, depth, category, status, importance
-		     , case when trunc(startdate) &lt; sysdate and sysdate &lt; trunc(lastdate)+1 then 1
-		            when trunc(lastdate)+1 &lt; sysdate then -1
+		     , case when trunc(startdate) &lt;= trunc(sysdate) and trunc(sysdate) &lt;= trunc(lastdate) then 1
+		            when trunc(lastdate) &lt; trunc(sysdate) then -1
 		            else 0 end as dayCnt
 		     , (select count(*) from tbl_folder
 		       where status in (1, 0) and idx != F.idx
@@ -83,8 +83,8 @@
 		     , to_char(startdate, 'yyyy-mm-dd') as startdate
 		     , to_char(lastdate, 'yyyy-mm-dd') as lastdate
 		     , fk_folder_idx, groupno, depth, category, status, importance
-		     , case when trunc(startdate) &lt; sysdate and sysdate &lt; trunc(lastdate)+1 then 1
-		            when trunc(lastdate)+1 &lt; sysdate then -1
+		     , case when trunc(startdate) &lt;= trunc(sysdate) and trunc(sysdate) &lt;= trunc(lastdate) then 1
+		            when trunc(lastdate) &lt; trunc(sysdate) then -1
 		            else 0 end as dayCnt
 		     , (select avg(importance) from tbl_folder where idx != F.idx start with idx = F.idx connect by prior idx = fk_folder_idx) as importanceAvg
 		from tbl_folder F
@@ -315,37 +315,37 @@
 		<result property="complete" column="complete" javaType="String"/>
 	</resultMap>
 	<select id="getPeriodCnt" resultMap="getPeriodCnt"> <!-- 전체 건수 -->
-		select (select count(*) from tbl_folder where status = 1 and startdate > sysdate) as before
-		     , (select count(*) from tbl_folder where status = 1 and startdate &lt; sysdate and sysdate &lt; lastdate) as doing
-		     , (select count(*) from tbl_folder where status = 1 and lastdate &lt; sysdate) as lapse
+		select (select count(*) from tbl_folder where status = 1 and trunc(startdate) > trunc(sysdate)) as before
+		     , (select count(*) from tbl_folder where status = 1 and trunc(startdate) &lt;= trunc(sysdate) and trunc(sysdate) &lt;= trunc(lastdate)) as doing
+		     , (select count(*) from tbl_folder where status = 1 and trunc(lastdate) &lt; trunc(sysdate)) as lapse
 		     , (select count(*) from tbl_folder where status = 0) as complete
 		from dual
 	</select>
 	<select id="getPeriodCntByTeamwon" resultMap="getPeriodCnt"> <!-- 팀원별 건수 -->
-		select (select count(*) from tbl_folder where status = 1 and startdate > sysdate
+		select (select count(*) from tbl_folder where status = 1 and trunc(startdate) > trunc(sysdate)
 		           and idx in (select fk_folder_idx from tbl_folder_teamwon where fk_teamwon_idx = #{teamwon_idx} and status = 1)) as before
-		     , (select count(*) from tbl_folder where status = 1 and startdate &lt; sysdate and sysdate &lt; lastdate
+		     , (select count(*) from tbl_folder where status = 1 and trunc(startdate) &lt;= trunc(sysdate) and trunc(sysdate) &lt;= trunc(lastdate)
 		           and idx in (select fk_folder_idx from tbl_folder_teamwon where fk_teamwon_idx = #{teamwon_idx} and status = 1)) as doing
-		     , (select count(*) from tbl_folder where status = 1 and lastdate &lt; sysdate
+		     , (select count(*) from tbl_folder where status = 1 and trunc(lastdate) &lt; trunc(sysdate)
 		           and idx in (select fk_folder_idx from tbl_folder_teamwon where fk_teamwon_idx = #{teamwon_idx} and status = 1)) as lapse
 		     , (select count(*) from tbl_folder where status = 0
 		           and idx in (select fk_folder_idx from tbl_folder_teamwon where fk_teamwon_idx = #{teamwon_idx} and status = 1)) as complete
 		from dual
 	</select>
 	<select id="getPeriodCntBySearch" resultMap="getPeriodCnt"> <!-- 검색어별 건수 -->
-		select (select count(*) from tbl_folder where status = 1 and startdate > sysdate
+		select (select count(*) from tbl_folder where status = 1 and trunc(startdate) > trunc(sysdate)
 		           and idx in (select distinct idx
 		                       from view_getSearchElement 
 		                       where fk_teamwon_idx in (select idx from tbl_teamwon where fk_team_idx = #{team_idx})
 		                         and searchWord like '%'||#{searchWord}||'%')
 		       ) as before
-		     , (select count(*) from tbl_folder where status = 1 and startdate &lt; sysdate and sysdate &lt; lastdate
+		     , (select count(*) from tbl_folder where status = 1 and trunc(startdate) &lt;= trunc(sysdate) and trunc(sysdate) &lt;= trunc(lastdate)
 		           and idx in (select distinct idx
 		                       from view_getSearchElement 
 		                       where fk_teamwon_idx in (select idx from tbl_teamwon where fk_team_idx = #{team_idx})
 		                         and searchWord like '%'||#{searchWord}||'%')
 		       ) as doing
-		     , (select count(*) from tbl_folder where status = 1 and lastdate &lt; sysdate
+		     , (select count(*) from tbl_folder where status = 1 and trunc(lastdate) &lt; trunc(sysdate)
 		           and idx in (select distinct idx
 		                       from view_getSearchElement 
 		                       where fk_teamwon_idx in (select idx from tbl_teamwon where fk_team_idx = #{team_idx})
